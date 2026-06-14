@@ -12,12 +12,18 @@ The skill produces bilingual Chinese and English output by default:
 
 ## Install
 
-Copy the skill folder into your local Codex skills directory:
+In Codex, install it from this GitHub path with `$skill-installer`:
+
+```text
+Use $skill-installer to install https://github.com/danielwanwx/senior-sde-interview-script-skill/tree/main/senior-sde-interview-script
+```
+
+Or copy the skill folder into your local Codex skills directory:
 
 ```bash
 mkdir -p ~/.codex/skills
 git clone https://github.com/danielwanwx/senior-sde-interview-script-skill.git /tmp/senior-sde-interview-script-skill
-cp -R /tmp/senior-sde-interview-script-skill/skill ~/.codex/skills/senior-sde-interview-script
+cp -R /tmp/senior-sde-interview-script-skill/senior-sde-interview-script ~/.codex/skills/
 ```
 
 Then start a new Codex session and invoke:
