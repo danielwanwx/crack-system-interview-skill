@@ -76,6 +76,7 @@ Default to a clean hybrid board:
 - light gray fills for script and summary cards (`#ffffff`, `#f9fafb`, `#f3f4f6`)
 - blue fills/strokes only for the decision-flow boxes (`#dbeafe`, `#2563eb`)
 - no rainbow palettes, decorative colors, or five-color flowcharts
+- Excalidraw default-feeling typography and sketch style: omit custom `fontFamily` unless necessary, use rough hand-drawn shapes, and avoid polished slide-deck typography
 
 The diagram should be a **script card plus decision flow**, not a sparse flowchart. It must stand on its own when opened:
 
@@ -96,6 +97,14 @@ When Excalidraw MCP tools are available:
 For the JSON passed to `export_to_excalidraw`, use real Excalidraw `text` elements for all text. Do not rely on MCP-only `label` shorthand inside shapes; it can display in the MCP preview but export to excalidraw.com as blank boxes. If using `label` for `create_view`, convert it into explicit text elements before export.
 
 Use a simple top-to-bottom layout: script block first, blue decision flow second, 30-second version last. Keep text readable and non-overlapping. Chinese labels and script are the default for diagrams unless the user asks for English-only.
+
+Visual spacing rules:
+
+- Use generous padding: at least 32 px inside large script cards and 24 px inside flow boxes.
+- Use comfortable line spacing: `lineHeight` around 1.35-1.5 for script text and 1.25-1.35 for short labels.
+- Prefer fewer wider text lines over dense paragraphs. Add manual line breaks where needed.
+- Keep 40-60 px vertical gaps between major sections.
+- Use Excalidraw's default roughness/hand-drawn feel; the board should feel like an Excalidraw note, not a slide deck.
 
 When Excalidraw MCP tools are not available:
 

@@ -7,7 +7,7 @@ Default output is intentionally short:
 - one-sentence summary in Chinese and English
 - a Chinese 90-120 second interview answer
 - a short English version
-- a black/gray Excalidraw script card with blue decision-flow boxes when MCP export is available
+- an Excalidraw-default-style script card with blue decision-flow boxes when MCP export is available
 - a compact 30-second Chinese version
 - only one follow-up gotcha when it is clearly useful
 
@@ -55,7 +55,7 @@ Use $senior-sde-interview-script to turn this technical excerpt into a senior SD
 
 When Excalidraw MCP tools are available, the skill should call `create_view`, export with `export_to_excalidraw`, and return the Excalidraw URL directly.
 
-The default board is a hybrid script card, not a colorful flowchart. It should include the actual Chinese speaking script, a blue decision flow, and the 30-second version inside the drawing.
+The default board is a hybrid script card, not a colorful flowchart. It should include the actual Chinese speaking script, a blue decision flow, and the 30-second version inside the drawing. It should keep Excalidraw's default-feeling font and sketch style, with generous padding and comfortable line spacing.
 
 When exporting to excalidraw.com, text must be real Excalidraw `text` elements. Do not rely on MCP-only `label` shorthand in shapes, because it can export as blank boxes.
 
@@ -63,7 +63,7 @@ When Excalidraw MCP tools are unavailable, it should create a `.excalidraw` file
 
 Example GraphQL test link:
 
-https://excalidraw.com/#json=JixpfBqDILZJrCW388ANK,BQjxsfSr0Mjdl0JDfZrvRg
+https://excalidraw.com/#json=Qw-QKCMgvVK7VfDktC4N6,fvQ9vSqSgnMuvK4Y-O1vkQ
 
 ## 中文说明
 
@@ -74,6 +74,6 @@ https://excalidraw.com/#json=JixpfBqDILZJrCW388ANK,BQjxsfSr0Mjdl0JDfZrvRg
 - 中文和英文一句话总结
 - 中文 90-120 秒面试版
 - 英文短版
-- 黑白灰讲稿区 + 蓝色判断流程的 Excalidraw 链接，或 `.excalidraw` 文件路径
+- Excalidraw 默认风格讲稿区 + 蓝色判断流程链接，或 `.excalidraw` 文件路径
 - 中文 30 秒短版
 - 必要时只补一个高概率追问点
