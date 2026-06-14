@@ -1,0 +1,40 @@
+{
+  "name": "sde-interview-script-skill",
+  "version": "0.1.0",
+  "description": "Generate bilingual senior SDE interview scripts and Excalidraw visual boards from technical excerpts.",
+  "author": {
+    "name": "Daniel Wan",
+    "url": "https://github.com/danielwanwx"
+  },
+  "homepage": "https://github.com/danielwanwx/sde-interview-script-skill",
+  "repository": "https://github.com/danielwanwx/sde-interview-script-skill",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skill",
+    "plugin",
+    "interview",
+    "system-design",
+    "excalidraw"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "SDE Interview Script",
+    "shortDescription": "Bilingual senior SDE scripts plus Excalidraw boards.",
+    "longDescription": "Turn technical interview excerpts into concise Chinese and English senior SDE speaking scripts, then map the same content into an Excalidraw-first visual explanation.",
+    "developerName": "Daniel Wan",
+    "category": "Productivity",
+    "capabilities": [
+      "Bilingual",
+      "Excalidraw",
+      "Interview Prep"
+    ],
+    "defaultPrompt": [
+      "Turn this excerpt into bilingual SDE scripts and an Excalidraw board.",
+      "Create a senior interview answer and Excalidraw visual.",
+      "Explain this system design concept with a script and diagram."
+    ],
+    "brandColor": "#2563EB"
+  },
+  "mcpServers": "./.mcp.json"
+}
