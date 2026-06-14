@@ -1,7 +1,7 @@
 interface:
   display_name: "Senior SDE Interview Script"
-  short_description: "Concise SDE scripts with Excalidraw links"
-  default_prompt: "Use $senior-sde-interview-script to create a senior answer and show a Chinese-handwritten Excalidraw preview in chat."
+  short_description: "SDE scripts as Excalidraw screenshots and links"
+  default_prompt: "Use $senior-sde-interview-script to create a senior SDE Excalidraw screenshot and link only."
 dependencies:
   tools:
     - type: "mcp"

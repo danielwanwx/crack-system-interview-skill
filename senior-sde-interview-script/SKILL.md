@@ -1,6 +1,6 @@
 ---
 name: senior-sde-interview-script
-description: "Convert Hello Interview excerpts, system design notes, API design notes, or other technical interview material into senior SDE interview speaking scripts plus direct Excalidraw visual links when possible. Use when the user provides source paragraphs and asks for a concise but solid speakable interview answer, memorization-friendly draft, bilingual Chinese/English version, 30-second version, Excalidraw diagram, or asks to preserve this response pattern. Also use when the user wants answers to sound senior, practical, opinionated, and interview-ready without becoming textbook-like, overly long, or overly autobiographical."
+description: "Convert Hello Interview excerpts, system design notes, API design notes, or other technical interview material into senior SDE interview speaking scripts embedded in Excalidraw visuals, with screenshot-and-link-only chat replies by default. Use when the user provides source paragraphs and asks for a concise but solid speakable interview answer, memorization-friendly draft, bilingual Chinese/English version, 30-second version, Excalidraw diagram, or asks to preserve this response pattern. Also use when the user wants answers to sound senior, practical, opinionated, and interview-ready without becoming textbook-like, overly long, or overly autobiographical."
 ---
 
 # Senior SDE Interview Script
@@ -11,7 +11,7 @@ Turn technical source material into a short answer a senior SDE candidate can ac
 
 ## Core Output
 
-Unless the user asks for a different structure, produce:
+Unless the user asks for a different structure, generate the following content for the Excalidraw board:
 
 - **一句话总结 / One-Sentence Summary**: one short Chinese sentence and one short English sentence explaining what the paragraph is about.
 - **中文面试版**: 2 short Chinese paragraphs, suitable for a 90-120 second spoken answer.
@@ -20,7 +20,7 @@ Unless the user asks for a different structure, produce:
 - **30 秒短版**: one compact Chinese answer, at most two sentences.
 - **追问准备 / Follow-Up Prep**: omit by default. Add only one short gotcha when it is highly likely to be asked or the user requests it.
 
-Do not add long explanations about the process. The user wants an interview answer and a visual, not study notes.
+Default chat reply must contain only the rendered preview image and the Excalidraw link or `.excalidraw` path. Do not repeat the summary, Chinese answer, English version, 30-second version, or follow-up text outside the image unless the user explicitly asks for copyable text.
 
 ## Workflow
 
@@ -98,8 +98,12 @@ When Excalidraw MCP tools are available:
 
 Chat delivery rule:
 
+- The final response should normally be only:
+  1. the rendered preview image
+  2. the Excalidraw URL or `.excalidraw` file path
 - Display the rendered Excalidraw preview image directly in the response using Markdown image syntax whenever possible.
 - Put the Excalidraw URL or `.excalidraw` file path after the image as a backup, not as the primary way to inspect the output.
+- Do not include the generated script text outside the visual unless the user explicitly asks for the text.
 - If a preview image cannot be generated, return the link/path and briefly say the preview was unavailable.
 
 For the JSON passed to `export_to_excalidraw`, use real Excalidraw `text` elements for editable text. Do not rely on MCP-only `label` shorthand inside shapes; it can display in the MCP preview but export to excalidraw.com as blank boxes. If using `label` for `create_view`, convert it into explicit text elements before export.
@@ -131,7 +135,7 @@ When Excalidraw MCP tools are not available:
 ## Style Rules
 
 - Be concise and speakable.
-- First line must summarize the paragraph's topic, not describe the response format.
+- Put the summary and script inside the visual; do not lead the chat response with copied script text by default.
 - Always include a direct preview image when possible, plus an Excalidraw URL or file path as backup.
 - Use the user's examples when present; add only one small realistic example when needed.
 - Do not over-explain basic definitions.

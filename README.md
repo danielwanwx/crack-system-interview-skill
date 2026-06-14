@@ -1,15 +1,13 @@
 # SDE Interview Script Skill
 
-A Codex skill and plugin for turning technical interview excerpts into senior SDE speaking scripts and direct Excalidraw visual links.
+A Codex skill and plugin for turning technical interview excerpts into senior SDE speaking scripts embedded in Excalidraw visuals, with screenshot-and-link-only chat replies by default.
 
-Default output is intentionally short:
+Default chat output is intentionally minimal:
 
-- one-sentence summary in Chinese and English
-- a Chinese 90-120 second interview answer
-- a short English version
-- a direct in-chat preview image of a handwritten Chinese/English Excalidraw script card, plus an editable Excalidraw link when export is available
-- a compact 30-second Chinese version
-- only one follow-up gotcha when it is clearly useful
+- a direct in-chat preview image of the handwritten Excalidraw script card
+- an editable Excalidraw link, or a `.excalidraw` file path as backup
+
+The generated board itself contains the one-sentence summary, Chinese interview answer, compact decision flow, and 30-second version. The chat reply should not repeat that text unless the user explicitly asks for copyable text.
 
 ## Install as a plugin
 
@@ -53,7 +51,7 @@ Use $senior-sde-interview-script to turn this technical excerpt into a senior SD
 
 ## Excalidraw behavior
 
-When Excalidraw MCP tools are available, the skill should call `create_view`, export with `export_to_excalidraw`, show a rendered preview image directly in chat, and return the Excalidraw URL as an editable backup.
+When Excalidraw MCP tools are available, the skill should call `create_view`, export with `export_to_excalidraw`, show a rendered preview image directly in chat, and return the Excalidraw URL as an editable backup. By default, the final response should only contain the screenshot and link/path.
 
 The default board is a hybrid script card, not a colorful flowchart. It should include the actual Chinese speaking script, a blue decision flow, and the 30-second version inside the drawing. All cards, boxes, and frames should have transparent backgrounds with hand-drawn strokes only. Use black or dark gray strokes for script cards, and blue strokes/text/arrows for decision-flow boxes. Do not use blue or gray fills.
 
@@ -75,9 +73,7 @@ https://excalidraw.com/#json=8gKTecAEUwJp5d7gU9Cuw,AqB6Qd5bVIOuuzx9786Rdw
 
 默认输出包括：
 
-- 中文和英文一句话总结
-- 中文 90-120 秒面试版
-- 英文短版
-- 直接显示在 chat 里的中文手写 Excalidraw 预览图，透明框体 + 蓝色判断流程边框，并附链接或 `.excalidraw` 文件路径作为备份
-- 中文 30 秒短版
-- 必要时只补一个高概率追问点
+- 直接显示在 chat 里的中文手写 Excalidraw 截图
+- Excalidraw 链接或 `.excalidraw` 文件路径作为备份
+
+讲稿正文、30 秒短版、判断流程都放在图里；除非明确要求可复制文本，回复里不重复展开。

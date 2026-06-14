@@ -1,7 +1,7 @@
 {
   "name": "sde-interview-script-skill",
   "version": "0.1.0",
-  "description": "Generate senior SDE interview scripts with in-chat Excalidraw previews and transparent hand-drawn frames.",
+  "description": "Generate senior SDE interview scripts as Excalidraw screenshots plus editable links.",
   "author": {
     "name": "Daniel Wan",
     "url": "https://github.com/danielwanwx"
@@ -21,7 +21,7 @@
   "interface": {
     "displayName": "SDE Interview Script",
     "shortDescription": "SDE scripts plus Excalidraw cards.",
-    "longDescription": "Turn technical interview excerpts into Chinese-first senior SDE speaking scripts, then show a Chinese-handwritten Excalidraw preview directly in chat with transparent frames and blue decision-flow outlines.",
+    "longDescription": "Turn technical interview excerpts into Chinese-first senior SDE speaking scripts embedded in Chinese-handwritten Excalidraw boards, then reply with only the screenshot and editable link by default.",
     "developerName": "Daniel Wan",
     "category": "Productivity",
     "capabilities": [
@@ -30,7 +30,7 @@
       "Interview Prep"
     ],
     "defaultPrompt": [
-      "Create a senior SDE answer and show a Chinese-handwritten Excalidraw preview in chat.",
+      "Create a senior SDE Excalidraw screenshot and link only.",
       "Turn this excerpt into a 90-120 second interview answer.",
       "Draw an Excalidraw card with a blue decision flow."
     ],
