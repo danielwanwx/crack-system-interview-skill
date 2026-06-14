@@ -1,4 +1,4 @@
 interface:
   display_name: "Senior SDE Interview Script"
-  short_description: "SDE scripts as Excalidraw screenshots and links"
-  default_prompt: "Use $senior-sde-interview-script to create a senior SDE Excalidraw-style preview image and link only."
+  short_description: "Multilingual SDE scripts as Excalidraw screenshots and links"
+  default_prompt: "Use $senior-sde-interview-script to create a senior SDE Excalidraw-style preview image and link only. Default to English unless I specify another language."

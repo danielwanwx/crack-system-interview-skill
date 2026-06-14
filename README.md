@@ -1,6 +1,6 @@
 # SDE Interview Script Skill
 
-A cross-agent plugin/skill package for turning technical interview excerpts into senior SDE speaking scripts embedded in Excalidraw-style visuals.
+A cross-agent plugin/skill package for turning technical interview excerpts into senior SDE speaking scripts embedded in Excalidraw-style visuals. Output language defaults to English, and users can request Chinese or another language in the prompt.
 
 Default output is intentionally minimal:
 
@@ -8,7 +8,7 @@ Default output is intentionally minimal:
 - an editable Excalidraw link when upload succeeds
 - a local `.excalidraw` path as fallback
 
-The generated board contains the one-sentence summary, Chinese interview answer, compact decision flow, and 30-second version. The chat reply should not repeat that text unless the user explicitly asks for copyable text.
+The generated board contains the one-sentence summary, interview answer, compact decision flow, and 30-second version in the target language. The chat reply should not repeat that text unless the user explicitly asks for copyable text.
 
 ## Recommended Architecture
 
@@ -46,20 +46,22 @@ scripts/                                             # repo-level renderer test 
 After the plugin or skill is installed in a host:
 
 1. User pastes a Hello Interview/API/system-design paragraph.
-2. The agent invokes `senior-sde-interview-script`.
-3. The skill tells the agent to create a compact JSON object:
+2. User optionally specifies language, for example `in Chinese`, `用中文`, `in Spanish`, or `bilingual English and Chinese`. If no language is specified, the skill uses English.
+3. The agent invokes `senior-sde-interview-script`.
+4. The skill tells the agent to create a compact JSON object:
 
 ```json
 {
   "title": "GraphQL",
-  "summary": "一句话中文总结；one short English summary.",
-  "script": "90-120 秒中文面试可讲版，2 个短段落。",
-  "short": "30 秒中文短版，最多 2 句。",
-  "flows": ["痛点", "适用场景", "代价", "结论"]
+  "language": "English",
+  "summary": "One short sentence explaining the core interview idea.",
+  "script": "A 90-120 second senior SDE interview answer in the target language.",
+  "short": "A 30-second version in the target language.",
+  "flows": ["Signal / pain", "When it fits", "Tradeoff", "Decision"]
 }
 ```
 
-4. The agent runs the bundled renderer:
+5. The agent runs the bundled renderer:
 
 ```bash
 python3 scripts/render_interview_card.py \
@@ -68,7 +70,7 @@ python3 scripts/render_interview_card.py \
   --slug interview-card
 ```
 
-5. The renderer writes:
+6. The renderer writes:
 
 ```json
 {
@@ -78,7 +80,33 @@ python3 scripts/render_interview_card.py \
 }
 ```
 
-6. Codex/Cursor reply with only the preview image and link/path. Claude Code terminal replies with the link first, then local paths if needed.
+7. Codex/Cursor reply with only the preview image and link/path. Claude Code terminal replies with the link first, then local paths if needed.
+
+## Language Selection
+
+Default output language is English:
+
+```text
+Use $senior-sde-interview-script to turn this excerpt into a senior SDE Excalidraw-style preview image and link only.
+```
+
+Chinese output:
+
+```text
+Use $senior-sde-interview-script to turn this excerpt into a senior SDE interview script and Excalidraw card. Use Chinese. Only output the image and link.
+```
+
+Other languages:
+
+```text
+Use $senior-sde-interview-script to turn this excerpt into a senior SDE interview script and Excalidraw card. Output in Spanish. Only output the image and link.
+```
+
+Bilingual:
+
+```text
+Use $senior-sde-interview-script to turn this excerpt into a senior SDE interview script and Excalidraw card. Use bilingual English and Chinese. Only output the image and link.
+```
 
 ## Install In Codex
 
@@ -93,7 +121,7 @@ Then install `SDE Interview Script` from the `SDE Interview Script Skills` marke
 Prompt:
 
 ```text
-Use $senior-sde-interview-script to turn this excerpt into a senior SDE Excalidraw-style preview image and link only.
+Use $senior-sde-interview-script to turn this excerpt into a senior SDE Excalidraw-style preview image and link only. Default to English unless I specify another language.
 ```
 
 ## Install In Cursor
@@ -175,4 +203,4 @@ No agent host should auto-enable arbitrary cloned plugins without user trust. So
 - Claude Code 用 `.claude-plugin`
 - 三者共享同一个 `SKILL.md` 和渲染脚本
 
-安装后，用户只需要粘贴原文段落，agent 会自动生成简短但有 senior 深度的中文面试讲稿，并把讲稿、判断流程和 30 秒短版放进 Excalidraw 风格图片里。聊天回复默认只给图片和链接。
+安装后，用户只需要粘贴原文段落，agent 会自动生成简短但有 senior 深度的面试讲稿，并把讲稿、判断流程和 30 秒短版放进 Excalidraw 风格图片里。默认输出英文；如果 prompt 里写 `用中文`、`Chinese`、`Spanish` 或其他语言，就按指定语言输出。聊天回复默认只给图片和链接。

@@ -1,7 +1,7 @@
 {
   "name": "sde-interview-script-skill",
-  "version": "0.2.0",
-  "description": "Generate senior SDE interview scripts as Excalidraw-style preview images plus editable links.",
+  "version": "0.3.0",
+  "description": "Generate language-selectable senior SDE interview scripts as Excalidraw-style preview images plus editable links.",
   "author": {
     "name": "Daniel Wan",
     "url": "https://github.com/danielwanwx"

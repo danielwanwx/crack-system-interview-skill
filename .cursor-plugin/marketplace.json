@@ -4,13 +4,13 @@
     "name": "Daniel Wan"
   },
   "metadata": {
-    "description": "Senior SDE interview scripts rendered as Excalidraw-style cards with preview images and editable links."
+    "description": "Language-selectable senior SDE interview scripts rendered as Excalidraw-style cards with preview images and editable links."
   },
   "plugins": [
     {
       "name": "sde-interview-script-skill",
       "source": "plugins/sde-interview-script-skill",
-      "description": "Turn technical interview excerpts into concise senior SDE speaking scripts embedded in Excalidraw visuals."
+      "description": "Turn technical interview excerpts into concise language-selectable senior SDE speaking scripts embedded in Excalidraw visuals."
     }
   ]
 }

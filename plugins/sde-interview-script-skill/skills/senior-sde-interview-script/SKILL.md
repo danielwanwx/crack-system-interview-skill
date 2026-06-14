@@ -1,6 +1,6 @@
 ---
 name: senior-sde-interview-script
-description: "Convert Hello Interview excerpts, system design notes, API design notes, or other technical interview material into senior SDE interview speaking scripts embedded in Excalidraw visuals, with screenshot-and-link-only chat replies by default. Use when the user provides source paragraphs and asks for a concise but solid speakable interview answer, memorization-friendly draft, bilingual Chinese/English version, 30-second version, Excalidraw diagram, or asks to preserve this response pattern. Also use when the user wants answers to sound senior, practical, opinionated, and interview-ready without becoming textbook-like, overly long, or overly autobiographical."
+description: "Convert Hello Interview excerpts, system design notes, API design notes, or other technical interview material into senior SDE interview speaking scripts embedded in Excalidraw visuals, with screenshot-and-link-only chat replies by default. Use when the user provides source paragraphs and asks for a concise but solid speakable interview answer, memorization-friendly draft, English-default or multilingual output, Chinese/English bilingual version, 30-second version, Excalidraw diagram, or asks to preserve this response pattern. Also use when the user wants answers to sound senior, practical, opinionated, and interview-ready without becoming textbook-like, overly long, or overly autobiographical."
 ---
 
 # Senior SDE Interview Script
@@ -13,43 +13,52 @@ Turn technical source material into a short answer a senior SDE candidate can ac
 
 Unless the user asks for a different structure, generate the following content for the Excalidraw board:
 
-- **一句话总结 / One-Sentence Summary**: one short Chinese sentence and one short English sentence explaining what the paragraph is about.
-- **中文面试版**: 2 short Chinese paragraphs, suitable for a 90-120 second spoken answer.
-- **English Short Version**: one short English paragraph with the same judgment and examples, not a literal translation.
+- **Target Language**: default to English. Use Chinese or another language only when the user explicitly requests it, for example "用中文", "Chinese", "Spanish", or "output in Japanese". If the user asks for bilingual output, include both requested languages.
+- **One-Sentence Summary**: one short sentence in the target language explaining what the paragraph is about.
+- **Interview Script**: 2 short paragraphs in the target language, suitable for a 90-120 second spoken answer.
 - **Excalidraw Visual**: show a rendered preview image directly in chat whenever possible, and include a direct Excalidraw share link as the editable backup. The board must include the speakable script text, not just empty concept boxes. Chinese text should look handwritten too, not only English. If MCP export is not available, create a `.excalidraw` file and return the path. Use a Board Brief only as the last fallback.
-- **30 秒短版**: one compact Chinese answer, at most two sentences.
-- **追问准备 / Follow-Up Prep**: omit by default. Add only one short gotcha when it is highly likely to be asked or the user requests it.
+- **30-Second Version**: one compact answer in the target language, at most two sentences.
+- **Follow-Up Prep**: omit by default. Add only one short gotcha when it is highly likely to be asked or the user requests it.
 
-Default chat reply must contain only the rendered preview image and the Excalidraw link or `.excalidraw` path. Do not repeat the summary, Chinese answer, English version, 30-second version, or follow-up text outside the image unless the user explicitly asks for copyable text.
+Default chat reply must contain only the rendered preview image and the Excalidraw link or `.excalidraw` path. Do not repeat the summary, interview script, 30-second version, or follow-up text outside the image unless the user explicitly asks for copyable text.
 
 ## Workflow
 
 1. Infer the likely interview question behind the excerpt.
-2. Start with one concise Chinese summary sentence and one concise English summary sentence.
-3. Extract only 4-5 interview-useful points:
+2. Determine the target language: English by default; use a requested language when specified; use bilingual only when explicitly requested.
+3. Start with one concise summary sentence in the target language.
+4. Extract only 4-5 interview-useful points:
    - the decision rule
    - when to use it
    - one realistic example
    - one senior caveat or tradeoff
    - one production implication when it changes the decision
-4. Reframe the material as a senior candidate evaluating a real design situation.
-5. Add practical depth only when it changes the decision: retries, caching, authorization, consistency, client contracts, observability, or operational cost.
-6. Create the Excalidraw visual as a hybrid script card with a blue decision flow and prefer a direct share link.
-7. End with a crisp principle the candidate can remember.
+5. Reframe the material as a senior candidate evaluating a real design situation.
+6. Add practical depth only when it changes the decision: retries, caching, authorization, consistency, client contracts, observability, or operational cost.
+7. Create the Excalidraw visual as a hybrid script card with a blue decision flow and prefer a direct share link.
+8. End with a crisp principle the candidate can remember.
 
 ## Length Budget
 
-- Chinese live answer: 90-120 seconds, usually 2 short paragraphs.
-- English answer: max 1 short paragraph.
-- 30-second version: max 2 Chinese sentences.
+- Live answer in the target language: 90-120 seconds, usually 2 short paragraphs.
+- 30-second version: max 2 sentences in the target language.
+- Bilingual output: keep each language concise; do not double the length of the board unless the user explicitly asks for a full bilingual script.
 - Follow-up prep: omit unless asked, or include exactly one obvious gotcha.
 - Do not enumerate every detail from the excerpt. Show judgment, not coverage.
 
 ## Voice And Stance
 
-Produce Chinese first by default. Include English unless the user asks for Chinese only.
+Produce English by default. Switch to Chinese or another language only when the user explicitly requests it. If the user writes in Chinese but does not specify output language, still default to English unless the current conversation clearly established Chinese as the target language.
 
-Use a candidate-owned point of view without sounding like a diary. Good phrases:
+Use a candidate-owned point of view without sounding like a diary. Good English phrases:
+
+- "I would first look at..."
+- "My decision rule is..."
+- "I would lean toward..."
+- "In a real design, I would care about..."
+- "The key is not...but..."
+
+Good Chinese phrases when Chinese is requested:
 
 - "这个问题我会先看..."
 - "我的判断标准是..."
@@ -84,7 +93,7 @@ Default to a clean hybrid board:
 The diagram should be a **script card plus decision flow**, not a sparse flowchart. It must stand on its own when opened:
 
 - title + one-sentence summary
-- large Chinese interview script block
+- large interview script block in the target language
 - 3-4 blue-outlined flow boxes, such as pain, fit, cost, decision
 - compact 30-second version
 
@@ -97,14 +106,15 @@ Bundled renderer workflow:
 ```json
 {
   "title": "GraphQL",
-  "summary": "一句话中文总结；one short English summary.",
-  "script": "90-120 秒中文面试可讲版，2 个短段落。",
-  "short": "30 秒中文短版，最多 2 句。",
+  "language": "English",
+  "summary": "One short sentence explaining the core interview idea.",
+  "script": "A 90-120 second senior SDE interview answer in the target language, usually 2 short paragraphs.",
+  "short": "A 30-second version in the target language, max 2 sentences.",
   "flows": [
-    "痛点 / signal",
-    "适用场景 / fit",
-    "代价 / tradeoff",
-    "结论 / decision"
+    "Signal / pain",
+    "When it fits",
+    "Tradeoff",
+    "Decision"
   ]
 }
 ```
@@ -145,9 +155,9 @@ Chinese handwriting rule:
 - When the user wants Chinese to look handwritten, render Chinese text blocks as transparent PNG or SVG using a Chinese handwriting-style font, then embed them as Excalidraw `image` elements with `files` data URLs.
 - Prefer `HanziPen SC` / `Hanzipen.ttc` when available on macOS. Fall back to `Kaiti`, `Yuanti`, or editable `fontFamily: 1` text only when no suitable Chinese handwriting font is available.
 - When exporting a share link with image-rendered Chinese, make sure the image files are included in the `.excalidraw` `files` map and uploaded/saved with the share link; otherwise excalidraw.com can open the board with blank image placeholders.
-- Keep the original Chinese script in the content JSON and generated artifacts, but do not repeat it in the chat response by default.
+- Keep the original target-language script in the content JSON and generated artifacts, but do not repeat it in the chat response by default.
 
-Use a simple top-to-bottom layout: script block first, blue decision flow second, 30-second version last. Keep text readable and non-overlapping. Chinese labels and script are the default for diagrams unless the user asks for English-only.
+Use a simple top-to-bottom layout: script block first, blue decision flow second, 30-second version last. Keep text readable and non-overlapping. English labels and script are the default for diagrams unless the user requests another language.
 
 Visual spacing rules:
 
@@ -170,7 +180,7 @@ When Excalidraw MCP tools are not available:
 - Always include a direct preview image when possible, plus an Excalidraw URL or file path as backup.
 - Use the user's examples when present; add only one small realistic example when needed.
 - Do not over-explain basic definitions.
-- Keep Chinese and English aligned in substance, but let each sound natural.
+- For bilingual output, keep both languages aligned in substance, but let each sound natural.
 - Do not add broad interview advice unless asked.
 - Use code-style formatting for endpoints, methods, fields, commands, and identifiers.
 
@@ -178,6 +188,6 @@ When Excalidraw MCP tools are not available:
 
 For an API design excerpt:
 
-"中文: 这个问题我会先判断这个值是在定位资源，还是只是在过滤结果。如果没有这个值，请求本身就不成立，我会把它放在 path；如果它只是缩小集合范围，我会放在 query parameter。这样 API contract 会更清楚，客户端也更容易理解哪些字段是必需的。"
+"English default: I would first decide whether the value identifies the resource or only filters a collection. If the request does not make sense without it, it belongs in the path; if it only narrows results, it belongs in query parameters. That keeps the API contract clear for clients."
 
-"English: I would first decide whether the value identifies the resource or only filters a collection. If the request does not make sense without it, it belongs in the path; if it only narrows results, it belongs in query parameters. That keeps the API contract clear for clients."
+"Chinese when requested: 这个问题我会先判断这个值是在定位资源，还是只是在过滤结果。如果没有这个值，请求本身就不成立，我会把它放在 path；如果它只是缩小集合范围，我会放在 query parameter。这样 API contract 会更清楚，客户端也更容易理解哪些字段是必需的。"
