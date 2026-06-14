@@ -1,11 +1,11 @@
 interface:
   display_name: "Senior SDE Interview Script"
-  short_description: "Turn notes into bilingual scripts and Excalidraw boards"
-  default_prompt: "Use $senior-sde-interview-script to summarize this excerpt, draft bilingual senior SDE answers, and create an Excalidraw visual."
+  short_description: "Concise SDE scripts with Excalidraw links"
+  default_prompt: "Use $senior-sde-interview-script to create a concise interview answer and direct Excalidraw link."
 dependencies:
   tools:
     - type: "mcp"
       value: "excalidraw"
-      description: "Excalidraw MCP server for drawing interview explanation boards"
+      description: "Excalidraw MCP server for drawing and exporting interview boards"
       transport: "streamable_http"
-      url: "https://mcp.excalidraw.com"
+      url: "https://mcp.excalidraw.com/mcp"

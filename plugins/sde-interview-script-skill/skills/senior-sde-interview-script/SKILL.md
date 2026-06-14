@@ -1,43 +1,54 @@
 ---
 name: senior-sde-interview-script
-description: Convert Hello Interview excerpts, system design notes, API design notes, or other technical interview material into concise bilingual Chinese and English senior SDE candidate speaking scripts plus an Excalidraw-first visual explanation. Use when the user provides source paragraphs and asks for a directly speakable interview answer, a memorization-friendly draft, a grounded practical explanation, bilingual Chinese/English versions, a 30-second version, follow-up prep, an Excalidraw diagram, or asks to preserve this response pattern. Also use when the user wants answers to sound senior, solid, practical, and opinionated without becoming textbook-like or overly autobiographical.
+description: "Convert Hello Interview excerpts, system design notes, API design notes, or other technical interview material into short senior SDE interview speaking scripts plus direct Excalidraw visual links when possible. Use when the user provides source paragraphs and asks for a concise speakable interview answer, memorization-friendly draft, bilingual Chinese/English version, 30-second version, Excalidraw diagram, or asks to preserve this response pattern. Also use when the user wants answers to sound senior, solid, practical, and opinionated without becoming textbook-like, overly long, or overly autobiographical."
 ---
 
 # Senior SDE Interview Script
 
 ## Overview
 
-Turn technical source material into bilingual Chinese and English interview answers that a senior SDE candidate can say out loud, then map the same content into an Excalidraw-friendly visual. Preserve the source's scope, add only enough practical framing to make the answer feel experienced, and avoid turning the response into abstract concept recitation.
+Turn technical source material into a short answer a senior SDE candidate can actually say in an interview, then map the same content into an Excalidraw visual. Preserve the source's intent, but do not try to cover every pasted detail. Pick the points an interviewer is likely testing.
 
 ## Core Output
 
 Unless the user asks for a different structure, produce:
 
-- **一句话总结 / One-Sentence Summary**: one sentence in Chinese and one sentence in English that state what the source paragraph is mainly about.
-- **中文可直接讲的版本**: 2-5 concise Chinese paragraphs, suitable to speak in an interview.
-- **English Speakable Version**: 2-5 concise English paragraphs with the same substance and senior-level stance, not a word-for-word translation if natural phrasing requires adjustment.
-- **Excalidraw Visual**: create or specify an Excalidraw board that makes the explanation scannable: title, core rule, example flow, and senior caveats.
-- **30 秒短版 / 30-Second Version**: one compact Chinese paragraph and one compact English paragraph for fast recall.
-- **追问准备 / Follow-Up Prep**: optional, only when the excerpt naturally has senior-level edge cases or tradeoffs worth anticipating; keep it short and bilingual when included.
+- **一句话总结 / One-Sentence Summary**: one short Chinese sentence and one short English sentence explaining what the paragraph is about.
+- **中文面试版**: 1-2 short Chinese paragraphs, suitable for a 60-90 second spoken answer.
+- **English Short Version**: one short English paragraph with the same judgment and examples, not a literal translation.
+- **Excalidraw Visual**: return a direct Excalidraw share link when tools allow it. If not, create a `.excalidraw` file and return the path. Use a Board Brief only as the last fallback.
+- **30 秒短版**: one compact Chinese answer, at most two sentences.
+- **追问准备 / Follow-Up Prep**: omit by default. Add only one short gotcha when it is highly likely to be asked or the user requests it.
 
-Do not add long explanations about the process. The user wants the answer draft, not a teaching essay about how it was produced.
+Do not add long explanations about the process. The user wants an interview answer and a visual, not study notes.
 
 ## Workflow
 
-1. Identify the likely interview question behind the excerpt.
-2. Start the response with one concise Chinese sentence and one concise English sentence summarizing what the excerpt is about.
-3. Extract the source's actual decision rules, examples, caveats, and vocabulary.
-4. Reframe the material as answers from a senior SDE candidate evaluating a real design situation, first in Chinese and then in English.
-5. Add practical depth only where it follows naturally: production retries, failure modes, API contracts, data consistency, observability, operational cost, client expectations, or tradeoffs.
-6. Convert the same content into an Excalidraw visual structure. If Excalidraw MCP tools are available, use them to draw the board. If they are not available, output an **Excalidraw Board Brief** with exact boxes, arrows, labels, and layout so the board can be recreated directly in Excalidraw.
-7. Keep the answer scoped to the excerpt. Do not expand into a mini-lecture or introduce many unrelated topics.
-8. End with a crisp principle or judgment standard the candidate can remember.
+1. Infer the likely interview question behind the excerpt.
+2. Start with one concise Chinese summary sentence and one concise English summary sentence.
+3. Extract only 3-4 interview-useful points:
+   - the decision rule
+   - when to use it
+   - one realistic example
+   - one senior caveat or tradeoff
+4. Reframe the material as a senior candidate evaluating a real design situation.
+5. Add practical depth only when it changes the decision: retries, caching, authorization, consistency, client contracts, observability, or operational cost.
+6. Create the Excalidraw visual and prefer a direct share link.
+7. End with a crisp principle the candidate can remember.
+
+## Length Budget
+
+- Chinese live answer: max 2 short paragraphs.
+- English answer: max 1 short paragraph.
+- 30-second version: max 2 Chinese sentences.
+- Follow-up prep: omit unless asked, or include exactly one obvious gotcha.
+- Do not enumerate every detail from the excerpt. Show judgment, not coverage.
 
 ## Voice And Stance
 
-Produce both Chinese and English by default. Put Chinese first unless the user explicitly asks otherwise.
+Produce Chinese first by default. Include English unless the user asks for Chinese only.
 
-Use a candidate-owned point of view, but not a full first-person autobiography. Prefer phrases like:
+Use a candidate-owned point of view without sounding like a diary. Good phrases:
 
 - "这个问题我会先看..."
 - "我的判断标准是..."
@@ -45,68 +56,57 @@ Use a candidate-owned point of view, but not a full first-person autobiography. 
 - "在实际设计里，我会关注..."
 - "这里关键不是...而是..."
 
-Avoid overusing "我在项目中..." or "当我遇到..." in every paragraph. The answer should sound like a senior candidate standing in front of the problem, making a clear judgment, and explaining why.
+Avoid repeating "我在项目中..." or "当我遇到..." in every paragraph. The answer should sound like a senior candidate standing in front of the problem, making a clear judgment, and explaining why.
 
 ## Senior-Level Signal
 
-Make the answer feel senior by including at least two of these when relevant:
+Make the answer feel senior by including the practical reason behind the rule, not just the definition. Prefer one concrete API, data, or distributed-systems example, plus one boundary condition such as when not to use the pattern, what breaks at scale, how retries/caching/auth affect the design, or what the client contract implies.
 
-- The design rule, not just the definition.
-- Why the rule matters in production.
-- A concrete API, data, or distributed-systems scenario.
-- A tradeoff or boundary condition.
-- A retry, failure, consistency, or client-contract implication.
-- A short note about when not to use the pattern.
-
-Keep the language plain. Do not stack buzzwords. Avoid "concept dump" answers that define terms but never say how to choose.
+Keep the language plain. Avoid buzzword stacks and concept dumps.
 
 ## Excalidraw Visual Workflow
 
-Prefer Excalidraw over Mermaid or generic diagram formats. The diagram should not be decorative; it should help the candidate remember and explain the answer.
+Prefer Excalidraw over Mermaid or generic diagrams. Do not use Mermaid unless the user explicitly asks for Mermaid.
 
 When Excalidraw MCP tools are available:
 
-1. Create a single board for the excerpt.
-2. Use a simple left-to-right or top-to-bottom layout.
-3. Put the topic and one-sentence summary at the top.
-4. Add 3-6 content blocks:
-   - core decision rule
-   - concrete example
-   - request/response or data flow when relevant
-   - production implication
-   - edge case or follow-up point
-5. Connect blocks with arrows that show reasoning, not just sequence.
-6. Keep labels short. Use Chinese first and add concise English where helpful.
-7. Avoid putting full paragraphs into the drawing; keep the full prose in the script sections.
+1. Call `read_me` once if tool usage is unclear.
+2. Create one board with `create_view`.
+3. Export it with `export_to_excalidraw`.
+4. Return the Excalidraw URL directly in the answer.
 
-When Excalidraw MCP tools are not available, output:
+Use 4-6 blocks:
 
-- board title
-- canvas layout direction
-- elements list with `id`, `type`, `label`, and `purpose`
-- arrows list with `from`, `to`, and `label`
-- optional color grouping for main rule, example, caveat, and final takeaway
+- interview question
+- core rule
+- when to use
+- concrete example
+- gotcha or tradeoff
+- takeaway
 
-Do not substitute Mermaid unless the user explicitly asks for Mermaid.
+Use a simple left-to-right or top-to-bottom layout. Connect blocks with arrows that show reasoning. Keep diagram labels very short; English labels are fine for diagrams unless the user asks for Chinese labels. Do not put paragraphs in the drawing.
+
+When Excalidraw MCP tools are not available:
+
+1. Create a `.excalidraw` artifact when filesystem access is available.
+2. Return the absolute file path.
+3. Output an **Excalidraw Board Brief** only if neither MCP export nor file creation is possible.
 
 ## Style Rules
 
 - Be concise and speakable.
-- Make the first line a one-sentence summary of the source paragraph's topic, not a meta-comment about the answer.
-- Always include either a drawn Excalidraw board or an Excalidraw-ready board brief.
-- Use the user's examples when present.
-- Use realistic examples when they clarify the source, but keep them small.
-- Do not over-explain basic definitions unless the excerpt depends on them.
-- Produce both Chinese and English versions by default; keep both versions aligned in substance.
+- First line must summarize the paragraph's topic, not describe the response format.
+- Always include a direct Excalidraw URL or a file path when possible.
+- Use the user's examples when present; add only one small realistic example when needed.
+- Do not over-explain basic definitions.
+- Keep Chinese and English aligned in substance, but let each sound natural.
 - Do not add broad interview advice unless asked.
 - Use code-style formatting for endpoints, methods, fields, commands, and identifiers.
 
 ## Example Shape
 
-For an API design excerpt, the main answer should sound like:
+For an API design excerpt:
 
-"中文: 这个问题我会先判断这个值是在定位资源，还是只是在过滤结果。如果没有这个值，请求本身就不完整，我会把它放在 path 里；如果它只是缩小集合范围，我会放在 query parameter 里。比如..."
+"中文: 这个问题我会先判断这个值是在定位资源，还是只是在过滤结果。如果没有这个值，请求本身就不成立，我会把它放在 path；如果它只是缩小集合范围，我会放在 query parameter。这样 API contract 会更清楚，客户端也更容易理解哪些字段是必需的。"
 
-"English: I would first decide whether the value identifies the resource or only filters the result set. If the request does not make sense without it, I would put it in the path; if it only narrows a collection, I would use a query parameter. For example..."
-
-Then connect it to a practical consequence, such as client clarity, API stability, retries, authorization checks, or avoiding over-nesting.
+"English: I would first decide whether the value identifies the resource or only filters a collection. If the request does not make sense without it, it belongs in the path; if it only narrows results, it belongs in query parameters. That keeps the API contract clear for clients."
