@@ -16,7 +16,7 @@ Unless the user asks for a different structure, produce:
 - **一句话总结 / One-Sentence Summary**: one short Chinese sentence and one short English sentence explaining what the paragraph is about.
 - **中文面试版**: 2 short Chinese paragraphs, suitable for a 90-120 second spoken answer.
 - **English Short Version**: one short English paragraph with the same judgment and examples, not a literal translation.
-- **Excalidraw Visual**: return a direct Excalidraw share link when tools allow it. The board must include the speakable script text, not just empty concept boxes. If MCP export is not available, create a `.excalidraw` file and return the path. Use a Board Brief only as the last fallback.
+- **Excalidraw Visual**: return a direct Excalidraw share link when tools allow it. The board must include the speakable script text, not just empty concept boxes. Chinese text should look handwritten too, not only English. If MCP export is not available, create a `.excalidraw` file and return the path. Use a Board Brief only as the last fallback.
 - **30 秒短版**: one compact Chinese answer, at most two sentences.
 - **追问准备 / Follow-Up Prep**: omit by default. Add only one short gotcha when it is highly likely to be asked or the user requests it.
 
@@ -76,7 +76,7 @@ Default to a clean hybrid board:
 - light gray fills for script and summary cards (`#ffffff`, `#f9fafb`, `#f3f4f6`)
 - blue fills/strokes only for the decision-flow boxes (`#dbeafe`, `#2563eb`)
 - no rainbow palettes, decorative colors, or five-color flowcharts
-- Excalidraw handwritten typography and sketch style: set text `fontFamily` to `1` for Excalidraw's hand-drawn/Virgil-style font, use rough hand-drawn shapes, and avoid polished slide-deck typography
+- Excalidraw handwritten typography and sketch style: set editable text `fontFamily` to `1` for Excalidraw's hand-drawn/Virgil-style font, use rough hand-drawn shapes, and avoid polished slide-deck typography
 
 The diagram should be a **script card plus decision flow**, not a sparse flowchart. It must stand on its own when opened:
 
@@ -94,7 +94,15 @@ When Excalidraw MCP tools are available:
 3. Export it with `export_to_excalidraw`.
 4. Return the Excalidraw URL directly in the answer.
 
-For the JSON passed to `export_to_excalidraw`, use real Excalidraw `text` elements for all text. Do not rely on MCP-only `label` shorthand inside shapes; it can display in the MCP preview but export to excalidraw.com as blank boxes. If using `label` for `create_view`, convert it into explicit text elements before export.
+For the JSON passed to `export_to_excalidraw`, use real Excalidraw `text` elements for editable text. Do not rely on MCP-only `label` shorthand inside shapes; it can display in the MCP preview but export to excalidraw.com as blank boxes. If using `label` for `create_view`, convert it into explicit text elements before export.
+
+Chinese handwriting rule:
+
+- Excalidraw's Virgil font may not provide handwritten CJK glyphs, so `fontFamily: 1` can still render Chinese as a plain fallback font.
+- When the user wants Chinese to look handwritten, render Chinese text blocks as transparent PNG or SVG using a Chinese handwriting-style font, then embed them as Excalidraw `image` elements with `files` data URLs.
+- Prefer `HanziPen SC` / `Hanzipen.ttc` when available on macOS. Fall back to `Kaiti`, `Yuanti`, or editable `fontFamily: 1` text only when no suitable Chinese handwriting font is available.
+- When exporting a share link with image-rendered Chinese, make sure the image files are included in the `.excalidraw` `files` map and uploaded/saved with the share link; otherwise excalidraw.com can open the board with blank image placeholders.
+- Keep the original Chinese script in the chat response because image-rendered Chinese in Excalidraw is not directly editable as text.
 
 Use a simple top-to-bottom layout: script block first, blue decision flow second, 30-second version last. Keep text readable and non-overlapping. Chinese labels and script are the default for diagrams unless the user asks for English-only.
 
@@ -104,7 +112,7 @@ Visual spacing rules:
 - Use comfortable line spacing: `lineHeight` around 1.35-1.5 for script text and 1.25-1.35 for short labels.
 - Prefer fewer wider text lines over dense paragraphs. Add manual line breaks where needed.
 - Keep 40-60 px vertical gaps between major sections.
-- Use Excalidraw's handwritten roughness/hand-drawn feel; set text `fontFamily: 1`, use roughness around `1.5-2`, and make the board feel like an Excalidraw note, not a slide deck.
+- Use Excalidraw's handwritten roughness/hand-drawn feel; set editable text `fontFamily: 1`, use roughness around `1.5-2`, and make the board feel like an Excalidraw note, not a slide deck.
 
 When Excalidraw MCP tools are not available:
 

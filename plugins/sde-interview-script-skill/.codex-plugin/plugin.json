@@ -1,7 +1,7 @@
 {
   "name": "sde-interview-script-skill",
   "version": "0.1.0",
-  "description": "Generate senior SDE interview scripts and handwritten Excalidraw cards with blue decision flows.",
+  "description": "Generate senior SDE interview scripts and Chinese-handwritten Excalidraw cards with blue decision flows.",
   "author": {
     "name": "Daniel Wan",
     "url": "https://github.com/danielwanwx"
@@ -21,7 +21,7 @@
   "interface": {
     "displayName": "SDE Interview Script",
     "shortDescription": "SDE scripts plus Excalidraw cards.",
-    "longDescription": "Turn technical interview excerpts into Chinese-first senior SDE speaking scripts, then export a handwritten Excalidraw script card with blue decision-flow boxes when tools are available.",
+    "longDescription": "Turn technical interview excerpts into Chinese-first senior SDE speaking scripts, then export a Chinese-handwritten Excalidraw script card with blue decision-flow boxes when tools are available.",
     "developerName": "Daniel Wan",
     "category": "Productivity",
     "capabilities": [
@@ -30,7 +30,7 @@
       "Interview Prep"
     ],
     "defaultPrompt": [
-      "Create a senior SDE answer and handwritten Excalidraw card.",
+      "Create a senior SDE answer and Chinese-handwritten Excalidraw card.",
       "Turn this excerpt into a 90-120 second interview answer.",
       "Draw an Excalidraw card with a blue decision flow."
     ],
