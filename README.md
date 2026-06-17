@@ -1,6 +1,6 @@
 # SDE Interview Script Skill
 
-A cross-agent plugin/skill package for turning pasted text into speakable scripts embedded in Excalidraw-style visuals. It includes a short `$card` entrypoint for general text and a backward-compatible `$senior-sde-interview-script` entrypoint for SDE interview prep. Output language defaults to English, and users can request Chinese or another language in the prompt.
+A cross-agent plugin/skill package for turning pasted text into diagram-first Excalidraw-style visuals with concise embedded talk tracks. It includes a short `$card` entrypoint for general text and a backward-compatible `$senior-sde-interview-script` entrypoint for SDE interview prep. Output language defaults to English, and users can request Chinese or another language in the prompt.
 
 ## Simplest Usage
 
@@ -34,14 +34,14 @@ Default output is intentionally minimal:
 - an editable Excalidraw link when upload succeeds
 - a local `.excalidraw` path as fallback
 
-The generated board contains the one-sentence summary, interview answer, compact decision flow, and 30-second version in the target language. The chat reply should not repeat that text unless the user explicitly asks for copyable text.
+The generated board explains the material through blocks, arrows, comparisons, decision trees, callouts, and a small talk-track note. It should not look like a long essay pasted into a box. The chat reply should not repeat the visual text unless the user explicitly asks for copyable text.
 
 ## Recommended Architecture
 
 The best compatibility model is:
 
 1. **Plugin manifests per host**: Codex, Cursor, and Claude Code each get their own marketplace/plugin manifest.
-2. **Short primary skill**: all hosts load `skills/card/SKILL.md` as the easiest entrypoint.
+2. **Short primary skill**: all hosts load `skills/card/SKILL.md` as the easiest diagram-first entrypoint.
 3. **SDE preset skill**: `skills/senior-sde-interview-script/SKILL.md` remains available for users who want the explicit SDE interview workflow.
 4. **Bundled renderer scripts**: the agent writes a small content JSON, then runs `scripts/render_interview_card.py` to generate the preview SVG, `.excalidraw` file, and optional Excalidraw share link.
 5. **Optional MCP**: Excalidraw MCP is declared for hosts that support it, but it is not required for the main flow.
@@ -81,16 +81,24 @@ After the plugin or skill is installed in a host:
 1. User pastes a Hello Interview/API/system-design paragraph.
 2. User optionally specifies language, for example `in Chinese`, `用中文`, `in Spanish`, or `bilingual English and Chinese`. If no language is specified, the skill uses English.
 3. The agent invokes `card` by default, or `senior-sde-interview-script` for the explicit SDE preset.
-4. The skill tells the agent to create a compact JSON object:
+4. The skill tells the agent to create a diagram JSON object:
 
 ```json
 {
-  "title": "GraphQL",
+  "title": "CAP in Interviews",
   "language": "English",
-  "summary": "One short sentence explaining the core interview idea.",
-  "script": "A 90-120 second senior SDE interview answer in the target language.",
-  "short": "A 30-second version in the target language.",
-  "flows": ["Signal / pain", "When it fits", "Tradeoff", "Decision"]
+  "layout": "decision",
+  "summary": "CAP is a partition-time product decision.",
+  "blocks": [
+    {"id": "partition", "kind": "decision", "title": "Partition happens", "body": "P is not optional."},
+    {"id": "cp", "kind": "option", "title": "Choose CP", "body": "Reject stale reads."},
+    {"id": "ap", "kind": "option", "title": "Choose AP", "body": "Stay online, accept staleness."}
+  ],
+  "connectors": [
+    {"from": "partition", "to": "cp", "label": "wrong data is costly"},
+    {"from": "partition", "to": "ap", "label": "downtime is costly"}
+  ],
+  "talk_track": "In an interview, ask which failure mode the product can tolerate."
 }
 ```
 

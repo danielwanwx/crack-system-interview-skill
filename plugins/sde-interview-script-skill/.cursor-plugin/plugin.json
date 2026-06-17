@@ -1,8 +1,8 @@
 {
   "name": "sde-interview-script-skill",
-  "displayName": "SDE Interview Script",
-  "version": "0.4.0",
-  "description": "Generate language-selectable Excalidraw-style script cards from pasted text, with a short card skill.",
+  "displayName": "Script Card",
+  "version": "0.5.0",
+  "description": "Generate diagram-first Excalidraw visuals from pasted text, with a short card skill.",
   "author": {
     "name": "Daniel Wan"
   },

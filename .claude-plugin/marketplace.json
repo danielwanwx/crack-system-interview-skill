@@ -3,13 +3,13 @@
   "owner": {
     "name": "Daniel Wan"
   },
-  "description": "Language-selectable script cards rendered as Excalidraw-style visuals.",
+  "description": "Diagram-first script cards rendered as Excalidraw-style visuals.",
   "plugins": [
     {
       "name": "sde-interview-script-skill",
       "source": "./plugins/sde-interview-script-skill",
-      "description": "Turn pasted text into concise language-selectable speaking scripts embedded in Excalidraw visuals.",
-      "version": "0.4.0",
+      "description": "Turn pasted text into diagram-first language-selectable Excalidraw visuals.",
+      "version": "0.5.0",
       "author": {
         "name": "Daniel Wan"
       },

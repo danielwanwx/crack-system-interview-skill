@@ -1,4 +1,4 @@
 interface:
   display_name: "Card"
-  short_description: "Turn text into Excalidraw script cards"
-  default_prompt: "Use $card to turn this text into an Excalidraw-style preview image and link only. Default to English unless I specify another language."
+  short_description: "Turn text into diagram-first Excalidraw cards"
+  default_prompt: "Use $card to turn this text into a diagram-first Excalidraw visual and link only. Default to English unless I specify another language."

@@ -4,13 +4,13 @@
     "name": "Daniel Wan"
   },
   "metadata": {
-    "description": "Language-selectable script cards rendered as Excalidraw-style visuals with preview images and editable links."
+    "description": "Diagram-first script cards rendered as Excalidraw-style visuals with preview images and editable links."
   },
   "plugins": [
     {
       "name": "sde-interview-script-skill",
       "source": "plugins/sde-interview-script-skill",
-      "description": "Turn pasted text into concise language-selectable speaking scripts embedded in Excalidraw visuals."
+      "description": "Turn pasted text into diagram-first language-selectable Excalidraw visuals."
     }
   ]
 }

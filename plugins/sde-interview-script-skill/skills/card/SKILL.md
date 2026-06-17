@@ -1,15 +1,15 @@
 ---
 name: card
-description: "Turn any pasted text, article excerpt, study note, interview topic, system design/API note, or explanation request into a concise speakable script embedded in an Excalidraw-style visual card, with image-and-link-only replies by default. Use when the user says use $card, make a card, draw an Excalidraw card, create a script card, summarize this into a visual note, prepare an interview answer, or wants a short explainable version of arbitrary text."
+description: "Turn pasted text, article excerpts, study notes, interview topics, system design/API notes, or explanation requests into diagram-first Excalidraw visuals with concise embedded talk tracks. Use when the user says use $card, make a card, draw an Excalidraw card, create a visual explanation, summarize this into a visual note, prepare an interview answer, or wants a short explainable version of arbitrary text. Prefer dynamic diagrams, decision trees, comparisons, pipelines, concept maps, architecture-style blocks, and callouts over long article-like script blocks."
 ---
 
 # Card
 
 ## Goal
 
-Turn the user's text into a clean Excalidraw-style script card. The card should contain the actual explanation, not empty boxes. Default to English unless the user specifies Chinese or another language.
+Create an Excalidraw-style visual explanation, not a rewritten article. The diagram should help the user understand the idea by showing structure, decisions, contrasts, flow, causality, and tradeoffs. Keep the speakable script as a small support layer inside the visual.
 
-Use this skill for general text too. If the user asks for SDE, system design, API design, or interview prep, frame the answer as a senior SDE interview response. Otherwise, frame it as a clear teachable explanation or talk track.
+Default to English unless the user specifies Chinese or another language.
 
 ## Output Contract
 
@@ -20,32 +20,94 @@ Default chat response:
 
 Do not paste the script text outside the image unless the user asks for copyable text.
 
+## Diagram-First Rule
+
+Avoid the old pattern of `summary + long script + four boxes + short version`. That feels like moving an article into a card.
+
+Instead:
+
+- Make the visual structure the main explanation.
+- Use multiple small blocks, each with one solid idea.
+- Put reasoning on arrows when the transition matters.
+- Use callouts for gotchas, caveats, interviewer signals, and production implications.
+- Keep the final talk track short, usually 3-5 lines.
+- Prefer concrete labels over generic labels like "Core idea" or "Tradeoff".
+
+## Choose A Layout
+
+Pick the layout that fits the source:
+
+- `decision`: for "should we choose A or B?", interview tradeoffs, CAP, consistency vs availability.
+- `comparison`: for CP vs AP, REST vs GraphQL, offset vs cursor, Redis vs DB.
+- `pipeline`: for request flows, async processing, replication, CDC, queues.
+- `architecture`: for services, data stores, caches, clients, and system boundaries.
+- `concept-map`: for explaining one concept through surrounding causes, examples, caveats, and implications.
+- `auto`: only when none of the above clearly fits.
+
+Use manual `x`, `y`, `width`, and `height` when a custom layout would explain the idea better. Coordinates are pixels on a roughly `1760px` wide canvas. Prefer fewer clean arrows over dense crossing arrows; use callouts for side notes.
+
 ## Content Shape
 
-Create one compact JSON object:
+Create a compact JSON object for the renderer:
 
 ```json
 {
-  "title": "Short title",
+  "title": "CAP in Interviews",
   "language": "English",
-  "summary": "One short sentence explaining the core idea.",
-  "script": "A concise speakable explanation in the target language, usually 2 short paragraphs.",
-  "short": "A 30-second version in the target language, max 2 sentences.",
-  "flows": [
-    "Signal / context",
-    "Core idea",
-    "Tradeoff / caveat",
-    "Takeaway"
-  ]
+  "layout": "decision",
+  "summary": "CAP is a partition-time product decision: stale data or failed requests.",
+  "blocks": [
+    {
+      "id": "partition",
+      "kind": "decision",
+      "title": "Partition happens",
+      "body": "P is not optional in real distributed systems."
+    },
+    {
+      "id": "cp",
+      "kind": "option",
+      "title": "Choose CP",
+      "body": "Block/fail requests to avoid stale reads."
+    },
+    {
+      "id": "ap",
+      "kind": "option",
+      "title": "Choose AP",
+      "body": "Keep serving, tolerate temporary staleness."
+    }
+  ],
+  "connectors": [
+    {"from": "partition", "to": "cp", "label": "wrong data is expensive"},
+    {"from": "partition", "to": "ap", "label": "downtime is expensive"}
+  ],
+  "callouts": [
+    {
+      "title": "Interview signal",
+      "body": "Do not say pick any two. During a partition, pick C or A."
+    }
+  ],
+  "talk_track": "I would first ask what failure is cheaper for the product: stale data or temporary unavailability."
 }
 ```
 
-Language rules:
+Legacy fields `summary`, `script`, `short`, and `flows` still work, but prefer `blocks`, `connectors`, `callouts`, and `talk_track`.
+
+## Block Guidance
+
+- `kind: decision` renders as a diamond.
+- `kind: option`, `concept`, `step`, `system`, or `data` renders as a blue outlined block.
+- `kind: caveat`, `warning`, or `risk` renders as a warning callout.
+- `kind: note`, `example`, or `talk_track` renders as a dark outlined note.
+- `kind: client`, `actor`, or `user` can render as an ellipse in architecture diagrams.
+- Keep each block to 1-3 short lines.
+- Make every block earn its place: no empty labels, no generic filler.
+
+## Language Rules
 
 - Default to English.
-- Use Chinese only when the user writes `Chinese`, `用中文`, or clearly asks for Chinese output.
+- Use Chinese when the user writes `Chinese`, `用中文`, `in chinese`, or clearly asks for Chinese output.
 - Use any other requested language directly.
-- For bilingual output, keep each language short enough to fit the card.
+- For bilingual output, make the diagram mostly structural and keep text short.
 
 ## Rendering
 
@@ -65,15 +127,16 @@ Host-specific delivery:
 ## Visual Style
 
 - White background.
-- Transparent card and flow-box backgrounds.
-- Black/dark strokes for title, summary, script, and 30-second section.
-- Blue strokes/text/arrows only for the decision-flow boxes.
+- Transparent block backgrounds.
+- Blue strokes/text/arrows for main diagram structure.
+- Black/dark strokes for notes and talk track.
+- Red only for real warnings or caveats.
 - Handwritten Excalidraw feel.
 - Generous spacing and readable line breaks.
 
 ## Quality Bar
 
-- Be concise and speakable.
-- Preserve the user's intent instead of covering every detail.
-- Add one practical example or caveat only when it makes the explanation more solid.
+- Make the picture explain the idea before the talk track is read.
+- Convert paragraphs into relationships: choices, causes, consequences, examples, and failure modes.
 - For technical interview content, show senior judgment through tradeoffs, production implications, and boundary conditions.
+- If the output still looks like a long essay with a small flowchart, revise the JSON before rendering.

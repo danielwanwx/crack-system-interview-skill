@@ -1,7 +1,7 @@
 {
   "name": "sde-interview-script-skill",
-  "version": "0.4.0",
-  "description": "Generate language-selectable Excalidraw-style script cards from pasted text, with a short $card entrypoint.",
+  "version": "0.5.0",
+  "description": "Generate diagram-first Excalidraw visuals from pasted text, with a short $card entrypoint.",
   "author": {
     "name": "Daniel Wan",
     "url": "https://github.com/danielwanwx"
@@ -20,20 +20,21 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Script Card",
-    "shortDescription": "Text to Excalidraw cards.",
-    "longDescription": "Turn pasted text into English-default or user-selected-language speakable scripts embedded in handwritten Excalidraw-style boards. Use the short $card skill for general text, or the SDE preset for interview prep.",
+    "shortDescription": "Text to diagram-first Excalidraw cards.",
+    "longDescription": "Turn pasted text into English-default or user-selected-language diagram-first Excalidraw visuals with concise embedded talk tracks. Use the short $card skill for general text, or the SDE preset for interview prep.",
     "developerName": "Daniel Wan",
     "category": "Productivity",
     "capabilities": [
       "Multilingual",
       "Excalidraw",
       "Interview Prep",
-      "Study Notes"
+      "Study Notes",
+      "Diagramming"
     ],
     "defaultPrompt": [
-      "Use $card to turn this text into an Excalidraw-style preview image and link only.",
+      "Use $card to turn this text into a diagram-first Excalidraw visual and link only.",
       "Use $card in Chinese.",
-      "Draw an Excalidraw card with a blue decision flow."
+      "Draw a decision tree or comparison map instead of a long script block."
     ],
     "brandColor": "#2563EB"
   },
