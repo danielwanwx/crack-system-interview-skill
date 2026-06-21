@@ -76,6 +76,60 @@ def element_bounds(element: dict[str, Any]) -> tuple[float, float, float, float]
     return None
 
 
+def arrow_points(element: dict[str, Any]) -> list[list[float]]:
+    x = float(element.get("x", 0))
+    y = float(element.get("y", 0))
+    points = element.get("points") or [[0, 0], [element.get("width", 0), element.get("height", 0)]]
+    return [[x + float(point[0]), y + float(point[1])] for point in points]
+
+
+def shrink_bounds(
+    bounds: tuple[float, float, float, float],
+    amount: float,
+) -> tuple[float, float, float, float]:
+    left, top, right, bottom = bounds
+    return left + amount, top + amount, right - amount, bottom - amount
+
+
+def segment_intersects_bounds(
+    p1: list[float],
+    p2: list[float],
+    bounds: tuple[float, float, float, float],
+) -> bool:
+    left, top, right, bottom = bounds
+    x1, y1 = p1
+    x2, y2 = p2
+    if right <= left or bottom <= top:
+        return False
+    if abs(y1 - y2) < 0.001:
+        seg_left, seg_right = sorted((x1, x2))
+        return top <= y1 <= bottom and max(seg_left, left) <= min(seg_right, right)
+    if abs(x1 - x2) < 0.001:
+        seg_top, seg_bottom = sorted((y1, y2))
+        return left <= x1 <= right and max(seg_top, top) <= min(seg_bottom, bottom)
+    return False
+
+
+def bounds_overlap(
+    a: tuple[float, float, float, float],
+    b: tuple[float, float, float, float],
+) -> bool:
+    return max(a[0], b[0]) <= min(a[2], b[2]) and max(a[1], b[1]) <= min(a[3], b[3])
+
+
+def contained_in(
+    inner: tuple[float, float, float, float],
+    outer: tuple[float, float, float, float],
+    tolerance: float = 4,
+) -> bool:
+    return (
+        inner[0] >= outer[0] - tolerance
+        and inner[1] >= outer[1] - tolerance
+        and inner[2] <= outer[2] + tolerance
+        and inner[3] <= outer[3] + tolerance
+    )
+
+
 def non_space_len(value: str) -> int:
     return len(re.sub(r"\s+", "", value))
 
@@ -148,15 +202,28 @@ def validate_scene(
     scene = load_json(excalidraw_path)
     width, height = svg_size(preview_path)
     counts: dict[str, int] = {}
+    block_bounds: dict[str, tuple[float, float, float, float]] = {}
+    text_images: list[tuple[str, tuple[float, float, float, float], dict[str, Any]]] = []
+    connector_arrows: list[dict[str, Any]] = []
     for element in scene.get("elements", []):
         element_type = str(element.get("type"))
         counts[element_type] = counts.get(element_type, 0) + 1
+        custom = element.get("customData") or {}
+        if custom.get("role") == "block":
+            bounds = element_bounds(element)
+            if bounds:
+                block_bounds[str(custom.get("blockId"))] = bounds
+        if custom.get("role") == "connector":
+            connector_arrows.append(element)
         if element_type == "image":
-            key = str((element.get("customData") or {}).get("key") or element.get("fileId") or "")
+            key = str(custom.get("key") or element.get("fileId") or "")
             if key.startswith(("icon", "wb_icon")):
                 raise AssertionError(
                     f"{case_path.name}: component icons should not render by default: {key}",
                 )
+            bounds = element_bounds(element)
+            if bounds:
+                text_images.append((key, bounds, custom))
         bounds = element_bounds(element)
         if not bounds:
             continue
@@ -166,6 +233,46 @@ def validate_scene(
                 f"{case_path.name}: {element_type} element {element.get('id')} "
                 f"falls outside canvas {width}x{height}: {bounds}",
             )
+
+    for key, bounds, custom in text_images:
+        parent_id = ""
+        if key.startswith("wb_block_"):
+            parent_id = key.removeprefix("wb_block_")
+        elif key.startswith("block"):
+            candidate = key.removeprefix("block")
+            if candidate in block_bounds:
+                parent_id = candidate
+        if parent_id and parent_id in block_bounds and not contained_in(bounds, block_bounds[parent_id]):
+            raise AssertionError(
+                f"{case_path.name}: text image {key} exceeds parent block {parent_id}: "
+                f"text={bounds}, block={block_bounds[parent_id]}",
+            )
+        if key.startswith(("connector", "wb_connector_")):
+            src = str(custom.get("from") or "")
+            dst = str(custom.get("to") or "")
+            for block_id, block in block_bounds.items():
+                if block_id in {src, dst}:
+                    continue
+                if bounds_overlap(shrink_bounds(block, 4), bounds):
+                    raise AssertionError(
+                        f"{case_path.name}: connector label {key} overlaps block {block_id}: "
+                        f"label={bounds}, block={block}",
+                    )
+
+    for arrow_element in connector_arrows:
+        custom = arrow_element.get("customData") or {}
+        src = str(custom.get("from") or "")
+        dst = str(custom.get("to") or "")
+        points = arrow_points(arrow_element)
+        for index in range(len(points) - 1):
+            for block_id, bounds in block_bounds.items():
+                if block_id in {src, dst}:
+                    continue
+                if segment_intersects_bounds(points[index], points[index + 1], shrink_bounds(bounds, 6)):
+                    raise AssertionError(
+                        f"{case_path.name}: connector {src}->{dst} crosses block {block_id}: "
+                        f"segment={points[index]}->{points[index + 1]}, block={bounds}",
+                    )
 
     if counts.get("diamond", 0):
         raise AssertionError(f"{case_path.name}: diamond shapes are disabled for this style")

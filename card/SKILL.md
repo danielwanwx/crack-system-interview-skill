@@ -90,6 +90,18 @@ Pick the layout that fits the source:
 
 Use manual `x`, `y`, `width`, and `height` when a custom layout would explain the idea better. Coordinates are pixels on a roughly `1760px` wide canvas. Prefer fewer clean arrows over dense crossing arrows; use callouts for side notes.
 
+## Excalidraw+ Alignment
+
+Treat the Excalidraw+ docs as the visual source of truth: diagrams should be native scene content, not screenshots of an article. The renderer creates native block and connector elements and attaches semantic metadata so it can route and validate the scene.
+
+Hard visual rules:
+
+- Text must fit inside its parent block. If content is important, increase the block height instead of letting text escape.
+- Arrows and connector lines must not pass through unrelated blocks. Move blocks or let the renderer route around obstacles.
+- Connector labels should sit beside lines and avoid blocks; keep labels short.
+- Prefer clean block placement over manual point hacks. Use explicit `points` only when a custom route is truly clearer.
+- Decorative vector icons are opt-in only with `show_icon: true`.
+
 ## Content Shape
 
 Create a compact JSON object for the renderer:
@@ -184,6 +196,7 @@ Host-specific delivery:
 - Rows should use the available width and align cleanly at the left/right edges when possible.
 - Left-align block body text by default; center only titles or tiny actor/client nodes when it improves scanning.
 - Readable line breaks: prefer sentence-level lines over phrase fragments.
+- Never accept a rendered scene where text escapes a block or an arrow crosses through a block.
 
 ## Quality Bar
 

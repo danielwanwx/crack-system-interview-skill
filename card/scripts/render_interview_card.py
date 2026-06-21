@@ -644,6 +644,15 @@ def plus_text_color(block: dict[str, Any]) -> str:
     return str(block.get("textColor") or block.get("text_color") or PLUS_STROKE)
 
 
+def fit_text_y(y: float, height: float, text_height: float, preferred_padding: float = 18) -> float:
+    free_space = height - text_height
+    if free_space <= 0:
+        return y
+    if free_space < preferred_padding * 2:
+        return y + free_space / 2
+    return y + max(preferred_padding, free_space / 2)
+
+
 def plus_icon_name(block: dict[str, Any]) -> str:
     show_icon = any(
         bool(block.get(key))
@@ -888,6 +897,215 @@ def orthogonal_points(
     return [[x1, y1], [x1, mid_y], [x2, mid_y], [x2, y2]]
 
 
+def inflated_rect(
+    rect: tuple[float, float, float, float],
+    padding: float,
+) -> tuple[float, float, float, float]:
+    x, y, w, h = rect
+    return x - padding, y - padding, w + padding * 2, h + padding * 2
+
+
+def segment_intersects_rect(
+    p1: list[float],
+    p2: list[float],
+    rect: tuple[float, float, float, float],
+) -> bool:
+    x, y, w, h = rect
+    left, right = sorted((x, x + w))
+    top, bottom = sorted((y, y + h))
+    x1, y1 = p1
+    x2, y2 = p2
+    if abs(y1 - y2) < 0.001:
+        seg_left, seg_right = sorted((x1, x2))
+        return top <= y1 <= bottom and max(seg_left, left) <= min(seg_right, right)
+    if abs(x1 - x2) < 0.001:
+        seg_top, seg_bottom = sorted((y1, y2))
+        return left <= x1 <= right and max(seg_top, top) <= min(seg_bottom, bottom)
+    return False
+
+
+def segment_clear(
+    p1: list[float],
+    p2: list[float],
+    obstacles: list[tuple[float, float, float, float]],
+) -> bool:
+    return not any(segment_intersects_rect(p1, p2, obstacle) for obstacle in obstacles)
+
+
+def rects_overlap(
+    a: tuple[float, float, float, float],
+    b: tuple[float, float, float, float],
+) -> bool:
+    ax, ay, aw, ah = a
+    bx, by, bw, bh = b
+    return max(ax, bx) <= min(ax + aw, bx + bw) and max(ay, by) <= min(ay + ah, by + bh)
+
+
+def route_around_obstacles(
+    src: tuple[float, float, float, float],
+    dst: tuple[float, float, float, float],
+    obstacles: list[tuple[float, float, float, float]],
+    routing: str = "auto",
+    canvas_width: float = 1500,
+) -> list[list[float]]:
+    base = orthogonal_points(src, dst, routing)
+    if all(segment_clear(base[index], base[index + 1], obstacles) for index in range(len(base) - 1)):
+        return base
+
+    start = base[0]
+    end = base[-1]
+    xs = {round(start[0], 1), round(end[0], 1), 40.0, round(canvas_width - 40, 1)}
+    ys = {round(start[1], 1), round(end[1], 1)}
+    for x, y, w, h in obstacles:
+        xs.update({round(x, 1), round(x + w, 1), round(x - 36, 1), round(x + w + 36, 1)})
+        ys.update({round(y, 1), round(y + h, 1), round(y - 36, 1), round(y + h + 36, 1)})
+    xs = {x for x in xs if -80 <= x <= canvas_width + 80}
+
+    points = [(x, y) for x in xs for y in ys]
+    start_t = (round(start[0], 1), round(start[1], 1))
+    end_t = (round(end[0], 1), round(end[1], 1))
+    if start_t not in points:
+        points.append(start_t)
+    if end_t not in points:
+        points.append(end_t)
+
+    graph: dict[tuple[float, float], list[tuple[float, tuple[float, float]]]] = {point: [] for point in points}
+    by_x: dict[float, list[tuple[float, float]]] = {}
+    by_y: dict[float, list[tuple[float, float]]] = {}
+    for point in points:
+        by_x.setdefault(point[0], []).append(point)
+        by_y.setdefault(point[1], []).append(point)
+
+    def add_axis_edges(axis_points: list[tuple[float, float]]) -> None:
+        for a_index, a in enumerate(axis_points):
+            for b in axis_points[a_index + 1 :]:
+                if a[0] != b[0] and a[1] != b[1]:
+                    continue
+                pa = [a[0], a[1]]
+                pb = [b[0], b[1]]
+                if segment_clear(pa, pb, obstacles):
+                    distance = abs(a[0] - b[0]) + abs(a[1] - b[1])
+                    graph[a].append((distance, b))
+                    graph[b].append((distance, a))
+
+    for axis_points in by_x.values():
+        add_axis_edges(sorted(axis_points, key=lambda point: point[1]))
+    for axis_points in by_y.values():
+        add_axis_edges(sorted(axis_points, key=lambda point: point[0]))
+
+    import heapq
+
+    queue: list[tuple[float, int, tuple[float, float], Any]] = []
+    heapq.heappush(queue, (0.0, 0, start_t, None))
+    best: dict[tuple[float, float], float] = {start_t: 0.0}
+    previous: dict[tuple[float, float], Any] = {start_t: None}
+
+    while queue:
+        cost, bends, current, incoming_dir = heapq.heappop(queue)
+        if current == end_t:
+            break
+        if cost > best.get(current, float("inf")) + 0.001:
+            continue
+        for distance, neighbor in graph[current]:
+            direction = (
+                0 if abs(neighbor[0] - current[0]) < 0.001 else 1,
+                0 if abs(neighbor[1] - current[1]) < 0.001 else 1,
+            )
+            bend_penalty = 80 if incoming_dir is not None and direction != incoming_dir else 0
+            new_cost = cost + distance + bend_penalty
+            if new_cost + 0.001 < best.get(neighbor, float("inf")):
+                best[neighbor] = new_cost
+                previous[neighbor] = current
+                heapq.heappush(queue, (new_cost, bends + (1 if bend_penalty else 0), neighbor, direction))
+
+    if end_t not in previous:
+        return base
+
+    route: list[tuple[float, float]] = []
+    cursor: Any = end_t
+    while cursor is not None:
+        route.append(cursor)
+        cursor = previous.get(cursor)
+    route.reverse()
+
+    simplified: list[list[float]] = []
+    for point in route:
+        item = [float(point[0]), float(point[1])]
+        if len(simplified) >= 2:
+            prev = simplified[-1]
+            prev_prev = simplified[-2]
+            if (abs(prev_prev[0] - prev[0]) < 0.001 and abs(prev[0] - item[0]) < 0.001) or (
+                abs(prev_prev[1] - prev[1]) < 0.001 and abs(prev[1] - item[1]) < 0.001
+            ):
+                simplified[-1] = item
+                continue
+        simplified.append(item)
+    return simplified
+
+
+def route_connector_points(
+    src_id: str,
+    dst_id: str,
+    positions: dict[str, tuple[float, float, float, float]],
+    routing: str,
+    canvas_width: float,
+) -> list[list[float]]:
+    obstacles = [
+        inflated_rect(pos, 18)
+        for block_id, pos in positions.items()
+        if block_id not in {src_id, dst_id}
+    ]
+    return route_around_obstacles(positions[src_id], positions[dst_id], obstacles, routing, canvas_width)
+
+
+def label_bounds(x: float, y: float, block: dict[str, Any]) -> tuple[float, float, float, float]:
+    return x, y, float(block["width"]), float(block["height"])
+
+
+def choose_label_position(
+    points: list[list[float]],
+    label_block: dict[str, Any],
+    obstacles: list[tuple[float, float, float, float]],
+    canvas_width: float,
+    dx: float = 0,
+    dy: float = 0,
+) -> tuple[float, float]:
+    candidates: list[tuple[float, float]] = []
+    for index in range(len(points) - 1):
+        x1, y1 = points[index]
+        x2, y2 = points[index + 1]
+        mid_x = (x1 + x2) / 2
+        mid_y = (y1 + y2) / 2
+        if abs(y1 - y2) < 0.001:
+            candidates.extend(
+                [
+                    (mid_x - label_block["width"] / 2, mid_y - label_block["height"] - 12),
+                    (mid_x - label_block["width"] / 2, mid_y + 12),
+                ],
+            )
+        else:
+            candidates.extend(
+                [
+                    (mid_x + 12, mid_y - label_block["height"] / 2),
+                    (mid_x - label_block["width"] - 12, mid_y - label_block["height"] / 2),
+                ],
+            )
+    mid = points[len(points) // 2]
+    candidates.append((mid[0] - label_block["width"] / 2, mid[1] - label_block["height"] / 2))
+
+    inflated = [inflated_rect(obstacle, 8) for obstacle in obstacles]
+    for x, y in candidates:
+        x += dx
+        y += dy
+        bounds = label_bounds(x, y, label_block)
+        if x < 10 or x + label_block["width"] > canvas_width - 10:
+            continue
+        if not any(rects_overlap(bounds, obstacle) for obstacle in inflated):
+            return x, y
+    x, y = candidates[-1]
+    return x + dx, y + dy
+
+
 def centered_right_angle_points(
     src: tuple[float, float, float, float],
     dst: tuple[float, float, float, float],
@@ -1024,27 +1242,27 @@ def add_whiteboard_block(
     shape = str(block.get("shape") or "").lower()
     kind = block_kind(block)
     if shape in {"circle", "ellipse", "oval"} or kind in {"client", "actor", "user"}:
-        elements.append(ellipse(rng, x, y, w, h, plus_block_stroke(block), 2, now, background=plus_block_fill(block, index)))
+        shape_element = ellipse(rng, x, y, w, h, plus_block_stroke(block), 2, now, background=plus_block_fill(block, index))
     else:
         if shape == "square":
             size = min(w, h)
             x += (w - size) / 2
             y += (h - size) / 2
             w = h = size
-        elements.append(
-            rectangle(
-                rng,
-                x,
-                y,
-                w,
-                h,
-                plus_block_stroke(block),
-                int(block.get("strokeWidth") or 2),
-                now,
-                background=plus_block_fill(block, index),
-                stroke_style=str(block.get("strokeStyle") or block.get("stroke_style") or "solid"),
-            ),
+        shape_element = rectangle(
+            rng,
+            x,
+            y,
+            w,
+            h,
+            plus_block_stroke(block),
+            int(block.get("strokeWidth") or 2),
+            now,
+            background=plus_block_fill(block, index),
+            stroke_style=str(block.get("strokeStyle") or block.get("stroke_style") or "solid"),
         )
+    shape_element["customData"] = {"role": "block", "blockId": str(block["id"])}
+    elements.append(shape_element)
 
     icon_name = plus_icon_name(block)
     icon_space = 92 if icon_name and w > 260 else 0
@@ -1062,7 +1280,7 @@ def add_whiteboard_block(
     )
     key = f"wb_block_{block['id']}"
     blocks_svg[key] = text_block
-    text_y = y + max(18, (h - text_block["height"]) / 2)
+    text_y = fit_text_y(y, h, text_block["height"])
     align = str(block.get("align") or "left").lower()
     if icon_space:
         text_x = x + icon_space + (w - icon_space - text_block["width"]) / 2
@@ -1393,28 +1611,58 @@ def build_whiteboard_scene(content: dict[str, Any], slug: str) -> tuple[dict[str
             if str(connector.get("routing") or "").lower() in {"centered", "center", "decision"}:
                 points = centered_right_angle_points(positions[src], positions[dst])
             else:
-                points = orthogonal_points(positions[src], positions[dst], str(connector.get("routing") or "auto"))
+                points = route_connector_points(
+                    src,
+                    dst,
+                    positions,
+                    str(connector.get("routing") or "auto"),
+                    canvas_width,
+                )
         else:
             continue
-        elements.append(routed_arrow(rng, points, now, stroke=str(connector.get("stroke") or PLUS_STROKE), stroke_width=int(connector.get("strokeWidth") or 2)))
+        if src in positions and dst in positions and not connector.get("preserve_points"):
+            connector_obstacles = [
+                inflated_rect(pos, 18)
+                for block_id, pos in positions.items()
+                if block_id not in {src, dst}
+            ]
+            if any(
+                not segment_clear(points[point_index], points[point_index + 1], connector_obstacles)
+                for point_index in range(len(points) - 1)
+            ):
+                points = route_connector_points(
+                    src,
+                    dst,
+                    positions,
+                    str(connector.get("routing") or "auto"),
+                    canvas_width,
+                )
+        connector_element = routed_arrow(rng, points, now, stroke=str(connector.get("stroke") or PLUS_STROKE), stroke_width=int(connector.get("strokeWidth") or 2))
+        connector_element["customData"] = {"role": "connector", "from": src, "to": dst}
+        elements.append(connector_element)
         label = str(connector.get("label") or "")
         if label:
             label_block = text_block_svg(label, 17, 230, PLUS_STROKE, 6, 8, DIAGRAM_FONT, align="center")
             label_key = f"wb_connector_{index}"
             blocks_svg[label_key] = label_block
-            mid = points[len(points) // 2]
             label_dx = dimension(connector.get("label_dx") or connector.get("labelDx"), 0, canvas_width)
             label_dy = dimension(connector.get("label_dy") or connector.get("labelDy"), 0, 1600)
+            label_obstacles = [
+                inflated_rect(pos, 8)
+                for pos in positions.values()
+            ]
+            label_x, label_y = choose_label_position(points, label_block, label_obstacles, canvas_width, label_dx, label_dy)
             add_image_block(
                 elements,
                 files,
                 rng,
                 label_key,
                 label_block,
-                mid[0] - label_block["width"] / 2 + label_dx,
-                mid[1] - label_block["height"] / 2 + label_dy,
+                label_x,
+                label_y,
                 now,
             )
+            elements[-1]["customData"].update({"role": "connector_label", "from": src, "to": dst})
 
     max_y = max((y + h for x, y, w, h in positions.values()), default=y_cursor)
     callouts = list(content.get("callouts") or [])
@@ -1601,37 +1849,37 @@ def build_diagram_scene(
         text_area_x = x
         text_area_w = w
         if shape == "diamond":
-            elements.append(diamond(rng, x, y, w, h, stroke, stroke_width, now, background=fill))
+            shape_element = diamond(rng, x, y, w, h, stroke, stroke_width, now, background=fill)
             text_w = int(max(160, w * 0.62))
             text_x = x + (w - text_w) / 2
             text_y = y + h * 0.22
         elif shape == "ellipse":
-            elements.append(ellipse(rng, x, y, w, h, stroke, stroke_width, now, background=fill))
+            shape_element = ellipse(rng, x, y, w, h, stroke, stroke_width, now, background=fill)
             text_area_x = x + (96 if reserve_icon_space else 0)
             text_area_w = w - (116 if reserve_icon_space else 0)
             text_w = int(max(160, text_area_w * 0.68))
             text_x = text_area_x + (text_area_w - text_w) / 2
             text_y = y + h * 0.24
         else:
-            elements.append(
-                rectangle(
-                    rng,
-                    x,
-                    y,
-                    w,
-                    h,
-                    stroke,
-                    stroke_width,
-                    now,
-                    background=fill,
-                    stroke_style=stroke_style,
-                ),
+            shape_element = rectangle(
+                rng,
+                x,
+                y,
+                w,
+                h,
+                stroke,
+                stroke_width,
+                now,
+                background=fill,
+                stroke_style=stroke_style,
             )
             text_area_x = x + (118 if reserve_icon_space else 24)
             text_area_w = w - (148 if reserve_icon_space else 48)
             text_w = int(max(180, text_area_w))
             text_x = text_area_x + ((text_area_w - text_w) / 2 if align == "center" else 0)
             text_y = y + 28
+        shape_element["customData"] = {"role": "block", "blockId": block_id}
+        elements.append(shape_element)
         key = f"block{block_id}"
         blocks_svg[key] = rich_text_block_svg(
             str(block.get("title") or ""),
@@ -1649,7 +1897,7 @@ def build_diagram_scene(
             else:
                 text_x = x + (w - blocks_svg[key]["width"]) / 2
         if valign == "center":
-            text_y = y + max(18, (h - blocks_svg[key]["height"]) / 2)
+            text_y = fit_text_y(y, h, blocks_svg[key]["height"])
         add_image_block(elements, files, rng, key, blocks_svg[key], text_x, text_y, now)
 
         if plus_style and icon_name:
@@ -1686,7 +1934,32 @@ def build_diagram_scene(
             ]
             if len(points) < 2:
                 continue
-            elements.append(routed_arrow(rng, points, now, stroke=connector_stroke, stroke_width=connector_width))
+            src = str(connector.get("from") or connector.get("source") or "")
+            dst = str(connector.get("to") or connector.get("target") or "")
+            if src in positions and dst in positions and not connector.get("preserve_points"):
+                connector_obstacles = [
+                    inflated_rect(pos, 18)
+                    for block_id, pos in positions.items()
+                    if block_id not in {src, dst}
+                ]
+                if any(
+                    not segment_clear(points[point_index], points[point_index + 1], connector_obstacles)
+                    for point_index in range(len(points) - 1)
+                ):
+                    points = route_connector_points(
+                        src,
+                        dst,
+                        positions,
+                        str(connector.get("routing") or "auto"),
+                        canvas_width,
+                    )
+            connector_element = routed_arrow(rng, points, now, stroke=connector_stroke, stroke_width=connector_width)
+            connector_element["customData"] = {
+                "role": "connector",
+                "from": src,
+                "to": dst,
+            }
+            elements.append(connector_element)
             label = str(connector.get("label") or "")
             if label:
                 key = f"connector{index}"
@@ -1700,30 +1973,45 @@ def build_diagram_scene(
                     DIAGRAM_FONT if plus_style else HANDWRITING_FONT,
                     align="center",
                 )
-                mid = points[len(points) // 2]
+                label_obstacles = [
+                    inflated_rect(pos, 8)
+                    for pos in positions.values()
+                ]
+                label_x, label_y = choose_label_position(points, blocks_svg[key], label_obstacles, canvas_width)
                 add_image_block(
                     elements,
                     files,
                     rng,
                     key,
                     blocks_svg[key],
-                    mid[0] - blocks_svg[key]["width"] / 2,
-                    mid[1] - 38,
+                    label_x,
+                    label_y,
                     now,
                 )
+                elements[-1]["customData"].update({"role": "connector_label", "from": src, "to": dst})
             continue
         src = str(connector.get("from") or connector.get("source") or "")
         dst = str(connector.get("to") or connector.get("target") or "")
         if src not in positions or dst not in positions:
             continue
         if plus_style or str(connector.get("routing") or "").lower() in {"orthogonal", "right-angle", "right_angle"}:
-            points = orthogonal_points(positions[src], positions[dst])
-            elements.append(routed_arrow(rng, points, now, stroke=connector_stroke, stroke_width=connector_width))
+            points = route_connector_points(
+                src,
+                dst,
+                positions,
+                str(connector.get("routing") or "auto"),
+                canvas_width,
+            )
+            connector_element = routed_arrow(rng, points, now, stroke=connector_stroke, stroke_width=connector_width)
+            connector_element["customData"] = {"role": "connector", "from": src, "to": dst}
+            elements.append(connector_element)
             label_x = sum(point[0] for point in points) / len(points)
             label_y = sum(point[1] for point in points) / len(points)
         else:
             x1, y1, x2, y2 = connector_points(positions[src], positions[dst])
-            elements.append(arrow(rng, x1, y1, x2, y2, now, stroke=connector_stroke, stroke_width=connector_width))
+            connector_element = arrow(rng, x1, y1, x2, y2, now, stroke=connector_stroke, stroke_width=connector_width)
+            connector_element["customData"] = {"role": "connector", "from": src, "to": dst}
+            elements.append(connector_element)
             label_x = (x1 + x2) / 2
             label_y = (y1 + y2) / 2
         label = str(connector.get("label") or "")
@@ -1739,16 +2027,22 @@ def build_diagram_scene(
                 DIAGRAM_FONT if plus_style else HANDWRITING_FONT,
                 align="center",
             )
+            label_obstacles = [
+                inflated_rect(pos, 8)
+                for pos in positions.values()
+            ]
+            label_x, label_y = choose_label_position(points if plus_style else [[label_x, label_y], [label_x, label_y]], blocks_svg[key], label_obstacles, canvas_width)
             add_image_block(
                 elements,
                 files,
                 rng,
                 key,
                 blocks_svg[key],
-                label_x - blocks_svg[key]["width"] / 2,
-                label_y - 38,
+                label_x,
+                label_y,
                 now,
             )
+            elements[-1]["customData"].update({"role": "connector_label", "from": src, "to": dst})
 
     max_y = max((y + h for x, y, w, h in positions.values()), default=y_cursor)
     for index, callout in enumerate(content.get("callouts") or []):

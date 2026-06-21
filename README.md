@@ -38,6 +38,8 @@ The generated board explains the material through native blocks, arrows, compari
 
 The content step is intentionally LLM-heavy: the agent should first infer what a strong candidate would understand, then split output into two layers. The board contains professional whiteboard content: design choices, mechanisms, constraints, data flows, and tradeoffs. The `talk_track` contains the candidate-ready wording. Blocks should not be keyword flashcards, but they also should not sound like coaching notes.
 
+The renderer follows the Excalidraw+ docs model as closely as possible while staying offline-compatible: scenes are built from native Excalidraw blocks and connector elements, with semantic metadata for blocks, labels, and arrows. The local renderer does not require the Excalidraw+ MCP, but the same JSON structure can be adapted to MCP `edit_scene_content` flows when a host exposes that tool.
+
 ## Recommended Architecture
 
 The best compatibility model is:
@@ -47,6 +49,13 @@ The best compatibility model is:
 3. **SDE preset skill**: `skills/senior-sde-interview-script/SKILL.md` remains available for users who want the explicit SDE interview workflow.
 4. **Bundled renderer scripts**: the agent writes a small content JSON, then runs `scripts/render_interview_card.py` to generate the preview SVG, `.excalidraw` file, and optional Excalidraw share link.
 5. **Optional MCP**: Excalidraw MCP is declared for hosts that support it, but it is not required for the main flow.
+
+Renderer invariants:
+
+- Text must fit inside its parent block; blocks grow vertically when needed.
+- Connectors leave from block edges and route around unrelated blocks.
+- Connector labels avoid blocks where possible.
+- Decorative icons are opt-in, because they reduce text width and increase overlap risk.
 
 This is deliberately not a `rules` or `CLAUDE.md` package. Rules are too host-specific and passive; plugin + skill packaging gives installable discovery, namespaced invocation, bundled scripts, and optional MCP wiring.
 

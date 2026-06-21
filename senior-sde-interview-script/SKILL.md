@@ -110,6 +110,18 @@ Use manual `x`, `y`, `width`, and `height` when a custom layout would explain th
 
 Avoid decorative component icons by default. They are optional, and in dense interview boards they often reduce text width or cause layout drift. Prefer clean native blocks with strong labels and sentence-level content.
 
+## Excalidraw+ Alignment
+
+Treat the Excalidraw+ docs as the visual source of truth: the board should be native scene content, not article text disguised as a diagram. The renderer creates native block and connector elements and attaches semantic metadata so it can route and validate the scene locally; hosts with Excalidraw+ MCP can adapt the same structure to `edit_scene_content`.
+
+Hard visual rules:
+
+- Text must fit inside its parent block. If content matters, increase block height instead of clipping or spilling text.
+- Arrows and connector lines must not pass through unrelated blocks. Reposition blocks or rely on obstacle-aware routing.
+- Connector labels should be short and placed beside lines without covering blocks.
+- Prefer block movement and right-angle routing over dense crossing arrows.
+- Decorative vector icons are opt-in only with `show_icon: true`.
+
 ## Content Shape
 
 Create a compact JSON object for the bundled renderer:
@@ -198,6 +210,7 @@ Host-specific delivery:
 - Rows should use the available width and align cleanly at the left/right edges when possible.
 - Left-align block body text by default; center only titles or tiny actor/client nodes when it improves scanning.
 - Readable line breaks: prefer sentence-level lines over phrase fragments.
+- Never accept a rendered scene where text escapes a block or an arrow crosses through a block.
 
 ## Quality Bar
 
