@@ -839,6 +839,22 @@ def orthogonal_points(
     return [[x1, y1], [x1, mid_y], [x2, mid_y], [x2, y2]]
 
 
+def centered_right_angle_points(
+    src: tuple[float, float, float, float],
+    dst: tuple[float, float, float, float],
+) -> list[list[float]]:
+    sx, sy, sw, sh = src
+    dx, dy, dw, _ = dst
+    start_x = sx + sw / 2
+    start_y = sy + sh
+    end_x = dx + dw / 2
+    end_y = dy
+    mid_y = start_y + max(36, (end_y - start_y) / 2)
+    if abs(start_x - end_x) < 4:
+        return [[start_x, start_y], [end_x, end_y]]
+    return [[start_x, start_y], [start_x, mid_y], [end_x, mid_y], [end_x, end_y]]
+
+
 def add_top_frame(
     elements: list[dict[str, Any]],
     files: dict[str, Any],
@@ -974,6 +990,26 @@ def whiteboard_positions(
     layout = layout.lower()
     positions: dict[str, tuple[float, float, float, float]] = {}
     margin = 70
+    if layout in {"decision", "decision-tree", "decision_tree"} and blocks:
+        center_w = 520
+        center_h = 165
+        positions[str(blocks[0]["id"])] = (canvas_width / 2 - center_w / 2, top, center_w, center_h)
+        branches = blocks[1:3]
+        branch_w = 460
+        branch_h = 165
+        if len(branches) == 1:
+            positions[str(branches[0]["id"])] = (canvas_width / 2 - branch_w / 2, top + 255, branch_w, branch_h)
+        elif len(branches) >= 2:
+            positions[str(branches[0]["id"])] = (margin, top + 255, branch_w, branch_h)
+            positions[str(branches[1]["id"])] = (canvas_width - margin - branch_w, top + 255, branch_w, branch_h)
+        rest = blocks[3:]
+        for index, block in enumerate(rest):
+            w = 520 if len(rest) == 1 else 420
+            x = (canvas_width - w) / 2 if len(rest) == 1 else margin + (index % 2) * (canvas_width - 2 * margin - w)
+            y = top + 500 + (index // 2) * 210
+            positions[str(block["id"])] = (x, y, w, dimension(block.get("height"), 150, 800))
+        return positions
+
     if layout in {"comparison", "tradeoff", "compare"}:
         left = [block for index, block in enumerate(blocks) if str(block.get("lane") or block.get("side") or ("left" if index % 2 == 0 else "right")).lower() not in {"right", "ap", "availability", "option-b"}]
         right = [block for index, block in enumerate(blocks) if block not in left]
@@ -1155,7 +1191,13 @@ def build_whiteboard_scene(content: dict[str, Any], slug: str) -> tuple[dict[str
 
     connectors = list(content.get("connectors") or [])
     if not connectors and blocks:
-        if layout.lower() in {"comparison", "tradeoff", "compare"}:
+        if layout.lower() in {"decision", "decision-tree", "decision_tree"}:
+            for block in blocks[1:3]:
+                connectors.append({"from": blocks[0]["id"], "to": block["id"], "routing": "centered"})
+            if len(blocks) > 3:
+                for block in blocks[1:3]:
+                    connectors.append({"from": block["id"], "to": blocks[3]["id"], "routing": "centered"})
+        elif layout.lower() in {"comparison", "tradeoff", "compare"}:
             lane_groups: dict[str, list[dict[str, Any]]] = {}
             for index, block in enumerate(blocks):
                 lane = str(block.get("lane") or block.get("side") or ("left" if index % 2 == 0 else "right")).lower()
@@ -1173,7 +1215,10 @@ def build_whiteboard_scene(content: dict[str, Any], slug: str) -> tuple[dict[str
         if connector.get("points"):
             points = [[float(p[0]), float(p[1])] for p in connector["points"] if isinstance(p, list | tuple) and len(p) >= 2]
         elif src in positions and dst in positions:
-            points = orthogonal_points(positions[src], positions[dst])
+            if str(connector.get("routing") or "").lower() in {"centered", "center", "decision"}:
+                points = centered_right_angle_points(positions[src], positions[dst])
+            else:
+                points = orthogonal_points(positions[src], positions[dst])
         else:
             continue
         elements.append(routed_arrow(rng, points, now, stroke=str(connector.get("stroke") or PLUS_STROKE), stroke_width=int(connector.get("strokeWidth") or 2)))
@@ -1817,6 +1862,84 @@ def rounded_rect_points(x: float, y: float, w: float, h: float, r: float) -> lis
     ]
 
 
+def jitter(value: float, rng: random.Random, amount: float = 1.7) -> float:
+    return value + rng.uniform(-amount, amount)
+
+
+def rounded_rect_path(x: float, y: float, w: float, h: float, r: float, seed: str) -> str:
+    rng = rough_rng(seed)
+    r = min(r, w / 2, h / 2)
+    x0, y0, x1, y1 = x, y, x + w, y + h
+    return " ".join(
+        [
+            f"M {jitter(x0 + r, rng):.1f} {jitter(y0, rng):.1f}",
+            f"L {jitter(x1 - r, rng):.1f} {jitter(y0, rng):.1f}",
+            f"Q {jitter(x1, rng):.1f} {jitter(y0, rng):.1f} {jitter(x1, rng):.1f} {jitter(y0 + r, rng):.1f}",
+            f"L {jitter(x1, rng):.1f} {jitter(y1 - r, rng):.1f}",
+            f"Q {jitter(x1, rng):.1f} {jitter(y1, rng):.1f} {jitter(x1 - r, rng):.1f} {jitter(y1, rng):.1f}",
+            f"L {jitter(x0 + r, rng):.1f} {jitter(y1, rng):.1f}",
+            f"Q {jitter(x0, rng):.1f} {jitter(y1, rng):.1f} {jitter(x0, rng):.1f} {jitter(y1 - r, rng):.1f}",
+            f"L {jitter(x0, rng):.1f} {jitter(y0 + r, rng):.1f}",
+            f"Q {jitter(x0, rng):.1f} {jitter(y0, rng):.1f} {jitter(x0 + r, rng):.1f} {jitter(y0, rng):.1f}",
+        ],
+    )
+
+
+def rough_rounded_rect_svg(element: dict[str, Any]) -> str:
+    x = float(element["x"])
+    y = float(element["y"])
+    w = float(element["width"])
+    h = float(element["height"])
+    stroke = element["strokeColor"]
+    stroke_width = float(element.get("strokeWidth") or 2)
+    fill = element.get("backgroundColor") or "transparent"
+    rx = 28 if element.get("roundness") else 0
+    dash = ' stroke-dasharray="8 10"' if element.get("strokeStyle") == "dashed" else ""
+    fill_node = ""
+    if fill not in {"transparent", "none", ""}:
+        fill_node = (
+            f'<rect x="{x:.0f}" y="{y:.0f}" width="{w:.0f}" height="{h:.0f}" '
+            f'rx="{rx}" ry="{rx}" fill="{fill}" opacity="0.92" />'
+        )
+    if element.get("strokeStyle") == "dashed":
+        return (
+            fill_node
+            + f'<rect x="{x:.0f}" y="{y:.0f}" width="{w:.0f}" height="{h:.0f}" '
+            f'rx="{rx}" ry="{rx}" fill="none" stroke="{stroke}" '
+            f'stroke-width="{stroke_width}" stroke-linecap="round"{dash} />'
+        )
+    path_a = rounded_rect_path(x, y, w, h, rx, element["id"] + "a")
+    path_b = rounded_rect_path(x + 0.5, y - 0.3, w - 0.7, h + 0.4, rx, element["id"] + "b")
+    return (
+        fill_node
+        + f'<path d="{path_b}" fill="none" stroke="{stroke}" stroke-width="{max(1.0, stroke_width * 0.8):.1f}" '
+        'stroke-linecap="round" stroke-linejoin="round" opacity="0.42" />'
+        + f'<path d="{path_a}" fill="none" stroke="{stroke}" stroke-width="{stroke_width:.1f}" '
+        'stroke-linecap="round" stroke-linejoin="round" opacity="0.96" />'
+    )
+
+
+def rough_ellipse_svg(element: dict[str, Any]) -> str:
+    x = float(element["x"])
+    y = float(element["y"])
+    w = float(element["width"])
+    h = float(element["height"])
+    cx = x + w / 2
+    cy = y + h / 2
+    rx = w / 2
+    ry = h / 2
+    stroke = element["strokeColor"]
+    stroke_width = float(element.get("strokeWidth") or 2)
+    fill = element.get("backgroundColor") or "transparent"
+    fill_attr = fill if fill not in {"transparent", "none", ""} else "none"
+    return (
+        f'<ellipse cx="{cx:.0f}" cy="{cy:.0f}" rx="{rx:.0f}" ry="{ry:.0f}" fill="{fill_attr}" '
+        f'stroke="{stroke}" stroke-width="{max(1.0, stroke_width * 0.75):.1f}" opacity="0.45" />'
+        f'<ellipse cx="{cx + 1:.0f}" cy="{cy - 1:.0f}" rx="{max(1, rx - 1):.0f}" ry="{max(1, ry + 1):.0f}" fill="none" '
+        f'stroke="{stroke}" stroke-width="{stroke_width:.1f}" />'
+    )
+
+
 def render_preview_svg(scene: dict[str, Any], blocks: dict[str, Any], width: int, height: int) -> str:
     nodes = [
         f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" '
@@ -1825,26 +1948,9 @@ def render_preview_svg(scene: dict[str, Any], blocks: dict[str, Any], width: int
     ]
     for element in scene["elements"]:
         if element["type"] == "rectangle":
-            fill = element.get("backgroundColor") or "transparent"
-            dash = "8 10" if element.get("strokeStyle") == "dashed" else None
-            dash_attr = f' stroke-dasharray="{dash}"' if dash else ""
-            rx = 28 if element.get("roundness") else 0
-            nodes.append(
-                f'<rect x="{element["x"]:.0f}" y="{element["y"]:.0f}" '
-                f'width="{element["width"]:.0f}" height="{element["height"]:.0f}" '
-                f'rx="{rx}" ry="{rx}" '
-                f'fill="{fill if fill not in {"transparent", "none", ""} else "none"}" '
-                f'stroke="{element["strokeColor"]}" stroke-width="{element["strokeWidth"]}"{dash_attr} />',
-            )
+            nodes.append(rough_rounded_rect_svg(element))
         elif element["type"] == "ellipse":
-            fill = element.get("backgroundColor") or "transparent"
-            nodes.append(
-                f'<ellipse cx="{element["x"] + element["width"] / 2:.0f}" '
-                f'cy="{element["y"] + element["height"] / 2:.0f}" '
-                f'rx="{element["width"] / 2:.0f}" ry="{element["height"] / 2:.0f}" '
-                f'fill="{fill if fill not in {"transparent", "none", ""} else "none"}" stroke="{element["strokeColor"]}" '
-                f'stroke-width="{element["strokeWidth"]}" />'
-            )
+            nodes.append(rough_ellipse_svg(element))
         elif element["type"] == "diamond":
             x = element["x"]
             y = element["y"]
@@ -1858,9 +1964,10 @@ def render_preview_svg(scene: dict[str, Any], blocks: dict[str, Any], width: int
             ]
             point_text = " ".join(f"{px:.0f},{py:.0f}" for px, py in points)
             fill = element.get("backgroundColor") or "transparent"
+            if fill not in {"transparent", "none", ""}:
+                nodes.append(f'<polygon points="{point_text}" fill="{fill}" opacity="0.92" />')
             nodes.append(
-                f'<polygon points="{point_text}" fill="{fill if fill not in {"transparent", "none", ""} else "none"}" stroke="{element["strokeColor"]}" '
-                f'stroke-width="{element["strokeWidth"]}" />'
+                rough_polyline_svg(points, element["strokeColor"], element["strokeWidth"], element["id"], closed=True),
             )
         elif element["type"] == "arrow":
             x1 = element["x"]
@@ -1874,11 +1981,14 @@ def render_preview_svg(scene: dict[str, Any], blocks: dict[str, Any], width: int
                 f'<path d="M0,0 L0,6 L9,3 z" fill="{element["strokeColor"]}" />'
                 "</marker></defs>"
             )
-            point_text = " ".join(f"{px:.0f},{py:.0f}" for px, py in absolute_points)
             nodes.append(
-                f'<polyline points="{point_text}" fill="none" stroke="{element["strokeColor"]}" '
-                f'stroke-width="{element.get("strokeWidth") or 4}" stroke-linecap="round" '
-                f'stroke-linejoin="round" marker-end="url(#{marker_id})" />',
+                rough_polyline_svg(
+                    absolute_points,
+                    element["strokeColor"],
+                    element.get("strokeWidth") or 3,
+                    element["id"],
+                    marker_id=marker_id,
+                ),
             )
         elif element["type"] == "image":
             key = element["fileId"].split("_file_")[0]
