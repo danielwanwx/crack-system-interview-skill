@@ -1,6 +1,6 @@
 # SDE Interview Script Skill
 
-A cross-agent plugin/skill package for turning pasted text into diagram-first Excalidraw-style visuals with concise embedded talk tracks. It includes a short `$card` entrypoint for general text and a backward-compatible `$senior-sde-interview-script` entrypoint for SDE interview prep. Output language defaults to English, and users can request Chinese or another language in the prompt.
+A cross-agent plugin/skill package for turning pasted text into Excalidraw-style whiteboard visuals. It uses native Excalidraw blocks: dashed task/constraints frames, light-blue component blocks, black arrows, circles/squares/rectangles, and sticky notes for gotchas. It includes a short `$card` entrypoint for general text and a backward-compatible `$senior-sde-interview-script` entrypoint for SDE interview prep. Output language defaults to English, and users can request Chinese or another language in the prompt.
 
 ## Simplest Usage
 
@@ -34,7 +34,7 @@ Default output is intentionally minimal:
 - an editable Excalidraw link when upload succeeds
 - a local `.excalidraw` path as fallback
 
-The generated board explains the material through blocks, arrows, comparisons, decision trees, callouts, and a small talk-track note. It should not look like a long essay pasted into a box. The chat reply should not repeat the visual text unless the user explicitly asks for copyable text.
+The generated board explains the material through native blocks, arrows, comparisons, system-design component diagrams, and sticky-note callouts. It should look like a clean interview whiteboard, not a long essay pasted into a box. The chat reply should not repeat the visual text unless the user explicitly asks for copyable text.
 
 ## Recommended Architecture
 
@@ -87,18 +87,24 @@ After the plugin or skill is installed in a host:
 {
   "title": "CAP in Interviews",
   "language": "English",
-  "layout": "decision",
+  "style": "excalidraw-plus",
+  "layout": "comparison",
   "summary": "CAP is a partition-time product decision.",
+  "task": "Ask which failure hurts more during a partition: stale data or failed requests.",
+  "constraints": [
+    "Partition tolerance is mandatory",
+    "The choice affects storage, cache, replication, and fallback strategy"
+  ],
   "blocks": [
-    {"id": "partition", "kind": "decision", "title": "Partition happens", "body": "P is not optional."},
-    {"id": "cp", "kind": "option", "title": "Choose CP", "body": "Reject stale reads."},
-    {"id": "ap", "kind": "option", "title": "Choose AP", "body": "Stay online, accept staleness."}
+    {"id": "cp", "lane": "left", "kind": "component", "icon": "database", "title": "Choose CP", "body": "Reject stale reads."},
+    {"id": "ap", "lane": "right", "kind": "component", "icon": "cache", "title": "Choose AP", "body": "Stay online, accept staleness."}
   ],
   "connectors": [
-    {"from": "partition", "to": "cp", "label": "wrong data is costly"},
-    {"from": "partition", "to": "ap", "label": "downtime is costly"}
+    {"from": "cp", "to": "ap", "label": "same partition, different product priority"}
   ],
-  "talk_track": "In an interview, ask which failure mode the product can tolerate."
+  "callouts": [
+    {"title": "Interview signal", "body": "During a partition, the real choice is C or A."}
+  ]
 }
 ```
 

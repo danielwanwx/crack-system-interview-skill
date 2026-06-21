@@ -7,7 +7,7 @@ description: "Turn pasted text, article excerpts, study notes, interview topics,
 
 ## Goal
 
-Create an Excalidraw-style visual explanation, not a rewritten article. The diagram should help the user understand the idea by showing structure, decisions, contrasts, flow, causality, and tradeoffs. Keep the speakable script as a small support layer inside the visual.
+Create an Excalidraw whiteboard visual explanation, not a rewritten article. The board should feel like a hand-drawn interview whiteboard: task/constraints at the top, native Excalidraw blocks in the middle, arrows that show relationships, and sticky notes for gotchas or interviewer prompts.
 
 Default to English unless the user specifies Chinese or another language.
 
@@ -18,7 +18,7 @@ Default chat response:
 1. Rendered preview image when the host can display it.
 2. Excalidraw link if upload succeeds; otherwise the `.excalidraw` path.
 
-Do not paste the script text outside the image unless the user asks for copyable text.
+Do not paste the script text outside the image unless the user asks for copyable text. For interview prep, if the user asks for the speakable script separately, put that script in chat and keep the board diagram-first.
 
 ## Diagram-First Rule
 
@@ -30,17 +30,17 @@ Instead:
 - Use multiple small blocks, each with one solid idea.
 - Put reasoning on arrows when the transition matters.
 - Use callouts for gotchas, caveats, interviewer signals, and production implications.
-- Keep the final talk track short, usually 3-5 lines.
+- Keep any talk track short, usually 3-5 lines. Prefer returning it in chat when the user wants copyable speaking notes.
 - Prefer concrete labels over generic labels like "Core idea" or "Tradeoff".
+- Do not use the old `summary + long script + four flow boxes` layout.
 
 ## Choose A Layout
 
 Pick the layout that fits the source:
 
-- `decision`: for "should we choose A or B?", interview tradeoffs, CAP, consistency vs availability.
 - `comparison`: for CP vs AP, REST vs GraphQL, offset vs cursor, Redis vs DB.
+- `architecture`: for services, data stores, caches, clients, system boundaries, and API/RPC flows.
 - `pipeline`: for request flows, async processing, replication, CDC, queues.
-- `architecture`: for services, data stores, caches, clients, and system boundaries.
 - `concept-map`: for explaining one concept through surrounding causes, examples, caveats, and implications.
 - `auto`: only when none of the above clearly fits.
 
@@ -54,31 +54,34 @@ Create a compact JSON object for the renderer:
 {
   "title": "CAP in Interviews",
   "language": "English",
-  "layout": "decision",
+  "style": "excalidraw-plus",
+  "layout": "comparison",
   "summary": "CAP is a partition-time product decision: stale data or failed requests.",
+  "task": "Ask which failure hurts more during a partition: stale data or failed requests.",
+  "constraints": [
+    "Partition tolerance is mandatory",
+    "The choice affects storage, cache, replication, and fallback strategy"
+  ],
   "blocks": [
     {
-      "id": "partition",
-      "kind": "decision",
-      "title": "Partition happens",
-      "body": "P is not optional in real distributed systems."
-    },
-    {
       "id": "cp",
-      "kind": "option",
+      "lane": "left",
+      "kind": "component",
+      "icon": "database",
       "title": "Choose CP",
       "body": "Block/fail requests to avoid stale reads."
     },
     {
       "id": "ap",
-      "kind": "option",
+      "lane": "right",
+      "kind": "component",
+      "icon": "cache",
       "title": "Choose AP",
       "body": "Keep serving, tolerate temporary staleness."
     }
   ],
   "connectors": [
-    {"from": "partition", "to": "cp", "label": "wrong data is expensive"},
-    {"from": "partition", "to": "ap", "label": "downtime is expensive"}
+    {"from": "cp", "to": "ap", "label": "same partition, different product priority"}
   ],
   "callouts": [
     {
@@ -90,15 +93,16 @@ Create a compact JSON object for the renderer:
 }
 ```
 
-Legacy fields `summary`, `script`, `short`, and `flows` still work, but prefer `blocks`, `connectors`, `callouts`, and `talk_track`.
+Legacy fields `summary`, `script`, `short`, and `flows` still work, but prefer `style: "excalidraw-plus"`, `task`, `constraints`, `blocks`, `connectors`, and `callouts`.
 
 ## Block Guidance
 
-- `kind: decision` renders as a diamond.
-- `kind: option`, `concept`, `step`, `system`, or `data` renders as a blue outlined block.
-- `kind: caveat`, `warning`, or `risk` renders as a warning callout.
-- `kind: note`, `example`, or `talk_track` renders as a dark outlined note.
-- `kind: client`, `actor`, or `user` can render as an ellipse in architecture diagrams.
+- Use native Excalidraw shapes: `shape: "rectangle"`, `"square"`, `"circle"`, or `"ellipse"`.
+- `kind: component`, `service`, `api`, `database`, `cache`, `queue`, or `storage` renders as a light-blue component block.
+- `kind: note`, `callout`, or `question` renders as a sticky-note block.
+- `kind: caveat`, `warning`, or `risk` renders as a yellow gotcha note.
+- `kind: client`, `actor`, or `user` can render as a circle/ellipse in architecture diagrams.
+- Add `icon: "api"`, `"database"`, `"cache"`, `"queue"`, `"storage"`, `"client"`, or `"service"` when it helps the block scan like a system-design whiteboard.
 - Keep each block to 1-3 short lines.
 - Make every block earn its place: no empty labels, no generic filler.
 
@@ -127,11 +131,12 @@ Host-specific delivery:
 ## Visual Style
 
 - White background.
-- Transparent block backgrounds.
-- Blue strokes/text/arrows for main diagram structure.
-- Black/dark strokes for notes and talk track.
-- Red only for real warnings or caveats.
-- Handwritten Excalidraw feel.
+- Native Excalidraw block vocabulary: rounded rectangles, squares, circles/ellipses, dashed containers, arrows, and sticky notes.
+- Black/dark strokes and arrow lines by default.
+- Light-blue component fills (`#a5d8ff`) for main blocks.
+- Pale yellow/pink/mint fills for sticky notes and interviewer prompts.
+- Dashed rounded frames for `Task:` and `Constraints:`.
+- Handwritten Excalidraw feel, including Chinese when requested.
 - Generous spacing and readable line breaks.
 
 ## Quality Bar

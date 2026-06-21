@@ -7,7 +7,7 @@ description: "Convert Hello Interview excerpts, system design notes, API design 
 
 ## Goal
 
-Turn technical source material into a visual explanation a senior SDE candidate could use in an interview. The output should feel like an Excalidraw whiteboard: structure, tradeoffs, decision rules, gotchas, and a small embedded talk track. Do not turn the source into a long article card.
+Turn technical source material into a visual explanation a senior SDE candidate could use in an interview. The output should feel like an Excalidraw interview whiteboard: task/constraints at the top, native blocks in the middle, arrows for relationships, and sticky notes for gotchas or interviewer prompts. Do not turn the source into a long article card.
 
 Default to English unless the user explicitly asks for Chinese or another language.
 
@@ -18,7 +18,7 @@ Default chat response:
 1. Rendered preview image when the host can display it.
 2. Excalidraw link if upload succeeds; otherwise the `.excalidraw` path.
 
-Do not paste the script text outside the image unless the user asks for copyable text.
+Do not paste the script text outside the image unless the user asks for copyable text. If the user asks for a speakable script, put it in chat and keep the board diagram-first.
 
 ## Senior Interview Shape
 
@@ -31,7 +31,7 @@ Start with one sentence summarizing what the excerpt is really about. Then build
 - senior caveat
 - production implication when it changes the design
 
-The board should explain the topic before the talk track is read. The talk track should be short, usually 3-5 lines, and sound like a candidate making a judgment, not a textbook reciting definitions.
+The board should explain the topic before the talk track is read. If included, the talk track should be short, usually 3-5 lines, and sound like a candidate making a judgment, not a textbook reciting definitions.
 
 ## Voice
 
@@ -59,7 +59,6 @@ Avoid repeating "我在项目中..." or "当我遇到..." in every paragraph.
 
 Pick the layout that matches the concept:
 
-- `decision`: CAP, consistency vs availability, REST vs GraphQL choice, sync vs async.
 - `comparison`: GraphQL vs REST, offset vs cursor, RPC vs REST, CP vs AP.
 - `pipeline`: request flow, retry flow, booking/payment/inventory flow, CDC, replication.
 - `architecture`: clients, gateways, services, databases, queues, caches, internal RPC.
@@ -76,24 +75,28 @@ Create a compact JSON object for the bundled renderer:
 {
   "title": "CAP in Interviews",
   "language": "English",
-  "layout": "decision",
+  "style": "excalidraw-plus",
+  "layout": "comparison",
   "summary": "CAP is a partition-time product decision: stale data or failed requests.",
+  "task": "Ask which failure hurts more during a partition: stale data or failed requests.",
+  "constraints": [
+    "Partition tolerance is mandatory",
+    "The choice affects storage, cache, replication, and fallback strategy"
+  ],
   "blocks": [
     {
-      "id": "partition",
-      "kind": "decision",
-      "title": "Partition happens",
-      "body": "P is not optional in real distributed systems."
-    },
-    {
       "id": "cp",
-      "kind": "option",
+      "lane": "left",
+      "kind": "component",
+      "icon": "database",
       "title": "Choose CP",
       "body": "Block or fail requests to avoid stale reads."
     },
     {
       "id": "ap",
-      "kind": "option",
+      "lane": "right",
+      "kind": "component",
+      "icon": "cache",
       "title": "Choose AP",
       "body": "Keep serving and tolerate temporary staleness."
     }
@@ -112,15 +115,16 @@ Create a compact JSON object for the bundled renderer:
 }
 ```
 
-Legacy fields `summary`, `script`, `short`, and `flows` still work, but prefer `blocks`, `connectors`, `callouts`, and `talk_track`.
+Legacy fields `summary`, `script`, `short`, and `flows` still work, but prefer `style: "excalidraw-plus"`, `task`, `constraints`, `blocks`, `connectors`, and `callouts`.
 
 ## Block Guidance
 
-- `kind: decision` renders as a diamond.
-- `kind: option`, `concept`, `step`, `system`, or `data` renders as a blue outlined block.
-- `kind: caveat`, `warning`, or `risk` renders as a red warning callout.
-- `kind: note`, `example`, or `talk_track` renders as a dark outlined note.
-- `kind: client`, `actor`, or `user` can render as an ellipse in architecture diagrams.
+- Use native Excalidraw shapes: `shape: "rectangle"`, `"square"`, `"circle"`, or `"ellipse"`.
+- `kind: component`, `service`, `api`, `database`, `cache`, `queue`, or `storage` renders as a light-blue component block.
+- `kind: note`, `callout`, or `question` renders as a sticky-note block.
+- `kind: caveat`, `warning`, or `risk` renders as a yellow gotcha note.
+- `kind: client`, `actor`, or `user` can render as a circle/ellipse in architecture diagrams.
+- Add `icon: "api"`, `"database"`, `"cache"`, `"queue"`, `"storage"`, `"client"`, or `"service"` when it helps the block scan like a system-design whiteboard.
 - Keep each block to 1-3 short lines.
 - Make every block earn its place: no empty labels, no generic filler like "Core idea".
 
@@ -142,10 +146,11 @@ Host-specific delivery:
 ## Visual Style
 
 - White background.
-- Transparent block backgrounds.
-- Blue strokes/text/arrows for the main diagram structure.
-- Black/dark strokes for notes, examples, and the talk track.
-- Red only for real warnings or caveats.
+- Native Excalidraw block vocabulary: rounded rectangles, squares, circles/ellipses, dashed containers, arrows, and sticky notes.
+- Black/dark strokes and arrow lines by default.
+- Light-blue component fills (`#a5d8ff`) for main blocks.
+- Pale yellow/pink/mint fills for sticky notes and interviewer prompts.
+- Dashed rounded frames for `Task:` and `Constraints:`.
 - Handwritten Excalidraw feel, including Chinese when requested.
 - Generous spacing and readable line breaks.
 

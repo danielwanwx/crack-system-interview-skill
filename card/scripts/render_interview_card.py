@@ -26,9 +26,30 @@ from typing import Any
 
 
 HANDWRITING_FONT = (
-    "HanziPen SC,HanziPen TC,Kaiti SC,KaiTi,Bradley Hand,"
-    "Comic Sans MS,cursive,sans-serif"
+    "Excalifont,Xiaolai,HanziPen SC,HanziPen TC,Kaiti SC,KaiTi,"
+    "Bradley Hand,Comic Sans MS,cursive,sans-serif"
 )
+
+DIAGRAM_FONT = (
+    "Comic Shanns,Excalifont,Xiaolai,HanziPen SC,HanziPen TC,Kaiti SC,"
+    "Comic Sans MS,cursive,monospace"
+)
+
+PLUS_STYLE_ALIASES = {
+    "plus",
+    "excalidraw-plus",
+    "excalidraw_plus",
+    "whiteboard",
+    "interview-whiteboard",
+    "reference",
+}
+
+PLUS_BLUE = "#a5d8ff"
+PLUS_STROKE = "#1e1e1e"
+PLUS_PINK = "#fcc2d7"
+PLUS_YELLOW = "#fffbe6"
+PLUS_GREEN = "#f1fcf3"
+PLUS_MINT = "#eef8ff"
 
 
 def parse_args() -> argparse.Namespace:
@@ -133,7 +154,14 @@ def wrap_paragraph(paragraph: str, size: int, max_width: int) -> list[str]:
             line_width = token_width(line, size)
     if line.strip():
         lines.append(line.rstrip())
-    return lines
+    fixed: list[str] = []
+    orphan_punctuation = set("。，、；：！？,.!?;:")
+    for item in lines:
+        if fixed and item.strip() in orphan_punctuation:
+            fixed[-1] = fixed[-1] + item.strip()
+        else:
+            fixed.append(item)
+    return fixed
 
 
 def wrap_text(text: str, size: int, max_width: int) -> list[str | None]:
@@ -156,23 +184,29 @@ def text_block_svg(
     color: str,
     line_gap: int,
     paragraph_gap: int,
+    font_family: str = HANDWRITING_FONT,
+    align: str = "left",
 ) -> dict[str, Any]:
     lines = wrap_text(text, size, max_width)
     line_height = int(size * 1.26) + line_gap
     y = int(size * 1.1)
     text_nodes: list[str] = []
     max_line_width = 1.0
+    centered = align == "center"
+    svg_width = max_width + 8
+    text_x = svg_width / 2 if centered else 0
+    anchor = ' text-anchor="middle"' if centered else ""
     for line in lines:
         if line is None:
             y += paragraph_gap
             continue
         max_line_width = max(max_line_width, token_width(line, size))
         text_nodes.append(
-            f'<text x="0" y="{y}" font-size="{size}" fill="{color}" '
-            f'font-family="{HANDWRITING_FONT}">{html.escape(line)}</text>'
+            f'<text x="{text_x}" y="{y}" font-size="{size}" fill="{color}" '
+            f'font-family="{font_family}"{anchor}>{html.escape(line)}</text>'
         )
         y += line_height
-    width = min(max_width + 8, int(math.ceil(max_line_width)) + 10)
+    width = svg_width if centered else min(max_width + 8, int(math.ceil(max_line_width)) + 10)
     height = max(1, y - int(size * 0.3))
     svg = (
         f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" '
@@ -189,22 +223,28 @@ def rich_text_block_svg(
     body: str,
     max_width: int,
     color: str,
-    title_size: int = 24,
-    body_size: int = 21,
+    title_size: int = 30,
+    body_size: int = 26,
+    align: str = "left",
+    font_family: str = HANDWRITING_FONT,
 ) -> dict[str, Any]:
     title_lines = wrap_text(title, title_size, max_width) if title else []
     body_lines = wrap_text(body, body_size, max_width) if body else []
     y = int(title_size * 1.05)
     text_nodes: list[str] = []
     max_line_width = 1.0
+    centered = align == "center"
+    svg_width = max_width + 8
+    text_x = svg_width / 2 if centered else 0
+    anchor = ' text-anchor="middle"' if centered else ""
     for line in title_lines:
         if line is None:
             y += int(title_size * 0.65)
             continue
         max_line_width = max(max_line_width, token_width(line, title_size))
         text_nodes.append(
-            f'<text x="0" y="{y}" font-size="{title_size}" font-weight="700" '
-            f'fill="{color}" font-family="{HANDWRITING_FONT}">{html.escape(line)}</text>'
+            f'<text x="{text_x}" y="{y}" font-size="{title_size}" font-weight="700" '
+            f'fill="{color}" font-family="{font_family}"{anchor}>{html.escape(line)}</text>'
         )
         y += int(title_size * 1.45)
     if title_lines and body_lines:
@@ -215,11 +255,11 @@ def rich_text_block_svg(
             continue
         max_line_width = max(max_line_width, token_width(line, body_size))
         text_nodes.append(
-            f'<text x="0" y="{y}" font-size="{body_size}" fill="{color}" '
-            f'font-family="{HANDWRITING_FONT}">{html.escape(line)}</text>'
+            f'<text x="{text_x}" y="{y}" font-size="{body_size}" fill="{color}" '
+            f'font-family="{font_family}"{anchor}>{html.escape(line)}</text>'
         )
         y += int(body_size * 1.58)
-    width = min(max_width + 8, int(math.ceil(max_line_width)) + 10)
+    width = svg_width if centered else min(max_width + 8, int(math.ceil(max_line_width)) + 10)
     height = max(1, y - int(body_size * 0.25))
     svg = (
         f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" '
@@ -283,13 +323,16 @@ def rectangle(
     stroke: str,
     stroke_width: int,
     now: int,
+    background: str = "transparent",
+    stroke_style: str = "solid",
 ) -> dict[str, Any]:
     element = base_element(rng, "rectangle", x, y, width, height, now)
     element.update(
         {
             "strokeColor": stroke,
-            "backgroundColor": "transparent",
+            "backgroundColor": background,
             "strokeWidth": stroke_width,
+            "strokeStyle": stroke_style,
         },
     )
     return element
@@ -304,12 +347,13 @@ def diamond(
     stroke: str,
     stroke_width: int,
     now: int,
+    background: str = "transparent",
 ) -> dict[str, Any]:
     element = base_element(rng, "diamond", x, y, width, height, now)
     element.update(
         {
             "strokeColor": stroke,
-            "backgroundColor": "transparent",
+            "backgroundColor": background,
             "strokeWidth": stroke_width,
         },
     )
@@ -325,12 +369,13 @@ def ellipse(
     stroke: str,
     stroke_width: int,
     now: int,
+    background: str = "transparent",
 ) -> dict[str, Any]:
     element = base_element(rng, "ellipse", x, y, width, height, now)
     element.update(
         {
             "strokeColor": stroke,
-            "backgroundColor": "transparent",
+            "backgroundColor": background,
             "strokeWidth": stroke_width,
         },
     )
@@ -368,11 +413,13 @@ def arrow(
     x2: float,
     y2: float,
     now: int,
+    stroke: str = "#2563eb",
+    stroke_width: int = 3,
 ) -> dict[str, Any]:
     element = base_element(rng, "arrow", x1, y1, x2 - x1, y2 - y1, now)
     element.update(
         {
-            "strokeColor": "#2563eb",
+            "strokeColor": stroke,
             "backgroundColor": "transparent",
             "roundness": None,
             "points": [[0, 0], [x2 - x1, y2 - y1]],
@@ -381,7 +428,36 @@ def arrow(
             "endBinding": None,
             "startArrowhead": None,
             "endArrowhead": "arrow",
-            "strokeWidth": 3,
+            "strokeWidth": stroke_width,
+        },
+    )
+    return element
+
+
+def routed_arrow(
+    rng: random.Random,
+    points: list[list[float]],
+    now: int,
+    stroke: str = "#2563eb",
+    stroke_width: int = 3,
+) -> dict[str, Any]:
+    if len(points) < 2:
+        raise ValueError("routed arrows require at least two points")
+    x1, y1 = points[0]
+    x2, y2 = points[-1]
+    element = base_element(rng, "arrow", x1, y1, x2 - x1, y2 - y1, now)
+    element.update(
+        {
+            "strokeColor": stroke,
+            "backgroundColor": "transparent",
+            "roundness": None,
+            "points": [[px - x1, py - y1] for px, py in points],
+            "lastCommittedPoint": None,
+            "startBinding": None,
+            "endBinding": None,
+            "startArrowhead": None,
+            "endArrowhead": "arrow",
+            "strokeWidth": stroke_width,
         },
     )
     return element
@@ -407,6 +483,82 @@ def add_image_block(
     }
 
 
+def svg_data_block(svg: str, width: int, height: int) -> dict[str, Any]:
+    data_url = "data:image/svg+xml;base64," + base64.b64encode(svg.encode("utf-8")).decode("ascii")
+    return {"dataURL": data_url, "width": width, "height": height, "svg": svg}
+
+
+def component_icon_svg(kind: str, label: str = "", size: int = 72) -> dict[str, Any]:
+    kind = (kind or "service").lower()
+    palette = {
+        "api": ("#e64980", "API"),
+        "gateway": ("#e64980", "API"),
+        "lambda": ("#fd7e14", "λ"),
+        "compute": ("#fd7e14", "λ"),
+        "storage": ("#40c057", "S3"),
+        "s3": ("#40c057", "S3"),
+        "database": ("#4c6ef5", "DB"),
+        "db": ("#4c6ef5", "DB"),
+        "dynamodb": ("#4c6ef5", "DB"),
+        "cache": ("#37b24d", "C"),
+        "queue": ("#7950f2", "Q"),
+        "cdn": ("#228be6", "CDN"),
+        "client": ("#74c0fc", "U"),
+        "user": ("#74c0fc", "U"),
+        "service": ("#4dabf7", "S"),
+    }
+    bg, default_text = palette.get(kind, palette["service"])
+    text = (label or default_text)[:4]
+    radius = 9
+    mark = ""
+    if kind in {"database", "db", "dynamodb"}:
+        mark = (
+            '<ellipse cx="36" cy="24" rx="19" ry="8" fill="none" stroke="#fff" stroke-width="4"/>'
+            '<path d="M17 24v22c0 5 8 9 19 9s19-4 19-9V24" fill="none" stroke="#fff" stroke-width="4"/>'
+            '<path d="M17 36c0 5 8 9 19 9s19-4 19-9" fill="none" stroke="#fff" stroke-width="3"/>'
+        )
+        text = ""
+    elif kind in {"storage", "s3"}:
+        mark = (
+            '<path d="M21 24h31l-3 33H24z" fill="none" stroke="#fff" stroke-width="4" stroke-linejoin="round"/>'
+            '<path d="M25 24c2-5 20-5 23 0" fill="none" stroke="#fff" stroke-width="4"/>'
+        )
+        text = ""
+    elif kind in {"queue"}:
+        mark = (
+            '<path d="M19 22h34M19 36h34M19 50h34" stroke="#fff" stroke-width="5" stroke-linecap="round"/>'
+        )
+        text = ""
+    elif kind in {"cache"}:
+        mark = '<path d="M39 12L22 39h16l-5 22 18-31H35z" fill="none" stroke="#fff" stroke-width="5" stroke-linejoin="round"/>'
+        text = ""
+    elif kind in {"client", "user"}:
+        mark = (
+            '<circle cx="36" cy="25" r="10" fill="none" stroke="#fff" stroke-width="4"/>'
+            '<path d="M18 58c4-14 32-14 36 0" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/>'
+        )
+        text = ""
+    if text:
+        mark = (
+            f'<text x="36" y="45" text-anchor="middle" font-family="{DIAGRAM_FONT}" '
+            f'font-size="22" font-weight="700" fill="#fff">{html.escape(text)}</text>'
+        )
+    caption = html.escape(label) if label and label != text else ""
+    caption_node = (
+        f'<text x="36" y="88" text-anchor="middle" font-family="{DIAGRAM_FONT}" '
+        f'font-size="12" fill="#1e1e1e">{caption}</text>'
+        if caption
+        else ""
+    )
+    height = size + (22 if caption else 0)
+    svg = (
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{height}" viewBox="0 0 72 {72 + (22 if caption else 0)}">'
+        f'<rect x="6" y="6" width="60" height="60" rx="{radius}" fill="{bg}"/>'
+        f'{mark}{caption_node}</svg>'
+    )
+    return svg_data_block(svg, size, height)
+
+
 def dimension(value: Any, default: float, total: float) -> float:
     if value is None:
         return default
@@ -423,10 +575,10 @@ def block_kind(block: dict[str, Any]) -> str:
     return str(block.get("kind") or block.get("type") or block.get("shape") or "concept").lower()
 
 
-def block_shape(block: dict[str, Any]) -> str:
+def block_shape(block: dict[str, Any], allow_diamond: bool = True) -> str:
     shape = str(block.get("shape") or "").lower()
     kind = block_kind(block)
-    if shape in {"diamond", "decision"} or kind in {"decision", "question", "choice"}:
+    if allow_diamond and (shape in {"diamond", "decision"} or kind in {"decision", "question", "choice"}):
         return "diamond"
     if shape in {"ellipse", "circle", "oval"} or kind in {"client", "actor", "user"}:
         return "ellipse"
@@ -440,6 +592,62 @@ def block_stroke(block: dict[str, Any]) -> str:
     if kind in {"note", "talk", "talk_track", "example"}:
         return "#111827"
     return "#2563eb"
+
+
+def normalize_style(content: dict[str, Any]) -> str:
+    return str(content.get("style") or content.get("visual_style") or "").strip().lower()
+
+
+def is_plus_style(content: dict[str, Any]) -> bool:
+    style = normalize_style(content)
+    if not style and (content.get("task") or content.get("constraints")):
+        return True
+    return style in PLUS_STYLE_ALIASES
+
+
+def plus_block_fill(block: dict[str, Any], index: int = 0) -> str:
+    if block.get("fill") is not None:
+        return str(block.get("fill"))
+    if block.get("background") is not None:
+        return str(block.get("background"))
+    kind = block_kind(block)
+    if kind in {"note", "callout", "question", "followup", "follow-up", "interviewer"}:
+        return PLUS_PINK
+    if kind in {"caveat", "risk", "tradeoff", "trade-off", "warning"}:
+        return PLUS_YELLOW
+    if kind in {"answer", "principle", "takeaway", "conclusion"}:
+        return PLUS_GREEN
+    if kind in {"frame", "task", "constraints", "section"}:
+        return "transparent"
+    if kind in {"annotation", "hint"}:
+        return PLUS_MINT
+    return PLUS_BLUE
+
+
+def plus_block_stroke(block: dict[str, Any]) -> str:
+    return str(block.get("stroke") or PLUS_STROKE)
+
+
+def plus_text_color(block: dict[str, Any]) -> str:
+    return str(block.get("textColor") or block.get("text_color") or PLUS_STROKE)
+
+
+def coerce_text(value: Any) -> str:
+    if value is None:
+        return ""
+    if isinstance(value, list):
+        return "\n".join(str(item) for item in value)
+    if isinstance(value, dict):
+        parts = []
+        if value.get("title"):
+            parts.append(str(value["title"]))
+        body = value.get("body") or value.get("text") or value.get("items")
+        if isinstance(body, list):
+            parts.extend(str(item) for item in body)
+        elif body:
+            parts.append(str(body))
+        return "\n".join(parts)
+    return str(value)
 
 
 def normalize_block(raw: Any, index: int) -> dict[str, Any]:
@@ -619,31 +827,519 @@ def connector_points(
     return scx, start_y, dcx, end_y
 
 
+def orthogonal_points(
+    src: tuple[float, float, float, float],
+    dst: tuple[float, float, float, float],
+) -> list[list[float]]:
+    x1, y1, x2, y2 = connector_points(src, dst)
+    if abs(x2 - x1) >= abs(y2 - y1):
+        mid_x = x1 + (x2 - x1) / 2
+        return [[x1, y1], [mid_x, y1], [mid_x, y2], [x2, y2]]
+    mid_y = y1 + (y2 - y1) / 2
+    return [[x1, y1], [x1, mid_y], [x2, mid_y], [x2, y2]]
+
+
+def add_top_frame(
+    elements: list[dict[str, Any]],
+    files: dict[str, Any],
+    blocks_svg: dict[str, Any],
+    rng: random.Random,
+    key: str,
+    title: str,
+    body: str,
+    x: float,
+    y: float,
+    w: float,
+    h: float,
+    now: int,
+) -> None:
+    elements.append(
+        rectangle(
+            rng,
+            x,
+            y,
+            w,
+            h,
+            PLUS_STROKE,
+            2,
+            now,
+            background="transparent",
+            stroke_style="dashed",
+        ),
+    )
+    title_width = min(330, max(230, int(w * 0.38)))
+    body_width = max(220, int(w - title_width - 62))
+    title_size = 36 if len(title) > 8 else 42
+    title_block = text_block_svg(title, title_size, title_width, PLUS_STROKE, 8, 14, DIAGRAM_FONT)
+    body_block = text_block_svg(body, 24, body_width, PLUS_STROKE, 7, 12, DIAGRAM_FONT)
+    blocks_svg[f"{key}_title"] = title_block
+    blocks_svg[f"{key}_body"] = body_block
+    add_image_block(elements, files, rng, f"{key}_title", title_block, x + 44, y + max(24, (h - title_block["height"]) / 2), now)
+    add_image_block(elements, files, rng, f"{key}_body", body_block, x + title_width + 48, y + max(22, (h - body_block["height"]) / 2), now)
+
+
+def add_whiteboard_text(
+    elements: list[dict[str, Any]],
+    files: dict[str, Any],
+    blocks_svg: dict[str, Any],
+    rng: random.Random,
+    key: str,
+    text: str,
+    x: float,
+    y: float,
+    max_width: int,
+    size: int,
+    now: int,
+    color: str = PLUS_STROKE,
+    align: str = "center",
+) -> dict[str, Any]:
+    block = text_block_svg(text, size, max_width, color, 8, 12, DIAGRAM_FONT, align=align)
+    blocks_svg[key] = block
+    add_image_block(elements, files, rng, key, block, x, y, now)
+    return block
+
+
+def add_whiteboard_block(
+    elements: list[dict[str, Any]],
+    files: dict[str, Any],
+    blocks_svg: dict[str, Any],
+    rng: random.Random,
+    block: dict[str, Any],
+    pos: tuple[float, float, float, float],
+    index: int,
+    now: int,
+) -> None:
+    x, y, w, h = pos
+    shape = str(block.get("shape") or "").lower()
+    kind = block_kind(block)
+    if shape in {"circle", "ellipse", "oval"} or kind in {"client", "actor", "user"}:
+        elements.append(ellipse(rng, x, y, w, h, plus_block_stroke(block), 2, now, background=plus_block_fill(block, index)))
+    else:
+        if shape == "square":
+            size = min(w, h)
+            x += (w - size) / 2
+            y += (h - size) / 2
+            w = h = size
+        elements.append(
+            rectangle(
+                rng,
+                x,
+                y,
+                w,
+                h,
+                plus_block_stroke(block),
+                int(block.get("strokeWidth") or 2),
+                now,
+                background=plus_block_fill(block, index),
+                stroke_style=str(block.get("strokeStyle") or block.get("stroke_style") or "solid"),
+            ),
+        )
+
+    icon_name = str(block.get("icon") or "").strip()
+    icon_space = 92 if icon_name and w > 260 else 0
+    text_x = x + 24 + icon_space
+    text_w = int(max(130, w - 48 - icon_space))
+    text_block = rich_text_block_svg(
+        str(block.get("title") or ""),
+        str(block.get("body") or ""),
+        text_w,
+        plus_text_color(block),
+        int(block.get("title_size") or 28),
+        int(block.get("body_size") or 20),
+        align=str(block.get("align") or "center").lower(),
+        font_family=DIAGRAM_FONT,
+    )
+    key = f"wb_block_{block['id']}"
+    blocks_svg[key] = text_block
+    text_y = y + max(18, (h - text_block["height"]) / 2)
+    if icon_space:
+        text_x = x + icon_space + (w - icon_space - text_block["width"]) / 2
+    else:
+        text_x = x + (w - text_block["width"]) / 2
+    add_image_block(elements, files, rng, key, text_block, text_x, text_y, now)
+
+    if icon_name:
+        icon = component_icon_svg(icon_name, str(block.get("icon_label") or block.get("iconLabel") or ""), int(block.get("icon_size") or 66))
+        icon_key = f"wb_icon_{block['id']}"
+        blocks_svg[icon_key] = icon
+        add_image_block(elements, files, rng, icon_key, icon, x + 18, y + h - icon["height"] - 16, now)
+
+
+def whiteboard_positions(
+    blocks: list[dict[str, Any]],
+    layout: str,
+    top: float,
+    canvas_width: float,
+) -> dict[str, tuple[float, float, float, float]]:
+    layout = layout.lower()
+    positions: dict[str, tuple[float, float, float, float]] = {}
+    margin = 70
+    if layout in {"comparison", "tradeoff", "compare"}:
+        left = [block for index, block in enumerate(blocks) if str(block.get("lane") or block.get("side") or ("left" if index % 2 == 0 else "right")).lower() not in {"right", "ap", "availability", "option-b"}]
+        right = [block for index, block in enumerate(blocks) if block not in left]
+        left_x = margin
+        right_x = canvas_width - margin - 560
+        col_w = 560
+        gap_y = 92
+        for lane_blocks, x in ((left, left_x), (right, right_x)):
+            y = top
+            for block in lane_blocks:
+                h = dimension(block.get("height"), 180, 800)
+                positions[str(block["id"])] = (x, y, col_w, h)
+                y += h + gap_y
+        return positions
+
+    if layout in {"pipeline", "flow", "sequence"}:
+        block_w = 300 if len(blocks) > 3 else 350
+        block_h = 155
+        gap = 60
+        total = len(blocks) * block_w + max(0, len(blocks) - 1) * gap
+        start_x = max(margin, (canvas_width - total) / 2)
+        for index, block in enumerate(blocks):
+            positions[str(block["id"])] = (
+                start_x + index * (block_w + gap),
+                top,
+                dimension(block.get("width") or block.get("w"), block_w, canvas_width),
+                dimension(block.get("height") or block.get("h"), block_h, 800),
+            )
+        return positions
+
+    if layout in {"architecture", "system", "system-design"}:
+        rows: dict[str, list[dict[str, Any]]] = {"top": [], "middle": [], "bottom": []}
+        for block in blocks:
+            lane = str(block.get("lane") or block.get("tier") or "").lower()
+            kind = block_kind(block)
+            if lane in rows:
+                rows[lane].append(block)
+            elif kind in {"client", "actor", "user", "frontend"}:
+                rows["top"].append(block)
+            elif kind in {"database", "db", "cache", "queue", "storage", "store", "data"}:
+                rows["bottom"].append(block)
+            else:
+                rows["middle"].append(block)
+        row_y = {"top": top, "middle": top + 245, "bottom": top + 500}
+        for row, row_blocks in rows.items():
+            if not row_blocks:
+                continue
+            block_w = 260 if len(row_blocks) >= 4 else 310
+            gap = 70
+            total = len(row_blocks) * block_w + max(0, len(row_blocks) - 1) * gap
+            x0 = max(margin, (canvas_width - total) / 2)
+            for index, block in enumerate(row_blocks):
+                shape = str(block.get("shape") or "").lower()
+                kind = block_kind(block)
+                h = 170
+                w = block_w
+                if shape in {"circle", "ellipse"} or kind in {"client", "actor", "user"}:
+                    w = h = 180
+                positions[str(block["id"])] = (
+                    x0 + index * (block_w + gap),
+                    row_y[row],
+                    dimension(block.get("width") or block.get("w"), w, canvas_width),
+                    dimension(block.get("height") or block.get("h"), h, 800),
+                )
+        return positions
+
+    center_x = canvas_width / 2 - 260
+    if blocks:
+        positions[str(blocks[0]["id"])] = (center_x, top + 120, 520, 190)
+    spokes = [
+        (margin, top, 380, 150),
+        (canvas_width - margin - 380, top, 380, 150),
+        (margin, top + 310, 380, 150),
+        (canvas_width - margin - 380, top + 310, 380, 150),
+        (canvas_width / 2 - 230, top + 430, 460, 150),
+    ]
+    for block, pos in zip(blocks[1:], spokes):
+        positions[str(block["id"])] = pos
+    return positions
+
+
+def build_whiteboard_scene(content: dict[str, Any], slug: str) -> tuple[dict[str, Any], dict[str, Any], int, int]:
+    rng = random.Random(20260620)
+    now = int(time.time() * 1000)
+    canvas_width = int(dimension(content.get("width"), 1500, 1500))
+    margin = 70
+    content_width = canvas_width - margin * 2
+    elements: list[dict[str, Any]] = []
+    files: dict[str, Any] = {}
+    blocks_svg: dict[str, Any] = {}
+
+    title = str(content.get("title") or "Interview Whiteboard")
+    title_block = add_whiteboard_text(
+        elements,
+        files,
+        blocks_svg,
+        rng,
+        "wb_title",
+        title,
+        0,
+        52,
+        canvas_width,
+        44,
+        now,
+        align="center",
+    )
+    y_cursor = 52 + title_block["height"] + 34
+    summary = str(content.get("summary") or "")
+    if summary:
+        summary_block = text_block_svg(summary, 25, int(content_width), PLUS_STROKE, 8, 12, DIAGRAM_FONT, align="center")
+        blocks_svg["wb_summary"] = summary_block
+        add_image_block(elements, files, rng, "wb_summary", summary_block, (canvas_width - summary_block["width"]) / 2, y_cursor, now)
+        y_cursor += summary_block["height"] + 52
+
+    task_text = coerce_text(content.get("task") or content.get("problem"))
+    constraints_text = coerce_text(content.get("constraints"))
+    if task_text or constraints_text:
+        frame_h = 230
+        if task_text and constraints_text:
+            task_w = 590
+            gap = 44
+            add_top_frame(elements, files, blocks_svg, rng, "wb_task", str(content.get("task_title") or "Task:"), task_text, margin, y_cursor, task_w, frame_h, now)
+            add_top_frame(
+                elements,
+                files,
+                blocks_svg,
+                rng,
+                "wb_constraints",
+                str(content.get("constraints_title") or "Constraints:"),
+                constraints_text,
+                margin + task_w + gap,
+                y_cursor,
+                content_width - task_w - gap,
+                frame_h,
+                now,
+            )
+        else:
+            add_top_frame(
+                elements,
+                files,
+                blocks_svg,
+                rng,
+                "wb_task",
+                str(content.get("task_title") or ("Constraints:" if constraints_text else "Task:")),
+                task_text or constraints_text,
+                margin,
+                y_cursor,
+                content_width,
+                frame_h,
+                now,
+            )
+        y_cursor += frame_h + 86
+
+    raw_blocks = content.get("blocks") or content.get("nodes") or []
+    blocks = [normalize_block(block, index) for index, block in enumerate(raw_blocks)]
+    layout = str(content.get("layout") or "auto")
+    if layout.lower() == "auto":
+        if any(str(block.get("lane") or block.get("side") or "") for block in blocks):
+            layout = "comparison"
+        elif any(block_kind(block) in {"service", "api", "database", "db", "cache", "queue", "storage", "client", "actor", "user"} for block in blocks):
+            layout = "architecture"
+        elif len(blocks) <= 5:
+            layout = "concept-map"
+        else:
+            layout = "pipeline"
+    positions = whiteboard_positions(blocks, layout, y_cursor, canvas_width)
+
+    for index, block in enumerate(blocks):
+        block_id = str(block["id"])
+        default = positions.get(block_id, (margin, y_cursor, 300, 160))
+        pos = (
+            dimension(block.get("x"), default[0], canvas_width),
+            dimension(block.get("y"), default[1], 1600),
+            dimension(block.get("width") or block.get("w"), default[2], content_width),
+            dimension(block.get("height") or block.get("h"), default[3], 800),
+        )
+        positions[block_id] = pos
+        add_whiteboard_block(elements, files, blocks_svg, rng, block, pos, index, now)
+
+    connectors = list(content.get("connectors") or [])
+    if not connectors and blocks:
+        if layout.lower() in {"comparison", "tradeoff", "compare"}:
+            lane_groups: dict[str, list[dict[str, Any]]] = {}
+            for index, block in enumerate(blocks):
+                lane = str(block.get("lane") or block.get("side") or ("left" if index % 2 == 0 else "right")).lower()
+                lane_groups.setdefault(lane, []).append(block)
+            for lane_blocks in lane_groups.values():
+                for idx in range(len(lane_blocks) - 1):
+                    connectors.append({"from": lane_blocks[idx]["id"], "to": lane_blocks[idx + 1]["id"]})
+        else:
+            for idx in range(len(blocks) - 1):
+                connectors.append({"from": blocks[idx]["id"], "to": blocks[idx + 1]["id"]})
+
+    for index, connector in enumerate(connectors):
+        src = str(connector.get("from") or connector.get("source") or "")
+        dst = str(connector.get("to") or connector.get("target") or "")
+        if connector.get("points"):
+            points = [[float(p[0]), float(p[1])] for p in connector["points"] if isinstance(p, list | tuple) and len(p) >= 2]
+        elif src in positions and dst in positions:
+            points = orthogonal_points(positions[src], positions[dst])
+        else:
+            continue
+        elements.append(routed_arrow(rng, points, now, stroke=str(connector.get("stroke") or PLUS_STROKE), stroke_width=int(connector.get("strokeWidth") or 2)))
+        label = str(connector.get("label") or "")
+        if label:
+            label_block = text_block_svg(label, 17, 230, PLUS_STROKE, 6, 8, DIAGRAM_FONT, align="center")
+            label_key = f"wb_connector_{index}"
+            blocks_svg[label_key] = label_block
+            mid = points[len(points) // 2]
+            add_image_block(
+                elements,
+                files,
+                rng,
+                label_key,
+                label_block,
+                mid[0] - label_block["width"] / 2,
+                mid[1] - label_block["height"] / 2,
+                now,
+            )
+
+    max_y = max((y + h for x, y, w, h in positions.values()), default=y_cursor)
+    callouts = list(content.get("callouts") or [])
+    for index, callout in enumerate(callouts):
+        default_w = 420 if index < 2 else 620
+        default_h = 130
+        default_x = (canvas_width - default_w) / 2 if len(callouts) == 1 else margin + (index % 2) * (content_width - default_w)
+        x = dimension(callout.get("x"), default_x, canvas_width)
+        y = dimension(callout.get("y"), max_y + 54 + (index // 2) * 170, 2200)
+        w = dimension(callout.get("width") or callout.get("w"), default_w, content_width)
+        h = dimension(callout.get("height") or callout.get("h"), default_h, 600)
+        note = dict(callout)
+        note.setdefault("id", f"callout{index}")
+        note.setdefault("kind", "note")
+        note.setdefault("fill", [PLUS_PINK, PLUS_YELLOW, PLUS_MINT][index % 3])
+        note.setdefault("title_size", 24)
+        note.setdefault("body_size", 20)
+        add_whiteboard_block(elements, files, blocks_svg, rng, note, (x, y, w, h), index, now)
+        max_y = max(max_y, y + h)
+
+    canvas_height = int(max_y + 95)
+    scene = {
+        "type": "excalidraw",
+        "version": 2,
+        "source": "sde-interview-script-skill",
+        "elements": elements,
+        "appState": {
+            "viewBackgroundColor": "#ffffff",
+            "gridSize": None,
+            "theme": "light",
+            "name": slug,
+            "scrollX": 0,
+            "scrollY": 0,
+            "zoom": {"value": 1},
+        },
+        "files": files,
+    }
+    return scene, blocks_svg, canvas_width, canvas_height
+
+
 def build_diagram_scene(
     content: dict[str, Any],
     slug: str,
 ) -> tuple[dict[str, Any], dict[str, Any], int, int]:
     rng = random.Random(20260616)
     now = int(time.time() * 1000)
+    plus_style = is_plus_style(content)
     canvas_width = int(dimension(content.get("width"), 1760, 1760))
     margin = 80
     content_width = canvas_width - margin * 2
     elements: list[dict[str, Any]] = []
     files: dict[str, Any] = {}
     blocks_svg: dict[str, Any] = {
-        "title": text_block_svg(str(content.get("title", "Script Card")), 42, 1320, "#111827", 14, 22),
+        "title": text_block_svg(
+            str(content.get("title", "Script Card")),
+            44 if plus_style else 42,
+            1320,
+            PLUS_STROKE if plus_style else "#111827",
+            14,
+            22,
+            DIAGRAM_FONT if plus_style else HANDWRITING_FONT,
+            align="center" if plus_style else "left",
+        ),
     }
-    add_image_block(elements, files, rng, "title", blocks_svg["title"], margin, 70, now)
+    title_x = (canvas_width - blocks_svg["title"]["width"]) / 2 if plus_style else margin
+    add_image_block(elements, files, rng, "title", blocks_svg["title"], title_x, 70, now)
     y_cursor = 70 + blocks_svg["title"]["height"] + 42
     summary = str(content.get("summary") or "")
     if summary:
-        blocks_svg["summary"] = text_block_svg(summary, 28, int(content_width), "#374151", 12, 18)
-        add_image_block(elements, files, rng, "summary", blocks_svg["summary"], margin, y_cursor, now)
+        blocks_svg["summary"] = text_block_svg(
+            summary,
+            28,
+            int(content_width),
+            "#374151" if not plus_style else PLUS_STROKE,
+            12,
+            18,
+            DIAGRAM_FONT if plus_style else HANDWRITING_FONT,
+            align="center" if plus_style else "left",
+        )
+        summary_x = (canvas_width - blocks_svg["summary"]["width"]) / 2 if plus_style else margin
+        add_image_block(elements, files, rng, "summary", blocks_svg["summary"], summary_x, y_cursor, now)
         y_cursor += blocks_svg["summary"]["height"] + 64
+
+    task_text = coerce_text(content.get("task") or content.get("problem"))
+    constraints_text = coerce_text(content.get("constraints"))
+    if plus_style and (task_text or constraints_text):
+        frame_h = 150
+        gap = 48
+        if task_text and constraints_text:
+            left_w = 680
+            right_w = content_width - left_w - gap
+            add_top_frame(
+                elements,
+                files,
+                blocks_svg,
+                rng,
+                "task",
+                str(content.get("task_title") or "Task:"),
+                task_text,
+                margin,
+                y_cursor,
+                left_w,
+                frame_h,
+                now,
+            )
+            add_top_frame(
+                elements,
+                files,
+                blocks_svg,
+                rng,
+                "constraints",
+                str(content.get("constraints_title") or "Constraints:"),
+                constraints_text,
+                margin + left_w + gap,
+                y_cursor,
+                right_w,
+                frame_h,
+                now,
+            )
+        else:
+            add_top_frame(
+                elements,
+                files,
+                blocks_svg,
+                rng,
+                "task",
+                str(content.get("task_title") or ("Constraints:" if constraints_text else "Task:")),
+                task_text or constraints_text,
+                margin,
+                y_cursor,
+                content_width,
+                frame_h,
+                now,
+            )
+        y_cursor += frame_h + 86
 
     raw_blocks = content.get("blocks") or content.get("nodes") or []
     diagram_blocks = [normalize_block(block, index) for index, block in enumerate(raw_blocks)]
     layout = str(content.get("layout") or "auto")
+    if plus_style and layout.lower() == "auto":
+        kinds = {block_kind(block) for block in diagram_blocks}
+        if kinds & {"service", "api", "database", "db", "cache", "queue", "storage", "cdn", "client"}:
+            layout = "architecture"
+        elif any(str(block.get("lane") or block.get("side") or "") for block in diagram_blocks):
+            layout = "comparison"
+        else:
+            layout = "concept-map"
     auto = auto_positions(diagram_blocks, layout, y_cursor, canvas_width)
     positions: dict[str, tuple[float, float, float, float]] = {}
     for block in diagram_blocks:
@@ -667,31 +1363,81 @@ def build_diagram_scene(
     for block in diagram_blocks:
         block_id = str(block["id"])
         x, y, w, h = positions[block_id]
-        stroke = str(block.get("stroke") or block_stroke(block))
-        shape = block_shape(block)
+        stroke = plus_block_stroke(block) if plus_style else str(block.get("stroke") or block_stroke(block))
+        fill = plus_block_fill(block) if plus_style else str(block.get("fill") or block.get("background") or "transparent")
+        text_color = plus_text_color(block) if plus_style else (stroke if stroke != "#111827" else "#111827")
+        shape = block_shape(block, allow_diamond=(not plus_style or bool(block.get("allowDiamond"))))
+        default_align = "center" if plus_style else "left"
+        default_valign = "center" if plus_style else "top"
+        align = str(block.get("align") or content.get("align") or default_align).lower()
+        valign = str(block.get("valign") or content.get("valign") or default_valign).lower()
+        stroke_width = int(block.get("strokeWidth") or block.get("stroke_width") or (2 if plus_style else (3 if stroke == "#2563eb" else 2)))
+        stroke_style = str(block.get("strokeStyle") or block.get("stroke_style") or "solid")
+        icon_name = str(block.get("icon") or "").strip()
+        reserve_icon_space = bool(plus_style and icon_name)
+        text_area_x = x
+        text_area_w = w
         if shape == "diamond":
-            elements.append(diamond(rng, x, y, w, h, stroke, 3, now))
+            elements.append(diamond(rng, x, y, w, h, stroke, stroke_width, now, background=fill))
             text_w = int(max(160, w * 0.62))
             text_x = x + (w - text_w) / 2
             text_y = y + h * 0.22
         elif shape == "ellipse":
-            elements.append(ellipse(rng, x, y, w, h, stroke, 3 if stroke == "#2563eb" else 2, now))
-            text_w = int(max(160, w * 0.68))
-            text_x = x + (w - text_w) / 2
+            elements.append(ellipse(rng, x, y, w, h, stroke, stroke_width, now, background=fill))
+            text_area_x = x + (96 if reserve_icon_space else 0)
+            text_area_w = w - (116 if reserve_icon_space else 0)
+            text_w = int(max(160, text_area_w * 0.68))
+            text_x = text_area_x + (text_area_w - text_w) / 2
             text_y = y + h * 0.24
         else:
-            elements.append(rectangle(rng, x, y, w, h, stroke, 3 if stroke == "#2563eb" else 2, now))
-            text_w = int(max(180, w - 48))
-            text_x = x + 24
+            elements.append(
+                rectangle(
+                    rng,
+                    x,
+                    y,
+                    w,
+                    h,
+                    stroke,
+                    stroke_width,
+                    now,
+                    background=fill,
+                    stroke_style=stroke_style,
+                ),
+            )
+            text_area_x = x + (118 if reserve_icon_space else 24)
+            text_area_w = w - (148 if reserve_icon_space else 48)
+            text_w = int(max(180, text_area_w))
+            text_x = text_area_x + ((text_area_w - text_w) / 2 if align == "center" else 0)
             text_y = y + 28
         key = f"block{block_id}"
         blocks_svg[key] = rich_text_block_svg(
             str(block.get("title") or ""),
             str(block.get("body") or ""),
             text_w,
-            stroke if stroke != "#111827" else "#111827",
+            text_color,
+            31 if plus_style else 30,
+            23 if plus_style else 26,
+            align=align,
+            font_family=DIAGRAM_FONT if plus_style else HANDWRITING_FONT,
         )
+        if align == "center":
+            if reserve_icon_space:
+                text_x = text_area_x + (text_area_w - blocks_svg[key]["width"]) / 2
+            else:
+                text_x = x + (w - blocks_svg[key]["width"]) / 2
+        if valign == "center":
+            text_y = y + max(18, (h - blocks_svg[key]["height"]) / 2)
         add_image_block(elements, files, rng, key, blocks_svg[key], text_x, text_y, now)
+
+        if plus_style and icon_name:
+            icon_label = str(block.get("icon_label") or block.get("iconLabel") or "")
+            icon_size = int(dimension(block.get("icon_size"), 70, 120))
+            icon_block = component_icon_svg(icon_name, icon_label, icon_size)
+            icon_key = f"icon{block_id}"
+            blocks_svg[icon_key] = icon_block
+            icon_x = float(block.get("icon_x") or (x + 18))
+            icon_y = float(block.get("icon_y") or (y + h - icon_block["height"] - 14))
+            add_image_block(elements, files, rng, icon_key, icon_block, icon_x, icon_y, now)
 
     connectors = list(content.get("connectors") or [])
     if not connectors and diagram_blocks:
@@ -706,24 +1452,78 @@ def build_diagram_scene(
                 for index in range(len(diagram_blocks) - 1)
             ]
     for index, connector in enumerate(connectors):
+        connector_stroke = str(connector.get("stroke") or connector.get("color") or (PLUS_STROKE if plus_style else "#2563eb"))
+        connector_width = int(connector.get("strokeWidth") or connector.get("stroke_width") or (2 if plus_style else 3))
+        if connector.get("points"):
+            raw_points = connector.get("points") or []
+            points = [
+                [float(point[0]), float(point[1])]
+                for point in raw_points
+                if isinstance(point, list | tuple) and len(point) >= 2
+            ]
+            if len(points) < 2:
+                continue
+            elements.append(routed_arrow(rng, points, now, stroke=connector_stroke, stroke_width=connector_width))
+            label = str(connector.get("label") or "")
+            if label:
+                key = f"connector{index}"
+                blocks_svg[key] = text_block_svg(
+                    label,
+                    18 if not plus_style else 19,
+                    220,
+                    "#1e3a8a" if not plus_style else PLUS_STROKE,
+                    8,
+                    10,
+                    DIAGRAM_FONT if plus_style else HANDWRITING_FONT,
+                    align="center",
+                )
+                mid = points[len(points) // 2]
+                add_image_block(
+                    elements,
+                    files,
+                    rng,
+                    key,
+                    blocks_svg[key],
+                    mid[0] - blocks_svg[key]["width"] / 2,
+                    mid[1] - 38,
+                    now,
+                )
+            continue
         src = str(connector.get("from") or connector.get("source") or "")
         dst = str(connector.get("to") or connector.get("target") or "")
         if src not in positions or dst not in positions:
             continue
-        x1, y1, x2, y2 = connector_points(positions[src], positions[dst])
-        elements.append(arrow(rng, x1, y1, x2, y2, now))
+        if plus_style or str(connector.get("routing") or "").lower() in {"orthogonal", "right-angle", "right_angle"}:
+            points = orthogonal_points(positions[src], positions[dst])
+            elements.append(routed_arrow(rng, points, now, stroke=connector_stroke, stroke_width=connector_width))
+            label_x = sum(point[0] for point in points) / len(points)
+            label_y = sum(point[1] for point in points) / len(points)
+        else:
+            x1, y1, x2, y2 = connector_points(positions[src], positions[dst])
+            elements.append(arrow(rng, x1, y1, x2, y2, now, stroke=connector_stroke, stroke_width=connector_width))
+            label_x = (x1 + x2) / 2
+            label_y = (y1 + y2) / 2
         label = str(connector.get("label") or "")
         if label:
             key = f"connector{index}"
-            blocks_svg[key] = text_block_svg(label, 18, 190, "#1e3a8a", 8, 10)
+            blocks_svg[key] = text_block_svg(
+                label,
+                18 if not plus_style else 19,
+                220,
+                "#1e3a8a" if not plus_style else PLUS_STROKE,
+                8,
+                10,
+                DIAGRAM_FONT if plus_style else HANDWRITING_FONT,
+                align="center",
+            )
             add_image_block(
                 elements,
                 files,
                 rng,
                 key,
                 blocks_svg[key],
-                (x1 + x2) / 2 - blocks_svg[key]["width"] / 2,
-                (y1 + y2) / 2 - 38,
+                label_x - blocks_svg[key]["width"] / 2,
+                label_y - 38,
                 now,
             )
 
@@ -733,24 +1533,30 @@ def build_diagram_scene(
         y = dimension(callout.get("y"), max_y + 60 + (index // 2) * 190, 2000)
         w = dimension(callout.get("width") or callout.get("w"), 760, content_width)
         h = dimension(callout.get("height") or callout.get("h"), 160, 600)
-        stroke = str(callout.get("stroke") or "#b91c1c")
-        elements.append(rectangle(rng, x, y, w, h, stroke, 2, now))
+        stroke = str(callout.get("stroke") or (PLUS_STROKE if plus_style else "#b91c1c"))
+        fill = str(callout.get("fill") or callout.get("background") or ([PLUS_PINK, PLUS_YELLOW, PLUS_MINT][index % 3] if plus_style else "transparent"))
+        elements.append(rectangle(rng, x, y, w, h, stroke, 1 if plus_style else 2, now, background=fill))
         key = f"callout{index}"
         blocks_svg[key] = rich_text_block_svg(
             str(callout.get("title") or "Caveat"),
             str(callout.get("body") or callout.get("text") or ""),
             int(w - 48),
-            stroke,
-            22,
-            20,
+            PLUS_STROKE if plus_style else stroke,
+            24 if plus_style else 22,
+            21 if plus_style else 20,
+            align=str(callout.get("align") or ("center" if plus_style else "left")).lower(),
+            font_family=DIAGRAM_FONT if plus_style else HANDWRITING_FONT,
         )
-        add_image_block(elements, files, rng, key, blocks_svg[key], x + 24, y + 26, now)
+        text_x = x + (w - blocks_svg[key]["width"]) / 2 if plus_style else x + 24
+        text_y = y + max(16, (h - blocks_svg[key]["height"]) / 2) if plus_style else y + 26
+        add_image_block(elements, files, rng, key, blocks_svg[key], text_x, text_y, now)
         max_y = max(max_y, y + h)
 
     talk_track = content.get("talk_track") or content.get("short") or ""
     if isinstance(talk_track, list):
         talk_track = "\n".join(str(item) for item in talk_track)
-    if talk_track:
+    include_talk = bool(content.get("include_talk_track_in_board") or content.get("include_script_in_board"))
+    if talk_track and (include_talk or not plus_style):
         y = max_y + 78
         h = 165
         elements.append(rectangle(rng, margin, y, content_width, h, "#111827", 2, now))
@@ -761,6 +1567,7 @@ def build_diagram_scene(
             "#111827",
             23,
             21,
+            font_family=HANDWRITING_FONT,
         )
         add_image_block(elements, files, rng, "talk", blocks_svg["talk"], margin + 32, y + 26, now)
         max_y = y + h
@@ -889,6 +1696,8 @@ def build_legacy_scene(content: dict[str, Any], slug: str) -> tuple[dict[str, An
 
 
 def build_scene(content: dict[str, Any], slug: str) -> tuple[dict[str, Any], dict[str, Any], int, int]:
+    if is_plus_style(content):
+        return build_whiteboard_scene(content, slug)
     if content.get("blocks") or content.get("nodes"):
         return build_diagram_scene(content, slug)
     return build_legacy_scene(content, slug)
@@ -902,6 +1711,112 @@ def svg_image_tag(block: dict[str, Any], x: float, y: float) -> str:
     )
 
 
+def rough_rng(seed: str) -> random.Random:
+    return random.Random(sum((index + 1) * ord(char) for index, char in enumerate(seed)))
+
+
+def rough_segment_points(
+    start: tuple[float, float],
+    end: tuple[float, float],
+    rng: random.Random,
+    amplitude: float,
+) -> list[tuple[float, float]]:
+    x1, y1 = start
+    x2, y2 = end
+    dx = x2 - x1
+    dy = y2 - y1
+    length = max(1.0, math.hypot(dx, dy))
+    nx = -dy / length
+    ny = dx / length
+    steps = max(1, int(length // 48))
+    points: list[tuple[float, float]] = []
+    for step in range(steps + 1):
+        t = step / steps
+        x = x1 + dx * t
+        y = y1 + dy * t
+        if 0 < step < steps:
+            wobble = rng.uniform(-amplitude, amplitude)
+            x += nx * wobble + rng.uniform(-amplitude * 0.35, amplitude * 0.35)
+            y += ny * wobble + rng.uniform(-amplitude * 0.35, amplitude * 0.35)
+        points.append((x, y))
+    return points
+
+
+def rough_points(
+    points: list[tuple[float, float]],
+    seed: str,
+    amplitude: float,
+    closed: bool = False,
+) -> list[tuple[float, float]]:
+    rng = rough_rng(seed)
+    path_points = list(points)
+    if closed and path_points[0] != path_points[-1]:
+        path_points.append(path_points[0])
+    result: list[tuple[float, float]] = []
+    for index in range(len(path_points) - 1):
+        segment = rough_segment_points(path_points[index], path_points[index + 1], rng, amplitude)
+        if result:
+            segment = segment[1:]
+        result.extend(segment)
+    return result
+
+
+def polyline_svg(
+    points: list[tuple[float, float]],
+    color: str,
+    stroke_width: float,
+    marker_id: str | None = None,
+    opacity: float = 1.0,
+    closed: bool = False,
+    dash: str | None = None,
+) -> str:
+    if closed and points and points[0] != points[-1]:
+        points = [*points, points[0]]
+    point_text = " ".join(f"{px:.1f},{py:.1f}" for px, py in points)
+    marker = f' marker-end="url(#{marker_id})"' if marker_id else ""
+    dash_attr = f' stroke-dasharray="{dash}"' if dash else ""
+    return (
+        f'<polyline points="{point_text}" fill="none" stroke="{color}" '
+        f'stroke-width="{stroke_width}" stroke-linecap="round" stroke-linejoin="round" '
+        f'opacity="{opacity}"{dash_attr}{marker} />'
+    )
+
+
+def rough_polyline_svg(
+    points: list[tuple[float, float]],
+    color: str,
+    stroke_width: float,
+    seed: str,
+    marker_id: str | None = None,
+    closed: bool = False,
+    dash: str | None = None,
+) -> str:
+    primary = rough_points(points, seed + "a", 2.2 if closed else 1.6, closed)
+    secondary = rough_points(points, seed + "b", 1.7 if closed else 1.2, closed)
+    return (
+        polyline_svg(secondary, color, max(1.0, stroke_width * 0.8), None, 0.42, closed, dash)
+        + polyline_svg(primary, color, stroke_width, marker_id, 0.95, closed, dash)
+    )
+
+
+def rounded_rect_points(x: float, y: float, w: float, h: float, r: float) -> list[tuple[float, float]]:
+    r = min(r, w / 2, h / 2)
+    return [
+        (x + r, y),
+        (x + w - r, y),
+        (x + w - r / 2, y + r / 3),
+        (x + w, y + r),
+        (x + w, y + h - r),
+        (x + w - r / 2, y + h - r / 3),
+        (x + w - r, y + h),
+        (x + r, y + h),
+        (x + r / 2, y + h - r / 3),
+        (x, y + h - r),
+        (x, y + r),
+        (x + r / 2, y + r / 3),
+    ]
+
+
 def render_preview_svg(scene: dict[str, Any], blocks: dict[str, Any], width: int, height: int) -> str:
     nodes = [
         f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" '
@@ -910,18 +1825,24 @@ def render_preview_svg(scene: dict[str, Any], blocks: dict[str, Any], width: int
     ]
     for element in scene["elements"]:
         if element["type"] == "rectangle":
+            fill = element.get("backgroundColor") or "transparent"
+            dash = "8 10" if element.get("strokeStyle") == "dashed" else None
+            dash_attr = f' stroke-dasharray="{dash}"' if dash else ""
+            rx = 28 if element.get("roundness") else 0
             nodes.append(
                 f'<rect x="{element["x"]:.0f}" y="{element["y"]:.0f}" '
                 f'width="{element["width"]:.0f}" height="{element["height"]:.0f}" '
-                f'rx="28" ry="28" fill="none" stroke="{element["strokeColor"]}" '
-                f'stroke-width="{element["strokeWidth"]}" />'
+                f'rx="{rx}" ry="{rx}" '
+                f'fill="{fill if fill not in {"transparent", "none", ""} else "none"}" '
+                f'stroke="{element["strokeColor"]}" stroke-width="{element["strokeWidth"]}"{dash_attr} />',
             )
         elif element["type"] == "ellipse":
+            fill = element.get("backgroundColor") or "transparent"
             nodes.append(
                 f'<ellipse cx="{element["x"] + element["width"] / 2:.0f}" '
                 f'cy="{element["y"] + element["height"] / 2:.0f}" '
                 f'rx="{element["width"] / 2:.0f}" ry="{element["height"] / 2:.0f}" '
-                f'fill="none" stroke="{element["strokeColor"]}" '
+                f'fill="{fill if fill not in {"transparent", "none", ""} else "none"}" stroke="{element["strokeColor"]}" '
                 f'stroke-width="{element["strokeWidth"]}" />'
             )
         elif element["type"] == "diamond":
@@ -936,15 +1857,16 @@ def render_preview_svg(scene: dict[str, Any], blocks: dict[str, Any], width: int
                 (x, y + h / 2),
             ]
             point_text = " ".join(f"{px:.0f},{py:.0f}" for px, py in points)
+            fill = element.get("backgroundColor") or "transparent"
             nodes.append(
-                f'<polygon points="{point_text}" fill="none" stroke="{element["strokeColor"]}" '
+                f'<polygon points="{point_text}" fill="{fill if fill not in {"transparent", "none", ""} else "none"}" stroke="{element["strokeColor"]}" '
                 f'stroke-width="{element["strokeWidth"]}" />'
             )
         elif element["type"] == "arrow":
             x1 = element["x"]
             y1 = element["y"]
-            x2 = x1 + element["width"]
-            y2 = y1 + element["height"]
+            points = element.get("points") or [[0, 0], [element["width"], element["height"]]]
+            absolute_points = [(x1 + point[0], y1 + point[1]) for point in points]
             marker_id = f"arrow-{element['id']}"
             nodes.append(
                 f'<defs><marker id="{marker_id}" markerWidth="10" markerHeight="10" '
@@ -952,10 +1874,11 @@ def render_preview_svg(scene: dict[str, Any], blocks: dict[str, Any], width: int
                 f'<path d="M0,0 L0,6 L9,3 z" fill="{element["strokeColor"]}" />'
                 "</marker></defs>"
             )
+            point_text = " ".join(f"{px:.0f},{py:.0f}" for px, py in absolute_points)
             nodes.append(
-                f'<line x1="{x1:.0f}" y1="{y1:.0f}" x2="{x2:.0f}" y2="{y2:.0f}" '
-                f'stroke="{element["strokeColor"]}" stroke-width="4" '
-                f'marker-end="url(#{marker_id})" />'
+                f'<polyline points="{point_text}" fill="none" stroke="{element["strokeColor"]}" '
+                f'stroke-width="{element.get("strokeWidth") or 4}" stroke-linecap="round" '
+                f'stroke-linejoin="round" marker-end="url(#{marker_id})" />',
             )
         elif element["type"] == "image":
             key = element["fileId"].split("_file_")[0]
