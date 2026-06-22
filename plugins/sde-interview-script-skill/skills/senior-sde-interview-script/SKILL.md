@@ -42,6 +42,38 @@ This skill is not a keyword summarizer. Treat the source paragraph as raw materi
 
 Do not put interview coaching phrases into the board JSON. Avoid `I would`, `my judgment`, `interview signal`, `candidate`, `面试可讲`, `我会`, `我的判断`, or `面试里` inside `task`, `constraints`, `blocks`, `connectors`, or `callouts`. Use those only in `talk_track` or in chat when the user asks for copyable speaking notes.
 
+## Source Sufficiency And Auto Completion
+
+Before creating the board JSON, classify the source:
+
+- `complete`: the excerpt already contains enough mechanism, tradeoff, example, and caveat material for a senior answer.
+- `partial`: the excerpt has the core idea but misses one or two points a strong candidate would naturally mention.
+- `thin`: the user provided only a title, short prompt, or incomplete fragment.
+
+Default behavior is automatic completion based on the content. Do not ask for more text unless the topic is ambiguous enough that any completion would likely be wrong.
+
+Completion rules:
+
+- For stable system-design or API-design knowledge, use model background to fill only the missing senior-level points.
+- For current, niche, version-specific, product-specific, legal, medical, financial, or otherwise time-sensitive facts, use browsing or available trusted tools when the host allows it.
+- Prefer primary or authoritative sources when browsing is used.
+- Keep completion bounded: add at most 2-4 missing mechanisms, examples, caveats, or production implications.
+- Do not turn the answer into a textbook. The board should stay concise and interview-usable.
+- If a point is inferred rather than present in the source, keep it conservative and avoid implying it came from the pasted text.
+
+When the source is partial or thin, include compact metadata in the JSON:
+
+```json
+"source_notes": {
+  "completeness": "thin",
+  "completion_mode": "model_background",
+  "added_points": ["write amplification", "read amplification", "production fit"],
+  "uncertain_points": []
+}
+```
+
+Use `completion_mode: "none"` for complete sources, `"model_background"` for stable background completion, and `"researched"` when browsing or external tools were used. Keep `source_notes` out of the visual unless the user asks for citations or audit detail.
+
 Before creating the board JSON, infer and write from this internal structure:
 
 1. **Whiteboard objective.** The concrete design question being solved.

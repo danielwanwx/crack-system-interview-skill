@@ -37,6 +37,9 @@ REQUIRED_CATEGORIES = {
 }
 REQUIRED_SIZES = {"short", "medium", "long"}
 REQUIRED_LANGUAGES = {"Chinese", "English"}
+REQUIRED_SOURCE_COMPLETENESS = {"complete", "thin"}
+VALID_SOURCE_COMPLETENESS = {"complete", "partial", "thin"}
+VALID_COMPLETION_MODES = {"none", "model_background", "researched"}
 
 SMOKE_METADATA: dict[str, dict[str, str]] = {
     "api-design-concept-map.zh.json": {
@@ -177,6 +180,26 @@ def validate_case_metadata(case_path: Path, fixture: dict[str, Any], metadata: d
     if size == "long" and block_count < 6:
         raise AssertionError(f"{case_path.name}: long case is too small: {block_count} blocks")
 
+    source_notes = fixture.get("source_notes")
+    completeness = metadata.get("source_completeness", "complete")
+    completion_mode = metadata.get("completion_mode", "none")
+    if completeness not in VALID_SOURCE_COMPLETENESS:
+        raise AssertionError(f"{case_path.name}: invalid source_completeness {completeness!r}")
+    if completion_mode not in VALID_COMPLETION_MODES:
+        raise AssertionError(f"{case_path.name}: invalid completion_mode {completion_mode!r}")
+
+    if completeness == "complete":
+        return
+    if not isinstance(source_notes, dict):
+        raise AssertionError(f"{case_path.name}: partial/thin cases must include source_notes")
+    if str(source_notes.get("completeness") or "") != completeness:
+        raise AssertionError(f"{case_path.name}: source_notes completeness does not match QA metadata")
+    if str(source_notes.get("completion_mode") or "") != completion_mode:
+        raise AssertionError(f"{case_path.name}: source_notes completion_mode does not match QA metadata")
+    added_points = source_notes.get("added_points")
+    if not isinstance(added_points, list) or len(added_points) < 2:
+        raise AssertionError(f"{case_path.name}: partial/thin cases need at least two added_points")
+
 
 def absolute_points(element: dict[str, Any]) -> list[list[float]]:
     x = float(element.get("x", 0))
@@ -287,6 +310,7 @@ def run_release_cases(out_dir: Path, renderer: Path) -> None:
     categories: set[str] = set()
     sizes: set[str] = set()
     languages: set[str] = set()
+    source_completeness: set[str] = set()
     print(f"Release QA rendering {len(case_paths)} fixtures into {out_dir}")
 
     for case_path in case_paths:
@@ -303,6 +327,7 @@ def run_release_cases(out_dir: Path, renderer: Path) -> None:
         categories.add(metadata["chapter_category"])
         sizes.add(metadata["content_size"])
         languages.add(str(fixture.get("language") or ""))
+        source_completeness.add(metadata.get("source_completeness", "complete"))
         compact_counts = ", ".join(f"{key}={value}" for key, value in sorted(counts.items()))
         print(
             f"PASS {case_path.name} "
@@ -314,6 +339,7 @@ def run_release_cases(out_dir: Path, renderer: Path) -> None:
     missing_categories = REQUIRED_CATEGORIES - categories
     missing_sizes = REQUIRED_SIZES - sizes
     missing_languages = REQUIRED_LANGUAGES - languages
+    missing_source_completeness = REQUIRED_SOURCE_COMPLETENESS - source_completeness
     if missing_layouts:
         raise AssertionError(f"Missing release layout coverage: {sorted(missing_layouts)}")
     if missing_categories:
@@ -322,12 +348,15 @@ def run_release_cases(out_dir: Path, renderer: Path) -> None:
         raise AssertionError(f"Missing content size coverage: {sorted(missing_sizes)}")
     if missing_languages:
         raise AssertionError(f"Missing language coverage: {sorted(missing_languages)}")
+    if missing_source_completeness:
+        raise AssertionError(f"Missing source-completeness coverage: {sorted(missing_source_completeness)}")
 
     print("Release matrix:")
     print(f"  layouts: {', '.join(sorted(layouts))}")
     print(f"  categories: {', '.join(sorted(categories))}")
     print(f"  sizes: {', '.join(sorted(sizes))}")
     print(f"  languages: {', '.join(sorted(languages))}")
+    print(f"  source completeness: {', '.join(sorted(source_completeness))}")
 
 
 def main() -> None:

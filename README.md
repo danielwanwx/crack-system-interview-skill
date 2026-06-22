@@ -38,6 +38,8 @@ The generated board explains the material through native blocks, arrows, compari
 
 The content step is intentionally LLM-heavy: the agent should first infer what a strong candidate would understand, then split output into two layers. The board contains professional whiteboard content: design choices, mechanisms, constraints, data flows, and tradeoffs. The `talk_track` contains the candidate-ready wording. Blocks should not be keyword flashcards, but they also should not sound like coaching notes.
 
+The agent should also do an automatic source-sufficiency check. If the pasted text is already complete, it should only condense and structure it. If the text is partial or thin, it should fill the missing stable background needed for a useful board and talk track, such as mechanisms, tradeoffs, examples, caveats, or production implications. Browsing is reserved for current, version-specific, product-specific, niche, or high-stakes facts; when browsing is used, prefer primary or authoritative sources. The JSON can include `source_notes` with `completeness`, `completion_mode`, `added_points`, and `uncertain_points`, but those notes are not rendered by default.
+
 Before drawing, the agent should do a compact pre-drawing plan. For short material, a single comparison, pipeline, concept map, or architecture board is usually enough. For larger system-design material, use `layout: "modular-composite"` and split the board into modules. Good signals for modular mode include: more than five meaningful entities, more than two flows, multiple technical types (API, storage, cache, queue, consistency, failure recovery), or a source paragraph that mixes requirements, architecture, tradeoffs, and failure modes.
 
 The planning shape can be embedded in the JSON so another host can understand the intent:
@@ -231,6 +233,7 @@ fixtures, then validates:
 - Chinese and English output
 - native Excalidraw blocks, handwritten text images, connector routing, connector-label proximity, and bottom canvas padding
 - Codex, Cursor, and Claude plugin manifests plus synchronized renderer copies
+- auto-completion coverage for thin or partial sources via `source_notes`
 
 Network share links are intentionally outside the offline gate. To smoke-test
 link generation for one rendered board:

@@ -45,6 +45,38 @@ For interview or technical-learning material, do not summarize the paragraph mec
 
 The board must not sound like interview coaching. Avoid phrases like `I would`, `my decision rule`, `interview signal`, `面试可讲`, `我会`, `我的判断`, or `面试里` inside `task`, `constraints`, `blocks`, `connectors`, or `callouts`. Put those in `talk_track` only.
 
+## Source Sufficiency And Auto Completion
+
+Before writing the board, classify the pasted source:
+
+- `complete`: it already has the mechanism, tradeoffs, examples, and caveats needed for a solid visual.
+- `partial`: it has the core idea but misses one or two important interview points.
+- `thin`: it is only a title, a short prompt, or a fragment.
+
+Default behavior is automatic completion based on the content. Do not ask the user to paste more unless the topic is ambiguous enough that any completion would likely be wrong.
+
+Completion rules:
+
+- For stable technical knowledge, use model background to fill only the missing pieces needed for a strong board and talk track.
+- For current, niche, version-specific, product-specific, legal, medical, financial, or otherwise time-sensitive facts, use browsing or available trusted tools when the host allows it.
+- Prefer primary or authoritative sources when browsing is used.
+- Keep completion bounded: add at most 2-4 missing mechanisms, examples, caveats, or production implications.
+- Do not turn completion into a long tutorial. The final board should still be a concise whiteboard.
+- If a fact is inferred rather than present in the source, keep it conservative and avoid pretending it came from the pasted text.
+
+When the source is partial or thin, include a compact metadata object in the JSON so future QA and host agents can see what happened:
+
+```json
+"source_notes": {
+  "completeness": "partial",
+  "completion_mode": "model_background",
+  "added_points": ["write amplification", "read amplification", "production fit"],
+  "uncertain_points": []
+}
+```
+
+Use `completion_mode: "none"` for complete sources, `"model_background"` for stable background completion, and `"researched"` when browsing or external tools were used. Do not render `source_notes` on the board unless the user asks for citations or audit detail.
+
 Before writing the JSON, mentally produce this content plan:
 
 1. **Whiteboard objective**: the concrete design question or concept being solved.
