@@ -30,6 +30,7 @@ REQUIRED_CATEGORIES = {
     "advanced-topic",
     "api-design",
     "core-concept",
+    "framework",
     "key-technology",
     "pattern",
     "problem-breakdown",

@@ -226,7 +226,7 @@ The gate renders the curated Hello Interview smoke set plus release-specific
 fixtures, then validates:
 
 - all six layouts: `architecture`, `comparison`, `concept-map`, `decision`, `modular-composite`, `pipeline`
-- Hello Interview chapter styles: API design, core concepts, key technologies, patterns, advanced topics, and problem breakdowns
+- Hello Interview chapter styles: In a Hurry framework chapters, API design, core concepts, key technologies, patterns, advanced topics, and problem breakdowns
 - short, medium, and long content
 - Chinese and English output
 - native Excalidraw blocks, handwritten text images, connector routing, connector-label proximity, and bottom canvas padding
