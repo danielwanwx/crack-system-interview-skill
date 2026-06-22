@@ -50,6 +50,13 @@ PLUS_PINK = "#fcc2d7"
 PLUS_YELLOW = "#fffbe6"
 PLUS_GREEN = "#f1fcf3"
 PLUS_MINT = "#eef8ff"
+PLUS_EDGE_BLUE = "#d0ebff"
+PLUS_DATABASE_GREEN = "#d8f5a2"
+PLUS_CACHE_MINT = "#c3fae8"
+PLUS_QUEUE_LAVENDER = "#e5dbff"
+PLUS_STORAGE_GREEN = "#d3f9d8"
+PLUS_NOTE_GRAY = "#f8f9fa"
+PLUS_CLIENT_FILL = "#ffffff"
 
 WHITEBOARD_BOTTOM_PADDING = 185
 DIAGRAM_BOTTOM_PADDING = 140
@@ -638,14 +645,28 @@ def plus_block_fill(block: dict[str, Any], index: int = 0) -> str:
     if block.get("background") is not None:
         return str(block.get("background"))
     kind = block_kind(block)
-    if kind in {"note", "callout", "question", "followup", "follow-up", "interviewer"}:
+    if kind in {"frame", "task", "constraints", "section"}:
+        return "transparent"
+    if kind in {"client", "actor", "user", "frontend"}:
+        return PLUS_CLIENT_FILL
+    if kind in {"api", "gateway", "edge", "cdn"}:
+        return PLUS_EDGE_BLUE
+    if kind in {"database", "db"}:
+        return PLUS_DATABASE_GREEN
+    if kind in {"cache", "redis"}:
+        return PLUS_CACHE_MINT
+    if kind in {"queue", "stream", "kafka"}:
+        return PLUS_QUEUE_LAVENDER
+    if kind in {"storage", "store", "data", "s3", "blob", "file"}:
+        return PLUS_STORAGE_GREEN
+    if kind in {"note", "callout", "example"}:
+        return PLUS_NOTE_GRAY
+    if kind in {"question", "followup", "follow-up", "interviewer"}:
         return PLUS_PINK
     if kind in {"caveat", "risk", "tradeoff", "trade-off", "warning"}:
         return PLUS_YELLOW
     if kind in {"answer", "principle", "takeaway", "conclusion"}:
         return PLUS_GREEN
-    if kind in {"frame", "task", "constraints", "section"}:
-        return "transparent"
     if kind in {"annotation", "hint"}:
         return PLUS_MINT
     return PLUS_BLUE
@@ -2041,7 +2062,6 @@ def build_whiteboard_scene(content: dict[str, Any], slug: str) -> tuple[dict[str
         note = dict(callout)
         note.setdefault("id", f"callout{index}")
         note.setdefault("kind", "note")
-        note.setdefault("fill", [PLUS_PINK, PLUS_YELLOW, PLUS_MINT][index % 3])
         note.setdefault("title_size", 24)
         note.setdefault("body_size", 20)
         h = max(h, whiteboard_block_min_height(note, w, default_h))
@@ -2417,7 +2437,13 @@ def build_diagram_scene(
         w = dimension(callout.get("width") or callout.get("w"), 760, content_width)
         h = dimension(callout.get("height") or callout.get("h"), 160, 600)
         stroke = str(callout.get("stroke") or (PLUS_STROKE if plus_style else "#b91c1c"))
-        fill = str(callout.get("fill") or callout.get("background") or ([PLUS_PINK, PLUS_YELLOW, PLUS_MINT][index % 3] if plus_style else "transparent"))
+        callout_for_fill = dict(callout)
+        callout_for_fill.setdefault("kind", "note")
+        fill = str(
+            callout.get("fill")
+            or callout.get("background")
+            or (plus_block_fill(callout_for_fill, index) if plus_style else "transparent")
+        )
         elements.append(rectangle(rng, x, y, w, h, stroke, 1 if plus_style else 2, now, background=fill))
         key = f"callout{index}"
         blocks_svg[key] = rich_text_block_svg(

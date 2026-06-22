@@ -87,6 +87,7 @@ Renderer invariants:
 - Connectors should leave and enter block edges perpendicularly using short port stubs; avoid long segments that run parallel against a block border.
 - Connector labels should read as line annotations: keep them close to the line, slightly offset from the stroke, and only move them farther when needed to avoid blocks.
 - Whiteboard previews keep bottom padding beyond the lowest block so screenshots and SVG previews do not crop the final row.
+- Block backgrounds use a semantic palette, not random cycling: the same `kind` gets the same fill, and colors communicate role such as client, API, database, cache, queue, storage, warning, note, or answer.
 - Decorative icons are opt-in, because they reduce text width and increase overlap risk.
 
 This is deliberately not a `rules` or `CLAUDE.md` package. Rules are too host-specific and passive; plugin + skill packaging gives installable discovery, namespaced invocation, bundled scripts, and optional MCP wiring.

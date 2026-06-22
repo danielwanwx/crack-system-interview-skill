@@ -40,6 +40,48 @@ REQUIRED_LANGUAGES = {"Chinese", "English"}
 REQUIRED_SOURCE_COMPLETENESS = {"complete", "thin"}
 VALID_SOURCE_COMPLETENESS = {"complete", "partial", "thin"}
 VALID_COMPLETION_MODES = {"none", "model_background", "researched"}
+SEMANTIC_KIND_FILLS = {
+    "client": "#ffffff",
+    "actor": "#ffffff",
+    "user": "#ffffff",
+    "frontend": "#ffffff",
+    "api": "#d0ebff",
+    "gateway": "#d0ebff",
+    "edge": "#d0ebff",
+    "cdn": "#d0ebff",
+    "database": "#d8f5a2",
+    "db": "#d8f5a2",
+    "cache": "#c3fae8",
+    "redis": "#c3fae8",
+    "queue": "#e5dbff",
+    "stream": "#e5dbff",
+    "kafka": "#e5dbff",
+    "storage": "#d3f9d8",
+    "store": "#d3f9d8",
+    "data": "#d3f9d8",
+    "s3": "#d3f9d8",
+    "blob": "#d3f9d8",
+    "file": "#d3f9d8",
+    "note": "#f8f9fa",
+    "callout": "#f8f9fa",
+    "example": "#f8f9fa",
+    "question": "#fcc2d7",
+    "followup": "#fcc2d7",
+    "follow-up": "#fcc2d7",
+    "interviewer": "#fcc2d7",
+    "caveat": "#fffbe6",
+    "risk": "#fffbe6",
+    "tradeoff": "#fffbe6",
+    "trade-off": "#fffbe6",
+    "warning": "#fffbe6",
+    "answer": "#f1fcf3",
+    "principle": "#f1fcf3",
+    "takeaway": "#f1fcf3",
+    "conclusion": "#f1fcf3",
+    "annotation": "#eef8ff",
+    "hint": "#eef8ff",
+}
+DEFAULT_SEMANTIC_FILL = "#a5d8ff"
 
 SMOKE_METADATA: dict[str, dict[str, str]] = {
     "api-design-concept-map.zh.json": {
@@ -145,6 +187,10 @@ def load_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def expected_fill_for_kind(kind: str) -> str:
+    return SEMANTIC_KIND_FILLS.get(kind.lower(), DEFAULT_SEMANTIC_FILL)
+
+
 def metadata_for(case_path: Path, fixture: dict[str, Any]) -> dict[str, str]:
     metadata = fixture.get("qa")
     if isinstance(metadata, dict):
@@ -231,18 +277,53 @@ def rect_to_axis_segment_distance(
     return min(math.hypot(center_x - x1, center_y - y1), math.hypot(center_x - x2, center_y - y2))
 
 
-def validate_release_scene(case_path: Path, excalidraw_path: Path, preview_path: Path) -> None:
+def validate_release_scene(case_path: Path, fixture: dict[str, Any], excalidraw_path: Path, preview_path: Path) -> None:
     scene = load_json(excalidraw_path)
     _, canvas_height = smoke.svg_size(preview_path)
     max_bottom = 0.0
     connectors: dict[tuple[str, str], dict[str, Any]] = {}
     labels: list[dict[str, Any]] = []
+    kind_by_block_id: dict[str, str] = {}
+    explicit_fill_ids: set[str] = set()
+    seen_kind_fills: dict[str, str] = {}
+
+    for block in fixture.get("blocks") or []:
+        if not isinstance(block, dict):
+            continue
+        block_id = str(block.get("id") or "")
+        if not block_id:
+            continue
+        kind_by_block_id[block_id] = str(block.get("kind") or block.get("type") or block.get("shape") or "concept").lower()
+        if block.get("fill") is not None or block.get("background") is not None:
+            explicit_fill_ids.add(block_id)
+    for index, callout in enumerate(fixture.get("callouts") or []):
+        if not isinstance(callout, dict):
+            continue
+        block_id = str(callout.get("id") or f"callout{index}")
+        kind_by_block_id[block_id] = str(callout.get("kind") or callout.get("type") or "note").lower()
+        if callout.get("fill") is not None or callout.get("background") is not None:
+            explicit_fill_ids.add(block_id)
 
     for element in scene.get("elements", []):
         bounds = smoke.element_bounds(element)
         if bounds:
             max_bottom = max(max_bottom, bounds[3])
         custom = element.get("customData") or {}
+        if custom.get("role") == "block":
+            block_id = str(custom.get("blockId") or "")
+            kind = kind_by_block_id.get(block_id)
+            if kind and block_id not in explicit_fill_ids:
+                fill = str(element.get("backgroundColor") or "transparent")
+                expected_fill = expected_fill_for_kind(kind)
+                if fill != expected_fill:
+                    raise AssertionError(
+                        f"{case_path.name}: block {block_id} kind {kind!r} expected fill {expected_fill}, got {fill}",
+                    )
+                previous_fill = seen_kind_fills.setdefault(kind, fill)
+                if previous_fill != fill:
+                    raise AssertionError(
+                        f"{case_path.name}: kind {kind!r} uses inconsistent fills: {previous_fill} and {fill}",
+                    )
         if custom.get("role") == "connector":
             connectors[(str(custom.get("from") or ""), str(custom.get("to") or ""))] = element
         if custom.get("role") == "connector_label":
@@ -321,7 +402,7 @@ def run_release_cases(out_dir: Path, renderer: Path) -> None:
         layout, counts, preview = smoke.run_case(case_path, out_dir, renderer)
         slug = case_path.stem.replace(".", "-")
         case_out = out_dir / slug
-        validate_release_scene(case_path, case_out / f"{slug}.excalidraw", Path(preview))
+        validate_release_scene(case_path, fixture, case_out / f"{slug}.excalidraw", Path(preview))
 
         layouts.add(layout)
         categories.add(metadata["chapter_category"])
