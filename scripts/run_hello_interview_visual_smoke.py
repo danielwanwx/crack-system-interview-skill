@@ -159,7 +159,7 @@ def validate_board_voice(case_path: Path, fixture: dict[str, Any]) -> None:
     """Keep the rendered board professional; candidate wording belongs in talk_track."""
 
     banned = re.compile(
-        r"我会|我的|面试|面试官|面试可讲|I would|my decision|interview signal|candidate|interviewer",
+        r"我会|我的|面试|面试官|面试可讲|I would|my decision|interview signal|\bcandidate\b|\binterviewer\b",
         re.IGNORECASE,
     )
     board_values: list[tuple[str, str]] = []

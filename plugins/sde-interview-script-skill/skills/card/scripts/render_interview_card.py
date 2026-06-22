@@ -1999,7 +1999,7 @@ def build_whiteboard_scene(content: dict[str, Any], slug: str) -> tuple[dict[str
                 10,
                 14,
                 DIAGRAM_FONT,
-                align="center",
+                align="left",
             )
             label_key = f"wb_connector_{index}"
             blocks_svg[label_key] = label_block
@@ -2007,7 +2007,8 @@ def build_whiteboard_scene(content: dict[str, Any], slug: str) -> tuple[dict[str
             label_dy = dimension(connector.get("label_dy") or connector.get("labelDy"), 0, 1600)
             label_obstacles = [
                 inflated_rect(pos, CONNECTOR_LABEL_OBSTACLE_PADDING)
-                for pos in positions.values()
+                for block_id, pos in positions.items()
+                if block_id not in {src, dst}
             ]
             label_x, label_y = choose_label_position(points, label_block, label_obstacles, canvas_width, label_dx, label_dy)
             add_image_block(
@@ -2334,11 +2335,12 @@ def build_diagram_scene(
                     10,
                     14,
                     DIAGRAM_FONT if plus_style else HANDWRITING_FONT,
-                    align="center",
+                    align="left",
                 )
                 label_obstacles = [
                     inflated_rect(pos, CONNECTOR_LABEL_OBSTACLE_PADDING)
-                    for pos in positions.values()
+                    for block_id, pos in positions.items()
+                    if block_id not in {src, dst}
                 ]
                 label_x, label_y = choose_label_position(points, blocks_svg[key], label_obstacles, canvas_width)
                 add_image_block(
@@ -2388,11 +2390,12 @@ def build_diagram_scene(
                 10,
                 14,
                 DIAGRAM_FONT if plus_style else HANDWRITING_FONT,
-                align="center",
+                align="left",
             )
             label_obstacles = [
                 inflated_rect(pos, CONNECTOR_LABEL_OBSTACLE_PADDING)
-                for pos in positions.values()
+                for block_id, pos in positions.items()
+                if block_id not in {src, dst}
             ]
             label_x, label_y = choose_label_position(points if plus_style else [[label_x, label_y], [label_x, label_y]], blocks_svg[key], label_obstacles, canvas_width)
             add_image_block(

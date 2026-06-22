@@ -214,6 +214,31 @@ Bilingual:
 Use $card bilingual English and Chinese: <paste text here>
 ```
 
+## Release QA
+
+Before cutting a release, run the full offline gate:
+
+```bash
+python3 scripts/run_release_qa.py --out /tmp/hello-interview-release-qa
+```
+
+The gate renders the curated Hello Interview smoke set plus release-specific
+fixtures, then validates:
+
+- all six layouts: `architecture`, `comparison`, `concept-map`, `decision`, `modular-composite`, `pipeline`
+- Hello Interview chapter styles: API design, core concepts, key technologies, patterns, advanced topics, and problem breakdowns
+- short, medium, and long content
+- Chinese and English output
+- native Excalidraw blocks, handwritten text images, connector routing, connector-label proximity, and bottom canvas padding
+- Codex, Cursor, and Claude plugin manifests plus synchronized renderer copies
+
+Network share links are intentionally outside the offline gate. To smoke-test
+link generation for one rendered board:
+
+```bash
+node scripts/share_excalidraw.mjs --input /tmp/hello-interview-release-qa/<case>/<case>.excalidraw
+```
+
 ## Install In Codex
 
 Add this repository as a Codex plugin marketplace:
