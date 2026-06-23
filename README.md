@@ -1,6 +1,8 @@
 # SDE Interview Script Skill
 
-A cross-agent plugin/skill package for turning pasted text into Excalidraw-style whiteboard visuals. It uses native Excalidraw blocks: dashed task/constraints frames, light-blue component blocks, black arrows, circles/squares/rectangles, and sticky notes for gotchas. It avoids decorative component icons by default so layout stays clean and predictable. It includes a short `$card` entrypoint for general text and a backward-compatible `$senior-sde-interview-script` entrypoint for SDE interview prep. Output language defaults to English, and users can request Chinese or another language in the prompt.
+A cross-agent plugin/skill package for helping users digest hard technical and interview material. It turns dense pasted text into an Excalidraw-style whiteboard sample plus a concise talk track, so the user can understand the material, rehearse an interview answer, and see how the topic could be drawn on a whiteboard.
+
+It uses native Excalidraw blocks: dashed task/constraints frames, semantic component blocks, black arrows, circles/squares/rectangles, and sticky notes for gotchas. It avoids decorative component icons by default so layout stays clean and predictable. It includes a short `$card` entrypoint for general text and a backward-compatible `$senior-sde-interview-script` entrypoint for SDE interview prep. Output language defaults to English, and users can request Chinese or another language in the prompt.
 
 ## Simplest Usage
 
@@ -342,11 +344,11 @@ No agent host should auto-enable arbitrary cloned plugins without user trust. So
 
 ## 中文说明
 
-这个 repo 不是单纯的 prompt 或规则文件，而是跨宿主的 plugin + skill 包：
+这个 repo 不是单纯的 prompt 或规则文件，而是跨宿主的 plugin + skill 包。它的主要目的不是把文本“摘要成图”，而是帮助用户消化难嚼的技术资料和面试材料：先把核心心智模型讲清楚，再生成可以模仿的白板图，最后给出能直接练习的面试讲稿。
 
 - Codex 用 `.agents` / `.codex-plugin`
 - Cursor 用 `.cursor-plugin`
 - Claude Code 用 `.claude-plugin`
 - 三者共享同一个 `SKILL.md` 和渲染脚本
 
-安装后，最简单的调用就是 `Use $card: <粘贴文本>`。如果在 Claude Code 里，用 `/card <粘贴文本>`。默认输出英文；如果 prompt 里写 `用中文`、`Chinese`、`Spanish` 或其他语言，就按指定语言输出。聊天回复默认只给图片和链接。
+安装后，最简单的调用就是 `Use $card: <粘贴文本>`。如果在 Claude Code 里，用 `/card <粘贴文本>`。默认输出英文；如果 prompt 里写 `用中文`、`Chinese`、`Spanish` 或其他语言，就按指定语言输出。聊天回复默认包含预览图、Excalidraw 链接或本地路径，以及可复制的面试讲稿。

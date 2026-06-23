@@ -1,13 +1,19 @@
 ---
 name: card
-description: "Turn pasted text, article excerpts, study notes, interview topics, system design/API notes, or explanation requests into diagram-first Excalidraw visuals with concise embedded talk tracks. Use when the user says use $card, make a card, draw an Excalidraw card, create a visual explanation, summarize this into a visual note, prepare an interview answer, or wants a short explainable version of arbitrary text. Prefer dynamic diagrams, decision trees, comparisons, pipelines, concept maps, architecture-style blocks, and callouts over long article-like script blocks."
+description: "Help users digest difficult technical or interview material by turning pasted text, article excerpts, study notes, system design/API notes, or explanation requests into coherent Excalidraw whiteboard samples plus concise talk tracks. Use when the user says use $card, make a card, draw an Excalidraw card, create a visual explanation, summarize this into a visual note, prepare an interview answer, understand a hard technical topic, or wants a short explainable version of dense material. Prefer dynamic diagrams, decision trees, comparisons, pipelines, concept maps, architecture-style blocks, and callouts over long article-like script blocks."
 ---
 
 # Card
 
 ## Goal
 
-Create an Excalidraw whiteboard visual explanation, not a rewritten article. The board should feel like a hand-drawn technical whiteboard: task/constraints at the top, native Excalidraw blocks in the middle, arrows that show relationships, and sticky notes for gotchas, caveats, or production implications.
+Help the user understand, digest, and rehearse difficult technical material. Create an Excalidraw whiteboard sample plus a concise talk track, not a rewritten article. The board should feel like a hand-drawn technical whiteboard that a candidate could use as a model in an interview: task/constraints at the top, native Excalidraw blocks in the middle, arrows that show relationships, and sticky notes for gotchas, caveats, or production implications.
+
+This skill has three jobs:
+
+1. Make hard material easier to understand.
+2. Turn that understanding into interview-ready speaking notes.
+3. Provide a whiteboard example the user can imitate when explaining the topic.
 
 Default to English unless the user specifies Chinese or another language.
 

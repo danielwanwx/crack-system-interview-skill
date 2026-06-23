@@ -1,13 +1,19 @@
 ---
 name: senior-sde-interview-script
-description: "Convert Hello Interview excerpts, system design notes, API design notes, or other technical interview material into senior SDE interview-ready, diagram-first Excalidraw visuals with concise embedded talk tracks. Use when the user provides source paragraphs and asks for a concise but solid speakable interview answer, memorization-friendly draft, English-default or multilingual output, Chinese/English bilingual version, 30-second version, Excalidraw diagram, or asks to preserve this response pattern. Also use when the user wants answers to sound senior, practical, opinionated, and interview-ready without becoming textbook-like, overly long, or overly autobiographical."
+description: "Help senior SDE candidates digest difficult interview material, Hello Interview excerpts, system design notes, API design notes, and dense technical topics into coherent Excalidraw whiteboard samples plus concise speakable interview scripts. Use when the user provides source paragraphs and asks for a solid answer, memorization-friendly draft, multilingual output, Chinese/English bilingual version, 30-second version, Excalidraw diagram, whiteboard example, or wants to understand a hard topic well enough to explain it in an interview. Also use when the user wants answers to sound senior, practical, opinionated, and interview-ready without becoming textbook-like, overly long, or overly autobiographical."
 ---
 
 # Senior SDE Interview Script
 
 ## Goal
 
-Turn technical source material into a visual explanation a senior SDE candidate could use in an interview. The output should feel like a real Excalidraw system-design whiteboard: task/constraints at the top, native blocks in the middle, arrows for relationships, and sticky notes for gotchas, caveats, or production implications. Do not turn the source into a long article card.
+Help a senior SDE candidate digest hard interview material, rehearse a clear spoken explanation, and see how the topic could be drawn on a whiteboard. Turn technical source material into an Excalidraw whiteboard sample plus a concise interview script. The output should feel like a real system-design whiteboard: task/constraints at the top, native blocks in the middle, arrows for relationships, and sticky notes for gotchas, caveats, or production implications. Do not turn the source into a long article card.
+
+This skill has three jobs:
+
+1. Make dense or hard-to-chew technical material easier to understand.
+2. Convert that understanding into a senior-candidate talk track.
+3. Give the user a whiteboard pattern they can imitate during interviews.
 
 Default to English unless the user explicitly asks for Chinese or another language.
 
