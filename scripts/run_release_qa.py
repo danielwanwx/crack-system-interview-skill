@@ -9,6 +9,7 @@ English output, plus cross-agent plugin packaging invariants.
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import json
 import math
 import os
@@ -456,6 +457,35 @@ def compile_python() -> None:
     subprocess.run([sys.executable, "-m", "py_compile", *(str(path) for path in paths)], check=True, env=env)
 
 
+def validate_text_wrapping(renderer: Path) -> None:
+    spec = importlib.util.spec_from_file_location("card_renderer_for_qa", renderer)
+    if spec is None or spec.loader is None:
+        raise AssertionError(f"Cannot import renderer for text wrapping QA: {renderer}")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+
+    title_lines = module.wrap_text("Geohash: encode grid path", 28, 356)
+    if title_lines != ["Geohash: encode grid path"]:
+        raise AssertionError(f"Premature block title wrapping: {title_lines}")
+
+    body_lines = module.wrap_text("Store each restaurant's location as a geohash like dr5ru.", 20, 356)
+    if body_lines != ["Store each restaurant's location as a", "geohash like dr5ru."]:
+        raise AssertionError(f"Unexpected block body wrapping: {body_lines}")
+
+    label_block = module.text_block_svg(
+        "loses 2D meaning",
+        17,
+        54,
+        "#111",
+        10,
+        14,
+        module.DIAGRAM_FONT,
+        break_long_words=False,
+    )
+    if label_block.get("lines") != ["loses", "2D", "meaning"]:
+        raise AssertionError(f"Connector label split a word: {label_block.get('lines')}")
+
+
 def run_release_cases(out_dir: Path, renderer: Path) -> None:
     case_paths = sorted(SMOKE_CASE_DIR.glob("*.json")) + sorted(RELEASE_CASE_DIR.glob("*.json"))
     if not case_paths:
@@ -518,6 +548,7 @@ def main() -> None:
     args = parse_args()
     validate_packaging()
     compile_python()
+    validate_text_wrapping(args.renderer)
     run_release_cases(args.out, args.renderer)
     print("RELEASE_QA_PASS")
 

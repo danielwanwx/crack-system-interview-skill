@@ -126,13 +126,13 @@ def token_width(token: str, size: int) -> float:
     for char in token:
         code = ord(char)
         if char.isspace():
-            width += size * 0.32
+            width += size * 0.28
         elif 0x3400 <= code <= 0x9FFF:
-            width += size * 0.98
+            width += size * 0.90
         elif char in "`.,;:/|!()[]{}":
-            width += size * 0.35
+            width += size * 0.30
         else:
-            width += size * 0.56
+            width += size * 0.47
     return width
 
 
