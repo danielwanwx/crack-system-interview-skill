@@ -60,7 +60,7 @@ PLUS_CLIENT_FILL = "#ffffff"
 
 WHITEBOARD_BOTTOM_PADDING = 185
 DIAGRAM_BOTTOM_PADDING = 140
-CONNECTOR_LABEL_MAX_WIDTH = 300
+CONNECTOR_LABEL_MAX_WIDTH = 144
 CONNECTOR_LABEL_GAP = 6
 CONNECTOR_LABEL_OBSTACLE_PADDING = 10
 
@@ -1161,6 +1161,62 @@ def label_bounds(x: float, y: float, block: dict[str, Any]) -> tuple[float, floa
     return x, y, float(block["width"]), float(block["height"])
 
 
+def connector_label_width(
+    src: tuple[float, float, float, float],
+    dst: tuple[float, float, float, float],
+) -> int:
+    sx, sy, sw, sh = src
+    dx, dy, dw, dh = dst
+    horizontal_gap = max(dx - (sx + sw), sx - (dx + dw), 0)
+    vertical_overlap = max(sy, dy) < min(sy + sh, dy + dh)
+    if horizontal_gap > 0 and vertical_overlap:
+        clear_width = horizontal_gap - 2 * CONNECTOR_LABEL_OBSTACLE_PADDING - 18
+        return int(max(54, min(CONNECTOR_LABEL_MAX_WIDTH, clear_width)))
+    return CONNECTOR_LABEL_MAX_WIDTH
+
+
+def rect_overlap_area(
+    a: tuple[float, float, float, float],
+    b: tuple[float, float, float, float],
+) -> float:
+    ax, ay, aw, ah = a
+    bx, by, bw, bh = b
+    overlap_w = max(0.0, min(ax + aw, bx + bw) - max(ax, bx))
+    overlap_h = max(0.0, min(ay + ah, by + bh) - max(ay, by))
+    return overlap_w * overlap_h
+
+
+def rect_to_segment_distance(
+    rect: tuple[float, float, float, float],
+    p1: list[float],
+    p2: list[float],
+) -> float:
+    x, y, w, h = rect
+    left, top, right, bottom = x, y, x + w, y + h
+    x1, y1 = p1
+    x2, y2 = p2
+    if abs(y1 - y2) < 0.001:
+        seg_left, seg_right = sorted((x1, x2))
+        dx = 0.0 if max(left, seg_left) <= min(right, seg_right) else min(abs(left - seg_right), abs(right - seg_left))
+        dy = 0.0 if top <= y1 <= bottom else min(abs(top - y1), abs(bottom - y1))
+        return math.hypot(dx, dy)
+    if abs(x1 - x2) < 0.001:
+        seg_top, seg_bottom = sorted((y1, y2))
+        dx = 0.0 if left <= x1 <= right else min(abs(left - x1), abs(right - x1))
+        dy = 0.0 if max(top, seg_top) <= min(bottom, seg_bottom) else min(abs(top - seg_bottom), abs(bottom - seg_top))
+        return math.hypot(dx, dy)
+    center_x = (left + right) / 2
+    center_y = (top + bottom) / 2
+    return min(math.hypot(center_x - x1, center_y - y1), math.hypot(center_x - x2, center_y - y2))
+
+
+def rect_to_polyline_distance(rect: tuple[float, float, float, float], points: list[list[float]]) -> float:
+    return min(
+        rect_to_segment_distance(rect, points[index], points[index + 1])
+        for index in range(len(points) - 1)
+    )
+
+
 def choose_label_position(
     points: list[list[float]],
     label_block: dict[str, Any],
@@ -1169,36 +1225,52 @@ def choose_label_position(
     dx: float = 0,
     dy: float = 0,
 ) -> tuple[float, float]:
-    candidates: list[tuple[float, float]] = []
+    candidates: list[tuple[float, float, int]] = []
     for index in range(len(points) - 1):
         x1, y1 = points[index]
         x2, y2 = points[index + 1]
-        mid_x = (x1 + x2) / 2
-        mid_y = (y1 + y2) / 2
+        length = abs(x2 - x1) + abs(y2 - y1)
+        fractions = [0.5]
+        if length > 170:
+            fractions.extend([0.35, 0.65])
+        if length > 310:
+            fractions.extend([0.2, 0.8])
         if abs(y1 - y2) < 0.001:
-            candidates.extend(
-                [
-                    (
-                        mid_x - label_block["width"] / 2,
-                        mid_y - label_block["height"] - CONNECTOR_LABEL_GAP,
-                    ),
-                    (mid_x - label_block["width"] / 2, mid_y + CONNECTOR_LABEL_GAP),
-                ],
-            )
-        else:
-            candidates.extend(
-                [
-                    (mid_x + CONNECTOR_LABEL_GAP, mid_y - label_block["height"] / 2),
-                    (
-                        mid_x - label_block["width"] - CONNECTOR_LABEL_GAP,
-                        mid_y - label_block["height"] / 2,
-                    ),
-                ],
-            )
+            for fraction in fractions:
+                anchor_x = x1 + (x2 - x1) * fraction
+                candidates.extend(
+                    [
+                        (
+                            anchor_x - label_block["width"] / 2,
+                            y1 - label_block["height"] - CONNECTOR_LABEL_GAP,
+                            index,
+                        ),
+                        (anchor_x - label_block["width"] / 2, y1 + CONNECTOR_LABEL_GAP, index),
+                    ],
+                )
+        elif abs(x1 - x2) < 0.001:
+            for fraction in fractions:
+                anchor_y = y1 + (y2 - y1) * fraction
+                candidates.extend(
+                    [
+                        (x1 + CONNECTOR_LABEL_GAP, anchor_y - label_block["height"] / 2, index),
+                        (
+                            x1 - label_block["width"] - CONNECTOR_LABEL_GAP,
+                            anchor_y - label_block["height"] / 2,
+                            index,
+                        ),
+                    ],
+                )
     mid = points[len(points) // 2]
-    candidates.append((mid[0] - label_block["width"] / 2, mid[1] - label_block["height"] / 2))
+    candidates.append((mid[0] - label_block["width"] / 2, mid[1] - label_block["height"] / 2, max(0, len(points) // 2 - 1)))
 
     inflated = [inflated_rect(obstacle, CONNECTOR_LABEL_OBSTACLE_PADDING) for obstacle in obstacles]
+
+    def score(candidate_x: float, candidate_y: float) -> tuple[float, float]:
+        bounds = label_bounds(candidate_x, candidate_y, label_block)
+        overlap = sum(rect_overlap_area(bounds, obstacle) for obstacle in inflated)
+        distance = rect_to_polyline_distance(bounds, points)
+        return overlap, distance
 
     def usable(candidate_x: float, candidate_y: float) -> bool:
         bounds = label_bounds(candidate_x, candidate_y, label_block)
@@ -1206,14 +1278,20 @@ def choose_label_position(
             return False
         return not any(rects_overlap(bounds, obstacle) for obstacle in inflated)
 
-    for x, y in candidates:
+    best_usable: tuple[float, float, tuple[float, float]] | None = None
+    for x, y, segment_index in candidates:
         x += dx
         y += dy
         if usable(x, y):
-            return x, y
+            _overlap, distance = score(x, y)
+            ranked_score = (distance, float(segment_index))
+            if best_usable is None or ranked_score < best_usable[2]:
+                best_usable = (x, y, ranked_score)
+    if best_usable is not None:
+        return best_usable[0], best_usable[1]
 
     base_candidates = list(candidates)
-    for radius in (18, 36, 64, 96, 136):
+    for radius in (12, 24, 40, 60):
         offsets = [
             (0, -radius),
             (0, radius),
@@ -1224,14 +1302,21 @@ def choose_label_position(
             (-radius, radius),
             (radius, radius),
         ]
-        for base_x, base_y in base_candidates:
+        for base_x, base_y, _segment_index in base_candidates:
             for ox, oy in offsets:
                 x = base_x + dx + ox
                 y = base_y + dy + oy
                 if usable(x, y):
                     return x, y
-    x, y = candidates[-1]
-    return x + dx, y + dy
+
+    scored: list[tuple[float, float, float, float]] = []
+    for x, y, _segment_index in candidates:
+        x += dx
+        y += dy
+        overlap, distance = score(x, y)
+        scored.append((overlap, distance, x, y))
+    _, _, x, y = min(scored)
+    return x, y
 
 
 def centered_right_angle_points(
@@ -1699,7 +1784,7 @@ def whiteboard_positions(
     if layout in {"pipeline", "flow", "sequence"}:
         desired_w = 410 if len(blocks) > 3 else 460
         block_h = 155
-        gap = 54
+        gap = 180
         max_cols = max(1, min(len(blocks), int((content_width + gap) // (desired_w + gap))))
         y_cursor = top
         for row_start in range(0, len(blocks), max_cols):
@@ -1739,7 +1824,7 @@ def whiteboard_positions(
         for row, row_blocks in rows.items():
             if not row_blocks:
                 continue
-            gap = 70
+            gap = 188
             row_widths: list[float] = []
             flexible_indexes: list[int] = []
             fixed_total = 0.0
@@ -2015,7 +2100,7 @@ def build_whiteboard_scene(content: dict[str, Any], slug: str) -> tuple[dict[str
             label_block = text_block_svg(
                 label,
                 17,
-                CONNECTOR_LABEL_MAX_WIDTH,
+                connector_label_width(positions[src], positions[dst]),
                 PLUS_STROKE,
                 10,
                 14,
@@ -2026,11 +2111,7 @@ def build_whiteboard_scene(content: dict[str, Any], slug: str) -> tuple[dict[str
             blocks_svg[label_key] = label_block
             label_dx = dimension(connector.get("label_dx") or connector.get("labelDx"), 0, canvas_width)
             label_dy = dimension(connector.get("label_dy") or connector.get("labelDy"), 0, 1600)
-            label_obstacles = [
-                inflated_rect(pos, CONNECTOR_LABEL_OBSTACLE_PADDING)
-                for block_id, pos in positions.items()
-                if block_id not in {src, dst}
-            ]
+            label_obstacles = list(positions.values())
             label_x, label_y = choose_label_position(points, label_block, label_obstacles, canvas_width, label_dx, label_dy)
             add_image_block(
                 elements,
@@ -2350,18 +2431,14 @@ def build_diagram_scene(
                 blocks_svg[key] = text_block_svg(
                     label,
                     18 if not plus_style else 19,
-                    CONNECTOR_LABEL_MAX_WIDTH,
+                    connector_label_width(positions[src], positions[dst]),
                     "#1e3a8a" if not plus_style else PLUS_STROKE,
                     10,
                     14,
                     DIAGRAM_FONT if plus_style else HANDWRITING_FONT,
                     align="left",
                 )
-                label_obstacles = [
-                    inflated_rect(pos, CONNECTOR_LABEL_OBSTACLE_PADDING)
-                    for block_id, pos in positions.items()
-                    if block_id not in {src, dst}
-                ]
+                label_obstacles = list(positions.values())
                 label_x, label_y = choose_label_position(points, blocks_svg[key], label_obstacles, canvas_width)
                 add_image_block(
                     elements,
@@ -2405,18 +2482,14 @@ def build_diagram_scene(
             blocks_svg[key] = text_block_svg(
                 label,
                 18 if not plus_style else 19,
-                CONNECTOR_LABEL_MAX_WIDTH,
+                connector_label_width(positions[src], positions[dst]),
                 "#1e3a8a" if not plus_style else PLUS_STROKE,
                 10,
                 14,
                 DIAGRAM_FONT if plus_style else HANDWRITING_FONT,
                 align="left",
             )
-            label_obstacles = [
-                inflated_rect(pos, CONNECTOR_LABEL_OBSTACLE_PADDING)
-                for block_id, pos in positions.items()
-                if block_id not in {src, dst}
-            ]
+            label_obstacles = list(positions.values())
             label_x, label_y = choose_label_position(points if plus_style else [[label_x, label_y], [label_x, label_y]], blocks_svg[key], label_obstacles, canvas_width)
             add_image_block(
                 elements,

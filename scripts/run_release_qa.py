@@ -308,12 +308,26 @@ def rect_to_axis_segment_distance(
     return min(math.hypot(center_x - x1, center_y - y1), math.hypot(center_x - x2, center_y - y2))
 
 
+def bounds_overlap(
+    a: tuple[float, float, float, float],
+    b: tuple[float, float, float, float],
+    padding: float = 0.0,
+) -> bool:
+    a_left, a_top, a_right, a_bottom = a
+    b_left, b_top, b_right, b_bottom = b
+    return (
+        max(a_left, b_left - padding) < min(a_right, b_right + padding)
+        and max(a_top, b_top - padding) < min(a_bottom, b_bottom + padding)
+    )
+
+
 def validate_release_scene(case_path: Path, fixture: dict[str, Any], excalidraw_path: Path, preview_path: Path) -> None:
     scene = load_json(excalidraw_path)
     _, canvas_height = smoke.svg_size(preview_path)
     max_bottom = 0.0
     connectors: dict[tuple[str, str], dict[str, Any]] = {}
     labels: list[dict[str, Any]] = []
+    block_bounds: list[tuple[float, float, float, float]] = []
     kind_by_block_id: dict[str, str] = {}
     explicit_fill_ids: set[str] = set()
     seen_kind_fills: dict[str, str] = {}
@@ -341,6 +355,8 @@ def validate_release_scene(case_path: Path, fixture: dict[str, Any], excalidraw_
             max_bottom = max(max_bottom, bounds[3])
         custom = element.get("customData") or {}
         if custom.get("role") == "block":
+            if bounds:
+                block_bounds.append(bounds)
             block_id = str(custom.get("blockId") or "")
             kind = kind_by_block_id.get(block_id)
             if kind and block_id not in explicit_fill_ids:
@@ -379,10 +395,15 @@ def validate_release_scene(case_path: Path, fixture: dict[str, Any], excalidraw_
             rect_to_axis_segment_distance(bounds, points[index], points[index + 1])
             for index in range(len(points) - 1)
         )
-        if distance > 72:
+        if distance > 52:
             raise AssertionError(
                 f"{case_path.name}: connector label {key[0]}->{key[1]} is too far from its line: {distance:.1f}px",
             )
+        for block_bound in block_bounds:
+            if bounds_overlap(bounds, block_bound, padding=1):
+                raise AssertionError(
+                    f"{case_path.name}: connector label {key[0]}->{key[1]} overlaps a block",
+                )
 
 
 def validate_packaging() -> None:

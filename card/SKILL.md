@@ -176,6 +176,7 @@ Hard visual rules:
 - Arrows and connector lines must not pass through unrelated blocks. Move blocks or let the renderer route around obstacles.
 - Arrows should leave and enter block edges perpendicularly with short port stubs. Avoid routes that skim alongside a block edge or run parallel against the border before entering.
 - Connector labels should feel attached to the line: keep them close to the stroke, slightly offset for readability, and move them farther only when needed to avoid blocks.
+- Connector labels are relationship hints, not sentences. Use the requested language, keep them to 1-3 short words, and avoid awkward untranslated English on Chinese boards.
 - Use semantic fills, not decorative or random colors. The same `kind` must use the same fill across a board; choose `kind` intentionally because it controls both visual role and color.
 - Leave bottom breathing room on the whiteboard so the lowest block is fully visible in SVG previews and chat screenshots.
 - Prefer clean block placement over manual point hacks. Use explicit `points` only when a custom route is truly clearer.
