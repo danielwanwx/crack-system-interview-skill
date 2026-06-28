@@ -21,6 +21,9 @@ import shutil
 import subprocess
 import sys
 import time
+import urllib.error
+import urllib.parse
+import urllib.request
 from pathlib import Path
 from typing import Any
 
@@ -93,6 +96,32 @@ def parse_args() -> argparse.Namespace:
         "--no-share",
         action="store_true",
         help="Skip uploading to excalidraw.com.",
+    )
+    parser.add_argument(
+        "--tts",
+        choices=["none", "elevenlabs"],
+        default=os.environ.get("CARD_TTS", "none"),
+        help="Optionally synthesize content.talk_track to audio. Defaults to CARD_TTS or none.",
+    )
+    parser.add_argument(
+        "--tts-voice-id",
+        default=os.environ.get("ELEVENLABS_VOICE_ID", "JBFqnCBsd6RMkjVDRZzb"),
+        help="ElevenLabs voice ID. Defaults to ELEVENLABS_VOICE_ID or the public docs sample voice.",
+    )
+    parser.add_argument(
+        "--tts-model-id",
+        default=os.environ.get("ELEVENLABS_MODEL_ID", "eleven_multilingual_v2"),
+        help="ElevenLabs model ID. Defaults to ELEVENLABS_MODEL_ID or eleven_multilingual_v2.",
+    )
+    parser.add_argument(
+        "--tts-output-format",
+        default=os.environ.get("ELEVENLABS_OUTPUT_FORMAT", "mp3_44100_128"),
+        help="ElevenLabs output_format query value. Defaults to ELEVENLABS_OUTPUT_FORMAT or mp3_44100_128.",
+    )
+    parser.add_argument(
+        "--tts-language-code",
+        default=os.environ.get("ELEVENLABS_LANGUAGE_CODE"),
+        help="Optional ElevenLabs language_code, e.g. zh or en.",
     )
     return parser.parse_args()
 
@@ -2963,6 +2992,90 @@ def render_preview_svg(scene: dict[str, Any], blocks: dict[str, Any], width: int
     return "".join(nodes)
 
 
+def talk_track_text(content: dict[str, Any]) -> str:
+    text = content.get("talk_track") or content.get("short") or ""
+    if isinstance(text, list):
+        return "\n".join(str(item) for item in text)
+    return str(text).strip()
+
+
+def synthesize_elevenlabs_tts(
+    text: str,
+    audio_path: Path,
+    voice_id: str,
+    model_id: str,
+    output_format: str,
+    language_code: str | None = None,
+) -> dict[str, Any]:
+    api_key = os.environ.get("ELEVENLABS_API_KEY")
+    if not api_key:
+        raise RuntimeError("ELEVENLABS_API_KEY is not set")
+    if not text.strip():
+        raise RuntimeError("content.talk_track is empty; nothing to synthesize")
+
+    quoted_voice = urllib.parse.quote(voice_id, safe="")
+    quoted_format = urllib.parse.quote(output_format, safe="")
+    url = f"https://api.elevenlabs.io/v1/text-to-speech/{quoted_voice}?output_format={quoted_format}"
+    payload: dict[str, Any] = {
+        "text": text,
+        "model_id": model_id,
+    }
+    if language_code:
+        payload["language_code"] = language_code
+    request = urllib.request.Request(
+        url,
+        data=json.dumps(payload, ensure_ascii=False).encode("utf-8"),
+        headers={
+            "xi-api-key": api_key,
+            "Content-Type": "application/json",
+            "Accept": "audio/mpeg",
+        },
+        method="POST",
+    )
+
+    try:
+        with urllib.request.urlopen(request, timeout=120) as response:
+            audio = response.read()
+    except urllib.error.HTTPError as error:
+        body = error.read().decode("utf-8", errors="replace")[:800]
+        raise RuntimeError(f"ElevenLabs TTS failed: HTTP {error.code}: {body}") from error
+    except urllib.error.URLError as error:
+        raise RuntimeError(f"ElevenLabs TTS failed: {error.reason}") from error
+
+    if not audio:
+        raise RuntimeError("ElevenLabs TTS returned an empty audio response")
+    audio_path.write_bytes(audio)
+    return {
+        "provider": "elevenlabs",
+        "audio": str(audio_path),
+        "voice_id": voice_id,
+        "model_id": model_id,
+        "output_format": output_format,
+        "bytes": len(audio),
+    }
+
+
+def maybe_synthesize_tts(args: argparse.Namespace, content: dict[str, Any], out_dir: Path, slug: str) -> dict[str, Any] | None:
+    provider = str(args.tts or "none").lower()
+    if provider == "none":
+        return None
+    if provider != "elevenlabs":
+        return {"provider": provider, "error": f"Unsupported TTS provider: {provider}"}
+
+    audio_path = out_dir / f"{slug}-talk-track.mp3"
+    try:
+        return synthesize_elevenlabs_tts(
+            talk_track_text(content),
+            audio_path,
+            str(args.tts_voice_id),
+            str(args.tts_model_id),
+            str(args.tts_output_format),
+            str(args.tts_language_code) if args.tts_language_code else None,
+        )
+    except Exception as error:  # pragma: no cover - depends on external API
+        return {"provider": "elevenlabs", "error": str(error)}
+
+
 def maybe_share(excalidraw_path: Path, skip: bool) -> dict[str, Any] | None:
     if skip or not shutil.which("node"):
         return None
@@ -2996,12 +3109,17 @@ def main() -> None:
     preview_svg = render_preview_svg(scene, blocks, canvas_width, canvas_height)
     preview_path.write_text(preview_svg, encoding="utf-8")
     share = maybe_share(excalidraw_path, args.no_share)
+    tts = maybe_synthesize_tts(args, content, out_dir, slug)
     result = {
         "preview": str(preview_path),
         "excalidraw": str(excalidraw_path),
         "link": share.get("url") if isinstance(share, dict) else None,
         "share": share,
     }
+    if tts:
+        result["tts"] = tts
+        if tts.get("audio"):
+            result["audio"] = tts["audio"]
     result_path.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
     print(json.dumps(result, ensure_ascii=False, indent=2))
 

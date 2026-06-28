@@ -4,6 +4,40 @@ A cross-agent plugin/skill package for helping users digest hard technical and i
 
 It uses native Excalidraw blocks: dashed task/constraints frames, semantic component blocks, black arrows, circles/squares/rectangles, and sticky notes for gotchas. It avoids decorative component icons by default so layout stays clean and predictable. It includes a short `$card` entrypoint for general text and a backward-compatible `$senior-sde-interview-script` entrypoint for SDE interview prep. Output language defaults to English, and users can request Chinese or another language in the prompt.
 
+## Quick Install
+
+Most users do not need to understand the repository layout.
+
+Codex marketplace install:
+
+```bash
+codex plugin marketplace add danielwanwx/sde-interview-script-skill
+```
+
+Then install `Script Card` from the `Script Card Skills` marketplace.
+
+Local clone, Codex standalone skill:
+
+```bash
+git clone https://github.com/danielwanwx/sde-interview-script-skill.git
+cd sde-interview-script-skill
+scripts/install_codex_card.sh
+```
+
+If `~/.codex/skills/card` already exists and you want to replace it:
+
+```bash
+FORCE=1 scripts/install_codex_card.sh
+```
+
+Claude Code local testing:
+
+```bash
+claude --plugin-dir ./plugins/sde-interview-script-skill
+```
+
+The rest of the tree is packaging and release infrastructure: `plugins/` contains the cross-host plugin package, `card/` is the standalone short skill, `senior-sde-interview-script/` is the backward-compatible preset, and `examples/` plus `scripts/` are release QA.
+
 ## Simplest Usage
 
 Codex or Cursor:
