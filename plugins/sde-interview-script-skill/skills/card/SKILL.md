@@ -24,6 +24,7 @@ Default chat response:
 1. Rendered preview image when the host can display it.
 2. Excalidraw link if upload succeeds; otherwise the `.excalidraw` path.
 3. Copyable interview talk track when the source is interview prep, system design, API design, or technical study material.
+4. Audio file when the user asks for spoken rehearsal / read-aloud output and TTS generation succeeds.
 
 When the user pastes a paragraph to test or validate the skill, treat that as a request for a complete output: preview image, editable link/path, and a concise speakable script in chat. Keep the board diagram-first, but do not make the user open the image just to copy the talk track.
 
@@ -286,10 +287,26 @@ python3 scripts/render_interview_card.py --content /tmp/card.json --out /tmp/car
 
 If the current working directory is not this skill directory, run the script with its absolute path. Read the JSON emitted by the script; it contains `preview`, `excalidraw`, `link`, and `share`.
 
+For spoken rehearsal, use ElevenLabs only when the user asks for audio/read-aloud output or has explicitly requested automatic talk-track audio. Never hardcode API keys in the skill, JSON, or generated files. Read the key from `ELEVENLABS_API_KEY` and run:
+
+```bash
+ELEVENLABS_API_KEY="$ELEVENLABS_API_KEY" \
+python3 scripts/render_interview_card.py --content /tmp/card.json --out /tmp/card-output --slug card --tts elevenlabs
+```
+
+Useful optional settings:
+
+- `--tts-voice-id` or `ELEVENLABS_VOICE_ID` for a preferred ElevenLabs voice.
+- `--tts-model-id` or `ELEVENLABS_MODEL_ID`; default is `eleven_multilingual_v2`.
+- `--tts-language-code zh` for Chinese talk tracks when helpful.
+- `--tts-output-format` or `ELEVENLABS_OUTPUT_FORMAT`; default is `mp3_44100_128`.
+
+When TTS is enabled, the renderer includes `audio` and `tts` fields in the result JSON. If TTS fails, still return the card artifacts and briefly report the `tts.error`.
+
 Host-specific delivery:
 
-- Codex/Cursor: return Markdown image for `preview`, then `link` or `.excalidraw` path, then the copyable talk track when present.
-- Claude Code or terminal-only hosts: return `link` first; if no link exists, return `preview` and `.excalidraw` paths; then include the copyable talk track when present.
+- Codex/Cursor: return Markdown image for `preview`, then `link` or `.excalidraw` path, then the audio file when generated, then the copyable talk track when present.
+- Claude Code or terminal-only hosts: return `link` first; if no link exists, return `preview` and `.excalidraw` paths; then include the audio path when generated and the copyable talk track when present.
 
 ## Visual Style
 
