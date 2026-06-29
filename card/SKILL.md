@@ -1,19 +1,19 @@
 ---
 name: card
-description: "Help users digest difficult technical or interview material by turning pasted text, article excerpts, study notes, system design/API notes, or explanation requests into coherent Excalidraw whiteboard samples plus concise talk tracks. Use when the user says use $card, make a card, draw an Excalidraw card, create a visual explanation, summarize this into a visual note, prepare an interview answer, understand a hard technical topic, or wants a short explainable version of dense material. Prefer dynamic diagrams, decision trees, comparisons, pipelines, concept maps, architecture-style blocks, and callouts over long article-like script blocks."
+description: "Turn technical source material into source-aligned Excalidraw study cards: article URLs, pasted excerpts, book notes, system design/API notes, or explanation requests. Use when the user asks for $card, a visual note, Excalidraw card, diagram-first summary, concept map, comparison, pipeline, architecture sketch, multi-page card, or help understanding dense material. Prefer $senior-sde-interview-script instead when the main request is a candidate-style interview answer, 30/90-second script, senior/principal wording, bilingual answer rehearsal, or mock-interview response."
 ---
 
 # Card
 
 ## Goal
 
-Help the user understand, digest, and rehearse difficult technical material. Create an Excalidraw whiteboard sample plus a concise talk track, not a rewritten article. The board should feel like a hand-drawn technical whiteboard that a candidate could use as a model in an interview: task/constraints at the top, native Excalidraw blocks in the middle, arrows that show relationships, and sticky notes for gotchas, caveats, or production implications.
+Help the user understand and digest difficult technical material visually. Create an Excalidraw study card plus a concise explanatory talk track, not a rewritten article. The board should feel like a clean technical whiteboard: task/constraints at the top, native Excalidraw blocks in the middle, arrows that show relationships, and sticky notes for gotchas, caveats, or production implications.
 
 This skill has three jobs:
 
 1. Make hard material easier to understand.
-2. Turn that understanding into interview-ready speaking notes.
-3. Provide a whiteboard example the user can imitate when explaining the topic.
+2. Turn that understanding into short explanatory notes.
+3. Provide a visual reference the user can revisit or imitate when explaining the topic.
 
 Default to English unless the user specifies Chinese or another language.
 
@@ -23,10 +23,18 @@ Default chat response:
 
 1. Rendered preview image when the host can display it.
 2. Excalidraw link if upload succeeds; otherwise the `.excalidraw` path.
-3. Copyable interview talk track when the source is interview prep, system design, API design, or technical study material.
+3. Copyable explanatory talk track when the source is system design, API design, or technical study material.
 4. Audio file when the user asks for spoken rehearsal / read-aloud output and TTS generation succeeds.
 
-When the user pastes a paragraph to test or validate the skill, treat that as a request for a complete output: preview image, editable link/path, and a concise speakable script in chat. Keep the board diagram-first, but do not make the user open the image just to copy the talk track.
+When the user pastes a paragraph to test or validate the skill, treat that as a request for a complete output: preview image, editable link/path, and a concise talk track in chat. Keep the board diagram-first, but do not make the user open the image just to copy the spoken summary.
+
+## Boundary With Senior SDE Interview Script
+
+Use this skill for source digestion and visual memory. Preserve source headings, split long URLs into multiple cards, and make the diagram itself carry the explanation.
+
+Use `$senior-sde-interview-script` instead when the user primarily wants interview wording: a 30-second answer, 90-second answer, senior/principal phrasing, mock answer, bilingual rehearsal, or a response that should sound like a candidate speaking to an interviewer.
+
+If the user asks for both a visual study card and a candidate script, produce the card here and keep the talk track short; recommend `$senior-sde-interview-script` for a polished spoken answer.
 
 ## URL Input
 
@@ -127,12 +135,12 @@ For multidimensional search, proximity search, ranking, or filtering problems, p
 
 ## Board Content Vs Talk Track
 
-For interview or technical-learning material, do not summarize the paragraph mechanically. First infer what an excellent candidate would understand, then separate the output into two layers:
+For technical-learning material, do not summarize the paragraph mechanically. First infer what a well-prepared engineer should understand, then separate the output into two layers:
 
-1. **Board content**: what the candidate would actually draw on the whiteboard. This must be professional design content: entities, decisions, constraints, mechanisms, tradeoffs, and failure modes.
-2. **Talk track**: what the candidate would say while pointing at the board. This can use first person and interview phrasing.
+1. **Board content**: what belongs on the visual card: entities, decisions, constraints, mechanisms, tradeoffs, and failure modes.
+2. **Talk track**: a compact explanation to accompany the board. It should clarify the reading path, not become a full interview script.
 
-The board must not sound like interview coaching. Avoid phrases like `I would`, `my decision rule`, `interview signal`, `面试可讲`, `我会`, `我的判断`, or `面试里` inside `task`, `constraints`, `blocks`, `connectors`, or `callouts`. Put those in `talk_track` only.
+The board must not sound like interview coaching. Avoid phrases like `I would`, `my decision rule`, `interview signal`, `面试可讲`, `我会`, `我的判断`, or `面试里` inside `task`, `constraints`, `blocks`, `connectors`, or `callouts`. Put any first-person phrasing in `talk_track` only, and keep it brief.
 
 ## Source Sufficiency And Auto Completion
 
@@ -182,7 +190,7 @@ Also do a compact pre-drawing planning pass before choosing the final layout:
 - Use `modular-composite` when the source is still one coherent page but has more than five meaningful entities, more than two flows, multiple technical types, or mixes architecture, consistency, scaling, and failure recovery.
 - Split complex systems into modules such as overview, read path, write path, consistency boundary, async processing, failure recovery, or operational tradeoffs.
 - For URL input with headings, prefer modules based on the source's own titles before fallback names such as overview/read path/write path.
-- Keep the board content professional, as if drawn by the candidate during the interview. Do not put coaching instructions in module names or blocks.
+- Keep the board content professional and source-aligned. Do not put coaching instructions in module names or blocks.
 
 The visual blocks should contain **design sentence density**, not keyword density. A good board block sounds like this:
 
@@ -413,5 +421,5 @@ Host-specific delivery:
 - A good board has one obvious path through it. It should not feel like a pile of correct but disconnected notes.
 - Start with the strongest mental model, not with definitions. For geospatial search, the mental model is "circle vs strip/rectangle"; for retries it might be "same request replayed"; for CAP it is "partition-time choice".
 - Convert paragraphs into relationships: choices, causes, consequences, examples, and failure modes.
-- For technical interview content, show senior judgment through tradeoffs, production implications, and boundary conditions.
+- For interview-adjacent technical content, show engineering judgment through tradeoffs, production implications, and boundary conditions without turning the card into a full mock answer.
 - If the output still looks like a long essay with a small flowchart, revise the JSON before rendering.

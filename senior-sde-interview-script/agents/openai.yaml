@@ -1,4 +1,4 @@
 interface:
   display_name: "Senior SDE Interview Script"
-  short_description: "Digest hard SDE topics into whiteboard scripts"
-  default_prompt: "Use $senior-sde-interview-script to help me digest this topic with a senior SDE whiteboard sample, editable link, and speakable interview script."
+  short_description: "Craft senior interview answers"
+  default_prompt: "Use $senior-sde-interview-script to turn this topic into a concise senior interview answer with a supporting whiteboard sketch."

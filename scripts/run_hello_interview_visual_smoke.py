@@ -288,7 +288,7 @@ def validate_scene(
     if fixture.get("style") != "excalidraw-plus":
         raise AssertionError(f"{case_path.name}: fixture must exercise excalidraw-plus style")
     if not fixture.get("talk_track"):
-        raise AssertionError(f"{case_path.name}: fixture must include copyable interview talk track")
+        raise AssertionError(f"{case_path.name}: fixture must include copyable talk track")
     return counts
 
 

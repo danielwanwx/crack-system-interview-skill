@@ -1,13 +1,13 @@
 ---
 name: senior-sde-interview-script
-description: "Help senior SDE candidates digest difficult interview material, Hello Interview excerpts, system design notes, API design notes, and dense technical topics into coherent Excalidraw whiteboard samples plus concise speakable interview scripts. Use when the user provides source paragraphs and asks for a solid answer, memorization-friendly draft, multilingual output, Chinese/English bilingual version, 30-second version, Excalidraw diagram, whiteboard example, or wants to understand a hard topic well enough to explain it in an interview. Also use when the user wants answers to sound senior, practical, opinionated, and interview-ready without becoming textbook-like, overly long, or overly autobiographical."
+description: "Turn system design/API concepts, Hello Interview excerpts, notes, or prompts into senior-candidate interview answers with a concise Excalidraw whiteboard sketch and speakable script. Use when the user asks for $senior-sde-interview-script, a 30/90-second answer, senior/principal wording, mock interview response, bilingual English/Chinese answer, memorization-friendly script, interviewer-ready explanation, or practical opinionated tradeoff language. Prefer $card instead when the main request is source-aligned visual digestion, URL/article cards, multi-page notes, or concept-map study material."
 ---
 
 # Senior SDE Interview Script
 
 ## Goal
 
-Help a senior SDE candidate digest hard interview material, rehearse a clear spoken explanation, and see how the topic could be drawn on a whiteboard. Turn technical source material into an Excalidraw whiteboard sample plus a concise interview script. The output should feel like a real system-design whiteboard: task/constraints at the top, native blocks in the middle, arrows for relationships, and sticky notes for gotchas, caveats, or production implications. Do not turn the source into a long article card.
+Help a senior SDE candidate turn technical understanding into a clear interview performance. Produce a concise candidate-owned answer plus the whiteboard sketch that supports it. The output should feel like a real system-design explanation: a small task/constraints frame, native blocks for the key mechanism, arrows for relationships, and sticky notes for gotchas, caveats, or production implications. Do not turn the source into a long article card.
 
 This skill has three jobs:
 
@@ -26,6 +26,14 @@ Default chat response:
 3. Copyable senior-candidate interview script in the requested language.
 
 When the user pastes a paragraph to test or validate the skill, produce the complete package by default: preview image, editable link/path, and a concise speakable interview script in chat. The board stays diagram-first, but the answer must also include the wording the candidate can directly say.
+
+## Boundary With Card
+
+Use this skill when the user wants the final artifact to be spoken in an interview. Optimize for candidate voice, judgment, tradeoff language, and rehearsal.
+
+Use `$card` instead when the user mainly wants to understand a source visually: URL ingestion, source-heading preservation, article/chapter breakdown, multi-page Excalidraw notes, or a reusable study card.
+
+If both are useful, keep this skill focused on the speakable answer and a minimal supporting whiteboard. Do not duplicate `$card`'s long-source decomposition workflow.
 
 ## Senior Interview Shape
 
@@ -103,14 +111,14 @@ When the source is partial or thin, include compact metadata in the JSON:
 
 Use `completion_mode: "none"` for complete sources, `"model_background"` for stable background completion, and `"researched"` when browsing or external tools were used. Keep `source_notes` out of the visual unless the user asks for citations or audit detail.
 
-Before creating the board JSON, infer and write from this internal structure:
+Before creating the answer and board JSON, infer and write from this internal structure:
 
 1. **Whiteboard objective.** The concrete design question being solved.
 2. **Mental model.** The simplest visual frame that makes the issue obvious.
 3. **Professional board blocks.** Decisions, mechanisms, and boundaries that can stand on a live system-design whiteboard.
 4. **Judgment chain.** 2-4 blocks that each explain what design choice exists, why it matters, and what mechanism follows.
 5. **Senior caveat.** One failure mode, operational cost, retry/idempotency issue, consistency boundary, caching caveat, or product implication.
-6. **Speakable answer.** If requested outside the image, produce a 60-90 second answer in the requested language.
+6. **Speakable answer.** Produce a 30-second or 60-90 second answer in the requested language, depending on the user's ask.
 
 Also do a compact pre-drawing planning pass before choosing the final layout:
 

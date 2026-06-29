@@ -4,8 +4,8 @@ A cross-agent plugin/skill package for system design interview preparation. It c
 
 The package has three main entrypoints:
 
-- `$card` turns dense technical material into an Excalidraw-style whiteboard sample plus a concise talk track.
-- `$senior-sde-interview-script` keeps the original senior SDE interview answer workflow.
+- `$card` turns dense sources into source-aligned Excalidraw study cards and concise explanatory talk tracks.
+- `$senior-sde-interview-script` turns concepts or prompts into senior-candidate interview answers with a minimal supporting whiteboard.
 - `$system-design-study-coach` supervises the bundled 14-week system design and algorithms plan.
 
 The printable plan is available through GitHub Pages when this repository is published as `crack-system-interview-skill`:
@@ -14,7 +14,7 @@ The printable plan is available through GitHub Pages when this repository is pub
 https://danielwanwx.github.io/crack-system-interview-skill/
 ```
 
-It uses native Excalidraw blocks: dashed task/constraints frames, semantic component blocks, black arrows, circles/squares/rectangles, and sticky notes for gotchas. It avoids decorative component icons by default so layout stays clean and predictable. It includes a short `$card` entrypoint for general text and a backward-compatible `$senior-sde-interview-script` entrypoint for SDE interview prep. Output language defaults to English, and users can request Chinese or another language in the prompt.
+It uses native Excalidraw blocks: dashed task/constraints frames, semantic component blocks, black arrows, circles/squares/rectangles, and sticky notes for gotchas. It avoids decorative component icons by default so layout stays clean and predictable. `$card` is the visual study-card entrypoint for articles, URLs, notes, and dense concepts. `$senior-sde-interview-script` is the interview-expression entrypoint for 30/90-second answers, senior/principal phrasing, bilingual rehearsal, and mock responses. Output language defaults to English, and users can request Chinese or another language in the prompt.
 
 ## Quick Install
 
@@ -48,7 +48,7 @@ Claude Code local testing:
 claude --plugin-dir ./plugins/crack-system-interview-skill
 ```
 
-The rest of the tree is packaging and release infrastructure: `plugins/` contains the cross-host plugin package, `card/` is the standalone short skill, `senior-sde-interview-script/` is the backward-compatible preset, `system-design-study-coach/` is the standalone daily study coach, `docs/` is the GitHub Pages study plan, and `examples/` plus `scripts/` are release QA.
+The rest of the tree is packaging and release infrastructure: `plugins/` contains the cross-host plugin package, `card/` is the standalone visual study-card skill, `senior-sde-interview-script/` is the standalone interview-expression skill, `system-design-study-coach/` is the standalone daily study coach, `docs/` is the GitHub Pages study plan, and `examples/` plus `scripts/` are release QA.
 
 ## Simplest Usage
 
@@ -94,18 +94,18 @@ Check-out and repair:
 Use $system-design-study-coach to check my Day 4 artifact and assign repair tasks.
 ```
 
-Default output is intentionally minimal:
+Default `$card` output is intentionally minimal:
 
 - a direct preview image when the host can display local images
 - an editable Excalidraw link when upload succeeds
 - a local `.excalidraw` path as fallback
-- a copyable interview talk track when the source is interview prep, system design, API design, or technical study material
+- a copyable explanatory talk track when the source is system design, API design, or technical study material
 
-The generated board explains the material through native blocks, arrows, comparisons, system-design component diagrams, and sticky-note callouts. It should look like a clean interview whiteboard, not a long essay pasted into a box. Text should prefer one sentence per line when it fits, with left-aligned block content and rows that use the available width. For interview-style source material, the chat reply should include the copyable talk track after the preview and link so the user can both inspect the diagram and rehearse the answer.
+The generated board explains the material through native blocks, arrows, comparisons, system-design component diagrams, and sticky-note callouts. It should look like a clean technical whiteboard, not a long essay pasted into a box. Text should prefer one sentence per line when it fits, with left-aligned block content and rows that use the available width. For system-design or API material, the chat reply should include the copyable talk track after the preview and link so the user can inspect the diagram and rehearse the explanation.
 
 The board should also have a clear reading path. The agent first chooses a mental model, then draws the concrete scenario, the naive failure mode, the better mechanism, and the final correctness or choice rule. This prevents outputs that technically cover the source but feel hard to follow. For example, geospatial search should be framed as "circle vs strip/rectangle": a radius query wants a circular area, separate B-tree indexes produce strips or rectangles, spatial indexes reduce candidates, and exact distance filtering preserves correctness.
 
-The content step is intentionally LLM-heavy: the agent should first infer what a strong candidate would understand, then split output into two layers. The board contains professional whiteboard content: design choices, mechanisms, constraints, data flows, and tradeoffs. The `talk_track` contains the candidate-ready wording. Blocks should not be keyword flashcards, but they also should not sound like coaching notes.
+The content step is intentionally LLM-heavy: the agent should first infer what a well-prepared engineer should understand, then split output into two layers. The board contains professional whiteboard content: design choices, mechanisms, constraints, data flows, and tradeoffs. The `talk_track` explains the visual reading path without becoming a full interview answer. Use `$senior-sde-interview-script` when the desired output is candidate-ready wording. Blocks should not be keyword flashcards, but they also should not sound like coaching notes.
 
 The agent should also do an automatic source-sufficiency check. If the pasted text is already complete, it should only condense and structure it. If the text is partial or thin, it should fill the missing stable background needed for a useful board and talk track, such as mechanisms, tradeoffs, examples, caveats, or production implications. Browsing is reserved for current, version-specific, product-specific, niche, or high-stakes facts; when browsing is used, prefer primary or authoritative sources. The JSON can include `source_notes` with `completeness`, `completion_mode`, `added_points`, and `uncertain_points`, but those notes are not rendered by default.
 
@@ -209,7 +209,7 @@ After the plugin or skill is installed in a host:
 1. User pastes a Hello Interview/API/system-design paragraph.
 2. Or the user provides a public article URL; the skill first runs `scripts/fetch_url_text.py` and uses the extracted `title`, `outline`, `sections`, and `text` as source material.
 3. User optionally specifies language, for example `in Chinese`, `用中文`, `in Spanish`, or `bilingual English and Chinese`. If no language is specified, the skill uses English.
-4. The agent invokes `card` by default, or `senior-sde-interview-script` for the explicit SDE preset.
+4. The agent invokes `card` for visual source digestion, or `senior-sde-interview-script` when the user asks for candidate-style interview wording.
 5. For long URL sources, the agent creates a short page plan first and renders one compact card JSON per page. Each page preview/link is returned in source order.
 6. The skill tells the agent to create a diagram JSON object:
 
