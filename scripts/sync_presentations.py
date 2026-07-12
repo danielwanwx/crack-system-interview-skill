@@ -1,20 +1,19 @@
 #!/usr/bin/env python3
-"""Copy Desktop week presentations into docs/weekN/ for GitHub Pages."""
+"""Sync Week 1 presentation only to public GitHub Pages.
+
+Weeks 2-14 live in LoopCoach private data/presentations/ and are served
+behind entitlement gates — not published here.
+"""
 from __future__ import annotations
 
 import re
-import shutil
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
 DOCS = REPO / "docs"
 DESKTOP = Path("/Users/danielwan/Desktop")
 BASE = "https://danielwanwx.github.io/crack-system-interview-skill"
-
-SOURCES = {
-    1: DESKTOP / "bitly-week1.html",
-    **{n: DESKTOP / f"week{n}-presentation.html" for n in range(2, 15)},
-}
+PUBLIC_WEEKS = (1,)
 
 
 def patch_html(html: str, week: int) -> str:
@@ -41,7 +40,8 @@ def patch_action_guide(path: Path, week: int) -> bool:
 
 def main() -> None:
     copied = []
-    for week, src in SOURCES.items():
+    for week in PUBLIC_WEEKS:
+        src = DESKTOP / ("bitly-week1.html" if week == 1 else f"week{week}-presentation.html")
         if not src.exists():
             raise FileNotFoundError(src)
         dest_dir = DOCS / f"week{week}"
@@ -49,15 +49,15 @@ def main() -> None:
         dest = dest_dir / f"week{week}-presentation.html"
         html = patch_html(src.read_text(encoding="utf-8"), week)
         dest.write_text(html, encoding="utf-8")
-        copied.append(dest.relative_to(REPO))
+        copied.append(dest.relative_to(DOCS))
 
         guide = DOCS / f"week{week}-action-guide.html"
         if guide.exists():
             patch_action_guide(guide, week)
 
-    print(f"Synced {len(copied)} presentations to docs/weekN/")
-    for p in copied:
-        print(f"  {BASE}/{p.as_posix()}")
+    print(f"Synced {len(copied)} public presentation(s) to docs/weekN/")
+    for rel in copied:
+        print(f"  {BASE}/{rel.as_posix()}")
 
 
 if __name__ == "__main__":
