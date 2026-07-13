@@ -650,9 +650,9 @@ body {
       <div class="guide-body">
         时间分配是答题质量的乘数。正确框架把 45 分钟分成五段：<br><br>
         <a class="ref" href="https://www.hellointerview.com/learn/system-design/in-a-hurry/delivery#requirements-5-minutes" target="_blank">需求收集</a>（5 分钟）→
-        <a class="ref" href="https://www.hellointerview.com/learn/system-design/in-a-hurry/delivery#core-entities-1-2-minutes" target="_blank">核心实体</a>（2 分钟）→
-        <a class="ref" href="https://www.hellointerview.com/learn/system-design/in-a-hurry/delivery#api-3-5-minutes" target="_blank">API 定义</a>（5 分钟）→
-        <a class="ref" href="https://www.hellointerview.com/learn/system-design/in-a-hurry/delivery#high-level-design-10-minutes" target="_blank">高层架构</a>（15 分钟）→
+        <a class="ref" href="https://www.hellointerview.com/learn/system-design/in-a-hurry/delivery#core-entities-2-minutes" target="_blank">核心实体</a>（2 分钟）→
+        <a class="ref" href="https://www.hellointerview.com/learn/system-design/in-a-hurry/delivery#api-or-system-interface-5-minutes" target="_blank">API 定义</a>（5 分钟）→
+        <a class="ref" href="https://www.hellointerview.com/learn/system-design/in-a-hurry/delivery#high-level-design-10-15-minutes" target="_blank">高层架构</a>（15 分钟）→
         <a class="ref" href="https://www.hellointerview.com/learn/system-design/in-a-hurry/delivery#deep-dives-10-minutes" target="_blank">深挖 Tradeoffs</a>（15 分钟）<br><br>
         前两段是约束，后三段才是得分。超了前两段，你就在从最重的科目里偷时间。
       </div>
@@ -688,7 +688,7 @@ body {
     <div class="tl-item">
       <div class="tl-dot">2</div>
       <div>
-        <div class="tl-time"><a class="ref" href="https://www.hellointerview.com/learn/system-design/in-a-hurry/delivery#core-entities-1-2-minutes" target="_blank">5–7 分钟</a></div>
+        <div class="tl-time"><a class="ref" href="https://www.hellointerview.com/learn/system-design/in-a-hurry/delivery#core-entities-2-minutes" target="_blank">5–7 分钟</a></div>
         <div class="tl-title">核心实体</div>
         <div class="tl-body">列出 3–5 个核心数据实体（如 URL Mapping、User）。不要细化字段，这是给后续 Schema 设计铺路。</div>
       </div>
@@ -696,7 +696,7 @@ body {
     <div class="tl-item">
       <div class="tl-dot">3</div>
       <div>
-        <div class="tl-time"><a class="ref" href="https://www.hellointerview.com/learn/system-design/in-a-hurry/delivery#api-3-5-minutes" target="_blank">7–12 分钟</a></div>
+        <div class="tl-time"><a class="ref" href="https://www.hellointerview.com/learn/system-design/in-a-hurry/delivery#api-or-system-interface-5-minutes" target="_blank">7–12 分钟</a></div>
         <div class="tl-title">API 定义</div>
         <div class="tl-body">定义 2–3 个核心端点，包含 HTTP 方法、路径、请求/响应格式。<strong>这步让你的功能需求变成可验证的契约。</strong></div>
       </div>
@@ -704,7 +704,7 @@ body {
     <div class="tl-item">
       <div class="tl-dot">4</div>
       <div>
-        <div class="tl-time"><a class="ref" href="https://www.hellointerview.com/learn/system-design/in-a-hurry/delivery#high-level-design-10-minutes" target="_blank">12–27 分钟</a></div>
+        <div class="tl-time"><a class="ref" href="https://www.hellointerview.com/learn/system-design/in-a-hurry/delivery#high-level-design-10-15-minutes" target="_blank">12–27 分钟</a></div>
         <div class="tl-title">高层设计</div>
         <div class="tl-body">画出满足功能需求的完整系统图：组件、数据流、存储选型。<strong>每个组件都要能用一句话说清楚它为什么必要。</strong></div>
       </div>
@@ -981,11 +981,11 @@ body {
       <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H5M10 2V7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
       Bitly · Core Entities
     </a>
-    <a class="src-link" href="https://www.hellointerview.com/learn/system-design/in-a-hurry/storage#relational-databases" target="_blank">
+    <a class="src-link" href="https://www.hellointerview.com/learn/system-design/in-a-hurry/key-technologies#relational-databases" target="_blank">
       <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H5M10 2V7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
       HI · 关系型数据库
     </a>
-    <a class="src-link" href="https://www.hellointerview.com/learn/system-design/in-a-hurry/storage#nosql-databases" target="_blank">
+    <a class="src-link" href="https://www.hellointerview.com/learn/system-design/in-a-hurry/key-technologies#nosql-databases" target="_blank">
       <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H5M10 2V7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
       HI · NoSQL 数据库
     </a>
@@ -1018,8 +1018,8 @@ body {
     <div class="guide-section">
       <div class="guide-lbl">存储选型：关系型 vs NoSQL</div>
       <div class="guide-body">
-        <a class="ref" href="https://www.hellointerview.com/learn/system-design/in-a-hurry/storage#relational-databases" target="_blank"><strong>关系型（PostgreSQL/MySQL）</strong></a>：事务支持、Schema 约束、JOIN 能力。写入是行级锁，高并发写时可能成瓶颈。<br><br>
-        <a class="ref" href="https://www.hellointerview.com/learn/system-design/in-a-hurry/storage#nosql-databases" target="_blank"><strong>Key-Value NoSQL（DynamoDB/Cassandra）</strong></a>：以 short_code 为 key，long_url 为 value，查询是 O(1)，天然适合 Bitly 的读路径。水平扩展容易。<br><br>
+        <a class="ref" href="https://www.hellointerview.com/learn/system-design/in-a-hurry/key-technologies#relational-databases" target="_blank"><strong>关系型（PostgreSQL/MySQL）</strong></a>：事务支持、Schema 约束、JOIN 能力。写入是行级锁，高并发写时可能成瓶颈。<br><br>
+        <a class="ref" href="https://www.hellointerview.com/learn/system-design/in-a-hurry/key-technologies#nosql-databases" target="_blank"><strong>Key-Value NoSQL（DynamoDB/Cassandra）</strong></a>：以 short_code 为 key，long_url 为 value，查询是 O(1)，天然适合 Bitly 的读路径。水平扩展容易。<br><br>
         <strong>Bitly 推荐 NoSQL</strong>：读路径极简（点查询）、无需 JOIN、需要支撑亿级别读写量。
       </div>
     </div>
@@ -1084,14 +1084,14 @@ body {
   <div class="pair a up d6">
     <div class="pair-card bad">
       <div class="pair-head">
-        <div class="pair-name"><a class="ref" href="https://www.hellointerview.com/learn/system-design/in-a-hurry/storage#relational-databases" target="_blank">关系型数据库</a></div>
+        <div class="pair-name"><a class="ref" href="https://www.hellointerview.com/learn/system-design/in-a-hurry/key-technologies#relational-databases" target="_blank">关系型数据库</a></div>
         <span class="badge b-warn">不推荐</span>
       </div>
       <div class="pair-body">支持事务和复杂查询。但 Bitly 的读路径根本不需要 JOIN，垂直扩展有上限，亿级读写时需要手动分片。</div>
     </div>
     <div class="pair-card win">
       <div class="pair-head">
-        <div class="pair-name"><a class="ref" href="https://www.hellointerview.com/learn/system-design/in-a-hurry/storage#nosql-databases" target="_blank">Key-Value NoSQL</a></div>
+        <div class="pair-name"><a class="ref" href="https://www.hellointerview.com/learn/system-design/in-a-hurry/key-technologies#nosql-databases" target="_blank">Key-Value NoSQL</a></div>
         <span class="badge b-ok">推荐</span>
       </div>
       <div class="pair-body">short_code → record 的点查是天然 K-V 访问模式。DynamoDB/Cassandra 都能水平扩展、毫秒级读取，完美匹配 Bitly 的读路径。</div>
@@ -1123,11 +1123,11 @@ body {
 
   <div class="src-links a up d2">
     <span class="src-prefix">参考原文</span>
-    <a class="src-link" href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly#capacity-estimation" target="_blank">
+    <a class="src-link" href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly#3-how-can-we-scale-to-support-1b-shortened-urls-and-100m-dau" target="_blank">
       <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H5M10 2V7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
       Bitly · 容量规划
     </a>
-    <a class="src-link" href="https://www.hellointerview.com/learn/system-design/in-a-hurry/numbers" target="_blank">
+    <a class="src-link" href="https://www.hellointerview.com/learn/system-design/core-concepts/numbers-to-know" target="_blank">
       <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H5M10 2V7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
       HI · Numbers to Know
     </a>
@@ -1149,7 +1149,7 @@ body {
       <div class="guide-lbl">核心认知：推算流程</div>
       <div class="guide-body">
         从已知的非功能需求出发：<strong>100M DAU</strong>，开始推算：<br><br>
-        <strong>写入（创建短链）</strong>：假设每个用户每天创建 1 条短链 → <a class="ref" href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly#capacity-estimation" target="_blank">100M 条/天</a> ÷ 86,400 秒 ≈ <strong>1,200 QPS 写入</strong><br><br>
+        <strong>写入（创建短链）</strong>：假设每个用户每天创建 1 条短链 → <a class="ref" href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly#3-how-can-we-scale-to-support-1b-shortened-urls-and-100m-dau" target="_blank">100M 条/天</a> ÷ 86,400 秒 ≈ <strong>1,200 QPS 写入</strong><br><br>
         <strong>读取（跳转）</strong>：假设每个用户每天点击 10 次短链 → 1B 次/天 ÷ 86,400 ≈ <strong>11,500 QPS 读取</strong><br><br>
         读写比约 <strong>10:1</strong>（甚至更高）→ 这驱动了缓存优先的架构。<br><br>
         <strong>存储</strong>：100M 条/天 × 365 天 × 5 年 ≈ 180B 条记录，每条 ~500 字节 → <strong>约 90 TB</strong> → 单机放不下，需要分片或分布式存储。
@@ -1230,7 +1230,7 @@ body {
       <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H5M10 2V7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
       Bitly · High-Level Design
     </a>
-    <a class="src-link" href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly#key-technologies" target="_blank">
+    <a class="src-link" href="https://www.hellointerview.com/learn/system-design/in-a-hurry/key-technologies" target="_blank">
       <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H5M10 2V7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
       Bitly · Key Technologies
     </a>
@@ -1254,7 +1254,7 @@ body {
         <strong>写路径</strong>（POST /api/v1/urls）：<br>
         用户 → <a class="ref" href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly#high-level-design" target="_blank">Load Balancer</a> → App Server → 生成短码 → 写入 DB<br><br>
         <strong>读路径</strong>（GET /{code}）：<br>
-        用户 → Load Balancer → App Server → 查 <a class="ref" href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly#key-technologies" target="_blank">Cache（Redis）</a> → （miss 时）查 DB → 302 重定向<br><br>
+        用户 → Load Balancer → App Server → 查 <a class="ref" href="https://www.hellointerview.com/learn/system-design/in-a-hurry/key-technologies" target="_blank">Cache（Redis）</a> → （miss 时）查 DB → 302 重定向<br><br>
         每个组件的理由：<br>
         → <strong>Load Balancer</strong>：10K QPS 单机扛不住，需要水平扩展<br>
         → <strong>Redis Cache</strong>：读写比 10:1，绝大多数请求是重复的热链接，缓存命中率可达 80%+<br>
