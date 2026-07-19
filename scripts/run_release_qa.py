@@ -514,6 +514,8 @@ def compile_python() -> None:
         ROOT / "scripts/fetch_url_text.py",
         ROOT / "scripts/run_hello_interview_visual_smoke.py",
         ROOT / "scripts/run_release_qa.py",
+        ROOT / "scripts/bootstrap_curriculum_from_html.py",
+        ROOT / "scripts/sync_plugin_content.py",
         *(ROOT / copy for copy in RENDERER_COPIES),
         *(ROOT / copy for copy in URL_FETCH_COPIES),
         *(ROOT / copy for copy in STUDY_COACH_SCRIPTS),

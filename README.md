@@ -8,7 +8,7 @@ The package has three main entrypoints:
 - `$senior-sde-interview-script` turns concepts or prompts into senior-candidate interview answers with a minimal supporting whiteboard.
 - `$system-design-study-coach` supervises the bundled 18-week system design and algorithms plan.
 
-The shared core is an `Interview Case`: one structured record for the prompt, requirements, estimates, API, data model, architecture, deep dives, interviewer follow-ups, reference answer, rubric, and repair tasks. The three entrypoints are different views of the same case rather than separate content silos.
+The shared target model is an `Interview Case`: one structured record for the prompt, requirements, estimates, API, data model, architecture, deep dives, interviewer follow-ups, reference answer, rubric, and repair tasks. The three entrypoints are designed to become different views of the same case rather than separate content silos.
 
 The printable plan is available through GitHub Pages when this repository is published as `crack-system-interview-skill`:
 
