@@ -71,12 +71,12 @@ def parse_day(path: Path, docs_root: Path) -> dict:
         for th, td in re.findall(r"<tr><th>(.+?)</th><td>(.+?)</td></tr>", text, re.S)
     }
 
-    algo_match = re.search(r'<div class="algo-pack">(.+?)</div></section>', text, re.S)
+    algo_match = re.search(r'<div class="algo-pack">(.+?)</div>\s*</section>', text, re.S)
     algo_html = algo_match.group(1) if algo_match else ""
     algo_links = extract_links(algo_html)
     required, optional = [], []
     for link in algo_links:
-        target = optional if link["label"].startswith("选做：") else required
+        target = optional if link["label"].startswith(("选做：", "快刷：")) else required
         target.append(link)
 
     return {

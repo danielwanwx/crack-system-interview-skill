@@ -92,8 +92,8 @@
       "algorithms": {
         "required": [
           {"title": "Product of Array Except Self", "url": "https://leetcode.com/problems/product-of-array-except-self/"},
-          {"title": "Group Anagrams (review)", "url": "https://leetcode.com/problems/group-anagrams/"},
-          {"title": "Two Sum (review)", "url": "https://leetcode.com/problems/two-sum/"}
+          {"title": "Encode and Decode Strings", "url": "https://neetcode.io/problems/string-encode-and-decode"},
+          {"title": "Group Anagrams (review)", "url": "https://leetcode.com/problems/group-anagrams/"}
         ],
         "optional": [
           {"title": "Find Pivot Index", "url": "https://leetcode.com/problems/find-pivot-index/"},

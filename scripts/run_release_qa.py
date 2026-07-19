@@ -676,6 +676,32 @@ def validate_case_library() -> None:
                 raise AssertionError(f"{week_path.name}: unknown case_id {case_id}")
 
 
+def validate_curriculum_page_alignment() -> None:
+    lookup_path = ROOT / "system-design-study-coach/scripts/plan_lookup.py"
+    spec = importlib.util.spec_from_file_location("plan_lookup_for_qa", lookup_path)
+    if spec is None or spec.loader is None:
+        raise AssertionError("Could not import the study coach lookup module")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+
+    for week_path in sorted((ROOT / "curriculum").glob("week-*.json")):
+        week = load_json(week_path)
+        for manifest_day in week["days"]:
+            page_path = ROOT / "docs" / manifest_day["page"]
+            page_day = module.parse_day(page_path, ROOT / "docs")
+            curriculum_day = module.parse_manifest_day(week, manifest_day)
+            keys = ("week", "day", "date", "title", "path")
+            for key in keys:
+                if page_day[key] != curriculum_day[key]:
+                    raise AssertionError(
+                        f"{week_path.name}: Day {manifest_day['day']} page and curriculum disagree on {key}",
+                    )
+            if [item["url"] for item in page_day["sources"]] != [item["url"] for item in curriculum_day["sources"]]:
+                raise AssertionError(f"{week_path.name}: Day {manifest_day['day']} source links drifted from the page")
+            if [item["url"] for item in page_day["algorithms"]["required"]] != [item["url"] for item in curriculum_day["algorithms"]["required"]]:
+                raise AssertionError(f"{week_path.name}: Day {manifest_day['day']} required algorithms drifted from the page")
+
+
 def run_release_cases(out_dir: Path, renderer: Path) -> None:
     case_paths = sorted(SMOKE_CASE_DIR.glob("*.json")) + sorted(RELEASE_CASE_DIR.glob("*.json"))
     if not case_paths:
@@ -741,6 +767,7 @@ def main() -> None:
     validate_text_wrapping(args.renderer)
     validate_url_fetch_outline()
     validate_case_library()
+    validate_curriculum_page_alignment()
     validate_study_coach_lookup()
     run_release_cases(args.out, args.renderer)
     print("RELEASE_QA_PASS")
