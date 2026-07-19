@@ -1,28 +1,29 @@
 <!doctype html>
 <html lang="zh-CN">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>第 2 周第 3 天 - 把 Redis 当组件而不是魔法</title><link rel="stylesheet" href="../week1/style.css"></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>第 2 周第 3 天 - Redis 状态与原子扣减</title><link rel="stylesheet" href="../week1/style.css"></head>
 <body>
   <header class="topbar"><nav class="shell nav"><a class="brand" href="../week2-action-guide.html"><span class="mark"></span> 第 2 周</a><div class="navlinks"><a href="day-2.html">上一天</a><a href="day-4.html">下一天</a><a href="scorecard.html">评分表</a></div></nav></header>
   <main class="shell">
-    <section class="day-hero"><div class="eyebrow">第 2 周 · 第 3 天 · 2026-07-08 周三 · Redis</div><h1>把 Redis 当组件而不是魔法</h1><p class="deck">Redis 是很多面试答案里的默认组件，今天只学数据结构、TTL、原子操作、复制风险。</p><div class="day-meta"><span>系统设计 95 分钟</span><span>算法 75 分钟</span><span>复盘 10 分钟</span></div></section>
+    <section class="day-hero"><div class="eyebrow">第 2 周 · 第 3 天 · 2026-07-29 周三 · Redis Execution</div><h1>Redis 状态与原子扣减</h1><div class="day-meta"><span>系统设计 95 分钟</span><span>算法 75 分钟</span><span>复盘 10 分钟</span></div></section>
+    <section class="section"><div class="section-head"><h2>今日时间表</h2></div><table class="rubric"><tr><th>07:55–08:15</th><td><b>回忆</b><br>不看资料复述昨日设计；写出今天要验证的一条假设。</td></tr><tr><th>08:15–09:25</th><td><b>原文</b><br>依次阅读：Rate Limiter → Redis → 第六章：复制。只读页面下方列出的小节。</td></tr><tr><th>09:25–10:20</th><td><b>白板</b><br>写 Redis key schema 和 Lua 步骤：refill、check、decrement、expire。</td></tr><tr><th>15:30–16:45</th><td><b>算法</b><br>完成 3 道 Two Pointers；每题记录 pattern、invariant、复杂度和错因。</td></tr><tr><th>20:30–21:30</th><td><b>口述</b><br>脱稿讲当天产出；按修复规则：如果答案只有 INCR，补 refill 计算、TTL 和并发扣减。</td></tr></table></section>
     <div class="ops-grid">
       <section><h2>学习源包</h2>
-        <div class="source-block">
-          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/deep-dives/redis">Redis</a><span>Hello Interview</span></div>
-          <ul class="source-sections"><li>Data Structures</li><li>Expiration</li><li>Replication</li></ul>
-          <div class="proof">验收：能把 string、hash、set、sorted set 放到具体需求。</div>
-        </div>
-        <div class="source-block">
+        <div class="source-block" id="source-rate-limiter">
           <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/distributed-rate-limiter">Rate Limiter</a><span>Hello Interview</span></div>
-          <ul class="source-sections"><li>Algorithms</li><li>Redis</li><li>Consistency</li></ul>
-          <div class="proof">验收：理解 Redis 在限流中的原子计数作用。</div>
+          <ul class="source-sections"><li id="source-rate-limiter-algorithms"><span>Algorithms</span><em>页面级阅读</em></li><li id="source-rate-limiter-redis"><span>Redis</span><em>页面级阅读</em></li><li id="source-rate-limiter-consistency"><span>Consistency</span><em>页面级阅读</em></li></ul>
+          <div class="proof">验收：能把算法落到 Redis 状态。</div>
         </div>
-        <div class="source-block">
+        <div class="source-block" id="source-redis">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/deep-dives/redis">Redis</a><span>Hello Interview</span></div>
+          <ul class="source-sections"><li id="source-redis-data-structures"><span>Data Structures</span><em>页面级阅读</em></li><li id="source-redis-expiration"><span>Expiration</span><em>页面级阅读</em></li><li id="source-redis-replication"><span>Replication</span><em>页面级阅读</em></li></ul>
+          <div class="proof">验收：能说明 expiration、replication 与 failover 风险。</div>
+        </div>
+        <div class="source-block" id="source-ddia6">
           <div class="source-title"><a href="https://ddia.vonng.com/ch6/">第六章：复制</a><span>DDIA</span></div>
-          <ul class="source-sections"><li>主从复制</li><li>复制延迟</li><li>多主复制</li></ul>
-          <div class="proof">验收：能说明 Redis replica lag 与故障切换风险。</div>
-        </div><div class="extension-block"><div class="mini-title">拓展阅读</div><ul class="extension-list"><li><a href="https://bytebytego.com/">ByteByteGo System Design</a>：看 Redis、rate limiting、cache 图解。</li></ul></div></section>
-      <section><h2>今日验收</h2><table class="rubric"><tr><th>产出物</th><td>写出 token bucket / sliding window counter 的 Redis key 设计。</td></tr><tr><th>必须掌握</th><td>能解释 INCR、EXPIRE、Lua/script 原子性、hot key。</td></tr><tr><th>修复规则</th><td>如果答案只有“存在 Redis 里”，补 key schema 和 TTL。</td></tr></table><h2 style="margin-top:28px">算法模块</h2><div class="algo-pack"><div class="tag-row"><span>NeetCode Tag：Two Pointers</span><span>面积与单调性</span></div><p class="algo-why">简介：Two Pointers 的第二类是单调决策。今天练面积/边界移动。</p><p class="algo-line"><a href="https://leetcode.com/problems/container-with-most-water/">必做：Container With Most Water</a><a href="https://leetcode.com/problems/trapping-rain-water/">必做：Trapping Rain Water</a><a href="https://leetcode.com/problems/3sum/">复盘：3Sum</a></p><div class="mini-title">选做热门题</div><p class="algo-line"><a href="https://leetcode.com/problems/boats-to-save-people/">选做：Boats to Save People</a><a href="https://leetcode.com/problems/backspace-string-compare/">选做：Backspace String Compare</a><a href="https://leetcode.com/problems/merge-sorted-array/">选做：Merge Sorted Array</a></p></div></section>
+          <ul class="source-sections"><li id="source-ddia6-section-d2c3443d"><a href="https://ddia.vonng.com/ch6/#sec_replication_leader">单主复制</a></li><li id="source-ddia6-section-4a8bd588"><a href="https://ddia.vonng.com/ch6/#sec_replication_lag">复制延迟的问题</a></li><li id="source-ddia6-section-de19aee2"><a href="https://ddia.vonng.com/ch6/#sec_replication_multi_leader">多主复制</a></li></ul>
+          <div class="proof">验收：能解释 replica lag 不适合做 token 扣减。</div>
+        </div><div class="extension-block"><div class="mini-title">拓展阅读</div><ul class="extension-list"><li><a href="https://bytebytego.com/">ByteByteGo System Design</a></li></ul></div></section>
+      <section><h2>今日验收</h2><table class="rubric"><tr><th>产出物</th><td>写 Redis key schema 和 Lua 步骤：refill、check、decrement、expire。</td></tr><tr><th>必须掌握</th><td>能讲 tokens、last_refill_ms、TTL、Lua 原子性与 key cardinality。</td></tr><tr><th>修复规则</th><td>如果答案只有 INCR，补 refill 计算、TTL 和并发扣减。</td></tr></table><h2 style="margin-top:28px">算法模块</h2><div class="algo-pack"><div class="tag-row"><span>NeetCode Tag：Two Pointers</span><span>面积与单调性</span></div><p class="algo-line"><a href="https://leetcode.com/problems/container-with-most-water/">必做：Container With Most Water</a><a href="https://leetcode.com/problems/trapping-rain-water/">必做：Trapping Rain Water</a><a href="https://leetcode.com/problems/3sum/">复盘：3Sum</a></p><div class="mini-title">选做热门题</div><p class="algo-line"><a href="https://leetcode.com/problems/boats-to-save-people/">选做：Boats to Save People</a><a href="https://leetcode.com/problems/backspace-string-compare/">选做：Backspace String Compare</a><a href="https://leetcode.com/problems/merge-sorted-array/">选做：Merge Sorted Array</a></p></div></section>
     </div>
     <footer class="footer">第 2 周第 3 天通过条件：产出物可口述，算法题位有记录，最低信心点已写入 repair。</footer>
   </main>

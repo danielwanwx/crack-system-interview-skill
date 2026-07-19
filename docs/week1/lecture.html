@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第 1 周讲义 - URL Shortener / Bitly</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="../week1/style.css">
+</head>
+<body>
+
+  <header class="topbar">
+    <nav class="shell nav">
+      <a class="brand" href="../project-driven-picture.html"><span class="mark"></span> 项目化系统设计</a>
+      <div class="navlinks"><a href="../project-driven-picture.html">全局图</a><a href="../week1-action-guide.html">第 1 周</a><a href="lecture.html">讲义</a><a href="staff-qa.html">Staff Q&A</a><a href="live-mock.html">Live Mock</a><a href="scorecard.html">评分表</a></div>
+    </nav>
+  </header>
+  <main class="shell">
+
+    <section class="day-hero">
+      <div class="eyebrow">第 1 周讲义 · URL Shortener / Bitly</div>
+      <h1>把短链接系统讲到可辩护</h1>
+      <div class="day-meta"><span>核心讲义 60m</span><span>白板复述 30m</span><span>追问修复 30m</span></div>
+    </section>
+
+    <section class="section">
+      <div class="callout">维护 short_code → long_url 映射；create path 保证唯一性和持久化，redirect path 保证 p99、可用性和过期语义。</div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>需求边界</h2></div>
+      <table class="matrix">
+        <tr><th>类别</th><th>本周答案</th><th>设计影响</th></tr>
+        <tr><td>Functional Requirements</td><td>创建短链接；通过短码跳转；可选 expiration；可选 custom alias。</td><td>需要 write path、read path、unique constraint、过期判断。</td></tr>
+        <tr><td>Non-Functional Requirements</td><td>redirect p99 低延迟；高可用；读多写少；数据持久；合理防滥用。</td><td>cache/read replica、DB source of truth、rate limit、监控。</td></tr>
+        <tr><td>Out of scope</td><td>完整 analytics、campaign dashboard、custom domain、多地域双活、机器学习风控。</td><td>可以提 optional queue，但不要让主线失焦。</td></tr>
+      </table>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>API 契约</h2></div>
+      <table class="matrix">
+        <tr><th>Endpoint</th><th>语义</th><th>关键点</th></tr>
+        <tr><td>POST /urls</td><td>创建短链接，body 包含 long_url、optional custom_alias、optional expires_at。</td><td>返回 short_code、short_url、expires_at；身份来自 auth context；custom_alias 冲突返回 409。</td></tr>
+        <tr><td>GET /{short_code}</td><td>跳转到 long_url。</td><td>成功返回 302 Location；过期返回 410；不存在返回 404。</td></tr>
+        <tr><td>GET /urls/{id}</td><td>可选管理接口。</td><td>不是 redirect hot path，权限和 pagination 可以简化。</td></tr>
+      </table>
+      <div class="callout orange">301 vs 302：301 更容易被浏览器和中间层长期缓存，后续变更目标 URL 或过期处理会变困难。面试默认用 302 更稳，除非业务明确需要永久跳转。</div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>数据模型</h2></div>
+      <pre class="codeblock">CREATE TABLE url_mappings (
+  id BIGSERIAL PRIMARY KEY,
+  short_code VARCHAR(16) NOT NULL UNIQUE,
+  long_url TEXT NOT NULL,
+  owner_user_id BIGINT NULL,
+  created_at TIMESTAMP NOT NULL,
+  expires_at TIMESTAMP NULL,
+  is_disabled BOOLEAN NOT NULL DEFAULT FALSE
+);
+
+CREATE INDEX idx_url_mappings_owner_created
+  ON url_mappings(owner_user_id, created_at DESC);
+
+CREATE INDEX idx_url_mappings_expires_at
+  ON url_mappings(expires_at);</pre>
+      <div class="section-split">
+        <div><h3>为什么不是一开始就 NoSQL</h3><p>Bitly 的核心关系很简单，唯一约束和索引纪律比换数据库更重要。关系型数据库足够表达第一版，并方便讲事务、唯一性和 source of truth。</p></div>
+        <div><h3>什么时候考虑分片</h3><p>当单库写入、索引大小、读 replica、运维窗口或多地域要求真的成为瓶颈，再讨论按 short_code hash 或 tenant/region 分片。</p></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>容量判断</h2></div>
+      <table class="matrix">
+        <tr><th>问题</th><th>面试级估算</th><th>结论</th></tr>
+        <tr><td>1B URLs 存储</td><td>如果每条映射粗估 500B，约 500GB，不含索引和冗余。</td><td>这本身不足以证明必须分片。</td></tr>
+        <tr><td>100M DAU redirect</td><td>如果每人每天 10 次 redirect，约 1B/day，平均约 12K QPS，峰值可按 5-10 倍估。</td><td>读路径需要 cache/read replica，p99 是重点。</td></tr>
+        <tr><td>创建短链</td><td>通常远小于 redirect。</td><td>可以接受更高写延迟，重点是唯一性和持久化。</td></tr>
+      </table>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>高层设计</h2><p class="section-copy">create path / redirect path</p></div>
+      <table class="matrix">
+        <tr><th>路径</th><th>步骤</th><th>风险</th></tr>
+        <tr><td>Create path</td><td>Client -> API Gateway -> URL Service -> Code Generator -> DB -> optional event queue。</td><td>short_code collision、counter service outage、custom alias 冲突、恶意 URL。</td></tr>
+        <tr><td>Redirect path</td><td>Client -> DNS/LB/CDN -> Redirect Service -> Cache -> DB fallback -> 302。</td><td>cache miss storm、hot key、DB failover、过期链接缓存不一致。</td></tr>
+      </table>
+      <div class="callout green">核心表达：cache 是加速层，不是真实来源。DB 决定 long_url、expiration、disabled 状态；cache TTL 必须尊重 expires_at 和禁用逻辑。</div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>短码生成</h2></div>
+      <div class="grid-3">
+        <article class="tile"><div class="kicker">Hash long_url</div><h3>简单但有冲突</h3><p>同一 long_url 可稳定生成，但 collision、可枚举、custom alias 和安全语义要处理。</p></article>
+        <article class="tile"><div class="kicker">Counter + base62</div><h3>可控且高效</h3><p>递增 ID 转 base62，唯一性清楚。需要避免可猜测，可加 salt/shuffle 或分段发号。</p></article>
+        <article class="tile"><div class="kicker">Random code</div><h3>实现简单</h3><p>生成后查唯一索引，冲突重试。高规模下要讨论码长、冲突概率和重试成本。</p></article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>面试推进</h2></div>
+      <div class="decision-chain">
+        <article><span>01 · 0-5 min</span><h3>范围</h3><p>create、redirect、alias、expiration。</p><b>追问：NFR 与暂缓项。</b></article>
+        <article><span>02 · 5-12 min</span><h3>契约</h3><p>POST /urls；GET /{short_code}；302 / 404 / 410。</p><b>追问：alias、重试。</b></article>
+        <article><span>03 · 12-22 min</span><h3>路径</h3><p>create durable write；redirect cache → DB → 302。</p><b>追问：expiry、hot key。</b></article>
+        <article><span>04 · 22-35 min</span><h3>深挖</h3><p>短码唯一性；快速跳转。</p><b>追问：counter、collision、outage。</b></article>
+        <article><span>05 · 35-45 min</span><h3>扩展</h3><p>分片、多地域、analytics、abuse。</p><b>追问：触发条件与新风险。</b></article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>Applied AI 叠加</h2></div>
+      <table class="matrix">
+        <tr><th>如果加 AI 功能</th><th>正确位置</th><th>不能做什么</th></tr>
+        <tr><td>自动生成 link title / campaign summary</td><td>创建后异步任务，结果写 metadata。</td><td>不能阻塞 POST /urls 的核心创建成功。</td></tr>
+        <tr><td>恶意 URL 识别</td><td>异步扫描 + blocklist + 人工复核；高风险可先软拦截。</td><td>不能把 LLM 判断当唯一安全来源。</td></tr>
+        <tr><td>AI analytics insight</td><td>离线聚合后生成洞察。</td><td>不能进入 redirect hot path。</td></tr>
+      </table>
+      <div class="pill-row"><a class="pill" href="https://developers.openai.com/tracks/building-agents">OpenAI · Building agents</a><a class="pill" href="https://developers.openai.com/api/docs/guides/tools">OpenAI · Using tools</a><a class="pill" href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic · Building effective agents</a><a class="pill" href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">Anthropic · Demystifying evals for AI agents</a></div>
+    </section>
+
+    <footer class="footer">Week 1 lecture · 读完后用 15 分钟不看稿复述一遍，再进入 Staff Q&A。</footer>
+  </main>
+</body>
+</html>

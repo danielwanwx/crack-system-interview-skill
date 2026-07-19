@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>第 15 周第 2 天 - Tinder：API、状态与数据</title><link rel="stylesheet" href="../week1/style.css"></head>
+<body>
+  <header class="topbar"><nav class="shell nav"><a class="brand" href="../week15-action-guide.html"><span class="mark"></span> 第 15 周</a><div class="navlinks"><a href="day-1.html">上一天</a><a href="day-3.html">下一天</a><a href="scorecard.html">评分表</a></div></nav></header>
+  <main class="shell">
+    <section class="day-hero"><div class="eyebrow">第 15 周 · 第 2 天 · 2026-10-27 周二 · 主项目数据与 API</div><h1>Tinder：API、状态与数据</h1><div class="day-meta"><span>系统设计 140 分钟</span><span>算法 75 分钟</span><span>复盘 10 分钟</span></div></section>
+    <section class="section"><div class="section-head"><h2>今日时间表</h2></div><table class="rubric"><tr><th>07:55–08:15</th><td><b>回忆</b><br>不看资料复述昨日设计；写出今天要验证的一条假设。</td></tr><tr><th>08:15–09:25</th><td><b>原文</b><br>依次阅读：Tinder → Data Modeling → 第三章：数据模型与查询语言。只读页面下方列出的小节。</td></tr><tr><th>09:25–10:20</th><td><b>白板</b><br>写 Tinder API + schema：主体、key、访问模式、权限与错误语义。</td></tr><tr><th>15:30–16:45</th><td><b>算法</b><br>完成 3 道 Stack；每题记录 pattern、invariant、复杂度和错因。</td></tr><tr><th>20:30–21:30</th><td><b>口述</b><br>脱稿讲当天产出；按修复规则：若 schema 无法解释查询路径，重写 key 与 index。</td></tr></table></section>
+    <div class="ops-grid">
+      <section><h2>学习源包</h2>
+        <div class="source-block" id="source-tinder">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/tinder">Tinder</a><span>Hello Interview</span></div>
+          <ul class="source-sections"><li id="source-tinder-matching"><span>Matching</span><em>页面级阅读</em></li><li id="source-tinder-geo"><span>Geo</span><em>页面级阅读</em></li><li id="source-tinder-realtime"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/tinder#panel1bh-header">Realtime</a></li></ul>
+          <div class="proof">验收：能从需求推出实体、访问模式与权限边界。</div>
+        </div>
+        <div class="source-block" id="source-data-model">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/data-modeling">Data Modeling</a><span>Hello Interview</span></div>
+          <ul class="source-sections"><li id="source-data-model-entities-keys-relationships"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/data-modeling#entities-keys--relationships">Entities, Keys &amp; Relationships</a></li><li id="source-data-model-indexing-for-access-patterns"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/data-modeling#indexing-for-access-patterns">Indexing for Access Patterns</a></li><li id="source-data-model-scaling-and-sharding"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/data-modeling#scaling-and-sharding">Scaling and Sharding</a></li></ul>
+          <div class="proof">验收：能从访问路径推出 keys、indexes 与 schema。</div>
+        </div>
+        <div class="source-block" id="source-ddia3">
+          <div class="source-title"><a href="https://ddia.vonng.com/ch3/">第三章：数据模型与查询语言</a><span>DDIA</span></div>
+          <ul class="source-sections"><li id="source-ddia3-section-a3d48093"><a href="https://ddia.vonng.com/ch3/#sec_datamodels_history">关系模型</a></li><li id="source-ddia3-section-ff922257"><a href="https://ddia.vonng.com/ch3/#sec_datamodels_history">文档模型</a></li><li id="source-ddia3-section-60a2d45d"><span>查询语言</span><em>页面级阅读</em></li></ul>
+          <div class="proof">验收：能解释数据模型取舍。</div>
+        </div><div class="extension-block"><div class="mini-title">拓展阅读</div><ul class="extension-list"><li><a href="https://www.designgurus.io/course/grokking-the-system-design-interview">Grokking the System Design Interview</a></li><li><a href="https://bytebytego.com/">ByteByteGo System Design</a></li></ul></div></section>
+      <section><h2>今日验收</h2><table class="rubric"><tr><th>产出物</th><td>写 Tinder API + schema：主体、key、访问模式、权限与错误语义。</td></tr><tr><th>必须掌握</th><td>接口、状态与 schema 可从访问路径推出；权限和错误码明确。</td></tr><tr><th>修复规则</th><td>若 schema 无法解释查询路径，重写 key 与 index。</td></tr></table><h2 style="margin-top:28px">算法模块</h2><div class="algo-pack"><div class="tag-row"><span>NeetCode Tag：Stack</span><span>表达式</span></div><p class="algo-line"><a href="https://leetcode.com/problems/evaluate-reverse-polish-notation/">必做：Evaluate RPN</a><a href="https://leetcode.com/problems/simplify-path/">必做：Simplify Path</a><a href="https://leetcode.com/problems/valid-parentheses/">复盘：Valid Parentheses</a></p><div class="mini-title">选做热门题</div><p class="algo-line"><a href="https://leetcode.com/problems/remove-all-adjacent-duplicates-in-string/">选做：Remove Adjacent Duplicates</a><a href="https://leetcode.com/problems/online-stock-span/">选做：Online Stock Span</a><a href="https://leetcode.com/problems/next-greater-element-ii/">选做：Next Greater Element II</a></p></div></section>
+    </div>
+    <footer class="footer">第 15 周第 2 天通过条件：产出物可口述，算法题位有记录，最低信心点已写入 repair。</footer>
+  </main>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>第 15 周深度讲义 - Tinder</title><link rel="stylesheet" href="../week1/style.css"></head>
+<body><header class="topbar"><nav class="shell nav"><a class="brand" href="../week15-action-guide.html"><span class="mark"></span> 第 15 周</a><div class="navlinks"><a href="staff-qa.html">Staff Q&A</a><a href="live-mock.html">Live Mock</a><a href="scorecard.html">评分表</a></div></nav></header>
+<main class="shell"><section class="day-hero"><div class="eyebrow">第 15 周讲义 · 主项目 Tinder · 迁移 Uber</div><h1>地理匹配与调度</h1><div class="day-meta"><span>主线 45 分钟</span><span>白板 30 分钟</span><span>追问 30 分钟</span></div></section><section class="section"><div class="section-head"><h2>答题主线</h2></div><div class="grid-2"><article class="tile tight"><div class="kicker">01 · 核心判断</div><h3>候选不是匹配</h3><p>geo index 只找附近候选，最终是否展示还要经过偏好、年龄、block、可见性和 ranking 规则。将候选召回与双边 match 分开，才能保护隐私并允许各自扩展。</p></article><article class="tile tight"><div class="kicker">02 · 核心判断</div><h3>状态模型</h3><p>profile、location_cell、swipe、match、block 各自有不同寿命；location 是带 TTL 的软状态，match 是 durable 事实。swipe 写入需要稳定 id 和方向，双向条件满足时只创建一次 match。</p></article><article class="tile tight"><div class="kicker">03 · 核心判断</div><h3>地理与新鲜度</h3><p>位置上报不要求每次全局强一致，但必须携带 timestamp、精度和 TTL，过期位置绝不能进入候选。cell 边界要查邻格并在最终层算距离，GPS 抖动则用平滑和最小移动阈值处理。</p></article><article class="tile tight"><div class="kicker">04 · 核心判断</div><h3>双边写入</h3><p>right swipe 到达后检查反向 swipe，并用唯一约束或条件插入创建 match。通知在 match 提交后通过 outbox 触发，重复 swipe 不得产生重复 match 或重复通知。</p></article><article class="tile tight"><div class="kicker">05 · 核心判断</div><h3>隐私与撤销</h3><p>block、unmatch、隐身和删除必须比候选缓存更快收敛：读取时还要做权威过滤。历史数据可以为安全/合规保留受控审计，但不得继续参与推荐或通知。</p></article><article class="tile tight"><div class="kicker">06 · 核心判断</div><h3>热点城市</h3><p>大城市和热门时段会让少数 geo cell 过热，需分层 cell、复制读取和按地区隔离。仅按 user_id 分片会使附近查询跨大量 shard，无法控制延迟。</p></article><article class="tile tight"><div class="kicker">07 · 核心判断</div><h3>迁移到 Uber</h3><p>Uber 的 driver location 也是软状态，但 dispatch 需要对司机/订单建立短暂排他 reservation，不能只返回推荐列表。Tinder 的错误代价是较差体验，Uber 双派或错派直接影响履约，因此强约束边界更大。</p></article><article class="tile tight"><div class="kicker">08 · 核心判断</div><h3>实时系统运营</h3><p>candidate freshness、match success、stale location 和 dispatch latency 是关键用户信号。socket 连接数并非全部；定位上报和通知必须能降采样或回退到 pull，避免高峰拖垮权威写路径。</p></article></div></section><section class="section"><div class="section-head"><h2>原文定位</h2></div><div class="ops-grid"><section>
+        <div class="source-block" id="source-tinder">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/tinder">Tinder</a><span>Hello Interview</span></div>
+          <ul class="source-sections"><li id="source-tinder-matching"><span>Matching</span><em>页面级阅读</em></li><li id="source-tinder-geo"><span>Geo</span><em>页面级阅读</em></li><li id="source-tinder-realtime"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/tinder#panel1bh-header">Realtime</a></li></ul>
+          <div class="proof">从对应日计划进入精确小节；把原文转化为本页的设计判断。</div>
+        </div>
+        <div class="source-block" id="source-ddia2">
+          <div class="source-title"><a href="https://ddia.vonng.com/ch2/">第二章：数据系统的目标</a><span>DDIA</span></div>
+          <ul class="source-sections"><li id="source-ddia2-section-26b85607"><a href="https://ddia.vonng.com/ch2/#sec_introduction_reliability">可靠性</a></li><li id="source-ddia2-section-d2fbaae8"><a href="https://ddia.vonng.com/ch2/#sec_introduction_scalability">可伸缩性</a></li><li id="source-ddia2-section-3144b31e"><a href="https://ddia.vonng.com/ch2/#sec_introduction_maintainability">可维护性</a></li></ul>
+          <div class="proof">从对应日计划进入精确小节；把原文转化为本页的设计判断。</div>
+        </div>
+        <div class="source-block" id="source-api">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/api-design">API Design</a><span>Hello Interview</span></div>
+          <ul class="source-sections"><li id="source-api-rest-resource-modeling"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/api-design#rest">REST / Resource Modeling</a></li><li id="source-api-http-methods"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/api-design#http-methods">HTTP Methods</a></li><li id="source-api-security-considerations"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/api-design#security-considerations">Security Considerations</a></li></ul>
+          <div class="proof">从对应日计划进入精确小节；把原文转化为本页的设计判断。</div>
+        </div>
+        <div class="source-block" id="source-data-model">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/data-modeling">Data Modeling</a><span>Hello Interview</span></div>
+          <ul class="source-sections"><li id="source-data-model-entities-keys-relationships"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/data-modeling#entities-keys--relationships">Entities, Keys &amp; Relationships</a></li><li id="source-data-model-indexing-for-access-patterns"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/data-modeling#indexing-for-access-patterns">Indexing for Access Patterns</a></li><li id="source-data-model-scaling-and-sharding"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/data-modeling#scaling-and-sharding">Scaling and Sharding</a></li></ul>
+          <div class="proof">从对应日计划进入精确小节；把原文转化为本页的设计判断。</div>
+        </div>
+        <div class="source-block" id="source-ddia3">
+          <div class="source-title"><a href="https://ddia.vonng.com/ch3/">第三章：数据模型与查询语言</a><span>DDIA</span></div>
+          <ul class="source-sections"><li id="source-ddia3-section-a3d48093"><a href="https://ddia.vonng.com/ch3/#sec_datamodels_history">关系模型</a></li><li id="source-ddia3-section-ff922257"><a href="https://ddia.vonng.com/ch3/#sec_datamodels_history">文档模型</a></li><li id="source-ddia3-section-60a2d45d"><span>查询语言</span><em>页面级阅读</em></li></ul>
+          <div class="proof">从对应日计划进入精确小节；把原文转化为本页的设计判断。</div>
+        </div>
+        <div class="source-block" id="source-realtime-pattern">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/patterns/realtime-updates">Real-time Updates</a><span>Hello Interview</span></div>
+          <ul class="source-sections"><li id="source-realtime-pattern-polling"><a href="https://www.hellointerview.com/learn/system-design/patterns/realtime-updates#simple-polling-the-baseline">Polling</a></li><li id="source-realtime-pattern-websockets"><a href="https://www.hellointerview.com/learn/system-design/patterns/realtime-updates#websockets-the-full-duplex-champion">WebSockets</a></li><li id="source-realtime-pattern-server-sent-events"><a href="https://www.hellointerview.com/learn/system-design/patterns/realtime-updates#server-sent-events-sse-the-efficient-one-way-street">Server-Sent Events</a></li></ul>
+          <div class="proof">从对应日计划进入精确小节；把原文转化为本页的设计判断。</div>
+        </div>
+        <div class="source-block" id="source-ddia4">
+          <div class="source-title"><a href="https://ddia.vonng.com/ch4/">第四章：存储与检索</a><span>DDIA</span></div>
+          <ul class="source-sections"><li id="source-ddia4-section-df9a61f7"><a href="https://ddia.vonng.com/ch4/#sec_storage_oltp">索引</a></li><li id="source-ddia4-lsm"><a href="https://ddia.vonng.com/ch4/#sec_storage_btree_lsm_comparison">LSM 树</a></li><li id="source-ddia4-b"><a href="https://ddia.vonng.com/ch4/#sec_storage_b_trees">B 树</a></li></ul>
+          <div class="proof">从对应日计划进入精确小节；把原文转化为本页的设计判断。</div>
+        </div>
+        <div class="source-block" id="source-uber">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/uber">Uber</a><span>Hello Interview</span></div>
+          <ul class="source-sections"><li id="source-uber-matching"><span>Matching</span><em>页面级阅读</em></li><li id="source-uber-geo-indexing"><span>Geo Indexing</span><em>页面级阅读</em></li><li id="source-uber-realtime-location"><span>Realtime Location</span><em>页面级阅读</em></li></ul>
+          <div class="proof">从对应日计划进入精确小节；把原文转化为本页的设计判断。</div>
+        </div></section><section><h2>本周口述顺序</h2><table class="rubric"><tr><th>0–5 分钟</th><td>范围、用户、NFR 和暂缓项。</td></tr><tr><th>5–15 分钟</th><td>状态模型、API 与权威数据。</td></tr><tr><th>15–30 分钟</th><td>主路径、异步边界、容量与扩展 trigger。</td></tr><tr><th>30–45 分钟</th><td>两个 deep dive、故障、降级与指标。</td></tr><tr><th>迁移题</th><td>明确说出不可复用的状态、正确性或 SLO。</td></tr></table></section></div></section><footer class="footer">通过条件：主项目 75 / 100；迁移题 20 分钟内给出状态、主路径、取舍与 failure。</footer></main></body></html>

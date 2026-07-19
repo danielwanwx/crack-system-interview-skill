@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>第 13 周深度讲义 - YouTube Top K</title><link rel="stylesheet" href="../week1/style.css"></head>
+<body><header class="topbar"><nav class="shell nav"><a class="brand" href="../week13-action-guide.html"><span class="mark"></span> 第 13 周</a><div class="navlinks"><a href="staff-qa.html">Staff Q&A</a><a href="live-mock.html">Live Mock</a><a href="scorecard.html">评分表</a></div></nav></header>
+<main class="shell"><section class="day-hero"><div class="eyebrow">第 13 周讲义 · 主项目 YouTube Top K · 迁移 Ad Click Aggregator</div><h1>流式聚合与排行榜</h1><div class="day-meta"><span>主线 45 分钟</span><span>白板 30 分钟</span><span>追问 30 分钟</span></div></section><section class="section"><div class="section-head"><h2>答题主线</h2></div><div class="grid-2"><article class="tile tight"><div class="kicker">01 · 核心判断</div><h3>先写准确性合同</h3><p>Top K 先明确时间窗口、freshness、是否允许估算以及误差上界；“热门”没有统一含义。过去五分钟的近实时榜与昨日精确报表应走不同路径，不能用同一 Redis 排序集敷衍。</p></article><article class="tile tight"><div class="kicker">02 · 核心判断</div><h3>事件时间</h3><p>view/click 事件必须包含 event_id、event_time、内容/广告 key 与来源元数据。processing time 只说明何时到达；watermark 定义系统何时大致认为窗口完整，从而决定榜单何时稳定。</p></article><article class="tile tight"><div class="kicker">03 · 核心判断</div><h3>流与服务层分离</h3><p>原始事件流用于重放和审计，stream processor 维护窗口状态，serving store 只提供读取结果。把三者分开让算法、窗口和去重策略可以回填演化，不会因为一个榜单 bug 丢掉事实流。</p></article><article class="tile tight"><div class="kicker">04 · 核心判断</div><h3>精确与近似</h3><p>低基数或小窗口可精确计数，高基数热点可用 Count-Min Sketch 等近似结构先筛 heavy hitters。近似必须说明高估/误差概率和候选再精确化策略；HyperLogLog 估唯一数，并不能求 Top K。</p></article><article class="tile tight"><div class="kicker">05 · 核心判断</div><h3>重复与迟到</h3><p>at-least-once 流需要以 event_id 或业务去重键处理重复，迟到事件按照 watermark policy 更新、旁路或修正已发布榜。没有这些语义，所谓 exactly-once 只是框架配置而非用户结果。</p></article><article class="tile tight"><div class="kicker">06 · 核心判断</div><h3>热点与状态</h3><p>超级热视频或广告 campaign 会产生 key skew，把单个 stateful partition 压垮。需要 key salting、两阶段聚合或热点专用路径，并在最终合并阶段恢复正确计数。</p></article><article class="tile tight"><div class="kicker">07 · 核心判断</div><h3>迁移到点击与游戏榜</h3><p>广告点击聚合要更重视 anti-fraud、归因与财务校验；游戏榜可能要求用户提交后快速看到名次。它们复用事件流和窗口，但准确性、修正和读写延迟合同不同。</p></article><article class="tile tight"><div class="kicker">08 · 核心判断</div><h3>运营与回放</h3><p>state size、watermark lag、checkpoint 成功与误差界是第一类指标。新算法要 shadow/backfill 后与旧榜对比，再切换 serving 版本；不能直接覆盖正在展示的排名。</p></article></div></section><section class="section"><div class="section-head"><h2>原文定位</h2></div><div class="ops-grid"><section>
+        <div class="source-block" id="source-top-k">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/top-k">YouTube Top K</a><span>Hello Interview</span></div>
+          <ul class="source-sections"><li id="source-top-k-counting"><span>Counting</span><em>页面级阅读</em></li><li id="source-top-k-heavy-hitters"><span>Heavy Hitters</span><em>页面级阅读</em></li><li id="source-top-k-approximation"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/top-k#5-can-we-make-use-of-approximations-to-improve-performance">Approximation</a></li></ul>
+          <div class="proof">从对应日计划进入精确小节；把原文转化为本页的设计判断。</div>
+        </div>
+        <div class="source-block" id="source-ddia2">
+          <div class="source-title"><a href="https://ddia.vonng.com/ch2/">第二章：数据系统的目标</a><span>DDIA</span></div>
+          <ul class="source-sections"><li id="source-ddia2-section-26b85607"><a href="https://ddia.vonng.com/ch2/#sec_introduction_reliability">可靠性</a></li><li id="source-ddia2-section-d2fbaae8"><a href="https://ddia.vonng.com/ch2/#sec_introduction_scalability">可伸缩性</a></li><li id="source-ddia2-section-3144b31e"><a href="https://ddia.vonng.com/ch2/#sec_introduction_maintainability">可维护性</a></li></ul>
+          <div class="proof">从对应日计划进入精确小节；把原文转化为本页的设计判断。</div>
+        </div>
+        <div class="source-block" id="source-api">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/api-design">API Design</a><span>Hello Interview</span></div>
+          <ul class="source-sections"><li id="source-api-rest-resource-modeling"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/api-design#rest">REST / Resource Modeling</a></li><li id="source-api-http-methods"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/api-design#http-methods">HTTP Methods</a></li><li id="source-api-security-considerations"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/api-design#security-considerations">Security Considerations</a></li></ul>
+          <div class="proof">从对应日计划进入精确小节；把原文转化为本页的设计判断。</div>
+        </div>
+        <div class="source-block" id="source-data-model">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/data-modeling">Data Modeling</a><span>Hello Interview</span></div>
+          <ul class="source-sections"><li id="source-data-model-entities-keys-relationships"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/data-modeling#entities-keys--relationships">Entities, Keys &amp; Relationships</a></li><li id="source-data-model-indexing-for-access-patterns"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/data-modeling#indexing-for-access-patterns">Indexing for Access Patterns</a></li><li id="source-data-model-scaling-and-sharding"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/data-modeling#scaling-and-sharding">Scaling and Sharding</a></li></ul>
+          <div class="proof">从对应日计划进入精确小节；把原文转化为本页的设计判断。</div>
+        </div>
+        <div class="source-block" id="source-ddia3">
+          <div class="source-title"><a href="https://ddia.vonng.com/ch3/">第三章：数据模型与查询语言</a><span>DDIA</span></div>
+          <ul class="source-sections"><li id="source-ddia3-section-a3d48093"><a href="https://ddia.vonng.com/ch3/#sec_datamodels_history">关系模型</a></li><li id="source-ddia3-section-ff922257"><a href="https://ddia.vonng.com/ch3/#sec_datamodels_history">文档模型</a></li><li id="source-ddia3-section-60a2d45d"><span>查询语言</span><em>页面级阅读</em></li></ul>
+          <div class="proof">从对应日计划进入精确小节；把原文转化为本页的设计判断。</div>
+        </div>
+        <div class="source-block" id="source-scaling-writes">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/patterns/scaling-writes">Scaling Writes</a><span>Hello Interview</span></div>
+          <ul class="source-sections"><li id="source-scaling-writes-sharding"><a href="https://www.hellointerview.com/learn/system-design/patterns/scaling-writes#sharding-and-partitioning">Sharding</a></li><li id="source-scaling-writes-queues"><a href="https://www.hellointerview.com/learn/system-design/patterns/scaling-writes#handling-bursts-with-queues-and-load-shedding">Queues</a></li><li id="source-scaling-writes-batching"><a href="https://www.hellointerview.com/learn/system-design/patterns/scaling-writes#batching">Batching</a></li></ul>
+          <div class="proof">从对应日计划进入精确小节；把原文转化为本页的设计判断。</div>
+        </div>
+        <div class="source-block" id="source-ddia4">
+          <div class="source-title"><a href="https://ddia.vonng.com/ch4/">第四章：存储与检索</a><span>DDIA</span></div>
+          <ul class="source-sections"><li id="source-ddia4-section-df9a61f7"><a href="https://ddia.vonng.com/ch4/#sec_storage_oltp">索引</a></li><li id="source-ddia4-lsm"><a href="https://ddia.vonng.com/ch4/#sec_storage_btree_lsm_comparison">LSM 树</a></li><li id="source-ddia4-b"><a href="https://ddia.vonng.com/ch4/#sec_storage_b_trees">B 树</a></li></ul>
+          <div class="proof">从对应日计划进入精确小节；把原文转化为本页的设计判断。</div>
+        </div>
+        <div class="source-block" id="source-ad-click">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/ad-click-aggregator">Ad Click Aggregator</a><span>Hello Interview</span></div>
+          <ul class="source-sections"><li id="source-ad-click-requirements"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/ad-click-aggregator#functional-requirements">Requirements</a></li><li id="source-ad-click-aggregation"><span>Aggregation</span><em>页面级阅读</em></li><li id="source-ad-click-exactly-once"><span>Exactly Once</span><em>页面级阅读</em></li></ul>
+          <div class="proof">从对应日计划进入精确小节；把原文转化为本页的设计判断。</div>
+        </div></section><section><h2>本周口述顺序</h2><table class="rubric"><tr><th>0–5 分钟</th><td>范围、用户、NFR 和暂缓项。</td></tr><tr><th>5–15 分钟</th><td>状态模型、API 与权威数据。</td></tr><tr><th>15–30 分钟</th><td>主路径、异步边界、容量与扩展 trigger。</td></tr><tr><th>30–45 分钟</th><td>两个 deep dive、故障、降级与指标。</td></tr><tr><th>迁移题</th><td>明确说出不可复用的状态、正确性或 SLO。</td></tr></table></section></div></section><footer class="footer">通过条件：主项目 75 / 100；迁移题 20 分钟内给出状态、主路径、取舍与 failure。</footer></main></body></html>

@@ -3,63 +3,81 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>第 4 天 - 数据模型</title>
-  <link rel="stylesheet" href="style.css">
+  <title>第 1 周 第 4 天 - 数据模型与真实来源</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="../week1/style.css">
 </head>
 <body>
-  <header class="topbar"><nav class="shell nav"><a class="brand" href="../week1-action-guide.html"><span class="mark"></span> 第 1 周</a><div class="navlinks"><a href="day-3-api.html">上一天</a><a href="day-5-capacity.html">下一天</a><a href="scorecard.html">评分表</a></div></nav></header>
+
+  <header class="topbar">
+    <nav class="shell nav">
+      <a class="brand" href="../project-driven-picture.html"><span class="mark"></span> 项目化系统设计</a>
+      <div class="navlinks"><a href="../project-driven-picture.html">全局图</a><a href="../week1-action-guide.html">第 1 周</a><a href="lecture.html">讲义</a><a href="staff-qa.html">Staff Q&A</a><a href="live-mock.html">Live Mock</a><a href="scorecard.html">评分表</a></div>
+    </nav>
+  </header>
   <main class="shell">
+
     <section class="day-hero">
-      <div class="eyebrow">第 4 天 · 2026-07-02 周四 · 状态设计</div>
-      <h1>让状态服务访问路径</h1>
-      <p class="deck">Bitly 的数据模型很简单，正好暴露坏习惯。今天不做表结构装饰，重点是真实来源、索引纪律、缓存边界。</p>
-      <div class="day-meta"><span>系统设计 100 分钟</span><span>算法 80 分钟</span><span>复盘 10 分钟</span></div>
+      <div class="eyebrow">第 1 周 · 2026-07-23 周四 · 状态模型</div>
+      <h1>数据模型与真实来源</h1>
+      <div class="day-meta"><span>系统设计 100m</span><span>算法 60-75m</span><span>复盘 10m</span></div>
     </section>
+
+    <section class="section"><div class="section-head"><h2>今日时间表</h2></div><table class="rubric"><tr><th>07:55–08:15</th><td><b>回忆</b><br>不看资料复述昨日结论；写出今天要验证的一条假设。</td></tr><tr><th>08:15–09:25</th><td><b>原文</b><br>依次阅读：Data Modeling → 第三章：数据模型与查询语言 → 第四章：存储与检索 → Bitly。只读下方列出的小节。</td></tr><tr><th>09:25–10:20</th><td><b>白板</b><br>写 schema + index plan：url_mappings、users optional、unique short_code index、owner lookup index、expires_at 行为。</td></tr><tr><th>15:30–16:45</th><td><b>算法</b><br>完成 Arrays &amp; Hashing 三题；每题记录 pattern、invariant、复杂度和错因。</td></tr><tr><th>20:30–21:30</th><td><b>口述</b><br>脱稿讲当天产出；按修复规则：任何字段如果不能绑定 API、NFR 或运维行为，就从面试 schema 里删掉。</td></tr></table></section>
+
     <div class="ops-grid">
       <section>
-        <h2>学习源包</h2>
-        <div class="source-block">
+        <h2>阅读源包</h2>
+
+        <div class="source-block" id="source-data-modeling">
           <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/data-modeling">Data Modeling</a><span>Hello Interview</span></div>
-          <ul class="source-sections"><li>Data Modeling in an Interview</li><li>Database Model Options</li><li>Relational Databases (SQL)</li><li>Schema Design Fundamentals</li><li>Start with Requirements</li><li>Entities, Keys & Relationships</li><li>Indexing for Access Patterns</li><li>Normalization vs Denormalization</li><li>Scaling and Sharding</li></ul>
-          <div class="proof">验收：默认从 PostgreSQL 出发，除非某个需求明确让其他模型更合理。</div>
+          <ul class="source-sections"><li id="source-data-modeling-data-modeling-in-an-interview"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/data-modeling#database-model-options">Data Modeling in an Interview</a></li><li id="source-data-modeling-relational-databases-sql"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/data-modeling#relational-databases-sql">Relational Databases (SQL)</a></li><li id="source-data-modeling-entities-keys-relationships"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/data-modeling#entities-keys--relationships">Entities, Keys &amp; Relationships</a></li><li id="source-data-modeling-indexing-for-access-patterns"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/data-modeling#indexing-for-access-patterns">Indexing for Access Patterns</a></li><li id="source-data-modeling-normalization-vs-denormalization"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/data-modeling#normalization-vs-denormalization">Normalization vs Denormalization</a></li><li id="source-data-modeling-scaling-and-sharding"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/data-modeling#scaling-and-sharding">Scaling and Sharding</a></li></ul>
+          <div class="proof">能从访问路径推出 url_mappings 表和索引。</div>
         </div>
-        <div class="source-block">
+        <div class="source-block" id="source-section-fc75f0d">
           <div class="source-title"><a href="https://ddia.vonng.com/ch3/">第三章：数据模型与查询语言</a><span>DDIA</span></div>
-          <ul class="source-sections"><li>关系模型与文档模型</li><li>多对一和多对多的关系</li></ul>
-          <div class="proof">验收：能说明数据模型选择会影响未来查询、演化成本和一致性边界。</div>
+          <ul class="source-sections"><li id="source-section-fc75f0d-section-a3d48093"><a href="https://ddia.vonng.com/ch3/#sec_datamodels_history">关系模型</a></li><li id="source-section-fc75f0d-section-ff922257"><a href="https://ddia.vonng.com/ch3/#sec_datamodels_history">文档模型</a></li><li id="source-section-fc75f0d-section-8f516c54"><a href="https://ddia.vonng.com/ch3/#sec_datamodels_many_to_many">多对一和多对多关系</a></li></ul>
+          <div class="proof">知道这里不是文档模型炫技题，关系模型足够清晰。</div>
         </div>
-        <div class="source-block">
+        <div class="source-block" id="source-section-1ef6634e">
+          <div class="source-title"><a href="https://ddia.vonng.com/ch4/">第四章：存储与检索</a><span>DDIA</span></div>
+          <ul class="source-sections"><li id="source-section-1ef6634e-section-df9a61f7"><a href="https://ddia.vonng.com/ch4/#sec_storage_oltp">索引</a></li><li id="source-section-1ef6634e-b"><a href="https://ddia.vonng.com/ch4/#sec_storage_b_trees">B 树</a></li><li id="source-section-1ef6634e-lsm"><a href="https://ddia.vonng.com/ch4/#sec_storage_btree_lsm_comparison">LSM 树</a></li></ul>
+          <div class="proof">能解释索引让 redirect lookup 变快，但会增加写成本。</div>
+        </div>
+        <div class="source-block" id="source-bitly">
           <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly">Bitly</a><span>Hello Interview</span></div>
-          <ul class="source-sections"><li>Defining the Core Entities</li><li>High-Level Design: database stores mapping</li></ul>
-          <div class="proof">验收：产出 URL mapping table 和 index plan。</div>
+          <ul class="source-sections"><li id="source-bitly-defining-the-core-entities"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly#defining-the-core-entities">Defining the Core Entities</a></li><li id="source-bitly-high-level-design"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly#high-level-design">High-Level Design</a></li></ul>
+          <div class="proof">产出 URL mapping table 和 index plan。</div>
         </div>
         <div class="extension-block">
           <div class="mini-title">拓展阅读</div>
-          <ul class="extension-list">
-            <li><a href="https://ddia.vonng.com/ch4/">DDIA 第四章：存储与检索</a>：理解索引、读写路径和存储引擎取舍。</li>
-            <li><a href="https://www.postgresql.org/docs/current/indexes.html">PostgreSQL Indexes</a>：只看 B-tree 与唯一索引概念，不需要深挖调参。</li>
-          </ul>
+          <ul class="extension-list"><li><a href="https://www.hellointerview.com/learn/system-design/deep-dives/postgres">PostgreSQL</a></li><li><a href="https://developers.openai.com/tracks/building-agents">OpenAI · Building agents</a></li></ul>
         </div>
       </section>
       <section>
-        <h2>今日验收</h2>
+        <h2>今日产出</h2>
         <table class="rubric">
-          <tr><th>产出物</th><td>url_mappings(short_code unique, long_url, creator_id, custom_alias, expires_at, created_at)，并写出访问路径到索引的映射。</td></tr>
-          <tr><th>必须掌握</th><td>short_code 是跳转查询键；expires_at 影响清理和缓存 TTL；缓存永远不是真实来源。</td></tr>
-          <tr><th>高级信号</th><td>先规范化，再按已证明的读路径做反规范化；没有明确触发条件不谈分片。</td></tr>
-          <tr><th>修复规则</th><td>任何字段如果不能绑定 API、非功能需求或运维行为，就从面试表结构里删掉。</td></tr>
+          <tr><th>产出物</th><td>写 schema + index plan：url_mappings、users optional、unique short_code index、owner lookup index、expires_at 行为。</td></tr>
+          <tr><th>修复规则</th><td>任何字段如果不能绑定 API、NFR 或运维行为，就从面试 schema 里删掉。</td></tr>
+          <tr><th>面试表达</th><td>我会从 redirect 查询路径开始建索引：short_code 是最关键 lookup key，因此需要唯一索引。</td></tr>
         </table>
-        <h2 style="margin-top:28px">算法模块</h2>
-        <div class="algo-pack">
-          <div class="tag-row"><span>NeetCode Tag：Arrays & Hashing</span><span>层级：Constraint / Sequence</span></div>
-          <p class="algo-why">简介：收尾 Arrays & Hashing 核心题。今天之后，这个 tag 的 NeetCode 核心题应全部见过一遍。</p>
-          <p class="algo-line"><a href="https://leetcode.com/problems/valid-sudoku/">必做：Valid Sudoku</a><a href="https://leetcode.com/problems/longest-consecutive-sequence/">必做：Longest Consecutive Sequence</a><a href="https://leetcode.com/problems/product-of-array-except-self/">复盘：Product Except Self</a></p>
+        <h2 style="margin-top:28px">必须掌握</h2>
+        <ul class="compact-list"><li><span class="box"></span><span>DB 是 source of truth，cache 不是。</span></li><li><span class="box"></span><span>short_code 必须唯一，custom alias 需要冲突处理。</span></li><li><span class="box"></span><span>expires_at 既影响 redirect 语义，也影响清理策略和缓存 TTL。</span></li></ul>
+          <h2 style="margin-top:28px">算法模块</h2>
+          <div class="algo-pack">
+            <div class="tag-row"><span>NeetCode Tag：Arrays & Hashing</span><span>Matrix and set constraints</span></div>
+          <p class="algo-line"><a href="https://leetcode.com/problems/valid-sudoku/">必做：Valid Sudoku</a><a href="https://leetcode.com/problems/longest-consecutive-sequence/">必做：Longest Consecutive Sequence</a><a href="https://leetcode.com/problems/product-of-array-except-self/">复盘：Product of Array Except Self</a></p>
           <div class="mini-title">选做热门题</div>
-          <p class="algo-line"><a href="https://leetcode.com/problems/set-matrix-zeroes/">Set Matrix Zeroes</a><a href="https://leetcode.com/problems/spiral-matrix/">Spiral Matrix</a><a href="https://leetcode.com/problems/missing-number/">Missing Number</a></p>
+          <p class="algo-line"><a href="https://leetcode.com/problems/set-matrix-zeroes/">选做：Set Matrix Zeroes</a><a href="https://leetcode.com/problems/missing-number/">选做：Missing Number</a></p>
         </div>
       </section>
     </div>
-    <footer class="footer">第 4 天通过条件：每一块状态都有存在理由。</footer>
+
+    <section class="section">
+      <div class="pill-row"><a class="button" href="day-3-api.html">上一天</a><a class="button" href="day-5-capacity.html">下一天</a><a class="button" href="../week1-action-guide.html">返回 Week 1</a></div>
+    </section>
+
+    <footer class="footer">第 1 周 · URL Shortener / Bitly。</footer>
   </main>
 </body>
 </html>

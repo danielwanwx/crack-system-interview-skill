@@ -1,28 +1,29 @@
 <!doctype html>
 <html lang="zh-CN">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>第 10 周第 6 天 - Geo failure repair</title><link rel="stylesheet" href="../week1/style.css"></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>第 10 周第 6 天 - Price Tracking Service：Failure 与运维</title><link rel="stylesheet" href="../week1/style.css"></head>
 <body>
   <header class="topbar"><nav class="shell nav"><a class="brand" href="../week10-action-guide.html"><span class="mark"></span> 第 10 周</a><div class="navlinks"><a href="day-5.html">上一天</a><a href="day-7.html">下一天</a><a href="scorecard.html">评分表</a></div></nav></header>
   <main class="shell">
-    <section class="day-hero"><div class="eyebrow">第 10 周 · 第 6 天 · 2026-09-05 周六 · Repair</div><h1>Geo failure repair</h1><p class="deck">写 geo failure 清单：位置过期、热点城市、司机断线、库存不准、半径查询过慢。</p><div class="day-meta"><span>系统设计 90 分钟</span><span>算法 75 分钟</span><span>复盘 10 分钟</span></div></section>
+    <section class="day-hero"><div class="eyebrow">第 10 周 · 第 6 天 · 2026-09-26 周六 · 故障桥接</div><h1>Price Tracking Service：Failure 与运维</h1><div class="day-meta"><span>系统设计 180 分钟</span><span>算法 75 分钟</span><span>复盘 10 分钟</span></div></section>
+    <section class="section"><div class="section-head"><h2>今日时间表</h2></div><table class="rubric"><tr><th>08:30–10:30</th><td><b>原文与深挖</b><br>阅读：Price Tracking Service → 第九章：分布式系统的麻烦 → CAP Theorem；补齐所有 failure path。</td></tr><tr><th>10:45–12:00</th><td><b>白板</b><br>写 Price Tracking Service 与 Web Crawler 的 failure matrix：检测、降级、恢复、SLO。</td></tr><tr><th>14:30–15:45</th><td><b>算法</b><br>完成 3 道 Graphs 限时题；重做本周最慢题。</td></tr><tr><th>20:30–21:30</th><td><b>口述</b><br>用 15 分钟讲主项目、15 分钟讲迁移题、15 分钟讲故障与指标。</td></tr></table></section>
     <div class="ops-grid">
       <section><h2>学习源包</h2>
-        <div class="source-block">
-          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/uber">Uber</a><span>Hello Interview</span></div>
-          <ul class="source-sections"><li>Matching</li><li>Geo Indexing</li><li>Realtime Location</li></ul>
-          <div class="proof">验收：检查匹配和位置流。</div>
+        <div class="source-block" id="source-camel">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/camelcamelcamel">Price Tracking Service</a><span>Hello Interview</span></div>
+          <ul class="source-sections"><li id="source-camel-requirements"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/camelcamelcamel#functional-requirements">Requirements</a></li><li id="source-camel-price-history"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/camelcamelcamel#1-users-should-be-able-to-view-price-history-for-amazon-products-via-website-or-chrome-extension">Price History</a></li><li id="source-camel-alerts"><span>Alerts</span><em>页面级阅读</em></li></ul>
+          <div class="proof">验收：能覆盖主项目的故障、降级与恢复。</div>
         </div>
-        <div class="source-block">
-          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/tinder">Tinder</a><span>Hello Interview</span></div>
-          <ul class="source-sections"><li>Matching</li><li>Geo</li><li>Realtime</li></ul>
-          <div class="proof">验收：检查候选生成和匹配。</div>
-        </div>
-        <div class="source-block">
+        <div class="source-block" id="source-ddia9">
           <div class="source-title"><a href="https://ddia.vonng.com/ch9/">第九章：分布式系统的麻烦</a><span>DDIA</span></div>
-          <ul class="source-sections"><li>网络故障</li><li>时钟</li><li>不可靠性</li></ul>
-          <div class="proof">验收：检查地理系统故障。</div>
-        </div><div class="extension-block"><div class="mini-title">拓展阅读</div><ul class="extension-list"><li><a href="https://www.designgurus.io/course/grokking-the-system-design-interview">Grokking the System Design Interview</a>：对照 Grokking 的同类 case study。</li><li><a href="https://bytebytego.com/">ByteByteGo System Design</a>：用 Alex Xu / ByteByteGo 图解校准表达。</li></ul></div></section>
-      <section><h2>今日验收</h2><table class="rubric"><tr><th>产出物</th><td>写 geo failure 清单：位置过期、热点城市、司机断线、库存不准、半径查询过慢。</td></tr><tr><th>必须掌握</th><td>每个故障都要有 TTL、fallback 或重算策略。</td></tr><tr><th>修复规则</th><td>如果没有位置过期机制，补 TTL 和 heartbeat。</td></tr></table><h2 style="margin-top:28px">算法模块</h2><div class="algo-pack"><div class="tag-row"><span>NeetCode Tag：Graphs</span><span>复盘</span></div><p class="algo-why">本周按 NeetCode 的 Graphs block 推进。今天只处理「复盘」，三题都要留下 pattern、invariant、复杂度和错因。</p><p class="algo-line"><a href="https://leetcode.com/problems/redundant-connection/">限时：Redundant Connection</a><a href="https://leetcode.com/problems/accounts-merge/">限时：Accounts Merge</a><a href="https://leetcode.com/problems/pacific-atlantic-water-flow/">复盘：Pacific Atlantic</a></p><div class="mini-title">选做热门题</div><p class="algo-line"><a href="https://leetcode.com/problems/clone-graph/">选做：Clone Graph Review</a><a href="https://leetcode.com/problems/graph-valid-tree/">选做：Valid Tree Review</a><a href="https://leetcode.com/problems/course-schedule-ii/">选做：Course Schedule II Review</a></p></div></section>
+          <ul class="source-sections"><li id="source-ddia9-section-8d1157b0"><a href="https://ddia.vonng.com/ch9/#sec_distributed_networks">不可靠的网络</a></li><li id="source-ddia9-section-2708c76c"><a href="https://ddia.vonng.com/ch9/#sec_distributed_clocks">不可靠的时钟</a></li><li id="source-ddia9-section-a8494a93"><a href="https://ddia.vonng.com/ch9/#sec_distributed_partial_failure">故障与部分失效</a></li></ul>
+          <div class="proof">验收：能说明网络、时钟与 partial failure。</div>
+        </div>
+        <div class="source-block" id="source-deep-cap">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/deep-dives/cap-theorem">CAP Theorem</a><span>Hello Interview</span></div>
+          <ul class="source-sections"><li id="source-deep-cap-network-partitions"><span>Network Partitions</span><em>页面级阅读</em></li><li id="source-deep-cap-consistency-tradeoffs"><span>Consistency Tradeoffs</span><em>页面级阅读</em></li></ul>
+          <div class="proof">验收：能明确 consistency / availability 取舍。</div>
+        </div><div class="extension-block"><div class="mini-title">拓展阅读</div><ul class="extension-list"><li><a href="https://www.designgurus.io/course/grokking-the-system-design-interview">Grokking the System Design Interview</a></li><li><a href="https://bytebytego.com/">ByteByteGo System Design</a></li></ul></div></section>
+      <section><h2>今日验收</h2><table class="rubric"><tr><th>产出物</th><td>写 Price Tracking Service 与 Web Crawler 的 failure matrix：检测、降级、恢复、SLO。</td></tr><tr><th>必须掌握</th><td>每个故障有监控、明确的降级选择与恢复条件。</td></tr><tr><th>修复规则</th><td>若只有 happy path，补 timeout、retry、partial failure 与指标。</td></tr></table><h2 style="margin-top:28px">算法模块</h2><div class="algo-pack"><div class="tag-row"><span>NeetCode Tag：Graphs</span><span>复盘</span></div><p class="algo-line"><a href="https://leetcode.com/problems/redundant-connection/">限时：Redundant Connection</a><a href="https://leetcode.com/problems/accounts-merge/">限时：Accounts Merge</a><a href="https://leetcode.com/problems/pacific-atlantic-water-flow/">复盘：Pacific Atlantic</a></p><div class="mini-title">选做热门题</div><p class="algo-line"><a href="https://leetcode.com/problems/clone-graph/">选做：Clone Graph Review</a><a href="https://leetcode.com/problems/graph-valid-tree/">选做：Valid Tree Review</a><a href="https://leetcode.com/problems/course-schedule-ii/">选做：Course Schedule II Review</a></p></div></section>
     </div>
     <footer class="footer">第 10 周第 6 天通过条件：产出物可口述，算法题位有记录，最低信心点已写入 repair。</footer>
   </main>

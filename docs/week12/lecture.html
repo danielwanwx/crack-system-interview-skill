@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>第 12 周深度讲义 - Yelp</title><link rel="stylesheet" href="../week1/style.css"></head>
+<body><header class="topbar"><nav class="shell nav"><a class="brand" href="../week12-action-guide.html"><span class="mark"></span> 第 12 周</a><div class="navlinks"><a href="staff-qa.html">Staff Q&A</a><a href="live-mock.html">Live Mock</a><a href="scorecard.html">评分表</a></div></nav></header>
+<main class="shell"><section class="day-hero"><div class="eyebrow">第 12 周讲义 · 主项目 Yelp · 迁移 Food Review App</div><h1>地理搜索与内容质量</h1><div class="day-meta"><span>主线 45 分钟</span><span>白板 30 分钟</span><span>追问 30 分钟</span></div></section><section class="section"><div class="section-head"><h2>答题主线</h2></div><div class="grid-2"><article class="tile tight"><div class="kicker">01 · 核心判断</div><h3>明确两条读路径</h3><p>Yelp 详情页回答某个 business 的权威资料和评论，搜索页回答某个地图视窗内的候选与排序。两条路径的存储和一致性目标不同：详情可强读，搜索索引允许短暂滞后。</p></article><article class="tile tight"><div class="kicker">02 · 核心判断</div><h3>地理索引只做候选</h3><p>geohash/S2 等 cell 将附近查询转成有限 cell 的候选召回，但 cell 边界和大小不保证精确半径。最终必须用真实距离过滤和排序，并查询相邻 cell 防止边界漏结果。</p></article><article class="tile tight"><div class="kicker">03 · 核心判断</div><h3>建模评论与聚合</h3><p>business、location、review、rating_aggregate、moderation_case 分开保存。review 是可审计事实，aggregate 是派生投影；删除或隐藏评论必须触发可重放的聚合修正。</p></article><article class="tile tight"><div class="kicker">04 · 核心判断</div><h3>稳定分页</h3><p>地图拖动和排序变化会让 offset pagination 重复或跳项，因此使用带 query context、sort key 和最后结果的 cursor。filter、地理范围和 ranking version 都应进入 token，保证下一页的语义可解释。</p></article><article class="tile tight"><div class="kicker">05 · 核心判断</div><h3>排序可解释</h3><p>候选先经过文本、分类、营业状态和距离 filter，再融合距离、评分、评论量和相关性排序。要给用户可理解的主要理由，同时防止某一特征如评论量永久压制新商家。</p></article><article class="tile tight"><div class="kicker">06 · 核心判断</div><h3>内容质量与滥用</h3><p>反刷评不是一句“上模型”，而是 review 状态机、速率限制、账号/商家关系证据、举报队列和人工复核。未审核评论的展示政策与 aggregate 是否计入要清楚，否则评分会不可解释。</p></article><article class="tile tight"><div class="kicker">07 · 核心判断</div><h3>迁移到 Food Review App</h3><p>Food Review App 增加图片上传、内容审核和更强的用户生成内容生命周期，但 geo search 和 review aggregate 可复用。图片与评论都应有可见性状态，不能在 upload 成功后立即作为公开事实。</p></article><article class="tile tight"><div class="kicker">08 · 核心判断</div><h3>运营信号</h3><p>检索质量要看 recall、NDCG 和 zero-result，内容链路要看 moderation latency 和 aggregate lag。地图系统还要观测 cell 热点与边界召回；只看 API 成功率会掩盖“附近什么都搜不到”。</p></article></div></section><section class="section"><div class="section-head"><h2>原文定位</h2></div><div class="ops-grid"><section>
+        <div class="source-block" id="source-yelp">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/yelp">Yelp</a><span>Hello Interview</span></div>
+          <ul class="source-sections"><li id="source-yelp-geo-search"><span>Geo Search</span><em>页面级阅读</em></li><li id="source-yelp-reviews"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/yelp#3-users-should-be-able-to-leave-reviews-on-businesses">Reviews</a></li><li id="source-yelp-ranking"><span>Ranking</span><em>页面级阅读</em></li></ul>
+          <div class="proof">从对应日计划进入精确小节；把原文转化为本页的设计判断。</div>
+        </div>
+        <div class="source-block" id="source-ddia2">
+          <div class="source-title"><a href="https://ddia.vonng.com/ch2/">第二章：数据系统的目标</a><span>DDIA</span></div>
+          <ul class="source-sections"><li id="source-ddia2-section-26b85607"><a href="https://ddia.vonng.com/ch2/#sec_introduction_reliability">可靠性</a></li><li id="source-ddia2-section-d2fbaae8"><a href="https://ddia.vonng.com/ch2/#sec_introduction_scalability">可伸缩性</a></li><li id="source-ddia2-section-3144b31e"><a href="https://ddia.vonng.com/ch2/#sec_introduction_maintainability">可维护性</a></li></ul>
+          <div class="proof">从对应日计划进入精确小节；把原文转化为本页的设计判断。</div>
+        </div>
+        <div class="source-block" id="source-api">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/api-design">API Design</a><span>Hello Interview</span></div>
+          <ul class="source-sections"><li id="source-api-rest-resource-modeling"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/api-design#rest">REST / Resource Modeling</a></li><li id="source-api-http-methods"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/api-design#http-methods">HTTP Methods</a></li><li id="source-api-security-considerations"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/api-design#security-considerations">Security Considerations</a></li></ul>
+          <div class="proof">从对应日计划进入精确小节；把原文转化为本页的设计判断。</div>
+        </div>
+        <div class="source-block" id="source-data-model">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/data-modeling">Data Modeling</a><span>Hello Interview</span></div>
+          <ul class="source-sections"><li id="source-data-model-entities-keys-relationships"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/data-modeling#entities-keys--relationships">Entities, Keys &amp; Relationships</a></li><li id="source-data-model-indexing-for-access-patterns"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/data-modeling#indexing-for-access-patterns">Indexing for Access Patterns</a></li><li id="source-data-model-scaling-and-sharding"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/data-modeling#scaling-and-sharding">Scaling and Sharding</a></li></ul>
+          <div class="proof">从对应日计划进入精确小节；把原文转化为本页的设计判断。</div>
+        </div>
+        <div class="source-block" id="source-ddia3">
+          <div class="source-title"><a href="https://ddia.vonng.com/ch3/">第三章：数据模型与查询语言</a><span>DDIA</span></div>
+          <ul class="source-sections"><li id="source-ddia3-section-a3d48093"><a href="https://ddia.vonng.com/ch3/#sec_datamodels_history">关系模型</a></li><li id="source-ddia3-section-ff922257"><a href="https://ddia.vonng.com/ch3/#sec_datamodels_history">文档模型</a></li><li id="source-ddia3-section-60a2d45d"><span>查询语言</span><em>页面级阅读</em></li></ul>
+          <div class="proof">从对应日计划进入精确小节；把原文转化为本页的设计判断。</div>
+        </div>
+        <div class="source-block" id="source-ddia4">
+          <div class="source-title"><a href="https://ddia.vonng.com/ch4/">第四章：存储与检索</a><span>DDIA</span></div>
+          <ul class="source-sections"><li id="source-ddia4-section-df9a61f7"><a href="https://ddia.vonng.com/ch4/#sec_storage_oltp">索引</a></li><li id="source-ddia4-lsm"><a href="https://ddia.vonng.com/ch4/#sec_storage_btree_lsm_comparison">LSM 树</a></li><li id="source-ddia4-b"><a href="https://ddia.vonng.com/ch4/#sec_storage_b_trees">B 树</a></li></ul>
+          <div class="proof">从对应日计划进入精确小节；把原文转化为本页的设计判断。</div>
+        </div>
+        <div class="source-block" id="source-guided-practice">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/in-a-hurry/problem-breakdowns">Hello Interview Guided Practice</a><span>Hello Interview</span></div>
+          <ul class="source-sections"><li id="source-guided-practice-donations-website"><span>Donations Website</span><em>页面级阅读</em></li><li id="source-guided-practice-food-review-app"><span>Food Review App</span><em>页面级阅读</em></li><li id="source-guided-practice-game-leaderboard"><span>Game Leaderboard</span><em>页面级阅读</em></li><li id="source-guided-practice-notification-system"><span>Notification System</span><em>页面级阅读</em></li><li id="source-guided-practice-github-actions"><span>GitHub Actions</span><em>页面级阅读</em></li></ul>
+          <div class="proof">从对应日计划进入精确小节；把原文转化为本页的设计判断。</div>
+        </div>
+        <div class="source-block" id="source-elasticsearch">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/deep-dives/elasticsearch">Elasticsearch</a><span>Hello Interview</span></div>
+          <ul class="source-sections"><li id="source-elasticsearch-inverted-index"><a href="https://www.hellointerview.com/learn/system-design/deep-dives/elasticsearch#inverted-index">Inverted Index</a></li><li id="source-elasticsearch-shards"><span>Shards</span><em>页面级阅读</em></li><li id="source-elasticsearch-query-execution"><span>Query Execution</span><em>页面级阅读</em></li></ul>
+          <div class="proof">从对应日计划进入精确小节；把原文转化为本页的设计判断。</div>
+        </div></section><section><h2>本周口述顺序</h2><table class="rubric"><tr><th>0–5 分钟</th><td>范围、用户、NFR 和暂缓项。</td></tr><tr><th>5–15 分钟</th><td>状态模型、API 与权威数据。</td></tr><tr><th>15–30 分钟</th><td>主路径、异步边界、容量与扩展 trigger。</td></tr><tr><th>30–45 分钟</th><td>两个 deep dive、故障、降级与指标。</td></tr><tr><th>迁移题</th><td>明确说出不可复用的状态、正确性或 SLO。</td></tr></table></section></div></section><footer class="footer">通过条件：主项目 75 / 100；迁移题 20 分钟内给出状态、主路径、取舍与 failure。</footer></main></body></html>

@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第 1 周 GPT Live Mock - URL Shortener / Bitly</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="../week1/style.css">
+</head>
+<body>
+
+  <header class="topbar">
+    <nav class="shell nav">
+      <a class="brand" href="../project-driven-picture.html"><span class="mark"></span> 项目化系统设计</a>
+      <div class="navlinks"><a href="../project-driven-picture.html">全局图</a><a href="../week1-action-guide.html">第 1 周</a><a href="lecture.html">讲义</a><a href="staff-qa.html">Staff Q&A</a><a href="live-mock.html">Live Mock</a><a href="scorecard.html">评分表</a></div>
+    </nav>
+  </header>
+  <main class="shell">
+
+    <section class="day-hero">
+      <div class="eyebrow">第 1 周 · GPT Live Mock Runbook</div>
+      <h1>让 GPT 像面试官，而不是助教。</h1>
+      <div class="day-meta"><span>45 分钟</span><span>Senior 难度</span><span>动态追问</span></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>启动顺序</h2></div>
+      <div class="mock-steps"><span>01 发送 prompt</span><span>02 听题并澄清</span><span>03 白板推进</span><span>04 两个深挖</span><span>05 收取评分</span></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>Interviewer Prompt</h2></div>
+      <div class="prompt-toolbar"><button class="button" type="button" onclick="navigator.clipboard.writeText(document.getElementById('live-mock-prompt').innerText).then(() => this.textContent='已复制')">复制 Prompt</button><a class="button" href="staff-qa.html">查看追问树</a><a class="button" href="scorecard.html">查看评分表</a></div>
+      <pre class="prompt-block" id="live-mock-prompt">你是一位 Senior 系统设计面试官。题目：Design a URL shortening service like Bitly。全程中文。
+
+规则
+- 开场只给题目；等待候选人澄清。
+- 一次只问一个问题；不教学、不提示、不补全答案。
+- 只沿候选人的选择或遗漏追问；不要按题库顺序念题。
+- 候选人提 cache，追 source of truth、TTL、disable、stampede、outage；提 counter，追可用性、range allocation、enumeration。
+- 节奏：0-5 范围；5-12 API/schema；12-22 HLD/容量；22-35 两个 deep dives；35-45 failure/扩展。
+- 必测：范围、redirect hot path、short_code uniqueness、302/404/410、DB/cache、容量、两个 deep dives、failure/observability。
+- analytics、abuse、AI 仅在候选人提出或主线完成后追问。
+
+基线
+用户创建 short URL，可选 custom alias / expiration；访问 short URL 后 redirect 到 original URL。目标：redirect &lt;100ms、高可用、约 1B mappings / 100M DAU、读远多于写。
+
+结束评分 /100
+范围 15；API/schema 15；HLD 20；容量/取舍 15；deep dives 20；failure/operations 10；沟通 5。
+每项给出候选人实际说过的证据；列出 2 个亮点、2 个缺口、1 个 15 分钟 repair exercise。</pre>
+    </section>
+
+    <footer class="footer">记录一个最低分维度，完成一次 15 分钟 repair。</footer>
+  </main>
+</body>
+</html>

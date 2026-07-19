@@ -1,28 +1,29 @@
 <!doctype html>
 <html lang="zh-CN">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>第 2 周第 7 天 - 限流或缓存二选一 mock</title><link rel="stylesheet" href="../week1/style.css"></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>第 2 周第 7 天 - Distributed Rate Limiter Mock</title><link rel="stylesheet" href="../week1/style.css"></head>
 <body>
   <header class="topbar"><nav class="shell nav"><a class="brand" href="../week2-action-guide.html"><span class="mark"></span> 第 2 周</a><div class="navlinks"><a href="day-6.html">上一天</a><a href="scorecard.html">评分表</a></div></nav></header>
   <main class="shell">
-    <section class="day-hero"><div class="eyebrow">第 2 周 · 第 7 天 · 2026-07-12 周日 · Mock</div><h1>限流或缓存二选一 mock</h1><p class="deck">跑一场 35-45 分钟 mock：Distributed Rate Limiter 或 Distributed Cache。</p><div class="day-meta"><span>系统设计 45+45 分钟</span><span>算法 75 分钟</span><span>复盘 10 分钟</span></div></section>
+    <section class="day-hero"><div class="eyebrow">第 2 周 · 第 7 天 · 2026-08-02 周日 · Mock</div><h1>Distributed Rate Limiter Mock</h1><div class="day-meta"><span>系统设计 45+45 分钟</span><span>算法 75 分钟</span><span>复盘 10 分钟</span></div></section>
+    <section class="section"><div class="section-head"><h2>今日时间表</h2></div><table class="rubric"><tr><th>09:00–09:45</th><td><b>Mock</b><br>按面试时间盒作答；不看讲义。</td></tr><tr><th>10:00–11:15</th><td><b>评分与修复</b><br>完成一场 45 分钟 mock：范围、算法、Redis、HLD、两个 failure deep dive。</td></tr><tr><th>14:00–15:15</th><td><b>算法</b><br>完成 3 道 Two Pointers 限时复盘题。</td></tr><tr><th>20:30–21:00</th><td><b>周复盘</b><br>更新错题、设计决策和下周第 1 天的预读清单。</td></tr></table></section>
     <div class="ops-grid">
       <section><h2>学习源包</h2>
-        <div class="source-block">
+        <div class="source-block" id="source-rate-limiter">
           <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/distributed-rate-limiter">Rate Limiter</a><span>Hello Interview</span></div>
-          <ul class="source-sections"><li>Algorithms</li><li>Redis</li><li>Consistency</li></ul>
-          <div class="proof">验收：按 senior 期望复盘漏项。</div>
+          <ul class="source-sections"><li id="source-rate-limiter-algorithms"><span>Algorithms</span><em>页面级阅读</em></li><li id="source-rate-limiter-redis"><span>Redis</span><em>页面级阅读</em></li><li id="source-rate-limiter-consistency"><span>Consistency</span><em>页面级阅读</em></li></ul>
+          <div class="proof">验收：能按 Senior 预期完成主线。</div>
         </div>
-        <div class="source-block">
-          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/distributed-cache">Distributed Cache</a><span>Hello Interview</span></div>
-          <ul class="source-sections"><li>Consistent Hashing</li><li>Replication</li><li>Eviction</li></ul>
-          <div class="proof">验收：按 senior 期望复盘漏项。</div>
-        </div>
-        <div class="source-block">
+        <div class="source-block" id="source-deep-consistent">
           <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/deep-dives/consistent-hashing">Consistent Hashing</a><span>Hello Interview</span></div>
-          <ul class="source-sections"><li>Virtual Nodes</li><li>Failure Handling</li></ul>
-          <div class="proof">验收：检查 consistent hashing deep dive。</div>
-        </div><div class="extension-block"><div class="mini-title">拓展阅读</div><ul class="extension-list"><li><a href="https://neetcode.io/practice">NeetCode 150 Dashboard</a>：标记 Two Pointers 错题，下一周不再混刷。</li></ul></div></section>
-      <section><h2>今日验收</h2><table class="rubric"><tr><th>产出物</th><td>完成一场 mock 录音/白板，并用评分表打分。</td></tr><tr><th>必须掌握</th><td>75/100 以上，且没有 Redis/schema/failure critical miss。</td></tr><tr><th>修复规则</th><td>最低维度立刻做 15 分钟重写。</td></tr></table><h2 style="margin-top:28px">算法模块</h2><div class="algo-pack"><div class="tag-row"><span>NeetCode Tag：Two Pointers</span><span>Two Pointers Mock</span></div><p class="algo-why">简介：本周 tag 收尾，只做限时复盘。</p><p class="algo-line"><a href="https://leetcode.com/problems/3sum/">限时：3Sum</a><a href="https://leetcode.com/problems/container-with-most-water/">限时：Container With Most Water</a><a href="https://leetcode.com/problems/trapping-rain-water/">限时：Trapping Rain Water</a></p><div class="mini-title">选做热门题</div><p class="algo-line"><a href="https://leetcode.com/problems/valid-palindrome/">选做：Valid Palindrome Speed Run</a><a href="https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/">选做：Two Sum II Speed Run</a><a href="https://leetcode.com/problems/sort-colors/">选做：Sort Colors Speed Run</a></p></div></section>
+          <ul class="source-sections"><li id="source-deep-consistent-virtual-nodes"><a href="https://www.hellointerview.com/learn/system-design/deep-dives/consistent-hashing#virtual-nodes">Virtual Nodes</a></li><li id="source-deep-consistent-failure-handling"><span>Failure Handling</span><em>页面级阅读</em></li></ul>
+          <div class="proof">验收：能接住 consistent hashing 与 failure 追问。</div>
+        </div>
+        <div class="source-block" id="source-deep-cap">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/deep-dives/cap-theorem">CAP Theorem</a><span>Hello Interview</span></div>
+          <ul class="source-sections"><li id="source-deep-cap-network-partitions"><span>Network Partitions</span><em>页面级阅读</em></li><li id="source-deep-cap-consistency-tradeoffs"><span>Consistency Tradeoffs</span><em>页面级阅读</em></li></ul>
+          <div class="proof">验收：能说清 multi-region tradeoff。</div>
+        </div><div class="extension-block"><div class="mini-title">拓展阅读</div><ul class="extension-list"><li><a href="https://neetcode.io/practice">NeetCode 150 Dashboard</a></li></ul></div></section>
+      <section><h2>今日验收</h2><table class="rubric"><tr><th>产出物</th><td>完成一场 45 分钟 mock：范围、算法、Redis、HLD、两个 failure deep dive。</td></tr><tr><th>必须掌握</th><td>75/100 以上；不得漏 429、token bucket、Lua/hot key、Redis outage。</td></tr><tr><th>修复规则</th><td>最低分维度做一次 15 分钟 repair 后复测。</td></tr></table><h2 style="margin-top:28px">算法模块</h2><div class="algo-pack"><div class="tag-row"><span>NeetCode Tag：Two Pointers</span><span>Two Pointers Mock</span></div><p class="algo-line"><a href="https://leetcode.com/problems/3sum/">限时：3Sum</a><a href="https://leetcode.com/problems/container-with-most-water/">限时：Container With Most Water</a><a href="https://leetcode.com/problems/trapping-rain-water/">限时：Trapping Rain Water</a></p><div class="mini-title">选做热门题</div><p class="algo-line"><a href="https://leetcode.com/problems/valid-palindrome/">选做：Valid Palindrome Speed Run</a><a href="https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/">选做：Two Sum II Speed Run</a><a href="https://leetcode.com/problems/sort-colors/">选做：Sort Colors Speed Run</a></p></div></section>
     </div>
     <footer class="footer">第 2 周第 7 天通过条件：产出物可口述，算法题位有记录，最低信心点已写入 repair。</footer>
   </main>

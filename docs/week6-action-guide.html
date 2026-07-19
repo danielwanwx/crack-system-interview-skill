@@ -3,59 +3,59 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>第 6 周行动指南 - 文件同步与协同编辑</title>
+  <title>第 6 周行动指南 - 媒体上传、转码与分发</title>
   <link rel="stylesheet" href="week1/style.css">
 </head>
 <body>
-  <header class="topbar"><nav class="shell nav"><a class="brand" href="week6-action-guide.html"><span class="mark"></span> 第6周 / 文件同步与协同编辑</a><div class="navlinks"><a href="week6/day-1.html">第1天</a><a href="week6/day-2.html">第2天</a><a href="week6/day-3.html">第3天</a><a href="week6/day-4.html">第4天</a><a href="week6/day-5.html">第5天</a><a href="week6/day-6.html">第6天</a><a href="week6/day-7.html">第7天</a><a href="week6/scorecard.html">评分表</a></div></nav></header>
+  <header class="topbar"><nav class="shell nav"><a class="brand" href="week6-action-guide.html"><span class="mark"></span> 第6周 / 媒体上传、转码与分发</a><div class="navlinks"><a href="week6/day-1.html">第1天</a><a href="week6/day-2.html">第2天</a><a href="week6/day-3.html">第3天</a><a href="week6/day-4.html">第4天</a><a href="week6/day-5.html">第5天</a><a href="week6/day-6.html">第6天</a><a href="week6/day-7.html">第7天</a><a href="week6/lecture.html">讲义</a><a href="week6/staff-qa.html">Staff Q&A</a><a href="week6/live-mock.html">Live Mock</a><a href="week6/scorecard.html">评分表</a></div></nav></header>
   <main class="shell">
-    <section class="hero"><div><div class="eyebrow">第 6 周 · 2026-08-03 至 2026-08-09</div><h1>文件同步与协同编辑</h1><p class="deck">掌握文件同步、协同编辑、冲突解决和一致性边界。</p></div><aside class="hero-panel"><div class="metric"><b>7</b><span>天训练任务</span></div><div class="metric"><b>21</b><span>算法题位</span></div><div class="metric"><b>Linked List</b><span>本周算法 tag/block</span></div><div class="metric"><b>75+</b><span>周末 mock 通过线</span></div></aside></section>
-    <section class="section"><div class="section-head"><h2>本周目标</h2><p class="section-copy">掌握文件同步、协同编辑、冲突解决和一致性边界。</p></div><div class="two-col"><div><div class="kicker">必须掌握</div><ul class="compact-list"><li><span class="box"></span><span>每天完成源包阅读、一个白板产出物、三道算法题位。</span></li><li><span class="box"></span><span>所有 deep dive 必须能讲 tradeoff、failure mode、metric。</span></li><li><span class="box"></span><span>周末 mock 必须评分并修复最低维度。</span></li></ul></div><div><div class="kicker">本周不展开</div><ul class="compact-list"><li><span class="box"></span><span>不追求覆盖所有产品功能。</span></li><li><span class="box"></span><span>不背诵完整公司级架构图。</span></li><li><span class="box"></span><span>不把拓展阅读变成主任务。</span></li></ul></div></div></section>
-    <section class="section"><div class="section-head"><h2>时间线</h2><p class="section-copy">每天按照学习源包、今日验收、算法模块执行。拓展阅读只在主任务完成后使用。</p></div><div class="route">
-        <div class="row">
-          <div class="kicker">2026-08-03 周一</div>
-          <h3>第 1 天：文件元数据模型</h3>
-          <p>设计文件同步的数据模型：namespace、path、file version、chunk hash、device cursor。</p>
+    <section class="hero"><div><div class="eyebrow">第 6 周 · 2026-08-24 至 2026-08-30</div><h1>媒体上传、转码与分发</h1><div class="pill-row"><a class="pill" href="week6/lecture.html">深度讲义</a><a class="pill" href="week6/staff-qa.html">Staff Q&A</a><a class="pill" href="week6/live-mock.html">Live Mock</a><a class="pill" href="week6/scorecard.html">评分表</a></div></div><aside class="hero-panel"><div class="metric"><b>7</b><span>天训练任务</span></div><div class="metric"><b>21</b><span>算法题位</span></div><div class="metric"><b>Linked List</b><span>本周算法 tag/block</span></div><div class="metric"><b>75+</b><span>周末 mock 通过线</span></div></aside></section>
+    <section class="section"><div class="section-head"><h2>本周必做</h2></div><div class="two-col"><div><div class="kicker">掌握</div><ul class="compact-list"><li><span class="box"></span><span>主项目 Instagram：requirements、API/schema、HLD、capacity、两个 deep dives。</span></li><li><span class="box"></span><span>迁移项目：YouTube 只做可辩护的范围、核心状态、HLD 与一个 deep dive。</span></li><li><span class="box"></span><span>每天完成原文阅读、白板产出、3 道同一 NeetCode tag 题。</span></li></ul></div><div><div class="kicker">暂不展开</div><ul class="compact-list"><li><span class="box"></span><span>不属于主线的二级功能只记录，不展开。</span></li><li><span class="box"></span><span>拓展阅读只用于修正设计，不替代当天产出。</span></li></ul></div></div></section>
+    <section class="section"><div class="section-head"><h2>时间线</h2></div><div class="route">
+        <div class="row row-day-index" id="day-1">
+          <div class="kicker">2026-08-24 周一</div>
+          <h3><a href="week6/day-1.html">第 1 天：Instagram：范围与 NFR</a></h3>
+          <p>写 Instagram requirements matrix：FR、NFR、out of scope、success metric。</p>
           <a class="button" href="week6/day-1.html">进入</a>
         </div>
-        <div class="row">
-          <div class="kicker">2026-08-04 周二</div>
-          <h3>第 2 天：设计 Dropbox</h3>
-          <p>设计 Dropbox 同步：change log、device cursor、delta sync、conflict copy。</p>
+        <div class="row row-day-index" id="day-2">
+          <div class="kicker">2026-08-25 周二</div>
+          <h3><a href="week6/day-2.html">第 2 天：Instagram：API、状态与数据</a></h3>
+          <p>写 Instagram API + schema：主体、key、访问模式、权限与错误语义。</p>
           <a class="button" href="week6/day-2.html">进入</a>
         </div>
-        <div class="row">
-          <div class="kicker">2026-08-05 周三</div>
-          <h3>第 3 天：同步与冲突</h3>
-          <p>写冲突解决方案：版本向量/mtime 限制、乐观并发、conflict file、重试。</p>
+        <div class="row row-day-index" id="day-3">
+          <div class="kicker">2026-08-26 周三</div>
+          <h3><a href="week6/day-3.html">第 3 天：Instagram：核心路径与容量</a></h3>
+          <p>画 Instagram 主路径：请求/事件、状态变化、同步与异步边界，并写 capacity sheet。</p>
           <a class="button" href="week6/day-3.html">进入</a>
         </div>
-        <div class="row">
-          <div class="kicker">2026-08-06 周四</div>
-          <h3>第 4 天：设计 Google Docs</h3>
-          <p>设计 Google Docs：document model、operation stream、presence、snapshot、权限。</p>
+        <div class="row row-day-index" id="day-4">
+          <div class="kicker">2026-08-27 周四</div>
+          <h3><a href="week6/day-4.html">第 4 天：迁移：YouTube</a></h3>
+          <p>用 75 分钟拆 YouTube：范围、核心状态、HLD、一个 upload / transcoding / streaming deep dive。</p>
           <a class="button" href="week6/day-4.html">进入</a>
         </div>
-        <div class="row">
-          <div class="kicker">2026-08-07 周五</div>
-          <h3>第 5 天：协同一致性</h3>
-          <p>产出协同一致性卡：operation order、ack、retry、offline edit、merge。</p>
+        <div class="row row-day-index" id="day-5">
+          <div class="kicker">2026-08-28 周五</div>
+          <h3><a href="week6/day-5.html">第 5 天：迁移：Instagram</a></h3>
+          <p>用 75 分钟拆 Instagram：范围、核心状态、HLD、一个 media upload / feed fanout deep dive。</p>
           <a class="button" href="week6/day-5.html">进入</a>
         </div>
-        <div class="row">
-          <div class="kicker">2026-08-08 周六</div>
-          <h3>第 6 天：Sync failure repair</h3>
-          <p>写 Sync/Collab failure 清单：离线编辑、重复提交、权限变更、chunk 丢失、operation 重放。</p>
+        <div class="row row-day-index" id="day-6">
+          <div class="kicker">2026-08-29 周六</div>
+          <h3><a href="week6/day-6.html">第 6 天：Instagram：Failure 与运维</a></h3>
+          <p>写 Instagram 与 YouTube 的 failure matrix：检测、降级、恢复、SLO。</p>
           <a class="button" href="week6/day-6.html">进入</a>
         </div>
-        <div class="row">
-          <div class="kicker">2026-08-09 周日</div>
-          <h3>第 7 天：协同系统 mock</h3>
-          <p>跑 Dropbox 或 Google Docs mock。</p>
+        <div class="row row-day-index" id="day-7">
+          <div class="kicker">2026-08-30 周日</div>
+          <h3><a href="week6/day-7.html">第 7 天：Instagram Mock + YouTube 压缩题</a></h3>
+          <p>完成 Instagram 45 分钟 mock；再做 YouTube 20 分钟压缩设计与 repair note。</p>
           <a class="button" href="week6/day-7.html">进入</a>
         </div></div></section>
-    <section class="section"><div class="section-head"><h2>本周通过线</h2><div class="section-copy"><p>完成 1 场 35-45 分钟 mock。</p><p>评分达到 75/100 或明确列出 repair plan。</p><p>算法 tag/block 有错题记录和下周复盘入口。</p></div></div></section>
-    <footer class="footer">System Design Interview Plan · Printable weekly guide</footer>
+    <section class="section"><div class="section-head"><h2>通过线</h2><div class="section-copy"><p>45 分钟完成 Instagram 主线；20 分钟完成 YouTube 迁移题。</p><p>系统设计评分不低于 75 / 100。</p><p>当周 NeetCode tag 完成并记录错题。</p></div></div></section>
+    <footer class="footer">Generated by the printable-plan loop. Review report: week-generation-review.md</footer>
   </main>
 </body>
 </html>

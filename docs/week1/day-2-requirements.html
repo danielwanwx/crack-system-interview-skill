@@ -3,61 +3,76 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>第 2 天 - 需求边界</title>
-  <link rel="stylesheet" href="style.css">
+  <title>第 1 周 第 2 天 - 需求边界与 NFR</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="../week1/style.css">
 </head>
 <body>
-  <header class="topbar"><nav class="shell nav"><a class="brand" href="../week1-action-guide.html"><span class="mark"></span> 第 1 周</a><div class="navlinks"><a href="day-1-interview-os.html">上一天</a><a href="day-3-api.html">下一天</a><a href="scorecard.html">评分表</a></div></nav></header>
+
+  <header class="topbar">
+    <nav class="shell nav">
+      <a class="brand" href="../project-driven-picture.html"><span class="mark"></span> 项目化系统设计</a>
+      <div class="navlinks"><a href="../project-driven-picture.html">全局图</a><a href="../week1-action-guide.html">第 1 周</a><a href="lecture.html">讲义</a><a href="staff-qa.html">Staff Q&A</a><a href="live-mock.html">Live Mock</a><a href="scorecard.html">评分表</a></div>
+    </nav>
+  </header>
   <main class="shell">
+
     <section class="day-hero">
-      <div class="eyebrow">第 2 天 · 2026-06-30 周二 · 范围控制</div>
-      <h1>先收紧系统，再设计系统</h1>
-      <p class="deck">高级答案不是功能清单。今天要锁定 Bitly 的主线行为、明确暂缓范围，并把读多写少的负载特征转成设计压力。</p>
-      <div class="day-meta"><span>系统设计 90 分钟</span><span>算法 75 分钟</span><span>复盘 10 分钟</span></div>
+      <div class="eyebrow">第 1 周 · 2026-07-21 周二 · 需求边界</div>
+      <h1>需求边界与 NFR</h1>
+      <div class="day-meta"><span>系统设计 100m</span><span>算法 60-75m</span><span>复盘 10m</span></div>
     </section>
+
+    <section class="section"><div class="section-head"><h2>今日时间表</h2></div><table class="rubric"><tr><th>07:55–08:15</th><td><b>回忆</b><br>不看资料复述昨日结论；写出今天要验证的一条假设。</td></tr><tr><th>08:15–09:25</th><td><b>原文</b><br>依次阅读：Bitly → Delivery Framework → 第二章：数据系统的目标。只读下方列出的小节。</td></tr><tr><th>09:25–10:20</th><td><b>白板</b><br>产出 Bitly requirements matrix：FR、NFR、out of scope、design impact 四列。</td></tr><tr><th>15:30–16:45</th><td><b>算法</b><br>完成 Arrays &amp; Hashing 三题；每题记录 pattern、invariant、复杂度和错因。</td></tr><tr><th>20:30–21:30</th><td><b>口述</b><br>脱稿讲当天产出；按修复规则：如果 NFR 写成 fast、scalable、available 这种形容词，全部改成数字和设计影响。</td></tr></table></section>
 
     <div class="ops-grid">
       <section>
-        <h2>学习源包</h2>
-        <div class="source-block">
+        <h2>阅读源包</h2>
+
+        <div class="source-block" id="source-bitly">
           <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly">Bitly</a><span>Hello Interview</span></div>
-          <ul class="source-sections"><li>Understanding the Problem</li><li>Functional Requirements</li><li>Non-Functional Requirements</li><li>The Set Up</li><li>Defining the Core Entities</li></ul>
-          <div class="proof">验收：抽出精确范围：创建短链接、可选自定义别名、可选过期时间、跳转。</div>
+          <ul class="source-sections"><li id="source-bitly-understanding-the-problem"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly#understanding-the-problem">Understanding the Problem</a></li><li id="source-bitly-functional-requirements"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly#functional-requirements">Functional Requirements</a></li><li id="source-bitly-non-functional-requirements"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly#non-functional-requirements">Non-Functional Requirements</a></li><li id="source-bitly-the-set-up"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly#the-set-up">The Set Up</a></li><li id="source-bitly-defining-the-core-entities"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly#defining-the-core-entities">Defining the Core Entities</a></li></ul>
+          <div class="proof">能输出主线 FR 和量化 NFR，不把所有功能都塞进第一版。</div>
         </div>
-        <div class="source-block">
+        <div class="source-block" id="source-delivery-framework">
           <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/in-a-hurry/delivery">Delivery Framework</a><span>Hello Interview</span></div>
-          <ul class="source-sections"><li>Requirements (~5 minutes)</li><li>Capacity Estimation</li></ul>
-          <div class="proof">验收：requirements 保持战略性；只有会改变设计的估算才值得做。</div>
+          <ul class="source-sections"><li id="source-delivery-framework-requirements-5-minutes"><a href="https://www.hellointerview.com/learn/system-design/in-a-hurry/delivery#requirements-5-minutes">Requirements (~5 minutes)</a></li><li id="source-delivery-framework-capacity-estimation"><a href="https://www.hellointerview.com/learn/system-design/in-a-hurry/delivery#3-capacity-estimation">Capacity Estimation</a></li></ul>
+          <div class="proof">能在 5 分钟内完成范围收敛，并给 NFR 量级假设。</div>
+        </div>
+        <div class="source-block" id="source-section-1809d2e1">
+          <div class="source-title"><a href="https://ddia.vonng.com/ch2/">第二章：数据系统的目标</a><span>DDIA</span></div>
+          <ul class="source-sections"><li id="source-section-1809d2e1-section-22efb7fa"><a href="https://ddia.vonng.com/ch2/#sec_introduction_percentiles">描述性能</a></li><li id="source-section-1809d2e1-section-84b28d8e"><a href="https://ddia.vonng.com/ch2/#id23">延迟与响应时间</a></li><li id="source-section-1809d2e1-section-d4167de9"><a href="https://ddia.vonng.com/ch2/#sec_introduction_reliability">可用性</a></li></ul>
+          <div class="proof">把 p95/p99、可用性和吞吐写成可讨论的目标。</div>
         </div>
         <div class="extension-block">
           <div class="mini-title">拓展阅读</div>
-          <ul class="extension-list">
-            <li><a href="https://www.hellointerview.com/learn/system-design/core-concepts/api-design">API Design</a>：提前理解明天的接口契约如何从需求推出。</li>
-            <li><a href="https://ddia.vonng.com/ch2/">DDIA 第二章：数据系统的目标</a>：把“高可用、低延迟”改写成可量化目标。</li>
-          </ul>
+          <ul class="extension-list"><li><a href="https://www.hellointerview.com/learn/system-design/core-concepts/api-design">API Design</a></li><li><a href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic · Building effective agents</a></li></ul>
         </div>
       </section>
-
       <section>
-        <h2>今日验收</h2>
+        <h2>今日产出</h2>
         <table class="rubric">
-          <tr><th>产出物</th><td>Bitly 需求表：主线范围、暂缓范围、非功能目标、设计影响四列。</td></tr>
-          <tr><th>必须掌握</th><td>认证、点击分析、垃圾链接/恶意链接检测默认暂缓，除非面试官主动拉进范围。</td></tr>
-          <tr><th>高级信号</th><td>主动说出读写不对称，并连接到缓存、读路径、读写服务拆分。</td></tr>
-          <tr><th>修复规则</th><td>核心功能超过 4 个就砍；非功能需求没数字就补目标值；不能影响设计的需求不进主答案。</td></tr>
+          <tr><th>产出物</th><td>产出 Bitly requirements matrix：FR、NFR、out of scope、design impact 四列。</td></tr>
+          <tr><th>修复规则</th><td>如果 NFR 写成 fast、scalable、available 这种形容词，全部改成数字和设计影响。</td></tr>
+          <tr><th>面试表达</th><td>我先优化 redirect latency，因为读路径远大于写路径。创建短链可以稍慢，但 redirect 是用户可感知 hot path。</td></tr>
         </table>
-        <h2 style="margin-top:28px">算法模块</h2>
-        <div class="algo-pack">
-          <div class="tag-row"><span>NeetCode Tag：Arrays & Hashing</span><span>层级：Grouping / Frequency</span></div>
-          <p class="algo-why">简介：继续同一个 tag，进入分组和频率统计。重点是 key 设计、频率表、bucket/heap 取舍。</p>
+        <h2 style="margin-top:28px">必须掌握</h2>
+        <ul class="compact-list"><li><span class="box"></span><span>FR 必须包含 create short URL、redirect by short code、optional expiration/custom alias。</span></li><li><span class="box"></span><span>NFR 必须量化：redirect p99、availability、read/write ratio、storage horizon。</span></li><li><span class="box"></span><span>每个 NFR 都要能映射到一个设计动作，例如 cache、index、replica、TTL。</span></li></ul>
+          <h2 style="margin-top:28px">算法模块</h2>
+          <div class="algo-pack">
+            <div class="tag-row"><span>NeetCode Tag：Arrays & Hashing</span><span>Hash grouping</span></div>
           <p class="algo-line"><a href="https://leetcode.com/problems/group-anagrams/">必做：Group Anagrams</a><a href="https://leetcode.com/problems/top-k-frequent-elements/">必做：Top K Frequent Elements</a><a href="https://leetcode.com/problems/two-sum/">复盘：Two Sum</a></p>
           <div class="mini-title">选做热门题</div>
-          <p class="algo-line"><a href="https://leetcode.com/problems/sort-characters-by-frequency/">Sort Characters By Frequency</a><a href="https://leetcode.com/problems/majority-element/">Majority Element</a><a href="https://leetcode.com/problems/intersection-of-two-arrays/">Intersection of Two Arrays</a></p>
+          <p class="algo-line"><a href="https://leetcode.com/problems/sort-characters-by-frequency/">选做：Sort Characters By Frequency</a><a href="https://leetcode.com/problems/majority-element/">选做：Majority Element</a></p>
         </div>
-        <table class="rubric"><tr><th>通过线</th><td>能稳定使用哈希表、堆或桶计数思路，不滑回暴力枚举。</td></tr></table>
       </section>
     </div>
-    <footer class="footer">第 2 天通过条件：每个需求都能映射到 API、核心实体或架构压力。</footer>
+
+    <section class="section">
+      <div class="pill-row"><a class="button" href="day-1-interview-os.html">上一天</a><a class="button" href="day-3-api.html">下一天</a><a class="button" href="../week1-action-guide.html">返回 Week 1</a></div>
+    </section>
+
+    <footer class="footer">第 1 周 · URL Shortener / Bitly。</footer>
   </main>
 </body>
 </html>

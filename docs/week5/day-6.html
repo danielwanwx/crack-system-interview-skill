@@ -1,28 +1,29 @@
 <!doctype html>
 <html lang="zh-CN">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>第 5 周第 6 天 - Blob failure repair</title><link rel="stylesheet" href="../week1/style.css"></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>第 5 周第 6 天 - FB Live Comments：Failure 与运维</title><link rel="stylesheet" href="../week1/style.css"></head>
 <body>
   <header class="topbar"><nav class="shell nav"><a class="brand" href="../week5-action-guide.html"><span class="mark"></span> 第 5 周</a><div class="navlinks"><a href="day-5.html">上一天</a><a href="day-7.html">下一天</a><a href="scorecard.html">评分表</a></div></nav></header>
   <main class="shell">
-    <section class="day-hero"><div class="eyebrow">第 5 周 · 第 6 天 · 2026-08-01 周六 · Repair</div><h1>Blob failure repair</h1><p class="deck">写媒体系统故障清单：上传中断、转码失败、CDN 回源风暴、对象丢失、重复 complete。</p><div class="day-meta"><span>系统设计 90 分钟</span><span>算法 75 分钟</span><span>复盘 10 分钟</span></div></section>
+    <section class="day-hero"><div class="eyebrow">第 5 周 · 第 6 天 · 2026-08-22 周六 · 故障桥接</div><h1>FB Live Comments：Failure 与运维</h1><div class="day-meta"><span>系统设计 180 分钟</span><span>算法 75 分钟</span><span>复盘 10 分钟</span></div></section>
+    <section class="section"><div class="section-head"><h2>今日时间表</h2></div><table class="rubric"><tr><th>08:30–10:30</th><td><b>原文与深挖</b><br>阅读：FB Live Comments → 第九章：分布式系统的麻烦 → CAP Theorem；补齐所有 failure path。</td></tr><tr><th>10:45–12:00</th><td><b>白板</b><br>写 FB Live Comments 与 FB News Feed 的 failure matrix：检测、降级、恢复、SLO。</td></tr><tr><th>14:30–15:45</th><td><b>算法</b><br>完成 3 道 Binary Search 限时题；重做本周最慢题。</td></tr><tr><th>20:30–21:30</th><td><b>口述</b><br>用 15 分钟讲主项目、15 分钟讲迁移题、15 分钟讲故障与指标。</td></tr></table></section>
     <div class="ops-grid">
       <section><h2>学习源包</h2>
-        <div class="source-block">
-          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/deep-dives/cap-theorem">CAP Theorem</a><span>Hello Interview</span></div>
-          <ul class="source-sections"><li>Network Partitions</li><li>Consistency Tradeoffs</li></ul>
-          <div class="proof">验收：能解释跨区对象存储复制取舍。</div>
+        <div class="source-block" id="source-fb-live">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-live-comments">FB Live Comments</a><span>Hello Interview</span></div>
+          <ul class="source-sections"><li id="source-fb-live-1-how-can-we-ensure-comments-are-broadcasted-to-viewers-in-real-time"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-live-comments#1-how-can-we-ensure-comments-are-broadcasted-to-viewers-in-real-time">1) How can we ensure comments are broadcasted to viewers in real-time?</a></li><li id="source-fb-live-2-how-will-the-system-scale-to-support-millions-of-concurrent-viewers"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-live-comments#2-how-will-the-system-scale-to-support-millions-of-concurrent-viewers">2) How will the system scale to support millions of concurrent viewers?</a></li><li id="source-fb-live-3-how-do-we-handle-client-disconnections-and-ensure-viewers-don-t-miss-comments"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-live-comments#3-how-do-we-handle-client-disconnections-and-ensure-viewers-dont-miss-comments">3) How do we handle client disconnections and ensure viewers don&#x27;t miss comments?</a></li></ul>
+          <div class="proof">验收：能覆盖主项目的故障、降级与恢复。</div>
         </div>
-        <div class="source-block">
+        <div class="source-block" id="source-ddia9">
           <div class="source-title"><a href="https://ddia.vonng.com/ch9/">第九章：分布式系统的麻烦</a><span>DDIA</span></div>
-          <ul class="source-sections"><li>网络故障</li><li>时钟</li><li>不可靠性</li></ul>
-          <div class="proof">验收：能说明超时、重试、重复请求风险。</div>
+          <ul class="source-sections"><li id="source-ddia9-section-8d1157b0"><a href="https://ddia.vonng.com/ch9/#sec_distributed_networks">不可靠的网络</a></li><li id="source-ddia9-section-2708c76c"><a href="https://ddia.vonng.com/ch9/#sec_distributed_clocks">不可靠的时钟</a></li><li id="source-ddia9-section-a8494a93"><a href="https://ddia.vonng.com/ch9/#sec_distributed_partial_failure">故障与部分失效</a></li></ul>
+          <div class="proof">验收：能说明网络、时钟与 partial failure。</div>
         </div>
-        <div class="source-block">
-          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/patterns/large-blobs">Handling Large Blobs</a><span>Hello Interview</span></div>
-          <ul class="source-sections"><li>Object Storage</li><li>Multipart Uploads</li><li>CDN</li></ul>
-          <div class="proof">验收：能处理不完整 multipart upload。</div>
-        </div><div class="extension-block"><div class="mini-title">拓展阅读</div><ul class="extension-list"><li><a href="https://www.designgurus.io/course/grokking-the-system-design-interview">Grokking the System Design Interview</a>：对照 Grokking 的同类 case study。</li><li><a href="https://bytebytego.com/">ByteByteGo System Design</a>：用 Alex Xu / ByteByteGo 图解校准表达。</li></ul></div></section>
-      <section><h2>今日验收</h2><table class="rubric"><tr><th>产出物</th><td>写媒体系统故障清单：上传中断、转码失败、CDN 回源风暴、对象丢失、重复 complete。</td></tr><tr><th>必须掌握</th><td>每个故障要有检测、重试、用户状态显示。</td></tr><tr><th>修复规则</th><td>如果没有补偿任务，补 orphan parts cleanup 和 retry worker。</td></tr></table><h2 style="margin-top:28px">算法模块</h2><div class="algo-pack"><div class="tag-row"><span>NeetCode Tag：Binary Search</span><span>复盘</span></div><p class="algo-why">本周按 NeetCode 的 Binary Search block 推进。今天只处理「复盘」，三题都要留下 pattern、invariant、复杂度和错因。</p><p class="algo-line"><a href="https://leetcode.com/problems/find-peak-element/">限时：Find Peak Element</a><a href="https://leetcode.com/problems/capacity-to-ship-packages-within-d-days/">限时：Ship Packages</a><a href="https://leetcode.com/problems/time-based-key-value-store/">复盘：Time Map</a></p><div class="mini-title">选做热门题</div><p class="algo-line"><a href="https://leetcode.com/problems/search-insert-position/">选做：Search Insert Speed Run</a><a href="https://leetcode.com/problems/first-bad-version/">选做：First Bad Version Speed Run</a><a href="https://leetcode.com/problems/search-a-2d-matrix/">选做：2D Matrix Speed Run</a></p></div></section>
+        <div class="source-block" id="source-deep-cap">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/deep-dives/cap-theorem">CAP Theorem</a><span>Hello Interview</span></div>
+          <ul class="source-sections"><li id="source-deep-cap-network-partitions"><span>Network Partitions</span><em>页面级阅读</em></li><li id="source-deep-cap-consistency-tradeoffs"><span>Consistency Tradeoffs</span><em>页面级阅读</em></li></ul>
+          <div class="proof">验收：能明确 consistency / availability 取舍。</div>
+        </div><div class="extension-block"><div class="mini-title">拓展阅读</div><ul class="extension-list"><li><a href="https://www.designgurus.io/course/grokking-the-system-design-interview">Grokking the System Design Interview</a></li><li><a href="https://bytebytego.com/">ByteByteGo System Design</a></li></ul></div></section>
+      <section><h2>今日验收</h2><table class="rubric"><tr><th>产出物</th><td>写 FB Live Comments 与 FB News Feed 的 failure matrix：检测、降级、恢复、SLO。</td></tr><tr><th>必须掌握</th><td>每个故障有监控、明确的降级选择与恢复条件。</td></tr><tr><th>修复规则</th><td>若只有 happy path，补 timeout、retry、partial failure 与指标。</td></tr></table><h2 style="margin-top:28px">算法模块</h2><div class="algo-pack"><div class="tag-row"><span>NeetCode Tag：Binary Search</span><span>复盘</span></div><p class="algo-line"><a href="https://leetcode.com/problems/find-peak-element/">限时：Find Peak Element</a><a href="https://leetcode.com/problems/capacity-to-ship-packages-within-d-days/">限时：Ship Packages</a><a href="https://leetcode.com/problems/time-based-key-value-store/">复盘：Time Map</a></p><div class="mini-title">选做热门题</div><p class="algo-line"><a href="https://leetcode.com/problems/search-insert-position/">选做：Search Insert Speed Run</a><a href="https://leetcode.com/problems/first-bad-version/">选做：First Bad Version Speed Run</a><a href="https://leetcode.com/problems/search-a-2d-matrix/">选做：2D Matrix Speed Run</a></p></div></section>
     </div>
     <footer class="footer">第 5 周第 6 天通过条件：产出物可口述，算法题位有记录，最低信心点已写入 repair。</footer>
   </main>

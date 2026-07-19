@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Project-driven picture - 系统设计训练路线</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="week1/style.css">
+</head>
+<body>
+
+  <header class="topbar">
+    <nav class="shell nav">
+      <a class="brand" href="project-driven-picture.html"><span class="mark"></span> 项目化系统设计</a>
+      <div class="navlinks"><a href="project-driven-picture.html">全局图</a><a href="week1-action-guide.html">第 1 周</a><a href="week1/lecture.html">讲义</a><a href="week1/staff-qa.html">Staff Q&A</a><a href="week1/live-mock.html">Live Mock</a><a href="week1/scorecard.html">评分表</a></div>
+    </nav>
+  </header>
+  <main class="shell">
+
+    <section class="hero">
+      <div>
+        <div class="eyebrow">全局图</div>
+        <h1>每周一个主战场。每天推进一层资产。</h1>
+      </div>
+      <aside class="hero-panel">
+        <div class="metric"><b>18</b><span>项目主题周</span></div>
+        <div class="metric"><b>7</b><span>每周推进层</span></div>
+        <div class="metric"><b>3</b><span>每日算法题</span></div>
+        <div class="metric"><b>2-3</b><span>实现型 spike</span></div>
+      </aside>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>18 周主战场</h2></div>
+      <div class="route">
+        <div class="row no-action">
+          <div class="kicker">第 1 周</div>
+          <h3>URL Shortener / Bitly</h3>
+          <p><strong>主能力：</strong>面试操作系统、API、schema、capacity、redirect path<br><strong>Applied AI 叠加：</strong>只建立异步增强边界</p>
+        </div>
+        <div class="row no-action">
+          <div class="kicker">第 2 周</div>
+          <h3>Rate Limiter / Distributed Cache</h3>
+          <p><strong>主能力：</strong>Redis、TTL、consistent hashing、hot key、global quota<br><strong>Applied AI 叠加：</strong>不引入 AI 项目</p>
+        </div>
+        <div class="row no-action">
+          <div class="kicker">第 3–4 周</div>
+          <h3>Dropbox / Docs / WhatsApp / Chess</h3>
+          <p><strong>主能力：</strong>同步、协作、消息、实时状态<br><strong>Applied AI 叠加：</strong>不引入 AI 项目</p>
+        </div>
+        <div class="row no-action">
+          <div class="kicker">第 5–6 周</div>
+          <h3>Feed / Media</h3>
+          <p><strong>主能力：</strong>fanout、排序、上传、转码、CDN<br><strong>Applied AI 叠加：</strong>不引入 AI 项目</p>
+        </div>
+        <div class="row no-action">
+          <div class="kicker">第 7–8 周</div>
+          <h3>Contention / Payments</h3>
+          <p><strong>主能力：</strong>抢购、竞拍、账本、幂等<br><strong>Applied AI 叠加：</strong>不引入 AI 项目</p>
+        </div>
+        <div class="row no-action">
+          <div class="kicker">第 9–10 周</div>
+          <h3>Workflows / Crawling</h3>
+          <p><strong>主能力：</strong>retries、workers、frontier、dedupe<br><strong>Applied AI 叠加：</strong>不引入 AI 项目</p>
+        </div>
+        <div class="row no-action">
+          <div class="kicker">第 11–12 周</div>
+          <h3>Search / Streaming</h3>
+          <p><strong>主能力：</strong>index、ranking、stream、Top K、exactly once<br><strong>Applied AI 叠加：</strong>不引入 AI 项目</p>
+        </div>
+        <div class="row no-action">
+          <div class="kicker">第 13–14 周</div>
+          <h3>Metrics / Geo</h3>
+          <p><strong>主能力：</strong>metrics、time series、matching、dispatch<br><strong>Applied AI 叠加：</strong>不引入 AI 项目</p>
+        </div>
+        <div class="row no-action">
+          <div class="kicker">第 15–16 周</div>
+          <h3>Geo / Isolation</h3>
+          <p><strong>主能力：</strong>realtime location、inventory、sandbox、durable state<br><strong>Applied AI 叠加：</strong>不引入 AI 项目</p>
+        </div>
+        <div class="row no-action">
+          <div class="kicker">第 17–18 周</div>
+          <h3>LLM / Agent</h3>
+          <p><strong>主能力：</strong>model serving、retrieval、tool workflow、eval<br><strong>Applied AI 叠加：</strong>官方 OpenAI / Anthropic 原文</p>
+        </div></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>每周交付</h2></div>
+      <div class="two-col">
+        <div>
+          <div class="kicker">每周必须做</div>
+          <ul class="compact-list">
+            <li><span class="box"></span><span>一页讲义：系统本质、设计路径、关键 tradeoff。</span></li>
+            <li><span class="box"></span><span>一张白板图：API、schema、HLD、deep dive、failure path。</span></li>
+            <li><span class="box"></span><span>一份 Staff Q&A：追问、反问、指标、降级、安全、成本。</span></li>
+            <li><span class="box"></span><span>一次 mock：35-45 分钟，按 rubric 打分和修复。</span></li>
+          </ul>
+        </div>
+        <div>
+          <div class="kicker">少量实现 spike</div>
+          <ul class="compact-list">
+            <li><span class="box"></span><span>Week 3：metrics/eval/observability mini lab。</span></li>
+            <li><span class="box"></span><span>Week 8：idempotent workflow / retry / ledger spike。</span></li>
+            <li><span class="box"></span><span>Week 13：RAG + agent eval + tracing spike。</span></li>
+            <li><span class="box"></span><span>其余周只写 API、schema、topic、capacity、runbook 这种轻资产。</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="pill-row"><a class="pill" href="https://developers.openai.com/tracks/building-agents">OpenAI · Building agents</a><a class="pill" href="https://developers.openai.com/api/docs/guides/tools">OpenAI · Using tools</a><a class="pill" href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic · Building effective agents</a><a class="pill" href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">Anthropic · Demystifying evals for AI agents</a></div>
+    </section>
+
+    <footer class="footer">工作日早晨读原文并产出，下午刷同一 NeetCode tag，晚上口述修复。</footer>
+  </main>
+</body>
+</html>

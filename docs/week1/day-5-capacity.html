@@ -3,63 +3,76 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>第 5 天 - 容量判断</title>
-  <link rel="stylesheet" href="style.css">
+  <title>第 1 周 第 5 天 - 容量判断</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="../week1/style.css">
 </head>
 <body>
-  <header class="topbar"><nav class="shell nav"><a class="brand" href="../week1-action-guide.html"><span class="mark"></span> 第 1 周</a><div class="navlinks"><a href="day-4-data-model.html">上一天</a><a href="day-6-hld.html">下一天</a><a href="scorecard.html">评分表</a></div></nav></header>
+
+  <header class="topbar">
+    <nav class="shell nav">
+      <a class="brand" href="../project-driven-picture.html"><span class="mark"></span> 项目化系统设计</a>
+      <div class="navlinks"><a href="../project-driven-picture.html">全局图</a><a href="../week1-action-guide.html">第 1 周</a><a href="lecture.html">讲义</a><a href="staff-qa.html">Staff Q&A</a><a href="live-mock.html">Live Mock</a><a href="scorecard.html">评分表</a></div>
+    </nav>
+  </header>
   <main class="shell">
+
     <section class="day-hero">
-      <div class="eyebrow">第 5 天 · 2026-07-03 周五 · 扩展判断</div>
-      <h1>用数字删除多余架构</h1>
-      <p class="deck">估算的目的不是炫算术，而是保持架构克制。今天要学会判断单库加缓存什么时候足够，以及什么信号才真的迫使横向扩展。</p>
-      <div class="day-meta"><span>系统设计 95 分钟</span><span>算法 75 分钟</span><span>复盘 10 分钟</span></div>
+      <div class="eyebrow">第 1 周 · 2026-07-24 周五 · 容量与扩展</div>
+      <h1>容量判断</h1>
+      <div class="day-meta"><span>系统设计 100m</span><span>算法 60-75m</span><span>复盘 10m</span></div>
     </section>
+
+    <section class="section"><div class="section-head"><h2>今日时间表</h2></div><table class="rubric"><tr><th>07:55–08:15</th><td><b>回忆</b><br>不看资料复述昨日结论；写出今天要验证的一条假设。</td></tr><tr><th>08:15–09:25</th><td><b>原文</b><br>依次阅读：Numbers to Know → Bitly → 第二章：数据系统的目标。只读下方列出的小节。</td></tr><tr><th>09:25–10:20</th><td><b>白板</b><br>写 capacity sheet：URL 存储、redirect QPS、create QPS、cache hit ratio、DB lookup、带宽粗估。</td></tr><tr><th>15:30–16:45</th><td><b>算法</b><br>完成 Arrays &amp; Hashing 三题；每题记录 pattern、invariant、复杂度和错因。</td></tr><tr><th>20:30–21:30</th><td><b>口述</b><br>脱稿讲当天产出；按修复规则：如果你的方案先分片再估算，重写。先估算，再决定扩展手段。</td></tr></table></section>
+
     <div class="ops-grid">
       <section>
-        <h2>学习源包</h2>
-        <div class="source-block">
+        <h2>阅读源包</h2>
+
+        <div class="source-block" id="source-numbers-to-know">
           <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/numbers-to-know">Numbers to Know</a><span>Hello Interview</span></div>
-          <ul class="source-sections"><li>Modern Hardware Limits</li><li>Applying These Numbers in System Design Interviews</li><li>Caching</li><li>Databases</li><li>Cheat Sheet</li><li>Common Mistakes In Interviews</li></ul>
-          <div class="proof">验收：掌握数量级限制，用来阻止过早分片。</div>
+          <ul class="source-sections"><li id="source-numbers-to-know-modern-hardware-limits"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/numbers-to-know#modern-hardware-limits">Modern Hardware Limits</a></li><li id="source-numbers-to-know-applying-these-numbers-in-system-design-interviews"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/numbers-to-know#applying-these-numbers-in-system-design-interviews">Applying These Numbers in System Design Interviews</a></li><li id="source-numbers-to-know-caching"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/numbers-to-know#caching">Caching</a></li><li id="source-numbers-to-know-databases"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/numbers-to-know#databases">Databases</a></li><li id="source-numbers-to-know-cheat-sheet"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/numbers-to-know#cheat-sheet">Cheat Sheet</a></li><li id="source-numbers-to-know-common-mistakes-in-interviews"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/numbers-to-know#common-mistakes-in-interviews">Common Mistakes In Interviews</a></li></ul>
+          <div class="proof">能把数量级转成是否需要 cache、replica、sharding。</div>
         </div>
-        <div class="source-block">
+        <div class="source-block" id="source-bitly">
           <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly">Bitly</a><span>Hello Interview</span></div>
-          <ul class="source-sections"><li>3) How can we scale to support 1B shortened urls and 100M DAU?</li><li>But what if the DB goes down?</li><li>But what about our counter?</li></ul>
-          <div class="proof">验收：能估出 10 亿条映射约 500GB，并能为 PostgreSQL + 缓存作为起点辩护。</div>
+          <ul class="source-sections"><li id="source-bitly-3-how-can-we-scale-to-support-1b-shortened-urls-and-100m-dau"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly#3-how-can-we-scale-to-support-1b-shortened-urls-and-100m-dau">3) How can we scale to support 1B shortened urls and 100M DAU?</a></li><li id="source-bitly-but-what-if-the-db-goes-down"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly#3-how-can-we-scale-to-support-1b-shortened-urls-and-100m-dau">But what if the DB goes down?</a></li><li id="source-bitly-but-what-about-our-counter"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly#potential-deep-dives">But what about our counter?</a></li></ul>
+          <div class="proof">能解释 1B URLs 约 500GB 不等于必须分片。</div>
         </div>
-        <div class="source-block">
+        <div class="source-block" id="source-section-1809d2e1">
           <div class="source-title"><a href="https://ddia.vonng.com/ch2/">第二章：数据系统的目标</a><span>DDIA</span></div>
-          <ul class="source-sections"><li>延迟与响应时间</li><li>可伸缩性</li></ul>
-          <div class="proof">验收：把延迟与吞吐翻译成 Bitly 的具体非功能需求。</div>
+          <ul class="source-sections"><li id="source-section-1809d2e1-section-84b28d8e"><a href="https://ddia.vonng.com/ch2/#id23">延迟与响应时间</a></li><li id="source-section-1809d2e1-section-d2fbaae8"><a href="https://ddia.vonng.com/ch2/#sec_introduction_scalability">可伸缩性</a></li></ul>
+          <div class="proof">把 latency、throughput、availability 连接到 NFR。</div>
         </div>
         <div class="extension-block">
           <div class="mini-title">拓展阅读</div>
-          <ul class="extension-list">
-            <li><a href="https://www.hellointerview.com/learn/system-design/in-a-hurry/key-technologies">Key Technologies</a>：只看 Distributed Cache / CDN / Database 的定位。</li>
-            <li><a href="https://ddia.vonng.com/ch4/">DDIA 第四章：存储与检索</a>：用存储引擎和索引成本校准容量判断。</li>
-          </ul>
+          <ul class="extension-list"><li><a href="https://www.hellointerview.com/learn/system-design/in-a-hurry/key-technologies">Key Technologies</a></li><li><a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">Anthropic · Demystifying evals for AI agents</a></li></ul>
         </div>
       </section>
       <section>
-        <h2>今日验收</h2>
+        <h2>今日产出</h2>
         <table class="rubric">
-          <tr><th>产出物</th><td>容量估算表：日活、读写比例、单行大小、存储量、缓存理由、扩展触发条件。</td></tr>
-          <tr><th>必须掌握</th><td>10 亿条 URL 映射约 500GB。这个数字本身不足以证明需要分片。</td></tr>
-          <tr><th>触发条件</th><td>写入吞吐、读延迟、缓存命中率、备份窗口、地理分布、故障恢复。</td></tr>
-          <tr><th>修复规则</th><td>估算如果不改变设计就删掉；如果你说“太大”，必须指出具体组件限制。</td></tr>
+          <tr><th>产出物</th><td>写 capacity sheet：URL 存储、redirect QPS、create QPS、cache hit ratio、DB lookup、带宽粗估。</td></tr>
+          <tr><th>修复规则</th><td>如果你的方案先分片再估算，重写。先估算，再决定扩展手段。</td></tr>
+          <tr><th>面试表达</th><td>我会先看单机或单库是否扛得住存储，再看 redirect QPS 是否需要 cache/read replica。存储容量本身不是最强分片理由。</td></tr>
         </table>
-        <h2 style="margin-top:28px">算法模块</h2>
-        <div class="algo-pack">
-          <div class="tag-row"><span>NeetCode Tag：Arrays & Hashing</span><span>层级：高频扩展 / Prefix Hash</span></div>
-          <p class="algo-why">简介：不切换 tag。核心题过完后，用同类高频题补强哈希表、前缀和、投票计数。</p>
-          <p class="algo-line"><a href="https://leetcode.com/problems/subarray-sum-equals-k/">必做：Subarray Sum Equals K</a><a href="https://leetcode.com/problems/majority-element/">必做：Majority Element</a><a href="https://leetcode.com/problems/longest-consecutive-sequence/">复盘：Longest Consecutive</a></p>
+        <h2 style="margin-top:28px">必须掌握</h2>
+        <ul class="compact-list"><li><span class="box"></span><span>1B URLs 约 500GB 是面试级估算，不需要追求精确。</span></li><li><span class="box"></span><span>真正压力在 redirect QPS 和 p99 latency，不在总存储。</span></li><li><span class="box"></span><span>知道 read replica、cache、CDN、partition 分别解决什么问题。</span></li></ul>
+          <h2 style="margin-top:28px">算法模块</h2>
+          <div class="algo-pack">
+            <div class="tag-row"><span>NeetCode Tag：Arrays & Hashing</span><span>Prefix and frequency</span></div>
+          <p class="algo-line"><a href="https://leetcode.com/problems/subarray-sum-equals-k/">必做：Subarray Sum Equals K</a><a href="https://leetcode.com/problems/majority-element/">必做：Majority Element</a><a href="https://leetcode.com/problems/longest-consecutive-sequence/">复盘：Longest Consecutive Sequence</a></p>
           <div class="mini-title">选做热门题</div>
-          <p class="algo-line"><a href="https://leetcode.com/problems/continuous-subarray-sum/">Continuous Subarray Sum</a><a href="https://leetcode.com/problems/check-if-array-pairs-are-divisible-by-k/">Array Pairs Divisible by K</a><a href="https://leetcode.com/problems/find-all-duplicates-in-an-array/">Find All Duplicates in an Array</a></p>
+          <p class="algo-line"><a href="https://leetcode.com/problems/continuous-subarray-sum/">选做：Continuous Subarray Sum</a><a href="https://leetcode.com/problems/find-all-duplicates-in-an-array/">选做：Find All Duplicates in an Array</a></p>
         </div>
       </section>
     </div>
-    <footer class="footer">第 5 天通过条件：你的估算能约束架构，而不是装饰答案。</footer>
+
+    <section class="section">
+      <div class="pill-row"><a class="button" href="day-4-data-model.html">上一天</a><a class="button" href="day-6-hld.html">下一天</a><a class="button" href="../week1-action-guide.html">返回 Week 1</a></div>
+    </section>
+
+    <footer class="footer">第 1 周 · URL Shortener / Bitly。</footer>
   </main>
 </body>
 </html>

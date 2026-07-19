@@ -3,74 +3,81 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>第 1 天 - 面试操作系统</title>
-  <link rel="stylesheet" href="style.css">
+  <title>第 1 周 第 1 天 - 面试操作系统</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="../week1/style.css">
 </head>
 <body>
-  <header class="topbar"><nav class="shell nav"><a class="brand" href="../week1-action-guide.html"><span class="mark"></span> 第 1 周</a><div class="navlinks"><a href="day-2-requirements.html">下一天</a><a href="scorecard.html">评分表</a></div></nav></header>
+
+  <header class="topbar">
+    <nav class="shell nav">
+      <a class="brand" href="../project-driven-picture.html"><span class="mark"></span> 项目化系统设计</a>
+      <div class="navlinks"><a href="../project-driven-picture.html">全局图</a><a href="../week1-action-guide.html">第 1 周</a><a href="lecture.html">讲义</a><a href="staff-qa.html">Staff Q&A</a><a href="live-mock.html">Live Mock</a><a href="scorecard.html">评分表</a></div>
+    </nav>
+  </header>
   <main class="shell">
+
     <section class="day-hero">
-      <div class="eyebrow">第 1 天 · 2026-06-29 周一 · 基础框架</div>
-      <h1>先建立面试操作系统</h1>
-      <p class="deck">今天不要急着画架构。先搞清楚系统设计面试到底怎么被评估，以及你如何在 45 分钟里控制节奏、保留深挖时间。</p>
-      <div class="day-meta"><span>系统设计 95 分钟</span><span>算法 75 分钟</span><span>复盘 10 分钟</span></div>
+      <div class="eyebrow">第 1 周 · 2026-07-20 周一 · 问题框定</div>
+      <h1>面试操作系统</h1>
+      <div class="day-meta"><span>系统设计 90m</span><span>算法 60-75m</span><span>复盘 10m</span></div>
     </section>
+
+    <section class="section"><div class="section-head"><h2>今日时间表</h2></div><table class="rubric"><tr><th>07:55–08:15</th><td><b>回忆</b><br>不看资料复述昨日结论；写出今天要验证的一条假设。</td></tr><tr><th>08:15–09:25</th><td><b>原文</b><br>依次阅读：Introduction → How to Prepare for System Design Interviews → Delivery Framework → 第二章：数据系统的目标。只读下方列出的小节。</td></tr><tr><th>09:25–10:20</th><td><b>白板</b><br>写一页 Bitly interview control sheet：问题定义、目标用户、主线范围、暂缓范围、时间盒、最后 35 分钟答题顺序。</td></tr><tr><th>15:30–16:45</th><td><b>算法</b><br>完成 Arrays &amp; Hashing 三题；每题记录 pattern、invariant、复杂度和错因。</td></tr><tr><th>20:30–21:30</th><td><b>口述</b><br>脱稿讲当天产出；按修复规则：如果你一上来就画服务盒子，重做一遍：先写问题边界和 NFR，再允许画图。</td></tr></table></section>
 
     <div class="ops-grid">
       <section>
-        <h2>学习源包</h2>
-        <div class="source-block">
+        <h2>阅读源包</h2>
+
+        <div class="source-block" id="source-introduction">
           <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/in-a-hurry/introduction">Introduction</a><span>Hello Interview</span></div>
-          <ul class="source-sections"><li>What are system design interviews?</li><li>Types of System Design Interviews</li><li>Assessment / Interviewer Rubric</li></ul>
-          <div class="proof">验收：能说出评估信号来自问题推进、方案设计、技术深度、沟通节奏。</div>
+          <ul class="source-sections"><li id="source-introduction-what-are-system-design-interviews"><a href="https://www.hellointerview.com/learn/system-design/in-a-hurry/introduction#what-are-system-design-interviews">What are system design interviews?</a></li><li id="source-introduction-types-of-system-design-interviews"><a href="https://www.hellointerview.com/learn/system-design/in-a-hurry/introduction#types-of-system-design-interviews">Types of System Design Interviews</a></li><li id="source-introduction-assessment-interviewer-rubric"><a href="https://www.hellointerview.com/learn/system-design/in-a-hurry/introduction#assessment">Assessment / Interviewer Rubric</a></li></ul>
+          <div class="proof">能说出系统设计面试不是背架构图，而是用工程判断推进模糊问题。</div>
         </div>
-        <div class="source-block">
+        <div class="source-block" id="source-how-to-prepare-for-system-design-interviews">
           <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/in-a-hurry/how-to-prepare">How to Prepare for System Design Interviews</a><span>Hello Interview</span></div>
-          <ul class="source-sections"><li>Build a Foundation</li><li>Practice Practice Practice</li></ul>
-          <div class="proof">验收：能解释为什么被动阅读不够，必须立刻进入“读一小段，产出一小块答案”的节奏。</div>
+          <ul class="source-sections"><li id="source-how-to-prepare-for-system-design-interviews-build-a-foundation"><a href="https://www.hellointerview.com/learn/system-design/in-a-hurry/how-to-prepare">Build a Foundation</a></li><li id="source-how-to-prepare-for-system-design-interviews-practice-practice-practice"><a href="https://www.hellointerview.com/learn/system-design/in-a-hurry/how-to-prepare">Practice Practice Practice</a></li></ul>
+          <div class="proof">知道准备重点是形成可迁移框架，而不是平行泛读材料。</div>
         </div>
-        <div class="source-block">
+        <div class="source-block" id="source-delivery-framework">
           <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/in-a-hurry/delivery">Delivery Framework</a><span>Hello Interview</span></div>
-          <ul class="source-sections"><li>Overall Structure</li><li>Requirements (~5 minutes)</li><li>Core Entities (~2 minutes)</li><li>API or System Interface (~5 minutes)</li><li>High Level Design (~10-15 minutes)</li><li>Deep Dives (~10 minutes)</li></ul>
-          <div class="proof">验收：背下顺序，更重要的是讲清每段存在的目的。</div>
+          <ul class="source-sections"><li id="source-delivery-framework-overall-structure"><a href="https://www.hellointerview.com/learn/system-design/in-a-hurry/delivery">Overall Structure</a></li><li id="source-delivery-framework-requirements-5-minutes"><a href="https://www.hellointerview.com/learn/system-design/in-a-hurry/delivery#requirements-5-minutes">Requirements (~5 minutes)</a></li><li id="source-delivery-framework-core-entities-2-minutes"><a href="https://www.hellointerview.com/learn/system-design/in-a-hurry/delivery#core-entities-2-minutes">Core Entities (~2 minutes)</a></li><li id="source-delivery-framework-api-or-system-interface-5-minutes"><a href="https://www.hellointerview.com/learn/system-design/in-a-hurry/delivery#api-or-system-interface-5-minutes">API or System Interface (~5 minutes)</a></li><li id="source-delivery-framework-high-level-design-10-15-minutes"><a href="https://www.hellointerview.com/learn/system-design/in-a-hurry/delivery#high-level-design-10-15-minutes">High Level Design (~10-15 minutes)</a></li><li id="source-delivery-framework-deep-dives-10-minutes"><a href="https://www.hellointerview.com/learn/system-design/in-a-hurry/delivery#deep-dives-10-minutes">Deep Dives (~10 minutes)</a></li></ul>
+          <div class="proof">能背出时间盒，并解释每一段为什么存在。</div>
         </div>
-        <div class="source-block">
+        <div class="source-block" id="source-section-1809d2e1">
           <div class="source-title"><a href="https://ddia.vonng.com/ch2/">第二章：数据系统的目标</a><span>DDIA</span></div>
-          <ul class="source-sections"><li>描述性能</li><li>延迟与响应时间</li><li>平均值、中位数与百分位点</li><li>响应时间指标的应用</li></ul>
-          <div class="proof">验收：谈性能时用 p95/p99，不用平均延迟糊弄。</div>
+          <ul class="source-sections"><li id="source-section-1809d2e1-section-26b85607"><a href="https://ddia.vonng.com/ch2/#sec_introduction_reliability">可靠性</a></li><li id="source-section-1809d2e1-section-d2fbaae8"><a href="https://ddia.vonng.com/ch2/#sec_introduction_scalability">可伸缩性</a></li><li id="source-section-1809d2e1-section-3144b31e"><a href="https://ddia.vonng.com/ch2/#sec_introduction_maintainability">可维护性</a></li></ul>
+          <div class="proof">把可靠性、可伸缩性、可维护性翻译成面试里的 NFR 语言。</div>
         </div>
         <div class="extension-block">
           <div class="mini-title">拓展阅读</div>
-          <ul class="extension-list">
-            <li><a href="https://www.hellointerview.com/learn/system-design/core-concepts/numbers-to-know">Numbers to Know</a>：提前建立延迟、吞吐、存储量的数量级直觉。</li>
-            <li><a href="https://neetcode.io/practice">NeetCode 150 Dashboard</a>：只看 Arrays & Hashing 区域，先不要跳到树图动态规划。</li>
-          </ul>
+          <ul class="extension-list"><li><a href="https://neetcode.io/practice">NeetCode 150 Dashboard</a></li><li><a href="https://github.com/donnemartin/system-design-primer">System Design Primer</a></li></ul>
         </div>
       </section>
-
       <section>
-        <h2>今日验收</h2>
+        <h2>今日产出</h2>
         <table class="rubric">
-          <tr><th>产出物</th><td>一页答题操作系统：45 分钟时间线、每阶段目的、该说什么、不该展开什么。</td></tr>
-          <tr><th>必须掌握</th><td>90 秒内完整讲出面试流程，并说明高级候选人为什么必须给深挖留时间。</td></tr>
-          <tr><th>Bitly 初稿</th><td>写出 3 个功能需求和 4 个量化非功能需求。</td></tr>
-          <tr><th>修复规则</th><td>任何非功能需求只要是“高可用/低延迟/可扩展”这种空话，立刻改成指标、目标值、设计影响。</td></tr>
+          <tr><th>产出物</th><td>写一页 Bitly interview control sheet：问题定义、目标用户、主线范围、暂缓范围、时间盒、最后 35 分钟答题顺序。</td></tr>
+          <tr><th>修复规则</th><td>如果你一上来就画服务盒子，重做一遍：先写问题边界和 NFR，再允许画图。</td></tr>
+          <tr><th>面试表达</th><td>我会先确认这是 URL shortening service，核心路径是 create short URL 和 redirect。analytics、custom domain、abuse detection 我先标成 optional，除非 interviewer 要求。</td></tr>
         </table>
-        <h2 style="margin-top:28px">算法模块</h2>
-        <div class="algo-pack">
-          <div class="tag-row"><span>NeetCode Tag：Arrays & Hashing</span><span>层级：Set / Map 基础</span></div>
-          <p class="algo-why">简介：本周只刷 Arrays & Hashing。今天先完成哈希集合、频率表、补集查找三种基础模板。</p>
+        <h2 style="margin-top:28px">必须掌握</h2>
+        <ul class="compact-list"><li><span class="box"></span><span>能在 60 秒内解释短链接系统的核心：创建短码、保存映射、快速跳转。</span></li><li><span class="box"></span><span>能主动声明本周不做完整 analytics、abuse platform、多地域双活。</span></li><li><span class="box"></span><span>能把面试流程切成 requirements、entities、API、HLD、deep dive。</span></li></ul>
+          <h2 style="margin-top:28px">算法模块</h2>
+          <div class="algo-pack">
+            <div class="tag-row"><span>NeetCode Tag：Arrays & Hashing</span><span>Arrays &amp; Hashing 基础</span></div>
           <p class="algo-line"><a href="https://leetcode.com/problems/contains-duplicate/">必做：Contains Duplicate</a><a href="https://leetcode.com/problems/valid-anagram/">必做：Valid Anagram</a><a href="https://leetcode.com/problems/two-sum/">必做：Two Sum</a></p>
           <div class="mini-title">选做热门题</div>
-          <p class="algo-line"><a href="https://leetcode.com/problems/ransom-note/">Ransom Note</a><a href="https://leetcode.com/problems/isomorphic-strings/">Isomorphic Strings</a><a href="https://leetcode.com/problems/contains-duplicate-ii/">Contains Duplicate II</a></p>
+          <p class="algo-line"><a href="https://leetcode.com/problems/ransom-note/">选做：Ransom Note</a><a href="https://leetcode.com/problems/contains-duplicate-ii/">选做：Contains Duplicate II</a></p>
         </div>
-        <table class="rubric">
-          <tr><th>记录</th><td>每题留下模式、不变量、复杂度、一个容易出错点。</td></tr>
-          <tr><th>通过线</th><td>三题能独立 AC，或明天不看笔记可以重新写出正确思路。</td></tr>
-        </table>
       </section>
     </div>
-    <footer class="footer">第 1 天通过条件：你先理解面试机器，再开始设计系统。</footer>
+
+    <section class="section">
+      <div class="pill-row"><a class="button" href="day-2-requirements.html">下一天</a><a class="button" href="../week1-action-guide.html">返回 Week 1</a></div>
+    </section>
+
+    <footer class="footer">第 1 周 · URL Shortener / Bitly。</footer>
   </main>
 </body>
 </html>

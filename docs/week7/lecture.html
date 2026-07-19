@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>第 7 周深度讲义 - Ticketmaster</title><link rel="stylesheet" href="../week1/style.css"></head>
+<body><header class="topbar"><nav class="shell nav"><a class="brand" href="../week7-action-guide.html"><span class="mark"></span> 第 7 周</a><div class="navlinks"><a href="staff-qa.html">Staff Q&A</a><a href="live-mock.html">Live Mock</a><a href="scorecard.html">评分表</a></div></nav></header>
+<main class="shell"><section class="day-hero"><div class="eyebrow">第 7 周讲义 · 主项目 Ticketmaster · 迁移 Online Auction</div><h1>高竞争交易</h1><div class="day-meta"><span>主线 45 分钟</span><span>白板 30 分钟</span><span>追问 30 分钟</span></div></section><section class="section"><div class="section-head"><h2>答题主线</h2></div><div class="grid-2"><article class="tile tight"><div class="kicker">01 · 核心判断</div><h3>库存合同</h3><p>座位销售的第一不变量是同一 seat 在同一场次最多进入一个有效 hold 或一个 sold order。不是每次读 seat map 都强一致，而是 hold 和 sale 的条件写必须有明确线性化点。</p></article><article class="tile tight"><div class="kicker">02 · 核心判断</div><h3>状态模型</h3><p>seat、hold、order、payment_attempt 各自有生命周期；seat 状态至少区分 available、held、sold 和 expired。hold 需要 owner、expiry 和 version，不能只有一个 Redis 锁，否则恢复和审计没有依据。</p></article><article class="tile tight"><div class="kicker">03 · 核心判断</div><h3>读取与抢购分离</h3><p>seat map 是可缓存的展示投影，允许数秒陈旧；真正下单时必须回权威库存执行 compare-and-set。等候室只平滑进入率和挡住机器人，不能保证排到前面的人一定买到某个座位。</p></article><article class="tile tight"><div class="kicker">04 · 核心判断</div><h3>hold 的线性化</h3><p>请求以 seat_id、expected_state 和当前时间执行条件更新，成功即创建带 TTL 的 hold。TTL 到期不是自动正确性保证，sweeper 与 checkout 都必须再次比较 hold 版本和 expiry，防止过期与付款并发双卖。</p></article><article class="tile tight"><div class="kicker">05 · 核心判断</div><h3>支付与补偿</h3><p>支付是外部副作用，不能包进库存事务。order 先绑定 hold，支付成功后条件地转 sold；任何超时都通过 provider 查询、幂等键和补偿任务恢复，而不是猜测结果。</p></article><article class="tile tight"><div class="kicker">06 · 核心判断</div><h3>热点演出</h3><p>一个热门演出会把所有写压到少数 seat/venue 分区，因此要按 event 隔离容量、控制入场、限制每用户并发，并对热点座位串行化。横向加节点不会消除同一 seat 的竞争，只能保护周边服务。</p></article><article class="tile tight"><div class="kicker">07 · 核心判断</div><h3>故障决策</h3><p>发生网络分区时，库存权威分区不可用就应停止出售，而不是为了可用性冒 oversell 风险。可继续展示缓存 seat map 和排队页面，但不能发出不可撤销的成功承诺。</p></article><article class="tile tight"><div class="kicker">08 · 核心判断</div><h3>迁移到拍卖</h3><p>拍卖允许同一 item 被更高报价覆盖，正确性是可审计的最高有效 bid 和确定的 close rule。Ticketmaster 的 hold 是排他资源锁；两者都要处理竞争，但状态转换与公平定义不同。</p></article></div></section><section class="section"><div class="section-head"><h2>原文定位</h2></div><div class="ops-grid"><section>
+        <div class="source-block" id="source-ticketmaster">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/ticketmaster">Ticketmaster</a><span>Hello Interview</span></div>
+          <ul class="source-sections"><li id="source-ticketmaster-seat-holds"><span>Seat Holds</span><em>页面级阅读</em></li><li id="source-ticketmaster-contention"><span>Contention</span><em>页面级阅读</em></li><li id="source-ticketmaster-checkout"><span>Checkout</span><em>页面级阅读</em></li></ul>
+          <div class="proof">从对应日计划进入精确小节；把原文转化为本页的设计判断。</div>
+        </div>
+        <div class="source-block" id="source-ddia2">
+          <div class="source-title"><a href="https://ddia.vonng.com/ch2/">第二章：数据系统的目标</a><span>DDIA</span></div>
+          <ul class="source-sections"><li id="source-ddia2-section-26b85607"><a href="https://ddia.vonng.com/ch2/#sec_introduction_reliability">可靠性</a></li><li id="source-ddia2-section-d2fbaae8"><a href="https://ddia.vonng.com/ch2/#sec_introduction_scalability">可伸缩性</a></li><li id="source-ddia2-section-3144b31e"><a href="https://ddia.vonng.com/ch2/#sec_introduction_maintainability">可维护性</a></li></ul>
+          <div class="proof">从对应日计划进入精确小节；把原文转化为本页的设计判断。</div>
+        </div>
+        <div class="source-block" id="source-api">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/api-design">API Design</a><span>Hello Interview</span></div>
+          <ul class="source-sections"><li id="source-api-rest-resource-modeling"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/api-design#rest">REST / Resource Modeling</a></li><li id="source-api-http-methods"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/api-design#http-methods">HTTP Methods</a></li><li id="source-api-security-considerations"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/api-design#security-considerations">Security Considerations</a></li></ul>
+          <div class="proof">从对应日计划进入精确小节；把原文转化为本页的设计判断。</div>
+        </div>
+        <div class="source-block" id="source-data-model">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/data-modeling">Data Modeling</a><span>Hello Interview</span></div>
+          <ul class="source-sections"><li id="source-data-model-entities-keys-relationships"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/data-modeling#entities-keys--relationships">Entities, Keys &amp; Relationships</a></li><li id="source-data-model-indexing-for-access-patterns"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/data-modeling#indexing-for-access-patterns">Indexing for Access Patterns</a></li><li id="source-data-model-scaling-and-sharding"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/data-modeling#scaling-and-sharding">Scaling and Sharding</a></li></ul>
+          <div class="proof">从对应日计划进入精确小节；把原文转化为本页的设计判断。</div>
+        </div>
+        <div class="source-block" id="source-ddia3">
+          <div class="source-title"><a href="https://ddia.vonng.com/ch3/">第三章：数据模型与查询语言</a><span>DDIA</span></div>
+          <ul class="source-sections"><li id="source-ddia3-section-a3d48093"><a href="https://ddia.vonng.com/ch3/#sec_datamodels_history">关系模型</a></li><li id="source-ddia3-section-ff922257"><a href="https://ddia.vonng.com/ch3/#sec_datamodels_history">文档模型</a></li><li id="source-ddia3-section-60a2d45d"><span>查询语言</span><em>页面级阅读</em></li></ul>
+          <div class="proof">从对应日计划进入精确小节；把原文转化为本页的设计判断。</div>
+        </div>
+        <div class="source-block" id="source-contention">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/patterns/dealing-with-contention">Dealing with Contention</a><span>Hello Interview</span></div>
+          <ul class="source-sections"><li id="source-contention-locks"><a href="https://www.hellointerview.com/learn/system-design/patterns/dealing-with-contention#distributed-locks">Locks</a></li><li id="source-contention-leases"><span>Leases</span><em>页面级阅读</em></li><li id="source-contention-optimistic-concurrency"><a href="https://www.hellointerview.com/learn/system-design/patterns/dealing-with-contention#optimistic-concurrency-control">Optimistic Concurrency</a></li></ul>
+          <div class="proof">从对应日计划进入精确小节；把原文转化为本页的设计判断。</div>
+        </div>
+        <div class="source-block" id="source-ddia4">
+          <div class="source-title"><a href="https://ddia.vonng.com/ch4/">第四章：存储与检索</a><span>DDIA</span></div>
+          <ul class="source-sections"><li id="source-ddia4-section-df9a61f7"><a href="https://ddia.vonng.com/ch4/#sec_storage_oltp">索引</a></li><li id="source-ddia4-lsm"><a href="https://ddia.vonng.com/ch4/#sec_storage_btree_lsm_comparison">LSM 树</a></li><li id="source-ddia4-b"><a href="https://ddia.vonng.com/ch4/#sec_storage_b_trees">B 树</a></li></ul>
+          <div class="proof">从对应日计划进入精确小节；把原文转化为本页的设计判断。</div>
+        </div>
+        <div class="source-block" id="source-auction">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/online-auction">Online Auction</a><span>Hello Interview</span></div>
+          <ul class="source-sections"><li id="source-auction-bidding"><span>Bidding</span><em>页面级阅读</em></li><li id="source-auction-contention"><span>Contention</span><em>页面级阅读</em></li><li id="source-auction-consistency"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/online-auction#1-how-can-we-ensure-strong-consistency-for-bids">Consistency</a></li></ul>
+          <div class="proof">从对应日计划进入精确小节；把原文转化为本页的设计判断。</div>
+        </div></section><section><h2>本周口述顺序</h2><table class="rubric"><tr><th>0–5 分钟</th><td>范围、用户、NFR 和暂缓项。</td></tr><tr><th>5–15 分钟</th><td>状态模型、API 与权威数据。</td></tr><tr><th>15–30 分钟</th><td>主路径、异步边界、容量与扩展 trigger。</td></tr><tr><th>30–45 分钟</th><td>两个 deep dive、故障、降级与指标。</td></tr><tr><th>迁移题</th><td>明确说出不可复用的状态、正确性或 SLO。</td></tr></table></section></div></section><footer class="footer">通过条件：主项目 75 / 100；迁移题 20 分钟内给出状态、主路径、取舍与 failure。</footer></main></body></html>

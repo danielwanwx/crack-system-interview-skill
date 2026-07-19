@@ -3,36 +3,73 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>第 1 周评分表</title>
-  <link rel="stylesheet" href="style.css">
+  <title>第 1 周评分表 - URL Shortener / Bitly</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="../week1/style.css">
 </head>
 <body>
-  <header class="topbar"><nav class="shell nav"><a class="brand" href="../week1-action-guide.html"><span class="mark"></span> 第 1 周</a><div class="navlinks"><a href="day-7-mock.html">第 7 天</a><a href="../week1-action-guide.html">周概览</a></div></nav></header>
+
+  <header class="topbar">
+    <nav class="shell nav">
+      <a class="brand" href="../project-driven-picture.html"><span class="mark"></span> 项目化系统设计</a>
+      <div class="navlinks"><a href="../project-driven-picture.html">全局图</a><a href="../week1-action-guide.html">第 1 周</a><a href="lecture.html">讲义</a><a href="staff-qa.html">Staff Q&A</a><a href="live-mock.html">Live Mock</a><a href="scorecard.html">评分表</a></div>
+    </nav>
+  </header>
   <main class="shell">
+
     <section class="day-hero">
-      <div class="eyebrow">第 1 周最终闸门 · 设计 Bitly</div>
-      <h1>像面试官一样给答案打分</h1>
-      <p class="deck">评分表故意严格。通过代表基础足够进入更难系统；未通过代表下一周先修复，不急着加新内容。</p>
+      <div class="eyebrow">第 1 周评分表 · URL Shortener / Bitly</div>
+      <h1>75 分以上才进入 Week 2</h1>
+      <div class="day-meta"><span>满分 100</span><span>通过线 75</span><span>关键漏项直接重做</span></div>
     </section>
+
     <section class="section">
-      <table class="rubric">
-        <tr><th>维度</th><th>分值</th><th>通过信号</th></tr>
-        <tr><td>需求边界</td><td>15</td><td>能列出 3-4 个核心功能需求、量化非功能需求、明确暂缓范围，并说出读写不对称。</td></tr>
-        <tr><td>API 契约</td><td>15</td><td>覆盖 POST /urls、GET /{short_code}、302 vs 301、过期链接 410、重试/幂等与认证假设。</td></tr>
-        <tr><td>数据模型</td><td>15</td><td>给出 url_mappings 表、short_code 唯一索引、过期行为，并区分真实来源与缓存。</td></tr>
-        <tr><td>高层设计与请求路径</td><td>20</td><td>创建流程和跳转流程分开；能解释缓存命中/未命中、数据库回退、读写服务拆分、302 响应。</td></tr>
-        <tr><td>深挖能力</td><td>25</td><td>短码生成策略、hash vs counter/base62 取舍、快速跳转策略、缓存 TTL、不过早分片。</td></tr>
-        <tr><td>沟通控制</td><td>10</td><td>时间受控、取舍清晰、不独白，能接住面试官追问并整合回主线。</td></tr>
+      <table class="matrix">
+        <tr><th>维度</th><th>分值</th><th>验收标准</th></tr>
+        <tr><td>Problem framing</td><td>10</td><td>能收敛范围，明确 create path / redirect path，说明 out of scope。</td></tr>
+        <tr><td>Requirements / NFR</td><td>15</td><td>FR 清楚，NFR 有数字，且每个 NFR 对应设计影响。</td></tr>
+        <tr><td>API contract</td><td>15</td><td>覆盖 POST /urls、GET /{short_code}、302、410、404、409、auth context、重试/幂等。</td></tr>
+        <tr><td>Data model</td><td>15</td><td>url_mappings 表、short_code unique index、expires_at、disabled、source of truth 清楚。</td></tr>
+        <tr><td>Capacity</td><td>15</td><td>能估算 1B URLs、redirect QPS、cache hit、DB fallback，并避免过早分片。</td></tr>
+        <tr><td>HLD</td><td>15</td><td>create flow 和 redirect flow 分开，cache/DB/LB/CDN 位置合理。</td></tr>
+        <tr><td>Deep dives / failure</td><td>15</td><td>能讲短码生成、fast redirect、cache miss、DB down、hot key、counter outage。</td></tr>
       </table>
     </section>
+
     <section class="section">
-      <div class="grid-3">
-        <article class="tile"><div class="kicker">通过</div><h3>75+</h3><p>进入第 2 周。最低分维度作为观察项保留。</p></article>
-        <article class="tile"><div class="kicker">边缘</div><h3>65-74</h3><p>修复最低两个维度后，重跑第 7 天模拟面试。</p></article>
-        <article class="tile"><div class="kicker">未通过</div><h3>&lt;65</h3><p>不要进入下一周。回到对应失败维度的那一天重做。</p></article>
+      <div class="section-head"><h2>Critical misses</h2><p class="section-copy">出现下面任一情况，即使总分看似够，也要重做一次 15 分钟压缩版。</p></div>
+      <div class="two-col">
+        <div>
+          <ul class="compact-list">
+            <li><span class="box"></span><span>没有说明 short_code 唯一性。</span></li>
+            <li><span class="box"></span><span>没有 302 / 410 / 404 语义。</span></li>
+            <li><span class="box"></span><span>把 cache 当成 source of truth。</span></li>
+            <li><span class="box"></span><span>没有估算就直接 sharding。</span></li>
+          </ul>
+        </div>
+        <div>
+          <ul class="compact-list">
+            <li><span class="box"></span><span>redirect path 依赖同步 analytics 或 AI 调用。</span></li>
+            <li><span class="box"></span><span>没有 cache miss / DB down failure path。</span></li>
+            <li><span class="box"></span><span>API 没有错误码和重试边界。</span></li>
+            <li><span class="box"></span><span>Staff Q&A 少于 8 题能答清。</span></li>
+          </ul>
+        </div>
       </div>
     </section>
-    <footer class="footer">高级答案必须完整、克制、量化，并能在追问下守住取舍。</footer>
+
+    <section class="section">
+      <div class="section-head"><h2>Repair loop</h2><p class="section-copy">低分维度不要只写“复习”。必须生成一个可执行修复动作。</p></div>
+      <table class="matrix">
+        <tr><th>低分维度</th><th>修复动作</th><th>复测</th></tr>
+        <tr><td>API</td><td>重写 API contract table，补 status code 和 idempotency。</td><td>用 Day 3 口述 5 分钟。</td></tr>
+        <tr><td>Data model</td><td>从 redirect lookup 反推 schema 和 index，不保留无解释字段。</td><td>用 Day 4 口述 5 分钟。</td></tr>
+        <tr><td>Capacity</td><td>重新估算 storage / QPS / cache hit / DB lookup。</td><td>用 Day 5 口述 5 分钟。</td></tr>
+        <tr><td>Failure</td><td>补 cache miss、DB down、hot key、counter outage、expired link。</td><td>用 Staff Q&A 抽 4 题。</td></tr>
+      </table>
+    </section>
+
+    <footer class="footer">Scorecard · 分数必须来自一次真实口述或白板演练。</footer>
   </main>
 </body>
 </html>

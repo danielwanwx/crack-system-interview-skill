@@ -1,28 +1,29 @@
 <!doctype html>
 <html lang="zh-CN">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>第 8 周第 3 天 - 幂等与账本</title><link rel="stylesheet" href="../week1/style.css"></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>第 8 周第 3 天 - Payment System：核心路径与容量</title><link rel="stylesheet" href="../week1/style.css"></head>
 <body>
   <header class="topbar"><nav class="shell nav"><a class="brand" href="../week8-action-guide.html"><span class="mark"></span> 第 8 周</a><div class="navlinks"><a href="day-2.html">上一天</a><a href="day-4.html">下一天</a><a href="scorecard.html">评分表</a></div></nav></header>
   <main class="shell">
-    <section class="day-hero"><div class="eyebrow">第 8 周 · 第 3 天 · 2026-08-19 周三 · Data Model</div><h1>幂等与账本</h1><p class="deck">写支付正确性卡：幂等、outbox、reconciliation、double charge 防护。</p><div class="day-meta"><span>系统设计 100 分钟</span><span>算法 75 分钟</span><span>复盘 10 分钟</span></div></section>
+    <section class="day-hero"><div class="eyebrow">第 8 周 · 第 3 天 · 2026-09-09 周三 · 主项目核心路径</div><h1>Payment System：核心路径与容量</h1><div class="day-meta"><span>系统设计 140 分钟</span><span>算法 75 分钟</span><span>复盘 10 分钟</span></div></section>
+    <section class="section"><div class="section-head"><h2>今日时间表</h2></div><table class="rubric"><tr><th>07:55–08:15</th><td><b>回忆</b><br>不看资料复述昨日设计；写出今天要验证的一条假设。</td></tr><tr><th>08:15–09:25</th><td><b>原文</b><br>依次阅读：Payment System → Multi-step Processes → 第四章：存储与检索。只读页面下方列出的小节。</td></tr><tr><th>09:25–10:20</th><td><b>白板</b><br>画 Payment System 主路径：请求/事件、状态变化、同步与异步边界，并写 capacity sheet。</td></tr><tr><th>15:30–16:45</th><td><b>算法</b><br>完成 3 道 Tries -&gt; Heap/Priority Queue；每题记录 pattern、invariant、复杂度和错因。</td></tr><tr><th>20:30–21:30</th><td><b>口述</b><br>脱稿讲当天产出；按修复规则：若同步链路过长，重新划分 durable state 与 queue boundary。</td></tr></table></section>
     <div class="ops-grid">
       <section><h2>学习源包</h2>
-        <div class="source-block">
+        <div class="source-block" id="source-payment">
           <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/payment-system">Payment System</a><span>Hello Interview</span></div>
-          <ul class="source-sections"><li>Idempotency</li><li>Ledger</li><li>Reconciliation</li></ul>
-          <div class="proof">验收：能处理重复 webhook 和重试。</div>
+          <ul class="source-sections"><li id="source-payment-idempotency"><span>Idempotency</span><em>页面级阅读</em></li><li id="source-payment-ledger"><span>Ledger</span><em>页面级阅读</em></li><li id="source-payment-reconciliation"><span>Reconciliation</span><em>页面级阅读</em></li></ul>
+          <div class="proof">验收：能画出核心请求或事件路径。</div>
         </div>
-        <div class="source-block">
-          <div class="source-title"><a href="https://ddia.vonng.com/ch8/">第八章：事务</a><span>DDIA</span></div>
-          <ul class="source-sections"><li>ACID</li><li>隔离级别</li><li>并发控制</li></ul>
-          <div class="proof">验收：能解释 exactly-once 的现实边界。</div>
+        <div class="source-block" id="source-multi-step">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/patterns/multi-step-processes">Multi-step Processes</a><span>Hello Interview</span></div>
+          <ul class="source-sections"><li id="source-multi-step-sagas"><span>Sagas</span><em>页面级阅读</em></li><li id="source-multi-step-idempotency"><span>Idempotency</span><em>页面级阅读</em></li><li id="source-multi-step-retries"><span>Retries</span><em>页面级阅读</em></li></ul>
+          <div class="proof">验收：能把模式落到具体组件与状态。</div>
         </div>
-        <div class="source-block">
-          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/deep-dives/cap-theorem">CAP Theorem</a><span>Hello Interview</span></div>
-          <ul class="source-sections"><li>Network Partitions</li><li>Consistency Tradeoffs</li></ul>
-          <div class="proof">验收：能说明跨服务一致性成本。</div>
-        </div><div class="extension-block"><div class="mini-title">拓展阅读</div><ul class="extension-list"><li><a href="https://www.designgurus.io/course/grokking-the-system-design-interview">Grokking the System Design Interview</a>：对照 Grokking 的同类 case study。</li><li><a href="https://bytebytego.com/">ByteByteGo System Design</a>：用 Alex Xu / ByteByteGo 图解校准表达。</li></ul></div></section>
-      <section><h2>今日验收</h2><table class="rubric"><tr><th>产出物</th><td>写支付正确性卡：幂等、outbox、reconciliation、double charge 防护。</td></tr><tr><th>必须掌握</th><td>必须说清 at-least-once delivery 下如何达到业务上 exactly-once。</td></tr><tr><th>修复规则</th><td>如果只说分布式事务，改成 outbox + 对账。</td></tr></table><h2 style="margin-top:28px">算法模块</h2><div class="algo-pack"><div class="tag-row"><span>NeetCode Tag：Tries -&gt; Heap/Priority Queue</span><span>Heap 基础</span></div><p class="algo-why">本周按 NeetCode 的 Tries -&gt; Heap/Priority Queue block 推进。今天只处理「Heap 基础」，三题都要留下 pattern、invariant、复杂度和错因。</p><p class="algo-line"><a href="https://leetcode.com/problems/kth-largest-element-in-an-array/">必做：Kth Largest in Array</a><a href="https://leetcode.com/problems/last-stone-weight/">必做：Last Stone Weight</a><a href="https://leetcode.com/problems/kth-largest-element-in-a-stream/">必做：Kth Largest Stream</a></p><div class="mini-title">选做热门题</div><p class="algo-line"><a href="https://leetcode.com/problems/relative-ranks/">选做：Relative Ranks</a><a href="https://leetcode.com/problems/take-gifts-from-the-richest-pile/">选做：Take Gifts</a><a href="https://leetcode.com/problems/seat-reservation-manager/">选做：Seat Reservation Manager</a></p></div></section>
+        <div class="source-block" id="source-ddia4">
+          <div class="source-title"><a href="https://ddia.vonng.com/ch4/">第四章：存储与检索</a><span>DDIA</span></div>
+          <ul class="source-sections"><li id="source-ddia4-section-df9a61f7"><a href="https://ddia.vonng.com/ch4/#sec_storage_oltp">索引</a></li><li id="source-ddia4-lsm"><a href="https://ddia.vonng.com/ch4/#sec_storage_btree_lsm_comparison">LSM 树</a></li><li id="source-ddia4-b"><a href="https://ddia.vonng.com/ch4/#sec_storage_b_trees">B 树</a></li></ul>
+          <div class="proof">验收：能说明存储与索引影响。</div>
+        </div><div class="extension-block"><div class="mini-title">拓展阅读</div><ul class="extension-list"><li><a href="https://www.designgurus.io/course/grokking-the-system-design-interview">Grokking the System Design Interview</a></li><li><a href="https://bytebytego.com/">ByteByteGo System Design</a></li></ul></div></section>
+      <section><h2>今日验收</h2><table class="rubric"><tr><th>产出物</th><td>画 Payment System 主路径：请求/事件、状态变化、同步与异步边界，并写 capacity sheet。</td></tr><tr><th>必须掌握</th><td>能分清 hot path、durable state、async work 与 retry boundary。</td></tr><tr><th>修复规则</th><td>若同步链路过长，重新划分 durable state 与 queue boundary。</td></tr></table><h2 style="margin-top:28px">算法模块</h2><div class="algo-pack"><div class="tag-row"><span>NeetCode Tag：Tries -&gt; Heap/Priority Queue</span><span>Heap 基础</span></div><p class="algo-line"><a href="https://leetcode.com/problems/kth-largest-element-in-an-array/">必做：Kth Largest in Array</a><a href="https://leetcode.com/problems/last-stone-weight/">必做：Last Stone Weight</a><a href="https://leetcode.com/problems/kth-largest-element-in-a-stream/">必做：Kth Largest Stream</a></p><div class="mini-title">选做热门题</div><p class="algo-line"><a href="https://leetcode.com/problems/relative-ranks/">选做：Relative Ranks</a><a href="https://leetcode.com/problems/take-gifts-from-the-richest-pile/">选做：Take Gifts</a><a href="https://leetcode.com/problems/seat-reservation-manager/">选做：Seat Reservation Manager</a></p></div></section>
     </div>
     <footer class="footer">第 8 周第 3 天通过条件：产出物可口述，算法题位有记录，最低信心点已写入 repair。</footer>
   </main>

@@ -1,28 +1,29 @@
 <!doctype html>
 <html lang="zh-CN">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>第 4 周第 6 天 - Realtime failure repair</title><link rel="stylesheet" href="../week1/style.css"></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>第 4 周第 6 天 - WhatsApp：Failure 与运维</title><link rel="stylesheet" href="../week1/style.css"></head>
 <body>
   <header class="topbar"><nav class="shell nav"><a class="brand" href="../week4-action-guide.html"><span class="mark"></span> 第 4 周</a><div class="navlinks"><a href="day-5.html">上一天</a><a href="day-7.html">下一天</a><a href="scorecard.html">评分表</a></div></nav></header>
   <main class="shell">
-    <section class="day-hero"><div class="eyebrow">第 4 周 · 第 6 天 · 2026-07-25 周六 · Repair</div><h1>Realtime failure repair</h1><p class="deck">写实时系统故障清单：连接风暴、消息积压、重复投递、跨区延迟、网关宕机。</p><div class="day-meta"><span>系统设计 90 分钟</span><span>算法 75 分钟</span><span>复盘 10 分钟</span></div></section>
+    <section class="day-hero"><div class="eyebrow">第 4 周 · 第 6 天 · 2026-08-15 周六 · 故障桥接</div><h1>WhatsApp：Failure 与运维</h1><div class="day-meta"><span>系统设计 180 分钟</span><span>算法 75 分钟</span><span>复盘 10 分钟</span></div></section>
+    <section class="section"><div class="section-head"><h2>今日时间表</h2></div><table class="rubric"><tr><th>08:30–10:30</th><td><b>原文与深挖</b><br>阅读：WhatsApp → 第九章：分布式系统的麻烦 → CAP Theorem；补齐所有 failure path。</td></tr><tr><th>10:45–12:00</th><td><b>白板</b><br>写 WhatsApp 与 Online Chess 的 failure matrix：检测、降级、恢复、SLO。</td></tr><tr><th>14:30–15:45</th><td><b>算法</b><br>完成 3 道 Sliding Window 限时题；重做本周最慢题。</td></tr><tr><th>20:30–21:30</th><td><b>口述</b><br>用 15 分钟讲主项目、15 分钟讲迁移题、15 分钟讲故障与指标。</td></tr></table></section>
     <div class="ops-grid">
       <section><h2>学习源包</h2>
-        <div class="source-block">
-          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/deep-dives/cap-theorem">CAP Theorem</a><span>Hello Interview</span></div>
-          <ul class="source-sections"><li>Network Partitions</li><li>Consistency Tradeoffs</li></ul>
-          <div class="proof">验收：用网络分区解释实时系统降级。</div>
+        <div class="source-block" id="source-whatsapp">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/whatsapp">WhatsApp</a><span>Hello Interview</span></div>
+          <ul class="source-sections"><li id="source-whatsapp-2-users-should-be-able-to-send-receive-messages"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/whatsapp#2-users-should-be-able-to-sendreceive-messages">2) Users should be able to send/receive messages.</a></li><li id="source-whatsapp-3-users-should-be-able-to-receive-messages-sent-while-they-are-not-online-up-to-30-days"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/whatsapp#3-users-should-be-able-to-receive-messages-sent-while-they-are-not-online-up-to-30-days">3) Users should be able to receive messages sent while they are not online (up to 30 days).</a></li><li id="source-whatsapp-6-how-can-we-handle-a-last-seen-functionality"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/whatsapp#6-how-can-we-handle-a-last-seen-functionality">6) How can we handle a &quot;last seen&quot; functionality?</a></li></ul>
+          <div class="proof">验收：能覆盖主项目的故障、降级与恢复。</div>
         </div>
-        <div class="source-block">
-          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/patterns/realtime-updates">Real-time Updates</a><span>Hello Interview</span></div>
-          <ul class="source-sections"><li>Polling</li><li>WebSockets</li><li>Server-Sent Events</li></ul>
-          <div class="proof">验收：能处理断线、重连、重复消息。</div>
-        </div>
-        <div class="source-block">
+        <div class="source-block" id="source-ddia9">
           <div class="source-title"><a href="https://ddia.vonng.com/ch9/">第九章：分布式系统的麻烦</a><span>DDIA</span></div>
-          <ul class="source-sections"><li>网络故障</li><li>时钟</li><li>不可靠性</li></ul>
-          <div class="proof">验收：能说时钟、延迟、超时的不可靠。</div>
-        </div><div class="extension-block"><div class="mini-title">拓展阅读</div><ul class="extension-list"><li><a href="https://www.designgurus.io/course/grokking-the-system-design-interview">Grokking the System Design Interview</a>：对照 Grokking 的同类 case study。</li><li><a href="https://bytebytego.com/">ByteByteGo System Design</a>：用 Alex Xu / ByteByteGo 图解校准表达。</li></ul></div></section>
-      <section><h2>今日验收</h2><table class="rubric"><tr><th>产出物</th><td>写实时系统故障清单：连接风暴、消息积压、重复投递、跨区延迟、网关宕机。</td></tr><tr><th>必须掌握</th><td>每个故障必须有检测指标和用户可见降级。</td></tr><tr><th>修复规则</th><td>如果只有 happy path，补 reconnect/backpressure/replay。</td></tr></table><h2 style="margin-top:28px">算法模块</h2><div class="algo-pack"><div class="tag-row"><span>NeetCode Tag：Sliding Window</span><span>复盘</span></div><p class="algo-why">Sliding Window 错题复盘。</p><p class="algo-line"><a href="https://leetcode.com/problems/find-all-anagrams-in-a-string/">必做：限时</a><a href="https://leetcode.com/problems/fruit-into-baskets/">必做：限时</a><a href="https://leetcode.com/problems/sliding-window-maximum/">必做：复盘</a></p><div class="mini-title">选做热门题</div><p class="algo-line"><a href="https://leetcode.com/problems/repeated-dna-sequences/">选做：Repeated DNA Sequences</a><a href="https://leetcode.com/problems/subarrays-with-k-different-integers/">选做：Subarrays with K Different Integers</a><a href="https://leetcode.com/problems/number-of-substrings-containing-all-three-characters/">选做：Number of Substrings</a></p></div></section>
+          <ul class="source-sections"><li id="source-ddia9-section-8d1157b0"><a href="https://ddia.vonng.com/ch9/#sec_distributed_networks">不可靠的网络</a></li><li id="source-ddia9-section-2708c76c"><a href="https://ddia.vonng.com/ch9/#sec_distributed_clocks">不可靠的时钟</a></li><li id="source-ddia9-section-a8494a93"><a href="https://ddia.vonng.com/ch9/#sec_distributed_partial_failure">故障与部分失效</a></li></ul>
+          <div class="proof">验收：能说明网络、时钟与 partial failure。</div>
+        </div>
+        <div class="source-block" id="source-deep-cap">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/deep-dives/cap-theorem">CAP Theorem</a><span>Hello Interview</span></div>
+          <ul class="source-sections"><li id="source-deep-cap-network-partitions"><span>Network Partitions</span><em>页面级阅读</em></li><li id="source-deep-cap-consistency-tradeoffs"><span>Consistency Tradeoffs</span><em>页面级阅读</em></li></ul>
+          <div class="proof">验收：能明确 consistency / availability 取舍。</div>
+        </div><div class="extension-block"><div class="mini-title">拓展阅读</div><ul class="extension-list"><li><a href="https://www.designgurus.io/course/grokking-the-system-design-interview">Grokking the System Design Interview</a></li><li><a href="https://bytebytego.com/">ByteByteGo System Design</a></li></ul></div></section>
+      <section><h2>今日验收</h2><table class="rubric"><tr><th>产出物</th><td>写 WhatsApp 与 Online Chess 的 failure matrix：检测、降级、恢复、SLO。</td></tr><tr><th>必须掌握</th><td>每个故障有监控、明确的降级选择与恢复条件。</td></tr><tr><th>修复规则</th><td>若只有 happy path，补 timeout、retry、partial failure 与指标。</td></tr></table><h2 style="margin-top:28px">算法模块</h2><div class="algo-pack"><div class="tag-row"><span>NeetCode Tag：Sliding Window</span><span>复盘</span></div><p class="algo-line"><a href="https://leetcode.com/problems/find-all-anagrams-in-a-string/">必做：限时</a><a href="https://leetcode.com/problems/fruit-into-baskets/">必做：限时</a><a href="https://leetcode.com/problems/sliding-window-maximum/">必做：复盘</a></p><div class="mini-title">选做热门题</div><p class="algo-line"><a href="https://leetcode.com/problems/repeated-dna-sequences/">选做：Repeated DNA Sequences</a><a href="https://leetcode.com/problems/subarrays-with-k-different-integers/">选做：Subarrays with K Different Integers</a><a href="https://leetcode.com/problems/number-of-substrings-containing-all-three-characters/">选做：Number of Substrings</a></p></div></section>
     </div>
     <footer class="footer">第 4 周第 6 天通过条件：产出物可口述，算法题位有记录，最低信心点已写入 repair。</footer>
   </main>

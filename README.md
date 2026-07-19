@@ -1,18 +1,20 @@
 # Crack System Interview Skill
 
-A cross-agent plugin/skill package for system design interview preparation. It combines diagram-first interview explanation skills with a printable 14-week system design study plan and a daily study coach.
+A cross-agent plugin/skill package for system design interview preparation. It combines diagram-first interview explanation skills with a printable 18-week system design study plan and a daily study coach.
 
 The package has three main entrypoints:
 
 - `$card` turns dense sources into source-aligned Excalidraw study cards and concise explanatory talk tracks.
 - `$senior-sde-interview-script` turns concepts or prompts into senior-candidate interview answers with a minimal supporting whiteboard.
-- `$system-design-study-coach` supervises the bundled 14-week system design and algorithms plan.
+- `$system-design-study-coach` supervises the bundled 18-week system design and algorithms plan.
 
 The printable plan is available through GitHub Pages when this repository is published as `crack-system-interview-skill`:
 
 ```text
 https://danielwanwx.github.io/crack-system-interview-skill/
 ```
+
+The current route begins on 2026-07-20 and ends on 2026-11-22. Open `system-design-project-route.html` from the Pages root for the 18-week overview.
 
 It uses native Excalidraw blocks: dashed task/constraints frames, semantic component blocks, black arrows, circles/squares/rectangles, and sticky notes for gotchas. It avoids decorative component icons by default so layout stays clean and predictable. `$card` is the visual study-card entrypoint for articles, URLs, notes, and dense concepts. `$senior-sde-interview-script` is the interview-expression entrypoint for 30/90-second answers, senior/principal phrasing, bilingual rehearsal, and mock responses. Output language defaults to English, and users can request Chinese or another language in the prompt.
 
@@ -198,7 +200,7 @@ plugins/crack-system-interview-skill/
 card/                                                # standalone short skill copy
 senior-sde-interview-script/                         # standalone skill copy
 system-design-study-coach/                           # standalone daily study coach
-docs/                                                # GitHub Pages 14-week study plan
+docs/                                                # GitHub Pages 18-week study plan
 scripts/                                             # repo-level renderer test copy
 ```
 

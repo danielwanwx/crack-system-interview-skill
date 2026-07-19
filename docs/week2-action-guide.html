@@ -3,59 +3,59 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>第 2 周行动指南 - 限流与缓存基础设施</title>
+  <title>第 2 周行动指南 - Rate Limiter 与 Distributed Cache</title>
   <link rel="stylesheet" href="week1/style.css">
 </head>
 <body>
-  <header class="topbar"><nav class="shell nav"><a class="brand" href="week2-action-guide.html"><span class="mark"></span> 第2周 / 限流与缓存基础设施</a><div class="navlinks"><a href="week2/day-1.html">第1天</a><a href="week2/day-2.html">第2天</a><a href="week2/day-3.html">第3天</a><a href="week2/day-4.html">第4天</a><a href="week2/day-5.html">第5天</a><a href="week2/day-6.html">第6天</a><a href="week2/day-7.html">第7天</a><a href="week2/scorecard.html">评分表</a></div></nav></header>
+  <header class="topbar"><nav class="shell nav"><a class="brand" href="week2-action-guide.html"><span class="mark"></span> 第2周 / Rate Limiter 与 Distributed Cache</a><div class="navlinks"><a href="week2/day-1.html">第1天</a><a href="week2/day-2.html">第2天</a><a href="week2/day-3.html">第3天</a><a href="week2/day-4.html">第4天</a><a href="week2/day-5.html">第5天</a><a href="week2/day-6.html">第6天</a><a href="week2/day-7.html">第7天</a><a href="week2/scorecard.html">评分表</a></div></nav></header>
   <main class="shell">
-    <section class="hero"><div><div class="eyebrow">第 2 周 · 2026-07-06 至 2026-07-12</div><h1>限流与缓存基础设施</h1><p class="deck">把读扩展、缓存、Redis、consistent hashing 和 rate limiter 打成一组基础设施能力。</p></div><aside class="hero-panel"><div class="metric"><b>7</b><span>天训练任务</span></div><div class="metric"><b>21</b><span>算法题位</span></div><div class="metric"><b>Two Pointers</b><span>本周算法 tag/block</span></div><div class="metric"><b>75+</b><span>周末 mock 通过线</span></div></aside></section>
-    <section class="section"><div class="section-head"><h2>本周目标</h2><p class="section-copy">把读扩展、缓存、Redis、consistent hashing 和 rate limiter 打成一组基础设施能力。</p></div><div class="two-col"><div><div class="kicker">必须掌握</div><ul class="compact-list"><li><span class="box"></span><span>Caching、Redis、consistent hashing、rate limiter algorithms。</span></li><li><span class="box"></span><span>Distributed Cache 和 Rate Limiter 至少各能完整讲一遍。</span></li><li><span class="box"></span><span>故障路径必须包含 hot key、cache outage、Redis failover。</span></li></ul></div><div><div class="kicker">本周不展开</div><ul class="compact-list"><li><span class="box"></span><span>消息队列深挖、stream processing、复杂多 region 配额。</span></li><li><span class="box"></span><span>业务风控和 abuse detection 只作为扩展。</span></li></ul></div></div></section>
-    <section class="section"><div class="section-head"><h2>时间线</h2><p class="section-copy">每天按照学习源包、今日验收、算法模块执行。拓展阅读只在主任务完成后使用。</p></div><div class="route">
-        <div class="row">
-          <div class="kicker">2026-07-06 周一</div>
-          <h3>第 1 天：先把读路径拆开</h3>
-          <p>从缓存和读扩展开始，理解为什么大多数系统先被读路径压垮。</p>
+    <section class="hero"><div><div class="eyebrow">第 2 周 · 2026-07-27 至 2026-08-02</div><h1>Rate Limiter 与 Distributed Cache</h1><div class="pill-row"><a class="pill" href="week2/lecture.html">深度讲义</a><a class="pill" href="week2/staff-qa.html">Staff Q&A</a><a class="pill" href="week2/live-mock.html">Live Mock</a><a class="pill" href="week2/scorecard.html">评分表</a></div></div><aside class="hero-panel"><div class="metric"><b>7</b><span>天训练任务</span></div><div class="metric"><b>21</b><span>算法题位</span></div><div class="metric"><b>Two Pointers</b><span>本周算法 tag/block</span></div><div class="metric"><b>75+</b><span>周末 mock 通过线</span></div></aside></section>
+    <section class="section"><div class="section-head"><h2>本周必做</h2></div><div class="two-col"><div><div class="kicker">掌握</div><ul class="compact-list"><li><span class="box"></span><span>Rate Limiter：限流 key、429 契约、token bucket、Redis/Lua、global quota。</span></li><li><span class="box"></span><span>Distributed Cache：key routing、replication、eviction、cache outage。</span></li><li><span class="box"></span><span>DDIA 第六、七、九章的复制、分区与故障判断能落到两题。</span></li></ul></div><div><div class="kicker">暂不展开</div><ul class="compact-list"><li><span class="box"></span><span>完整 WAF / 风控平台、机器学习 abuse detection。</span></li><li><span class="box"></span><span>严格全球配额的强一致协调实现。</span></li></ul></div></div></section>
+    <section class="section"><div class="section-head"><h2>时间线</h2></div><div class="route">
+        <div class="row row-day-index" id="day-1">
+          <div class="kicker">2026-07-27 周一</div>
+          <h3><a href="week2/day-1.html">第 1 天：需求、策略与限流键</a></h3>
+          <p>写 rate-limit contract：保护对象、tenant/user/API key 维度、route、burst、429/Retry-After。</p>
           <a class="button" href="week2/day-1.html">进入</a>
         </div>
-        <div class="row">
-          <div class="kicker">2026-07-07 周二</div>
-          <h3>第 2 天：让缓存节点可扩缩</h3>
-          <p>学习 consistent hashing，知道普通 modulo hashing 为什么在节点变化时灾难性重映射。</p>
+        <div class="row row-day-index" id="day-2">
+          <div class="kicker">2026-07-28 周二</div>
+          <h3><a href="week2/day-2.html">第 2 天：算法选择与配额语义</a></h3>
+          <p>写算法选择表：fixed window、sliding window、token bucket、leaky bucket；选定 token bucket。</p>
           <a class="button" href="week2/day-2.html">进入</a>
         </div>
-        <div class="row">
-          <div class="kicker">2026-07-08 周三</div>
-          <h3>第 3 天：把 Redis 当组件而不是魔法</h3>
-          <p>Redis 是很多面试答案里的默认组件，今天只学数据结构、TTL、原子操作、复制风险。</p>
+        <div class="row row-day-index" id="day-3">
+          <div class="kicker">2026-07-29 周三</div>
+          <h3><a href="week2/day-3.html">第 3 天：Redis 状态与原子扣减</a></h3>
+          <p>写 Redis key schema 和 Lua 步骤：refill、check、decrement、expire。</p>
           <a class="button" href="week2/day-3.html">进入</a>
         </div>
-        <div class="row">
-          <div class="kicker">2026-07-09 周四</div>
-          <h3>第 4 天：掌握限流算法</h3>
-          <p>把固定窗口、滑动窗口、token bucket、leaky bucket 的行为和成本讲清。</p>
+        <div class="row row-day-index" id="day-4">
+          <div class="kicker">2026-07-30 周四</div>
+          <h3><a href="week2/day-4.html">第 4 天：Gateway HLD 与策略下发</a></h3>
+          <p>画 HLD：client、API gateway、local policy cache、rate limiter、Redis cluster、config control plane、metrics。</p>
           <a class="button" href="week2/day-4.html">进入</a>
         </div>
-        <div class="row">
-          <div class="kicker">2026-07-10 周五</div>
-          <h3>第 5 天：做一版完整缓存系统</h3>
-          <p>今天从 key routing、replication、eviction、consistency、failure 角度完整讲 distributed cache。</p>
+        <div class="row row-day-index" id="day-5">
+          <div class="kicker">2026-07-31 周五</div>
+          <h3><a href="week2/day-5.html">第 5 天：分布式执行与 Hot Key</a></h3>
+          <p>完成 scale deep dive：Redis cluster、consistent hashing、tenant hot key、局部配额与隔离。</p>
           <a class="button" href="week2/day-5.html">进入</a>
         </div>
-        <div class="row">
-          <div class="kicker">2026-07-11 周六</div>
-          <h3>第 6 天：把缓存和限流的故障讲出来</h3>
-          <p>高级答案要能主动说降级：缓存挂了怎么办、Redis 热点怎么办、限流误杀怎么办。</p>
+        <div class="row row-day-index" id="day-6">
+          <div class="kicker">2026-08-01 周六</div>
+          <h3><a href="week2/day-6.html">第 6 天：故障、多地域与运维</a></h3>
+          <p>写 failure matrix：Redis timeout、policy lag、hot key、network partition、multi-region overshoot。</p>
           <a class="button" href="week2/day-6.html">进入</a>
         </div>
-        <div class="row">
-          <div class="kicker">2026-07-12 周日</div>
-          <h3>第 7 天：限流或缓存二选一 mock</h3>
-          <p>跑一场 35-45 分钟 mock：Distributed Rate Limiter 或 Distributed Cache。</p>
+        <div class="row row-day-index" id="day-7">
+          <div class="kicker">2026-08-02 周日</div>
+          <h3><a href="week2/day-7.html">第 7 天：Distributed Rate Limiter Mock</a></h3>
+          <p>完成一场 45 分钟 mock：范围、算法、Redis、HLD、两个 failure deep dive。</p>
           <a class="button" href="week2/day-7.html">进入</a>
         </div></div></section>
-    <section class="section"><div class="section-head"><h2>本周通过线</h2><div class="section-copy"><p>35 分钟内完整讲 Distributed Rate Limiter 或 Distributed Cache。</p><p>能主动比较限流算法和缓存一致性取舍。</p><p>Two Pointers tag 完成一轮并记录错题。</p></div></div></section>
-    <footer class="footer">System Design Interview Plan · Printable weekly guide</footer>
+    <section class="section"><div class="section-head"><h2>通过线</h2><div class="section-copy"><p>45 分钟完成 Distributed Rate Limiter；20 分钟完成 Distributed Cache 迁移设计。</p><p>Two Pointers tag 完成一轮并记录错题。</p></div></div></section>
+    <footer class="footer">Generated by the printable-plan loop. Review report: week-generation-review.md</footer>
   </main>
 </body>
 </html>

@@ -3,172 +3,131 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>第 1 周行动指南 - 系统设计面试</title>
+  <title>第 1 周行动指南 - URL Shortener / Bitly</title>
+  <link rel="icon" href="data:,">
   <link rel="stylesheet" href="week1/style.css">
 </head>
 <body>
+
   <header class="topbar">
     <nav class="shell nav">
-      <a class="brand" href="week1-action-guide.html"><span class="mark"></span> 第1周 / Bitly 基础战役</a>
-      <div class="navlinks">
-        <a href="week1/day-1-interview-os.html">第1天</a>
-        <a href="week1/day-2-requirements.html">第2天</a>
-        <a href="week1/day-3-api.html">第3天</a>
-        <a href="week1/day-4-data-model.html">第4天</a>
-        <a href="week1/day-5-capacity.html">第5天</a>
-        <a href="week1/day-6-hld.html">第6天</a>
-        <a href="week1/day-7-mock.html">第7天</a>
-        <a href="week1/week1-presentation.html">讲义</a><a href="week1/bitly-staff-qa.html">Staff Q&amp;A</a><a href="week1/scorecard.html">评分表</a>
-      </div>
+      <a class="brand" href="project-driven-picture.html"><span class="mark"></span> 项目化系统设计</a>
+      <div class="navlinks"><a href="project-driven-picture.html">全局图</a><a href="week1-action-guide.html">第 1 周</a><a href="week1/lecture.html">讲义</a><a href="week1/staff-qa.html">Staff Q&A</a><a href="week1/live-mock.html">Live Mock</a><a href="week1/scorecard.html">评分表</a></div>
     </nav>
   </header>
-
   <main class="shell">
+
     <section class="hero">
       <div>
-        <div class="eyebrow">资深架构师训练简报 · 第 1 周 · 2026-06-29 至 2026-07-05</div>
-        <h1>建立系统设计面试的作战系统</h1>
-        <p class="deck">这一周不追求“看完很多材料”。目标是把 Bitly 这道基础题打穿：需求边界、API 契约、数据模型、容量判断、请求路径、关键深挖都能在 35 分钟内讲清楚。</p>
+        <div class="eyebrow">第 1 周 · 2026-07-20 至 2026-07-26 · 主项目</div>
+        <h1>URL Shortener / Bitly</h1>
+        <div class="pill-row">
+          <a class="pill" href="project-driven-picture.html">全局图</a>
+          <a class="pill" href="week1/lecture.html">深度讲义</a>
+          <a class="pill" href="week1/staff-qa.html">Staff Q&A</a>
+          <a class="pill" href="week1/live-mock.html">Live Mock</a>
+          <a class="pill" href="week1/scorecard.html">评分表</a>
+        </div>
       </div>
       <aside class="hero-panel">
-        <div class="metric"><b>7</b><span>天训练任务</span></div>
-        <div class="metric"><b>21</b><span>道算法题位</span></div>
-        <div class="metric"><b>35m</b><span>最终口述模拟</span></div>
-        <div class="metric"><b>75+</b><span>进入下一周通过线</span></div>
+        <div class="metric"><b>1</b><span>主系统</span></div>
+        <div class="metric"><b>7</b><span>项目层</span></div>
+        <div class="metric"><b>21</b><span>算法题位</span></div>
+        <div class="metric"><b>75+</b><span>mock 通过线</span></div>
       </aside>
     </section>
 
     <section class="section">
-      <div class="section-head">
-        <h2>本周目标</h2>
-        <p class="section-copy">到第 7 天结束，你应该能主动掌控一场短链接系统设计面试：先定范围，再给 API 和核心实体，再用容量估算判断是否真的需要分片，最后把快速跳转和唯一短码生成两个深挖点讲到可辩护。</p>
-      </div>
+      <div class="section-head"><h2>本周项目定义</h2><p class="section-copy">创建短链接，按短码跳转到原始 URL。</p></div>
       <div class="grid-3">
-        <article class="tile">
-          <div class="kicker">系统设计</div>
-          <h3>一个系统反复打磨</h3>
-          <p>Bitly 是本周唯一主线。你每天增加一层，而不是换题刷存在感。</p>
-        </article>
-        <article class="tile">
-          <div class="kicker">分布式系统</div>
-          <h3>只学会影响答案的概念</h3>
-          <p>p95/p99、可用性、真实来源、缓存 TTL、数据库限制、DNS/TCP/HTTP、CDN、读多写少扩展。</p>
-        </article>
-        <article class="tile">
-          <div class="kicker">算法训练</div>
-          <h3>每天三题位</h3>
-          <p>第 1 周只刷 NeetCode 150 的 Arrays & Hashing：核心题、同类扩展、限时复盘依次推进。下一组 tag 留到后续周。</p>
-        </article>
+        <article class="tile"><div class="kicker">核心路径</div><h3>创建和跳转</h3><p>POST /urls 创建映射，GET /{short_code} 返回 302 redirect。</p></article>
+        <article class="tile"><div class="kicker">Senior 标尺</div><h3>用数字做取舍</h3><p>1B URLs 约 500GB，不自动推出分片。先看 redirect QPS 和 p99。</p></article>
+        <article class="tile"><div class="kicker">Staff 信号</div><h3>主动讲失败</h3><p>collision、counter outage、cache stampede、DB failover、expired links、abuse。</p></article>
       </div>
     </section>
 
     <section class="section">
-      <div class="section-head">
-        <h2>知识边界</h2>
-        <p class="section-copy">这一周的范围必须收紧。你不是在泛读 Hello Interview、DDIA、Grokking、Alex Xu，而是在把它们中最该进入 Bitly 答案的部分组合成可交付能力。</p>
-      </div>
+      <div class="section-head"><h2>本周交付</h2></div>
       <div class="two-col">
         <div>
-          <div class="kicker">必须掌握</div>
+          <div class="kicker">必须交付</div>
           <ul class="compact-list">
-            <li><span class="box"></span><span>Hello Interview: Delivery Framework 的 45 分钟结构。</span></li>
-            <li><span class="box"></span><span>功能需求与量化非功能需求的写法。</span></li>
-            <li><span class="box"></span><span>REST 资源、HTTP 方法、状态码、幂等性、从认证上下文取得身份。</span></li>
-            <li><span class="box"></span><span>从访问路径推数据模型：URL 映射、唯一索引、过期时间、缓存 TTL。</span></li>
-            <li><span class="box"></span><span>容量判断：10 亿条 URL 映射约 500GB，本身不足以推出分片。</span></li>
-            <li><span class="box"></span><span>跳转路径：DNS / 负载均衡或 CDN / 读服务 / 缓存 / 数据库 / 302。</span></li>
-            <li><span class="box"></span><span>算法按 NeetCode tag 吸收：先掌握分类内核心题，再扩展同类热门题，不做随机刷题。</span></li>
+            <li><span class="box"></span><span>Requirements matrix：FR、NFR、out of scope、design impact。</span></li>
+            <li><span class="box"></span><span>API contract：POST /urls、GET /{short_code}、302、410、404、idempotency。</span></li>
+            <li><span class="box"></span><span>Schema + index：url_mappings、short_code unique index、expires_at。</span></li>
+            <li><span class="box"></span><span>Capacity sheet：storage、QPS、cache hit、DB lookup。</span></li>
+            <li><span class="box"></span><span>HLD whiteboard：create flow、redirect flow、cache miss、failure path。</span></li>
           </ul>
         </div>
         <div>
-          <div class="kicker">本周刻意不展开</div>
+          <div class="kicker">Applied AI 叠加</div>
           <ul class="compact-list">
-            <li><span class="box"></span><span>完整点击分析链路：地域、来源、设备、滥用检测。</span></li>
-            <li><span class="box"></span><span>完整多地域双活架构，只作为高级扩展点提一句。</span></li>
-            <li><span class="box"></span><span>Kafka、Flink、事件溯源深挖，留到指标、广告、支付系统。</span></li>
-            <li><span class="box"></span><span>Grokking / Alex Xu 大范围平行阅读。本周只用精准源包。</span></li>
-            <li><span class="box"></span><span>背图。每个盒子和箭头都必须能从 API 与状态变化推出来。</span></li>
+            <li><span class="box"></span><span>如果产品加 AI title/summary/safety scan，必须异步执行。</span></li>
+            <li><span class="box"></span><span>LLM 绝不进入 redirect hot path，避免 p99 和 availability 被模型调用拖垮。</span></li>
+            <li><span class="box"></span><span>AI 输出必须有 schema、eval、trace、fallback、manual review 边界。</span></li>
+            <li><span class="box"></span><span>这个 overlay 只建立思维方式，不把 Week 1 变成 AI 系统题。</span></li>
           </ul>
         </div>
       </div>
     </section>
 
     <section class="section">
-      <div class="section-head">
-        <h2>时间线</h2>
-        <p class="section-copy">顺序是刻意安排的：先学会面试里的操作节奏，再把每个概念绑定到 Bitly，最后在时间压力下跑模拟面试。每一天都有直达链接和验收标准。</p>
-      </div>
+      <div class="section-head"><h2>7 天推进</h2></div>
       <div class="route">
-        <div class="row">
-          <div class="kicker">2026-06-29 周一</div>
-          <h3>第 1 天：面试操作系统</h3>
-          <p>对应目录：Introduction / How to Prepare for System Design Interviews / Delivery Framework。</p>
+        <div class="row asset-row" id="day-1">
+          <div class="kicker">第 1 天<br>问题框定</div>
+          <h3><a href="week1/day-1-interview-os.html">面试操作系统</a></h3>
+          <p>写一页 Bitly interview control sheet：问题定义、目标用户、主线范围、暂缓范围、时间盒、最后 35 分钟答题顺序。<br><strong>算法：</strong>Arrays & Hashing</p>
           <a class="button" href="week1/day-1-interview-os.html">进入</a>
         </div>
-        <div class="row">
-          <div class="kicker">2026-06-30 周二</div>
-          <h3>第 2 天：需求边界</h3>
-          <p>把 Bitly 切到可答范围：功能需求、非功能需求、暂缓范围、读写不对称。</p>
+        <div class="row asset-row" id="day-2">
+          <div class="kicker">第 2 天<br>需求边界</div>
+          <h3><a href="week1/day-2-requirements.html">需求边界与 NFR</a></h3>
+          <p>产出 Bitly requirements matrix：FR、NFR、out of scope、design impact 四列。<br><strong>算法：</strong>Arrays & Hashing</p>
           <a class="button" href="week1/day-2-requirements.html">进入</a>
         </div>
-        <div class="row">
-          <div class="kicker">2026-07-01 周三</div>
-          <h3>第 3 天：API 契约</h3>
-          <p>先定客户端契约，再画架构：POST /urls、GET /{short_code}、302、410。</p>
+        <div class="row asset-row" id="day-3">
+          <div class="kicker">第 3 天<br>API 契约</div>
+          <h3><a href="week1/day-3-api.html">API 契约</a></h3>
+          <p>写 API contract table：method、path、request、response、status code、retry/idempotency、auth assumption。<br><strong>算法：</strong>Arrays & Hashing</p>
           <a class="button" href="week1/day-3-api.html">进入</a>
         </div>
-        <div class="row">
-          <div class="kicker">2026-07-02 周四</div>
-          <h3>第 4 天：数据模型</h3>
-          <p>用访问路径推 url_mappings 表、唯一索引、过期时间、缓存与真实来源边界。</p>
+        <div class="row asset-row" id="day-4">
+          <div class="kicker">第 4 天<br>状态模型</div>
+          <h3><a href="week1/day-4-data-model.html">数据模型与真实来源</a></h3>
+          <p>写 schema + index plan：url_mappings、users optional、unique short_code index、owner lookup index、expires_at 行为。<br><strong>算法：</strong>Arrays & Hashing</p>
           <a class="button" href="week1/day-4-data-model.html">进入</a>
         </div>
-        <div class="row">
-          <div class="kicker">2026-07-03 周五</div>
-          <h3>第 5 天：容量判断</h3>
-          <p>用数字删架构：估算存储、读写比、缓存收益、真正触发横向扩展的条件。</p>
+        <div class="row asset-row" id="day-5">
+          <div class="kicker">第 5 天<br>容量与扩展</div>
+          <h3><a href="week1/day-5-capacity.html">容量判断</a></h3>
+          <p>写 capacity sheet：URL 存储、redirect QPS、create QPS、cache hit ratio、DB lookup、带宽粗估。<br><strong>算法：</strong>Arrays & Hashing</p>
           <a class="button" href="week1/day-5-capacity.html">进入</a>
         </div>
-        <div class="row">
-          <div class="kicker">2026-07-04 周六</div>
-          <h3>第 6 天：HLD 与请求路径</h3>
-          <p>分别画创建流程与跳转流程，把缓存命中/未命中、数据库回退、302 讲成路径。</p>
+        <div class="row asset-row" id="day-6">
+          <div class="kicker">第 6 天<br>高层设计与深挖</div>
+          <h3><a href="week1/day-6-hld.html">高层设计与请求路径</a></h3>
+          <p>画 HLD：client、API gateway/LB、write service、read service、cache、DB、analytics queue optional，并编号 redirect path。<br><strong>算法：</strong>Arrays & Hashing</p>
           <a class="button" href="week1/day-6-hld.html">进入</a>
         </div>
-        <div class="row">
-          <div class="kicker">2026-07-05 周日</div>
-          <h3>第 7 天：模拟面试与修复</h3>
-          <p>35 分钟口述 Bitly，按评分表定位最低维度，立即进入修复循环。</p>
+        <div class="row asset-row" id="day-7">
+          <div class="kicker">第 7 天<br>模拟与修复</div>
+          <h3><a href="week1/day-7-mock.html">模拟面试与修复</a></h3>
+          <p>完成一场 mock 录音或白板截图，并写 repair note：最低分维度、漏掉原因、下一版修复句。<br><strong>算法：</strong>Arrays & Hashing</p>
           <a class="button" href="week1/day-7-mock.html">进入</a>
-        </div>
-      </div>
+        </div></div>
     </section>
 
     <section class="section">
-      <div class="section-head">
-        <h2>本周通过线</h2>
-        <p class="section-copy">通过第 1 周不是“笔记写得完整”，而是基础能力不再松散。你能把同一套操作系统迁移到 Dropbox、YouTube、Rate Limiter、Ticketmaster 这类后续题。</p>
-      </div>
+      <div class="section-head"><h2>通过线</h2><p class="section-copy">35-45 分钟 mock ≥ 75 / 100。</p></div>
       <div class="grid-3">
-        <article class="tile">
-          <div class="kicker">通过</div>
-          <h3>75 / 100</h3>
-          <p>不能漏掉短码生成、跳转流程、表结构/索引、缓存、容量判断。</p>
-        </article>
-        <article class="tile">
-          <div class="kicker">高级信号</div>
-          <h3>先讲取舍</h3>
-          <p>能主动比较哈希方案 vs 计数器/base62、缓存命中 vs 未命中、301 vs 302、PostgreSQL vs 过早分片。</p>
-        </article>
-        <article class="tile">
-          <div class="kicker">下一关</div>
-          <h3>可复用答题骨架</h3>
-          <p>最终答题骨架会变成第 2 周模板；最低分维度进入下一轮监督修复。</p>
-        </article>
+        <article class="tile tight"><div class="kicker">不能漏</div><h3>四个关键点</h3><p>短码唯一性、redirect hot path、DB source of truth、capacity before sharding。</p></article>
+        <article class="tile tight"><div class="kicker">Repair</div><h3>最低维度重写</h3><p>如果 API、schema、capacity、failure 任一维度低于 60%，当天重写。</p></article>
+        <article class="tile tight"><div class="kicker">下一周</div><h3>迁移到缓存与限流</h3><p>Week 2 不换学习方法，只换主系统。</p></article>
       </div>
     </section>
 
-    <footer class="footer">这是一份资深架构师面试训练简报。每日页面保留原始目录标题与直达链接，方便你按网页逐项定位。</footer>
+    <footer class="footer">第 1 周完成后进入第 2 周：限流与缓存基础设施。</footer>
   </main>
 </body>
 </html>

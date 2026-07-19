@@ -1,11 +1,11 @@
 ---
 name: system-design-study-coach
-description: Daily coach for the 14-week system design interview plan bundled in this repo. Use when the user asks for today's system design reading plan, a Week/Day assignment, study supervision, check-in/check-out, repair tasks, mock interview preparation, or wants Codex to combine the printable plan with $card or $senior-sde-interview-script.
+description: Daily coach for the 18-week system design interview plan bundled in this repo. Use when the user asks for today's system design reading plan, a Week/Day assignment, study supervision, check-in/check-out, repair tasks, mock interview preparation, or wants Codex to combine the printable plan with $card or $senior-sde-interview-script.
 ---
 
 # System Design Study Coach
 
-Use this skill to supervise the bundled 14-week system design and algorithms plan.
+Use this skill to supervise the bundled 18-week system design and algorithms plan.
 
 ## Quick Workflow
 

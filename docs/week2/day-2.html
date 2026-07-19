@@ -1,28 +1,29 @@
 <!doctype html>
 <html lang="zh-CN">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>第 2 周第 2 天 - 让缓存节点可扩缩</title><link rel="stylesheet" href="../week1/style.css"></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>第 2 周第 2 天 - 算法选择与配额语义</title><link rel="stylesheet" href="../week1/style.css"></head>
 <body>
   <header class="topbar"><nav class="shell nav"><a class="brand" href="../week2-action-guide.html"><span class="mark"></span> 第 2 周</a><div class="navlinks"><a href="day-1.html">上一天</a><a href="day-3.html">下一天</a><a href="scorecard.html">评分表</a></div></nav></header>
   <main class="shell">
-    <section class="day-hero"><div class="eyebrow">第 2 周 · 第 2 天 · 2026-07-07 周二 · Consistent Hashing</div><h1>让缓存节点可扩缩</h1><p class="deck">学习 consistent hashing，知道普通 modulo hashing 为什么在节点变化时灾难性重映射。</p><div class="day-meta"><span>系统设计 100 分钟</span><span>算法 75 分钟</span><span>复盘 10 分钟</span></div></section>
+    <section class="day-hero"><div class="eyebrow">第 2 周 · 第 2 天 · 2026-07-28 周二 · Rate Limiter Algorithms</div><h1>算法选择与配额语义</h1><div class="day-meta"><span>系统设计 100 分钟</span><span>算法 75 分钟</span><span>复盘 10 分钟</span></div></section>
+    <section class="section"><div class="section-head"><h2>今日时间表</h2></div><table class="rubric"><tr><th>07:55–08:15</th><td><b>回忆</b><br>不看资料复述昨日设计；写出今天要验证的一条假设。</td></tr><tr><th>08:15–09:25</th><td><b>原文</b><br>依次阅读：Rate Limiter → Caching → 第二章：数据系统的目标。只读页面下方列出的小节。</td></tr><tr><th>09:25–10:20</th><td><b>白板</b><br>写算法选择表：fixed window、sliding window、token bucket、leaky bucket；选定 token bucket。</td></tr><tr><th>15:30–16:45</th><td><b>算法</b><br>完成 3 道 Two Pointers；每题记录 pattern、invariant、复杂度和错因。</td></tr><tr><th>20:30–21:30</th><td><b>口述</b><br>脱稿讲当天产出；按修复规则：如果没有说明 window boundary 或 burst，补算法行为图。</td></tr></table></section>
     <div class="ops-grid">
       <section><h2>学习源包</h2>
-        <div class="source-block">
-          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/consistent-hashing">Consistent Hashing</a><span>Hello Interview</span></div>
-          <ul class="source-sections"><li>Hash Ring</li><li>Virtual Nodes</li><li>Replication</li></ul>
-          <div class="proof">验收：能讲 hash ring、virtual nodes、replication factor。</div>
+        <div class="source-block" id="source-rate-limiter">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/distributed-rate-limiter">Rate Limiter</a><span>Hello Interview</span></div>
+          <ul class="source-sections"><li id="source-rate-limiter-algorithms"><span>Algorithms</span><em>页面级阅读</em></li><li id="source-rate-limiter-redis"><span>Redis</span><em>页面级阅读</em></li><li id="source-rate-limiter-consistency"><span>Consistency</span><em>页面级阅读</em></li></ul>
+          <div class="proof">验收：能比较限流算法与适用条件。</div>
         </div>
-        <div class="source-block">
-          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/deep-dives/consistent-hashing">Consistent Hashing</a><span>Hello Interview</span></div>
-          <ul class="source-sections"><li>Virtual Nodes</li><li>Failure Handling</li></ul>
-          <div class="proof">验收：能处理节点加入、退出、热点和副本。</div>
+        <div class="source-block" id="source-caching">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/caching">Caching</a><span>Hello Interview</span></div>
+          <ul class="source-sections"><li id="source-caching-cache-aside"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/caching#cache-aside-lazy-loading">Cache Aside</a></li><li id="source-caching-write-through-write-back"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/caching#write-through-caching">Write Through / Write Back</a></li><li id="source-caching-eviction-policies"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/caching#cache-eviction-policies">Eviction Policies</a></li></ul>
+          <div class="proof">验收：能区分限流状态与普通缓存的语义。</div>
         </div>
-        <div class="source-block">
-          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/distributed-cache">Distributed Cache</a><span>Hello Interview</span></div>
-          <ul class="source-sections"><li>Consistent Hashing</li><li>Replication</li><li>Eviction</li></ul>
-          <div class="proof">验收：把 consistent hashing 落到 Distributed Cache。</div>
-        </div><div class="extension-block"><div class="mini-title">拓展阅读</div><ul class="extension-list"><li><a href="https://github.com/donnemartin/system-design-primer">System Design Primer</a>：只看 consistent hashing 与 caching tradeoffs。</li></ul></div></section>
-      <section><h2>今日验收</h2><table class="rubric"><tr><th>产出物</th><td>画一个 5 节点 distributed cache 的 key placement 和 failure path。</td></tr><tr><th>必须掌握</th><td>能比较 modulo hashing vs consistent hashing。</td></tr><tr><th>修复规则</th><td>如果图里没有 virtual node 和副本，补齐。</td></tr></table><h2 style="margin-top:28px">算法模块</h2><div class="algo-pack"><div class="tag-row"><span>NeetCode Tag：Two Pointers</span><span>排序后双指针</span></div><p class="algo-why">简介：继续 Two Pointers，进入排序、去重和重复值处理。</p><p class="algo-line"><a href="https://leetcode.com/problems/3sum/">必做：3Sum</a><a href="https://leetcode.com/problems/sort-colors/">必做：Sort Colors</a><a href="https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/">复盘：Two Sum II</a></p><div class="mini-title">选做热门题</div><p class="algo-line"><a href="https://leetcode.com/problems/4sum/">选做：4Sum</a><a href="https://leetcode.com/problems/remove-element/">选做：Remove Element</a><a href="https://leetcode.com/problems/squares-of-a-sorted-array/">选做：Squares of a Sorted Array</a></p></div></section>
+        <div class="source-block" id="source-ddia2">
+          <div class="source-title"><a href="https://ddia.vonng.com/ch2/">第二章：数据系统的目标</a><span>DDIA</span></div>
+          <ul class="source-sections"><li id="source-ddia2-section-26b85607"><a href="https://ddia.vonng.com/ch2/#sec_introduction_reliability">可靠性</a></li><li id="source-ddia2-section-d2fbaae8"><a href="https://ddia.vonng.com/ch2/#sec_introduction_scalability">可伸缩性</a></li><li id="source-ddia2-section-3144b31e"><a href="https://ddia.vonng.com/ch2/#sec_introduction_maintainability">可维护性</a></li></ul>
+          <div class="proof">验收：能说明吞吐、延迟与可用性取舍。</div>
+        </div><div class="extension-block"><div class="mini-title">拓展阅读</div><ul class="extension-list"><li><a href="https://www.designgurus.io/course/grokking-the-system-design-interview">Grokking the System Design Interview</a></li></ul></div></section>
+      <section><h2>今日验收</h2><table class="rubric"><tr><th>产出物</th><td>写算法选择表：fixed window、sliding window、token bucket、leaky bucket；选定 token bucket。</td></tr><tr><th>必须掌握</th><td>能用 capacity、refill rate、request cost 与 burst 解释 token bucket。</td></tr><tr><th>修复规则</th><td>如果没有说明 window boundary 或 burst，补算法行为图。</td></tr></table><h2 style="margin-top:28px">算法模块</h2><div class="algo-pack"><div class="tag-row"><span>NeetCode Tag：Two Pointers</span><span>排序后双指针</span></div><p class="algo-line"><a href="https://leetcode.com/problems/3sum/">必做：3Sum</a><a href="https://leetcode.com/problems/sort-colors/">必做：Sort Colors</a><a href="https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/">复盘：Two Sum II</a></p><div class="mini-title">选做热门题</div><p class="algo-line"><a href="https://leetcode.com/problems/4sum/">选做：4Sum</a><a href="https://leetcode.com/problems/remove-element/">选做：Remove Element</a><a href="https://leetcode.com/problems/squares-of-a-sorted-array/">选做：Squares of a Sorted Array</a></p></div></section>
     </div>
     <footer class="footer">第 2 周第 2 天通过条件：产出物可口述，算法题位有记录，最低信心点已写入 repair。</footer>
   </main>

@@ -1,28 +1,29 @@
 <!doctype html>
 <html lang="zh-CN">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>第 6 周第 7 天 - 协同系统 mock</title><link rel="stylesheet" href="../week1/style.css"></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>第 6 周第 7 天 - Instagram Mock + YouTube 压缩题</title><link rel="stylesheet" href="../week1/style.css"></head>
 <body>
   <header class="topbar"><nav class="shell nav"><a class="brand" href="../week6-action-guide.html"><span class="mark"></span> 第 6 周</a><div class="navlinks"><a href="day-6.html">上一天</a><a href="scorecard.html">评分表</a></div></nav></header>
   <main class="shell">
-    <section class="day-hero"><div class="eyebrow">第 6 周 · 第 7 天 · 2026-08-09 周日 · Mock</div><h1>协同系统 mock</h1><p class="deck">跑 Dropbox 或 Google Docs mock。</p><div class="day-meta"><span>系统设计 45+45 分钟</span><span>算法 75 分钟</span><span>复盘 10 分钟</span></div></section>
+    <section class="day-hero"><div class="eyebrow">第 6 周 · 第 7 天 · 2026-08-30 周日 · Mock 与修复</div><h1>Instagram Mock + YouTube 压缩题</h1><div class="day-meta"><span>系统设计 90+75 分钟</span><span>算法 75 分钟</span><span>复盘 10 分钟</span></div></section>
+    <section class="section"><div class="section-head"><h2>今日时间表</h2></div><table class="rubric"><tr><th>09:00–09:45</th><td><b>Mock</b><br>按面试时间盒作答；不看讲义。</td></tr><tr><th>10:00–11:15</th><td><b>评分与修复</b><br>完成 Instagram 45 分钟 mock；再做 YouTube 20 分钟压缩设计与 repair note。</td></tr><tr><th>14:00–15:15</th><td><b>算法</b><br>完成 3 道 Linked List 限时复盘题。</td></tr><tr><th>20:30–21:00</th><td><b>周复盘</b><br>更新错题、设计决策和下周第 1 天的预读清单。</td></tr></table></section>
     <div class="ops-grid">
       <section><h2>学习源包</h2>
-        <div class="source-block">
-          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/dropbox">Dropbox</a><span>Hello Interview</span></div>
-          <ul class="source-sections"><li>File Upload</li><li>Sync</li><li>Conflict Resolution</li></ul>
-          <div class="proof">验收：按 senior 期望复盘文件同步。</div>
+        <div class="source-block" id="source-instagram">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/instagram">Instagram</a><span>Hello Interview</span></div>
+          <ul class="source-sections"><li id="source-instagram-media-upload"><span>Media Upload</span><em>页面级阅读</em></li><li id="source-instagram-feed"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/instagram#3-users-should-be-able-to-see-a-chronological-feed-of-posts-from-the-users-they-follow">Feed</a></li><li id="source-instagram-fanout"><span>Fanout</span><em>页面级阅读</em></li></ul>
+          <div class="proof">验收：能在 mock 中完成主线并接住追问。</div>
         </div>
-        <div class="source-block">
-          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/google-docs">Google Docs</a><span>Hello Interview</span></div>
-          <ul class="source-sections"><li>Collaboration</li><li>Conflict Resolution</li><li>Presence</li></ul>
-          <div class="proof">验收：按 senior 期望复盘协同编辑。</div>
+        <div class="source-block" id="source-youtube">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/youtube">YouTube</a><span>Hello Interview</span></div>
+          <ul class="source-sections"><li id="source-youtube-upload"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/youtube#1-users-can-upload-videos">Upload</a></li><li id="source-youtube-transcoding"><span>Transcoding</span><em>页面级阅读</em></li><li id="source-youtube-streaming"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/youtube#background-video-streaming">Streaming</a></li></ul>
+          <div class="proof">验收：能在压缩题中迁移本周的核心判断。</div>
         </div>
-        <div class="source-block">
-          <div class="source-title"><a href="https://ddia.vonng.com/ch10/">第十章：一致性与共识</a><span>DDIA</span></div>
-          <ul class="source-sections"><li>线性一致性</li><li>共识</li><li>领导者选举</li></ul>
-          <div class="proof">验收：检查一致性表达。</div>
-        </div><div class="extension-block"><div class="mini-title">拓展阅读</div><ul class="extension-list"><li><a href="https://www.designgurus.io/course/grokking-the-system-design-interview">Grokking the System Design Interview</a>：对照 Grokking 的同类 case study。</li><li><a href="https://bytebytego.com/">ByteByteGo System Design</a>：用 Alex Xu / ByteByteGo 图解校准表达。</li></ul></div></section>
-      <section><h2>今日验收</h2><table class="rubric"><tr><th>产出物</th><td>跑 Dropbox 或 Google Docs mock。</td></tr><tr><th>必须掌握</th><td>75/100 以上；不能漏 metadata schema、change log、conflict、operation stream。</td></tr><tr><th>修复规则</th><td>最低维度做 15 分钟重写。</td></tr></table><h2 style="margin-top:28px">算法模块</h2><div class="algo-pack"><div class="tag-row"><span>NeetCode Tag：Linked List</span><span>专项模拟</span></div><p class="algo-why">本周按 NeetCode 的 Linked List block 推进。今天只处理「专项模拟」，三题都要留下 pattern、invariant、复杂度和错因。</p><p class="algo-line"><a href="https://leetcode.com/problems/reverse-linked-list/">限时：Reverse Linked List</a><a href="https://leetcode.com/problems/reorder-list/">限时：Reorder List</a><a href="https://leetcode.com/problems/merge-k-sorted-lists/">限时：Merge K Sorted Lists</a></p><div class="mini-title">选做热门题</div><p class="algo-line"><a href="https://leetcode.com/problems/copy-list-with-random-pointer/">选做：Copy Random Review</a><a href="https://leetcode.com/problems/add-two-numbers/">选做：Add Two Numbers Review</a><a href="https://leetcode.com/problems/sort-list/">选做：Sort List Review</a></p></div></section>
+        <div class="source-block" id="source-ddia13">
+          <div class="source-title"><a href="https://ddia.vonng.com/ch13/">第十三章：数据系统的未来</a><span>DDIA</span></div>
+          <ul class="source-sections"><li id="source-ddia13-section-99a85c8e"><span>派生数据</span><em>页面级阅读</em></li><li id="source-ddia13-section-8ed671bc"><span>端到端正确性</span><em>页面级阅读</em></li><li id="source-ddia13-section-b7b939a7"><span>演化</span><em>页面级阅读</em></li></ul>
+          <div class="proof">验收：能说明演化、backfill 或端到端正确性。</div>
+        </div><div class="extension-block"><div class="mini-title">拓展阅读</div><ul class="extension-list"><li><a href="https://www.designgurus.io/course/grokking-the-system-design-interview">Grokking the System Design Interview</a></li><li><a href="https://bytebytego.com/">ByteByteGo System Design</a></li></ul></div></section>
+      <section><h2>今日验收</h2><table class="rubric"><tr><th>产出物</th><td>完成 Instagram 45 分钟 mock；再做 YouTube 20 分钟压缩设计与 repair note。</td></tr><tr><th>必须掌握</th><td>主项目 75/100 以上；迁移题能在 20 分钟完成可辩护主线。</td></tr><tr><th>修复规则</th><td>最低分维度做 15 分钟 repair 后复测。</td></tr></table><h2 style="margin-top:28px">算法模块</h2><div class="algo-pack"><div class="tag-row"><span>NeetCode Tag：Linked List</span><span>专项模拟</span></div><p class="algo-line"><a href="https://leetcode.com/problems/reverse-linked-list/">限时：Reverse Linked List</a><a href="https://leetcode.com/problems/reorder-list/">限时：Reorder List</a><a href="https://leetcode.com/problems/merge-k-sorted-lists/">限时：Merge K Sorted Lists</a></p><div class="mini-title">选做热门题</div><p class="algo-line"><a href="https://leetcode.com/problems/copy-list-with-random-pointer/">选做：Copy Random Review</a><a href="https://leetcode.com/problems/add-two-numbers/">选做：Add Two Numbers Review</a><a href="https://leetcode.com/problems/sort-list/">选做：Sort List Review</a></p></div></section>
     </div>
     <footer class="footer">第 6 周第 7 天通过条件：产出物可口述，算法题位有记录，最低信心点已写入 repair。</footer>
   </main>

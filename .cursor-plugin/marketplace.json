@@ -4,13 +4,13 @@
     "name": "Daniel Wan"
   },
   "metadata": {
-    "description": "System design interview prep skills with Excalidraw-style cards, senior talk tracks, and a 14-week study coach."
+    "description": "System design interview prep skills with Excalidraw-style cards, senior talk tracks, and an 18-week study coach."
   },
   "plugins": [
     {
       "name": "crack-system-interview-skill",
       "source": "plugins/crack-system-interview-skill",
-      "description": "Turn pasted text into diagram-first Excalidraw visuals, or supervise the bundled 14-week system design plan."
+      "description": "Turn pasted text into diagram-first Excalidraw visuals, or supervise the bundled 18-week system design plan."
     }
   ]
 }

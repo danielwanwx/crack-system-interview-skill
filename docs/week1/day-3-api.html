@@ -3,58 +3,71 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>第 3 天 - API 契约</title>
-  <link rel="stylesheet" href="style.css">
+  <title>第 1 周 第 3 天 - API 契约</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="../week1/style.css">
 </head>
 <body>
-  <header class="topbar"><nav class="shell nav"><a class="brand" href="../week1-action-guide.html"><span class="mark"></span> 第 1 周</a><div class="navlinks"><a href="day-2-requirements.html">上一天</a><a href="day-4-data-model.html">下一天</a><a href="scorecard.html">评分表</a></div></nav></header>
+
+  <header class="topbar">
+    <nav class="shell nav">
+      <a class="brand" href="../project-driven-picture.html"><span class="mark"></span> 项目化系统设计</a>
+      <div class="navlinks"><a href="../project-driven-picture.html">全局图</a><a href="../week1-action-guide.html">第 1 周</a><a href="lecture.html">讲义</a><a href="staff-qa.html">Staff Q&A</a><a href="live-mock.html">Live Mock</a><a href="scorecard.html">评分表</a></div>
+    </nav>
+  </header>
   <main class="shell">
+
     <section class="day-hero">
-      <div class="eyebrow">第 3 天 · 2026-07-01 周三 · 接口纪律</div>
-      <h1>先定义契约，再画盒子</h1>
-      <p class="deck">API 是检验需求是否真实的第一关。今天要把用户可见契约、跳转语义、错误码与重试边界定清楚。</p>
-      <div class="day-meta"><span>系统设计 95 分钟</span><span>算法 80 分钟</span><span>复盘 10 分钟</span></div>
+      <div class="eyebrow">第 1 周 · 2026-07-22 周三 · API 契约</div>
+      <h1>API 契约</h1>
+      <div class="day-meta"><span>系统设计 95m</span><span>算法 60-75m</span><span>复盘 10m</span></div>
     </section>
+
+    <section class="section"><div class="section-head"><h2>今日时间表</h2></div><table class="rubric"><tr><th>07:55–08:15</th><td><b>回忆</b><br>不看资料复述昨日结论；写出今天要验证的一条假设。</td></tr><tr><th>08:15–09:25</th><td><b>原文</b><br>依次阅读：API Design → Bitly。只读下方列出的小节。</td></tr><tr><th>09:25–10:20</th><td><b>白板</b><br>写 API contract table：method、path、request、response、status code、retry/idempotency、auth assumption。</td></tr><tr><th>15:30–16:45</th><td><b>算法</b><br>完成 Arrays &amp; Hashing 三题；每题记录 pattern、invariant、复杂度和错因。</td></tr><tr><th>20:30–21:30</th><td><b>口述</b><br>脱稿讲当天产出；按修复规则：如果 API 表没有错误码和重试语义，不能通过。</td></tr></table></section>
+
     <div class="ops-grid">
       <section>
-        <h2>学习源包</h2>
-        <div class="source-block">
+        <h2>阅读源包</h2>
+
+        <div class="source-block" id="source-api-design">
           <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/api-design">API Design</a><span>Hello Interview</span></div>
-          <ul class="source-sections"><li>API Types</li><li>REST / Resource Modeling</li><li>HTTP Methods</li><li>Passing Data To APIs</li><li>Returning Data</li><li>Pagination / Versioning Strategies / Security Considerations</li></ul>
-          <div class="proof">验收：REST 作为默认选择；能说明路径、查询参数、请求体各自放什么，以及幂等性边界。</div>
+          <ul class="source-sections"><li id="source-api-design-api-types"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/api-design#api-types">API Types</a></li><li id="source-api-design-rest-resource-modeling"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/api-design#rest">REST / Resource Modeling</a></li><li id="source-api-design-http-methods"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/api-design#http-methods">HTTP Methods</a></li><li id="source-api-design-passing-data-to-apis"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/api-design#passing-data-to-apis">Passing Data To APIs</a></li><li id="source-api-design-returning-data"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/api-design#returning-data">Returning Data</a></li><li id="source-api-design-pagination-versioning-strategies-security-considerations"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/api-design#pagination">Pagination / Versioning Strategies / Security Considerations</a></li></ul>
+          <div class="proof">能解释为什么短链创建是 POST，跳转是 GET，身份来自 auth context。</div>
         </div>
-        <div class="source-block">
+        <div class="source-block" id="source-bitly">
           <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly">Bitly</a><span>Hello Interview</span></div>
-          <ul class="source-sections"><li>The API</li><li>2) Users should be able to access the original URL by using the shortened URL</li></ul>
-          <div class="proof">验收：能写出 POST /urls、GET /{short_code}、302 跳转、410 过期链接。</div>
+          <ul class="source-sections"><li id="source-bitly-the-api"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly#the-api">The API</a></li><li id="source-bitly-2-users-should-be-able-to-access-the-original-url-by-using-the-shortened-url"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly#2-users-should-be-able-to-access-the-original-url-by-using-the-shortened-url">2) Users should be able to access the original URL by using the shortened URL</a></li></ul>
+          <div class="proof">能覆盖 POST /urls、GET /{short_code}、302、410、404。</div>
         </div>
         <div class="extension-block">
           <div class="mini-title">拓展阅读</div>
-          <ul class="extension-list">
-            <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status">MDN HTTP response status codes</a>：补齐 201、302、400、404、410、429、5xx 的语义。</li>
-            <li><a href="https://www.hellointerview.com/learn/system-design/core-concepts/data-modeling">Data Modeling</a>：明天用 API 访问路径反推数据模型。</li>
-          </ul>
+          <ul class="extension-list"><li><a href="https://www.hellointerview.com/learn/system-design/core-concepts/data-modeling">Data Modeling</a></li><li><a href="https://developers.openai.com/api/docs/guides/tools">OpenAI · Using tools</a></li></ul>
         </div>
       </section>
       <section>
-        <h2>今日验收</h2>
+        <h2>今日产出</h2>
         <table class="rubric">
-          <tr><th>产出物</th><td>API 契约表：方法、路径、请求、响应、状态码、错误行为、重试说明。</td></tr>
-          <tr><th>必须掌握</th><td>POST 不天然幂等。GET 跳转读取状态并返回 HTTP 302。链接可能过期或变化时，301 有缓存风险。</td></tr>
-          <tr><th>安全边界</th><td>不要信任请求体里的 user_id；身份只能来自认证上下文。</td></tr>
-          <tr><th>修复规则</th><td>接口名如果像动词动作，改成资源名；如果错误码影响客户端行为，就必须写出来。</td></tr>
+          <tr><th>产出物</th><td>写 API contract table：method、path、request、response、status code、retry/idempotency、auth assumption。</td></tr>
+          <tr><th>修复规则</th><td>如果 API 表没有错误码和重试语义，不能通过。</td></tr>
+          <tr><th>面试表达</th><td>我不会让 client 传 user_id。身份应该来自认证上下文，避免伪造 owner。</td></tr>
         </table>
-        <h2 style="margin-top:28px">算法模块</h2>
-        <div class="algo-pack">
-          <div class="tag-row"><span>NeetCode Tag：Arrays & Hashing</span><span>层级：Prefix / Encoding</span></div>
-          <p class="algo-why">简介：继续 Arrays & Hashing，练更结构化的状态表达：前后缀数组、可逆编码、哈希签名复盘。</p>
+        <h2 style="margin-top:28px">必须掌握</h2>
+        <ul class="compact-list"><li><span class="box"></span><span>POST /urls 返回 short_code、short_url、expires_at。</span></li><li><span class="box"></span><span>GET /{short_code} 成功返回 302 Location，过期返回 410，不存在返回 404。</span></li><li><span class="box"></span><span>能说明 301 vs 302 的缓存影响，以及为什么面试默认 302 更稳。</span></li></ul>
+          <h2 style="margin-top:28px">算法模块</h2>
+          <div class="algo-pack">
+            <div class="tag-row"><span>NeetCode Tag：Arrays & Hashing</span><span>Array transform</span></div>
           <p class="algo-line"><a href="https://leetcode.com/problems/product-of-array-except-self/">必做：Product of Array Except Self</a><a href="https://neetcode.io/problems/string-encode-and-decode">必做：Encode and Decode Strings</a><a href="https://leetcode.com/problems/group-anagrams/">复盘：Group Anagrams</a></p>
           <div class="mini-title">选做热门题</div>
-          <p class="algo-line"><a href="https://leetcode.com/problems/find-pivot-index/">Find Pivot Index</a><a href="https://leetcode.com/problems/string-compression/">String Compression</a><a href="https://leetcode.com/problems/insert-delete-getrandom-o1/">Insert Delete GetRandom O(1)</a></p>
+          <p class="algo-line"><a href="https://leetcode.com/problems/find-pivot-index/">选做：Find Pivot Index</a><a href="https://leetcode.com/problems/insert-delete-getrandom-o1/">选做：Insert Delete GetRandom O(1)</a></p>
         </div>
       </section>
     </div>
-    <footer class="footer">第 3 天通过条件：你可以从 API 契约自然推出架构，而不是靠背图。</footer>
+
+    <section class="section">
+      <div class="pill-row"><a class="button" href="day-2-requirements.html">上一天</a><a class="button" href="day-4-data-model.html">下一天</a><a class="button" href="../week1-action-guide.html">返回 Week 1</a></div>
+    </section>
+
+    <footer class="footer">第 1 周 · URL Shortener / Bitly。</footer>
   </main>
 </body>
 </html>

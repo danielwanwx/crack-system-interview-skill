@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第 1 周 Staff Q&amp;A - URL Shortener / Bitly</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="../week1/style.css">
+</head>
+<body>
+
+  <header class="topbar">
+    <nav class="shell nav">
+      <a class="brand" href="../project-driven-picture.html"><span class="mark"></span> 项目化系统设计</a>
+      <div class="navlinks"><a href="../project-driven-picture.html">全局图</a><a href="../week1-action-guide.html">第 1 周</a><a href="lecture.html">讲义</a><a href="staff-qa.html">Staff Q&A</a><a href="live-mock.html">Live Mock</a><a href="scorecard.html">评分表</a></div>
+    </nav>
+  </header>
+  <main class="shell">
+
+    <section class="day-hero">
+      <div class="eyebrow">第 1 周 · Staff Q&A / Interview Tree</div>
+      <h1>让追问沿着你的答案发生。</h1>
+      <div class="day-meta"><span>25 个面试节点</span><span>5 个真实回合</span><span>2 个深挖最低要求</span></div>
+    </section>
+
+    <section class="section">
+      <div class="pill-row"><a class="pill" href="live-mock.html">打开 GPT Live Mock Runbook</a><a class="pill" href="lecture.html">返回 Bitly 讲义</a></div>
+    </section>
+
+    <section class="section"><div class="section-head"><h2>45 分钟追问树</h2></div>
+        <section class="mock-round">
+          <div class="mock-round-head"><span>00-05 min</span><h2>范围与优先级</h2></div>
+          <div class="mock-nodes">
+      <article class="mock-node">
+        <div class="mock-node-head"><span>01</span><h3>请设计一个像 Bitly 的 URL shortening service。你会先问什么？</h3></div>
+        <dl class="mock-grid">
+          <div><dt>回答必须覆盖</dt><dd>主动确认 create / redirect、custom alias、expiration、规模与地域；随后声明第一版边界。</dd></div>
+          <div class="follow"><dt>继续追问</dt><dd>analytics、账户和恶意链接检测一定不做吗？</dd></div>
+        </dl>
+      </article>
+      <article class="mock-node">
+        <div class="mock-node-head"><span>02</span><h3>你为什么把 redirect 而不是 create 放在第一优先级？</h3></div>
+        <dl class="mock-grid">
+          <div><dt>回答必须覆盖</dt><dd>说出读写极度不对称，以及 redirect 是用户可见 hot path。</dd></div>
+          <div class="follow"><dt>继续追问</dt><dd>请给 redirect 一个可度量的 NFR。</dd></div>
+        </dl>
+      </article>
+      <article class="mock-node">
+        <div class="mock-node-head"><span>03</span><h3>100M DAU 和 1B URLs 是硬需求。你还需要哪些假设才开始设计？</h3></div>
+        <dl class="mock-grid">
+          <div><dt>回答必须覆盖</dt><dd>补充每用户点击数、峰值倍数、创建量、URL 平均大小、保留期和地域。</dd></div>
+          <div class="follow"><dt>继续追问</dt><dd>如果 click traffic 有 10 倍日内峰值，你的估算如何变？</dd></div>
+        </dl>
+      </article>
+      <article class="mock-node">
+        <div class="mock-node-head"><span>04</span><h3>analytics 与恶意 URL 检测现在要不要纳入主设计？</h3></div>
+        <dl class="mock-grid">
+          <div><dt>回答必须覆盖</dt><dd>明确主线不阻塞 redirect；如要保留，只放异步事件或 soft block。</dd></div>
+          <div class="follow"><dt>继续追问</dt><dd>如果高风险链接必须立即阻断，redirect path 要增加什么状态？</dd></div>
+        </dl>
+      </article>
+      <article class="mock-node">
+        <div class="mock-node-head"><span>05</span><h3>你会如何向面试官复述问题，确保我们对齐？</h3></div>
+        <dl class="mock-grid">
+          <div><dt>回答必须覆盖</dt><dd>用 30 秒给出核心能力、NFR、暂缓范围和下一步交付顺序。</dd></div>
+          <div class="follow"><dt>继续追问</dt><dd>请用一句话说出这题的系统本质。</dd></div>
+        </dl>
+      </article></div>
+        </section>
+        <section class="mock-round">
+          <div class="mock-round-head"><span>05-12 min</span><h2>契约、状态与正确性</h2></div>
+          <div class="mock-nodes">
+      <article class="mock-node">
+        <div class="mock-node-head"><span>06</span><h3>请给出 create 和 redirect API。</h3></div>
+        <dl class="mock-grid">
+          <div><dt>回答必须覆盖</dt><dd>POST /urls 与 GET /{short_code}，包含 request/response、auth assumption 和状态码。</dd></div>
+          <div class="follow"><dt>继续追问</dt><dd>过期和不存在分别返回什么？</dd></div>
+        </dl>
+      </article>
+      <article class="mock-node">
+        <div class="mock-node-head"><span>07</span><h3>为什么默认选 302，而不是 301？</h3></div>
+        <dl class="mock-grid">
+          <div><dt>回答必须覆盖</dt><dd>解释控制权、过期/禁用、目标变更与浏览器缓存。</dd></div>
+          <div class="follow"><dt>继续追问</dt><dd>如果业务要求永久不可变跳转，结论会变吗？</dd></div>
+        </dl>
+      </article>
+      <article class="mock-node">
+        <div class="mock-node-head"><span>08</span><h3>你的 mapping 表里哪些字段是 redirect 必需的？</h3></div>
+        <dl class="mock-grid">
+          <div><dt>回答必须覆盖</dt><dd>short_code、long_url、expires_at、disabled；short_code unique index；owner 只服务管理面。</dd></div>
+          <div class="follow"><dt>继续追问</dt><dd>cache 和 DB 对 disabled / expiry 的职责分别是什么？</dd></div>
+        </dl>
+      </article>
+      <article class="mock-node">
+        <div class="mock-node-head"><span>09</span><h3>两个用户同时申请同一个 custom alias，怎么办？</h3></div>
+        <dl class="mock-grid">
+          <div><dt>回答必须覆盖</dt><dd>数据库唯一约束或条件写入保证最终正确性，返回 409；应用层预查不能替代约束。</dd></div>
+          <div class="follow"><dt>继续追问</dt><dd>生成码与 alias 如何避免命名空间冲突？</dd></div>
+        </dl>
+      </article>
+      <article class="mock-node">
+        <div class="mock-node-head"><span>10</span><h3>client 超时重试 POST /urls，会不会产生两个短链？</h3></div>
+        <dl class="mock-grid">
+          <div><dt>回答必须覆盖</dt><dd>先澄清产品是否允许；若不允许，使用 idempotency key / request record。</dd></div>
+          <div class="follow"><dt>继续追问</dt><dd>你的去重 key 是 URL 还是请求语义？</dd></div>
+        </dl>
+      </article></div>
+        </section>
+        <section class="mock-round">
+          <div class="mock-round-head"><span>12-22 min</span><h2>HLD、读路径与容量</h2></div>
+          <div class="mock-nodes">
+      <article class="mock-node">
+        <div class="mock-node-head"><span>11</span><h3>请从用户请求角度画出 create 与 redirect 两条路径。</h3></div>
+        <dl class="mock-grid">
+          <div><dt>回答必须覆盖</dt><dd>create：validate -&gt; generate -&gt; durable write；redirect：edge/LB -&gt; cache -&gt; DB fallback -&gt; 302。</dd></div>
+          <div class="follow"><dt>继续追问</dt><dd>为什么 analytics 不在图的同步主线？</dd></div>
+        </dl>
+      </article>
+      <article class="mock-node">
+        <div class="mock-node-head"><span>12</span><h3>为什么需要 cache？cache key、value 和 miss 行为是什么？</h3></div>
+        <dl class="mock-grid">
+          <div><dt>回答必须覆盖</dt><dd>short_code 为 key；value 至少含 long_url、expiry/disabled version；miss 回源 DB 并受控回填。</dd></div>
+          <div class="follow"><dt>继续追问</dt><dd>当 URL 被禁用时，如何防止旧 cache 继续跳转？</dd></div>
+        </dl>
+      </article>
+      <article class="mock-node">
+        <div class="mock-node-head"><span>13</span><h3>估算 1B URLs 的存储后，你为什么不马上分片？</h3></div>
+        <dl class="mock-grid">
+          <div><dt>回答必须覆盖</dt><dd>粗估数据量、索引与冗余；读压先由 cache/replica 处理，写量可能很低。</dd></div>
+          <div class="follow"><dt>继续追问</dt><dd>什么具体指标让你开始设计 shard key？</dd></div>
+        </dl>
+      </article>
+      <article class="mock-node">
+        <div class="mock-node-head"><span>14</span><h3>一个短链突然被明星转发，如何保护 DB？</h3></div>
+        <dl class="mock-grid">
+          <div><dt>回答必须覆盖</dt><dd>cache、singleflight/request coalescing、TTL jitter、预热与限流；观测 DB fallback QPS。</dd></div>
+          <div class="follow"><dt>继续追问</dt><dd>第一个 miss 时几万请求同时到达怎么办？</dd></div>
+        </dl>
+      </article>
+      <article class="mock-node">
+        <div class="mock-node-head"><span>15</span><h3>你会监控什么，才能知道设计真的守住 NFR？</h3></div>
+        <dl class="mock-grid">
+          <div><dt>回答必须覆盖</dt><dd>redirect p50/p95/p99、error rate、cache hit、DB fallback、create success、counter retry、hot key、expiry/disable mismatch。</dd></div>
+          <div class="follow"><dt>继续追问</dt><dd>哪一个指标会触发 cache 或 DB 的扩容？</dd></div>
+        </dl>
+      </article></div>
+        </section>
+        <section class="mock-round">
+          <div class="mock-round-head"><span>22-35 min</span><h2>深挖与故障施压</h2></div>
+          <div class="mock-nodes">
+      <article class="mock-node">
+        <div class="mock-node-head"><span>16</span><h3>你提到 counter + base62。这个方案保证什么，又牺牲什么？</h3></div>
+        <dl class="mock-grid">
+          <div><dt>回答必须覆盖</dt><dd>唯一性清楚、码长紧凑、吞吐高；牺牲全局发号可用性与可枚举性。</dd></div>
+          <div class="follow"><dt>继续追问</dt><dd>counter 服务不可用时，create path 如何表现？</dd></div>
+        </dl>
+      </article>
+      <article class="mock-node">
+        <div class="mock-node-head"><span>17</span><h3>如果用随机码/截断 hash，你如何把 collision 变成可控行为？</h3></div>
+        <dl class="mock-grid">
+          <div><dt>回答必须覆盖</dt><dd>估算码空间；DB unique constraint；有界重试；重试耗尽后的可观测失败。</dd></div>
+          <div class="follow"><dt>继续追问</dt><dd>恶意用户能否影响冲突或枚举？</dd></div>
+        </dl>
+      </article>
+      <article class="mock-node">
+        <div class="mock-node-head"><span>18</span><h3>DB 宕机时，redirect 会怎么样？</h3></div>
+        <dl class="mock-grid">
+          <div><dt>回答必须覆盖</dt><dd>cache hit 可继续；miss 明确失败或受控 stale serve，取决于禁用/安全要求；有 replica/failover 方案。</dd></div>
+          <div class="follow"><dt>继续追问</dt><dd>什么时候宁可 503，也不能返回 stale long_url？</dd></div>
+        </dl>
+      </article>
+      <article class="mock-node">
+        <div class="mock-node-head"><span>19</span><h3>缓存和 DB 的 expiry 不一致时，谁说了算？</h3></div>
+        <dl class="mock-grid">
+          <div><dt>回答必须覆盖</dt><dd>DB 事实优先；cache TTL 不超过 expires_at，必要时 value 带 version/expiry；清理是次要优化。</dd></div>
+          <div class="follow"><dt>继续追问</dt><dd>链接被立即 disable 时如何满足生效 SLA？</dd></div>
+        </dl>
+      </article>
+      <article class="mock-node">
+        <div class="mock-node-head"><span>20</span><h3>你的报警响了：p99 上升、cache hit 降到 40%、DB fallback 暴涨。先做什么？</h3></div>
+        <dl class="mock-grid">
+          <div><dt>回答必须覆盖</dt><dd>先判定 cache cluster、TTL/eviction、热 key、客户端重试或 DB 延迟；限制回源并保服务。</dd></div>
+          <div class="follow"><dt>继续追问</dt><dd>你会看哪三张图或哪三个切片？</dd></div>
+        </dl>
+      </article></div>
+        </section>
+        <section class="mock-round">
+          <div class="mock-round-head"><span>35-45 min</span><h2>高级扩展与判断边界</h2></div>
+          <div class="mock-nodes">
+      <article class="mock-node">
+        <div class="mock-node-head"><span>21</span><h3>业务进入多地域，欧洲用户也要求低延迟。你先升级哪里？</h3></div>
+        <dl class="mock-grid">
+          <div><dt>回答必须覆盖</dt><dd>先优化读：CDN/edge、regional cache、read replica；create 全球一致性按需求延后。</dd></div>
+          <div class="follow"><dt>继续追问</dt><dd>短码生成和 alias 如何在跨区保持正确？</dd></div>
+        </dl>
+      </article>
+      <article class="mock-node">
+        <div class="mock-node-head"><span>22</span><h3>产品要求点击 analytics，如何加而不破坏 redirect SLO？</h3></div>
+        <dl class="mock-grid">
+          <div><dt>回答必须覆盖</dt><dd>redirect 只发轻量事件到 log/queue，聚合异步；允许 analytics 最终一致、丢失预算和 backfill。</dd></div>
+          <div class="follow"><dt>继续追问</dt><dd>事件重复/丢失如何影响报表？</dd></div>
+        </dl>
+      </article>
+      <article class="mock-node">
+        <div class="mock-node-head"><span>23</span><h3>用户希望修改目标 URL。你会改 302、cache 和数据模型的哪些部分？</h3></div>
+        <dl class="mock-grid">
+          <div><dt>回答必须覆盖</dt><dd>保留 version/updated state、失效策略与审计；默认继续 302；定义更新传播 SLA。</dd></div>
+          <div class="follow"><dt>继续追问</dt><dd>已有浏览器/边缘缓存的旧值怎么办？</dd></div>
+        </dl>
+      </article>
+      <article class="mock-node">
+        <div class="mock-node-head"><span>24</span><h3>有人批量生成钓鱼链接并被频繁访问。你怎么处理？</h3></div>
+        <dl class="mock-grid">
+          <div><dt>回答必须覆盖</dt><dd>创建侧 rate limit/信誉/扫描；redirect 侧 disabled/blocklist、审计与误杀恢复；高风险优先 fail closed。</dd></div>
+          <div class="follow"><dt>继续追问</dt><dd>模型扫描失败或延迟时，用户会看到什么？</dd></div>
+        </dl>
+      </article>
+      <article class="mock-node">
+        <div class="mock-node-head"><span>25</span><h3>如果要加 AI 自动摘要和 campaign insight，设计该怎么变化？</h3></div>
+        <dl class="mock-grid">
+          <div><dt>回答必须覆盖</dt><dd>仅在 create 后/analytics 后的异步路径中使用；schema、eval、trace、fallback 与人工复核；不进入 redirect。</dd></div>
+          <div class="follow"><dt>继续追问</dt><dd>什么指标证明它值得保留？</dd></div>
+        </dl>
+      </article></div>
+        </section></section>
+
+    <footer class="footer">mock ≥ 75 / 100 · 两个 deep dives · 两处 failure mode</footer>
+  </main>
+</body>
+</html>
