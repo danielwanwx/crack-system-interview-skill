@@ -9,7 +9,7 @@
       "name": "crack-system-interview-skill",
       "source": "./plugins/crack-system-interview-skill",
       "description": "Turn pasted text into diagram-first Excalidraw visuals, or supervise the bundled 18-week system design plan.",
-      "version": "0.5.0",
+      "version": "0.6.0",
       "author": {
         "name": "Daniel Wan"
       },

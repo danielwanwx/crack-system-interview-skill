@@ -12,9 +12,9 @@ from pathlib import Path
 def find_repo_root() -> Path:
     here = Path(__file__).resolve()
     for parent in here.parents:
-        if (parent / "docs" / "system-design-14-week-master-plan.html").exists():
+        if (parent / "docs" / "system-design-project-route.html").exists():
             return parent
-    raise SystemExit("Could not find docs/system-design-14-week-master-plan.html from script path.")
+    raise SystemExit("Could not find docs/system-design-project-route.html from script path.")
 
 
 def clean_html(value: str) -> str:
@@ -155,7 +155,7 @@ def render_text(item: dict) -> str:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Look up the 14-week system design plan by date or week/day.")
+    parser = argparse.ArgumentParser(description="Look up the 18-week system design plan by date or week/day.")
     parser.add_argument("--date", help="Plan date, YYYY-MM-DD.")
     parser.add_argument("--week", type=int, help="Week number.")
     parser.add_argument("--day", type=int, help="Day number within the week.")

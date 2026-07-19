@@ -1,7 +1,7 @@
 {
   "name": "crack-system-interview-skill",
-  "version": "0.5.0",
-  "description": "System design interview prep skills: diagram-first Excalidraw cards, senior SDE talk tracks, and a 14-week study coach.",
+  "version": "0.6.0",
+  "description": "System design interview prep skills: diagram-first Excalidraw cards, senior SDE talk tracks, and an 18-week study coach.",
   "author": {
     "name": "Daniel Wan",
     "url": "https://github.com/danielwanwx"
@@ -20,8 +20,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Crack System Interview",
-    "shortDescription": "Whiteboard cards and a 14-week study coach.",
-    "longDescription": "Prepare for system design interviews with diagram-first Excalidraw visuals, senior SDE talk tracks, and a bundled 14-week study coach. Use $card for technical notes, $senior-sde-interview-script for interview-ready answers, and $system-design-study-coach for daily assignments and repair tasks.",
+    "shortDescription": "Whiteboard cards and an 18-week study coach.",
+    "longDescription": "Prepare for system design interviews with diagram-first Excalidraw visuals, senior SDE talk tracks, and a bundled 18-week study coach. Use $card for technical notes, $senior-sde-interview-script for interview-ready answers, and $system-design-study-coach for daily assignments and repair tasks.",
     "developerName": "Daniel Wan",
     "category": "Productivity",
     "capabilities": [

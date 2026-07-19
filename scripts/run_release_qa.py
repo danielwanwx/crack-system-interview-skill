@@ -164,11 +164,28 @@ REQUIRED_PATHS = [
     "plugins/crack-system-interview-skill/skills/system-design-study-coach/SKILL.md",
     "plugins/crack-system-interview-skill/skills/system-design-study-coach/scripts/plan_lookup.py",
     "docs/index.html",
-    "docs/system-design-14-week-master-plan.html",
+    "docs/system-design-project-route.html",
     "scripts/fetch_url_text.py",
     "scripts/render_interview_card.py",
     "scripts/run_hello_interview_visual_smoke.py",
     "scripts/share_excalidraw.mjs",
+]
+
+SKILL_COPIES = [
+    ("card/SKILL.md", "plugins/crack-system-interview-skill/skills/card/SKILL.md"),
+    (
+        "senior-sde-interview-script/SKILL.md",
+        "plugins/crack-system-interview-skill/skills/senior-sde-interview-script/SKILL.md",
+    ),
+    (
+        "system-design-study-coach/SKILL.md",
+        "plugins/crack-system-interview-skill/skills/system-design-study-coach/SKILL.md",
+    ),
+]
+
+STUDY_COACH_SCRIPTS = [
+    "system-design-study-coach/scripts/plan_lookup.py",
+    "plugins/crack-system-interview-skill/skills/system-design-study-coach/scripts/plan_lookup.py",
 ]
 
 URL_FETCH_COPIES = [
@@ -461,6 +478,18 @@ def validate_packaging() -> None:
         if copy_path.read_bytes() != canonical_fetch:
             raise AssertionError(f"URL fetcher copy is out of sync: {copy_text}")
 
+    for canonical_text, copy_text in SKILL_COPIES:
+        canonical_skill = ROOT / canonical_text
+        copy_path = ROOT / copy_text
+        if copy_path.read_bytes() != canonical_skill.read_bytes():
+            raise AssertionError(f"Skill copy is out of sync: {copy_text}")
+
+    canonical_lookup = (ROOT / STUDY_COACH_SCRIPTS[0]).read_bytes()
+    for copy_text in STUDY_COACH_SCRIPTS[1:]:
+        copy_path = ROOT / copy_text
+        if copy_path.read_bytes() != canonical_lookup:
+            raise AssertionError(f"Study coach lookup copy is out of sync: {copy_text}")
+
 
 def compile_python() -> None:
     paths = [
@@ -470,6 +499,7 @@ def compile_python() -> None:
         ROOT / "scripts/run_release_qa.py",
         *(ROOT / copy for copy in RENDERER_COPIES),
         *(ROOT / copy for copy in URL_FETCH_COPIES),
+        *(ROOT / copy for copy in STUDY_COACH_SCRIPTS),
     ]
     env = dict(os.environ)
     env.setdefault("PYTHONPYCACHEPREFIX", "/tmp/sde-skill-pycache")
@@ -548,6 +578,26 @@ def validate_url_fetch_outline() -> None:
         raise AssertionError("URL sections include trimmed footer content")
 
 
+def validate_study_coach_lookup() -> None:
+    expected_days = [(1, 1), (18, 7)]
+    for script_text in STUDY_COACH_SCRIPTS:
+        script = ROOT / script_text
+        for week, day in expected_days:
+            result = subprocess.run(
+                [sys.executable, str(script), "--week", str(week), "--day", str(day), "--format", "json"],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            item = json.loads(result.stdout)
+            if item["week"] != week or item["day"] != day:
+                raise AssertionError(f"{script_text}: Week {week} Day {day} lookup returned the wrong item")
+            if not item["date"] or not item["title"]:
+                raise AssertionError(f"{script_text}: Week {week} Day {day} is missing date or title")
+            if not (ROOT / "docs" / item["path"]).exists():
+                raise AssertionError(f"{script_text}: missing day page {item['path']}")
+
+
 def run_release_cases(out_dir: Path, renderer: Path) -> None:
     case_paths = sorted(SMOKE_CASE_DIR.glob("*.json")) + sorted(RELEASE_CASE_DIR.glob("*.json"))
     if not case_paths:
@@ -612,6 +662,7 @@ def main() -> None:
     compile_python()
     validate_text_wrapping(args.renderer)
     validate_url_fetch_outline()
+    validate_study_coach_lookup()
     run_release_cases(args.out, args.renderer)
     print("RELEASE_QA_PASS")
 
