@@ -1,12 +1,14 @@
 # Crack System Interview Skill
 
-A cross-agent plugin/skill package for system design interview preparation. It combines diagram-first interview explanation skills with a printable 18-week system design study plan and a daily study coach.
+A cross-agent plugin/skill package for system design interview preparation. It uses a case-driven loop: learn the mechanism, design under constraints, speak the answer, run a mock, then repair the weakest decision.
 
 The package has three main entrypoints:
 
 - `$card` turns dense sources into source-aligned Excalidraw study cards and concise explanatory talk tracks.
 - `$senior-sde-interview-script` turns concepts or prompts into senior-candidate interview answers with a minimal supporting whiteboard.
 - `$system-design-study-coach` supervises the bundled 18-week system design and algorithms plan.
+
+The shared core is an `Interview Case`: one structured record for the prompt, requirements, estimates, API, data model, architecture, deep dives, interviewer follow-ups, reference answer, rubric, and repair tasks. The three entrypoints are different views of the same case rather than separate content silos.
 
 The printable plan is available through GitHub Pages when this repository is published as `crack-system-interview-skill`:
 
@@ -50,7 +52,7 @@ Claude Code local testing:
 claude --plugin-dir ./plugins/crack-system-interview-skill
 ```
 
-The rest of the tree is packaging and release infrastructure: `plugins/` contains the cross-host plugin package, `card/` is the standalone visual study-card skill, `senior-sde-interview-script/` is the standalone interview-expression skill, `system-design-study-coach/` is the standalone daily study coach, `docs/` is the GitHub Pages study plan, and `examples/` plus `scripts/` are release QA.
+The rest of the tree is packaging and release infrastructure: `cases/` contains native Interview Cases, `curriculum/` is the Coach runtime schedule, and `plugins/` contains the cross-host package. Week 1 is the first native case migration; Weeks 2-18 are structured transition manifests captured from the current published plan and will be upgraded case by case. `card/` is the standalone visual study-card skill, `senior-sde-interview-script/` is the standalone interview-expression skill, `system-design-study-coach/` is the standalone daily study coach, `docs/` is the GitHub Pages study plan, and `examples/` plus `scripts/` are release QA.
 
 ## Simplest Usage
 

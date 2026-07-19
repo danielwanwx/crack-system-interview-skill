@@ -1,0 +1,588 @@
+{
+  "schema_version": "1.0",
+  "week": 2,
+  "title": "Week 2 transitional curriculum",
+  "source_status": "transitional-generated-from-html",
+  "days": [
+    {
+      "day": 1,
+      "date": "2026-07-27",
+      "title": "需求、策略与限流键",
+      "focus": "Rate Limiter Scope",
+      "page": "week2/day-1.html",
+      "case_id": "",
+      "time_blocks": [
+        {
+          "time": "07:55–08:15",
+          "task": "回忆\n不看资料复述昨日设计；写出今天要验证的一条假设。"
+        },
+        {
+          "time": "08:15–09:25",
+          "task": "原文\n依次阅读：Rate Limiter → API Gateway → 第二章：数据系统的目标。只读页面下方列出的小节。"
+        },
+        {
+          "time": "09:25–10:20",
+          "task": "白板\n写 rate-limit contract：保护对象、tenant/user/API key 维度、route、burst、429/Retry-After。"
+        },
+        {
+          "time": "15:30–16:45",
+          "task": "算法\n完成 3 道 Two Pointers；每题记录 pattern、invariant、复杂度和错因。"
+        },
+        {
+          "time": "20:30–21:30",
+          "task": "口述\n脱稿讲当天产出；按修复规则：如果只说“限制请求数”，补 identity、route、window、burst 和错误响应。"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Rate Limiter",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/distributed-rate-limiter",
+          "acceptance": "验收：能定义 request key、policy 与 429 语义。"
+        },
+        {
+          "title": "API Gateway",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/deep-dives/api-gateway",
+          "acceptance": "验收：能说明 gateway 的 rate limiting 位置。"
+        },
+        {
+          "title": "第二章：数据系统的目标",
+          "provider": "DDIA",
+          "url": "https://ddia.vonng.com/ch2/",
+          "acceptance": "验收：把 latency、availability 翻译成 NFR。"
+        }
+      ],
+      "deliverable": "写 rate-limit contract：保护对象、tenant/user/API key 维度、route、burst、429/Retry-After。",
+      "mastery": "限流 key 与拒绝语义可解释；声明哪些 route fail-open 或 fail-closed。",
+      "repair": "如果只说“限制请求数”，补 identity、route、window、burst 和错误响应。",
+      "algorithms": {
+        "required": [
+          {
+            "label": "必做：Valid Palindrome",
+            "url": "https://leetcode.com/problems/valid-palindrome/"
+          },
+          {
+            "label": "必做：Two Sum II",
+            "url": "https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/"
+          },
+          {
+            "label": "复盘：Contains Duplicate",
+            "url": "https://leetcode.com/problems/contains-duplicate/"
+          }
+        ],
+        "optional": [
+          {
+            "label": "选做：Move Zeroes",
+            "url": "https://leetcode.com/problems/move-zeroes/"
+          },
+          {
+            "label": "选做：Remove Duplicates from Sorted Array",
+            "url": "https://leetcode.com/problems/remove-duplicates-from-sorted-array/"
+          },
+          {
+            "label": "选做：Reverse String",
+            "url": "https://leetcode.com/problems/reverse-string/"
+          }
+        ]
+      },
+      "source_status": "transitional-generated-from-html"
+    },
+    {
+      "day": 2,
+      "date": "2026-07-28",
+      "title": "算法选择与配额语义",
+      "focus": "Rate Limiter Algorithms",
+      "page": "week2/day-2.html",
+      "case_id": "",
+      "time_blocks": [
+        {
+          "time": "07:55–08:15",
+          "task": "回忆\n不看资料复述昨日设计；写出今天要验证的一条假设。"
+        },
+        {
+          "time": "08:15–09:25",
+          "task": "原文\n依次阅读：Rate Limiter → Caching → 第二章：数据系统的目标。只读页面下方列出的小节。"
+        },
+        {
+          "time": "09:25–10:20",
+          "task": "白板\n写算法选择表：fixed window、sliding window、token bucket、leaky bucket；选定 token bucket。"
+        },
+        {
+          "time": "15:30–16:45",
+          "task": "算法\n完成 3 道 Two Pointers；每题记录 pattern、invariant、复杂度和错因。"
+        },
+        {
+          "time": "20:30–21:30",
+          "task": "口述\n脱稿讲当天产出；按修复规则：如果没有说明 window boundary 或 burst，补算法行为图。"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Rate Limiter",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/distributed-rate-limiter",
+          "acceptance": "验收：能比较限流算法与适用条件。"
+        },
+        {
+          "title": "Caching",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/core-concepts/caching",
+          "acceptance": "验收：能区分限流状态与普通缓存的语义。"
+        },
+        {
+          "title": "第二章：数据系统的目标",
+          "provider": "DDIA",
+          "url": "https://ddia.vonng.com/ch2/",
+          "acceptance": "验收：能说明吞吐、延迟与可用性取舍。"
+        }
+      ],
+      "deliverable": "写算法选择表：fixed window、sliding window、token bucket、leaky bucket；选定 token bucket。",
+      "mastery": "能用 capacity、refill rate、request cost 与 burst 解释 token bucket。",
+      "repair": "如果没有说明 window boundary 或 burst，补算法行为图。",
+      "algorithms": {
+        "required": [
+          {
+            "label": "必做：3Sum",
+            "url": "https://leetcode.com/problems/3sum/"
+          },
+          {
+            "label": "必做：Sort Colors",
+            "url": "https://leetcode.com/problems/sort-colors/"
+          },
+          {
+            "label": "复盘：Two Sum II",
+            "url": "https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/"
+          }
+        ],
+        "optional": [
+          {
+            "label": "选做：4Sum",
+            "url": "https://leetcode.com/problems/4sum/"
+          },
+          {
+            "label": "选做：Remove Element",
+            "url": "https://leetcode.com/problems/remove-element/"
+          },
+          {
+            "label": "选做：Squares of a Sorted Array",
+            "url": "https://leetcode.com/problems/squares-of-a-sorted-array/"
+          }
+        ]
+      },
+      "source_status": "transitional-generated-from-html"
+    },
+    {
+      "day": 3,
+      "date": "2026-07-29",
+      "title": "Redis 状态与原子扣减",
+      "focus": "Redis Execution",
+      "page": "week2/day-3.html",
+      "case_id": "",
+      "time_blocks": [
+        {
+          "time": "07:55–08:15",
+          "task": "回忆\n不看资料复述昨日设计；写出今天要验证的一条假设。"
+        },
+        {
+          "time": "08:15–09:25",
+          "task": "原文\n依次阅读：Rate Limiter → Redis → 第六章：复制。只读页面下方列出的小节。"
+        },
+        {
+          "time": "09:25–10:20",
+          "task": "白板\n写 Redis key schema 和 Lua 步骤：refill、check、decrement、expire。"
+        },
+        {
+          "time": "15:30–16:45",
+          "task": "算法\n完成 3 道 Two Pointers；每题记录 pattern、invariant、复杂度和错因。"
+        },
+        {
+          "time": "20:30–21:30",
+          "task": "口述\n脱稿讲当天产出；按修复规则：如果答案只有 INCR，补 refill 计算、TTL 和并发扣减。"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Rate Limiter",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/distributed-rate-limiter",
+          "acceptance": "验收：能把算法落到 Redis 状态。"
+        },
+        {
+          "title": "Redis",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/deep-dives/redis",
+          "acceptance": "验收：能说明 expiration、replication 与 failover 风险。"
+        },
+        {
+          "title": "第六章：复制",
+          "provider": "DDIA",
+          "url": "https://ddia.vonng.com/ch6/",
+          "acceptance": "验收：能解释 replica lag 不适合做 token 扣减。"
+        }
+      ],
+      "deliverable": "写 Redis key schema 和 Lua 步骤：refill、check、decrement、expire。",
+      "mastery": "能讲 tokens、last_refill_ms、TTL、Lua 原子性与 key cardinality。",
+      "repair": "如果答案只有 INCR，补 refill 计算、TTL 和并发扣减。",
+      "algorithms": {
+        "required": [
+          {
+            "label": "必做：Container With Most Water",
+            "url": "https://leetcode.com/problems/container-with-most-water/"
+          },
+          {
+            "label": "必做：Trapping Rain Water",
+            "url": "https://leetcode.com/problems/trapping-rain-water/"
+          },
+          {
+            "label": "复盘：3Sum",
+            "url": "https://leetcode.com/problems/3sum/"
+          }
+        ],
+        "optional": [
+          {
+            "label": "选做：Boats to Save People",
+            "url": "https://leetcode.com/problems/boats-to-save-people/"
+          },
+          {
+            "label": "选做：Backspace String Compare",
+            "url": "https://leetcode.com/problems/backspace-string-compare/"
+          },
+          {
+            "label": "选做：Merge Sorted Array",
+            "url": "https://leetcode.com/problems/merge-sorted-array/"
+          }
+        ]
+      },
+      "source_status": "transitional-generated-from-html"
+    },
+    {
+      "day": 4,
+      "date": "2026-07-30",
+      "title": "Gateway HLD 与策略下发",
+      "focus": "Gateway and Policy",
+      "page": "week2/day-4.html",
+      "case_id": "",
+      "time_blocks": [
+        {
+          "time": "07:55–08:15",
+          "task": "回忆\n不看资料复述昨日设计；写出今天要验证的一条假设。"
+        },
+        {
+          "time": "08:15–09:25",
+          "task": "原文\n依次阅读：API Gateway → Rate Limiter → Caching。只读页面下方列出的小节。"
+        },
+        {
+          "time": "09:25–10:20",
+          "task": "白板\n画 HLD：client、API gateway、local policy cache、rate limiter、Redis cluster、config control plane、metrics。"
+        },
+        {
+          "time": "15:30–16:45",
+          "task": "算法\n完成 3 道 Two Pointers；每题记录 pattern、invariant、复杂度和错因。"
+        },
+        {
+          "time": "20:30–21:30",
+          "task": "口述\n脱稿讲当天产出；按修复规则：如果控制面不可用会阻塞请求，补最后已知策略与本地缓存。"
+        }
+      ],
+      "sources": [
+        {
+          "title": "API Gateway",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/deep-dives/api-gateway",
+          "acceptance": "验收：能说明 gateway 的 routing、auth、rate limiting 职责。"
+        },
+        {
+          "title": "Rate Limiter",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/distributed-rate-limiter",
+          "acceptance": "验收：能讲 policy 与 consistency 边界。"
+        },
+        {
+          "title": "Caching",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/core-concepts/caching",
+          "acceptance": "验收：能给 policy cache 定 TTL 与失效策略。"
+        }
+      ],
+      "deliverable": "画 HLD：client、API gateway、local policy cache、rate limiter、Redis cluster、config control plane、metrics。",
+      "mastery": "能分开 data plane 与 control plane，并给 policy version、TTL、rollback。",
+      "repair": "如果控制面不可用会阻塞请求，补最后已知策略与本地缓存。",
+      "algorithms": {
+        "required": [
+          {
+            "label": "必做：4Sum",
+            "url": "https://leetcode.com/problems/4sum/"
+          },
+          {
+            "label": "必做：Remove Duplicates from Sorted Array",
+            "url": "https://leetcode.com/problems/remove-duplicates-from-sorted-array/"
+          },
+          {
+            "label": "复盘：Container Review",
+            "url": "https://leetcode.com/problems/container-with-most-water/"
+          }
+        ],
+        "optional": [
+          {
+            "label": "选做：Valid Palindrome II",
+            "url": "https://leetcode.com/problems/valid-palindrome-ii/"
+          },
+          {
+            "label": "选做：Sort Array By Parity",
+            "url": "https://leetcode.com/problems/sort-array-by-parity/"
+          },
+          {
+            "label": "选做：Partition Array According to Given Pivot",
+            "url": "https://leetcode.com/problems/partition-array-according-to-given-pivot/"
+          }
+        ]
+      },
+      "source_status": "transitional-generated-from-html"
+    },
+    {
+      "day": 5,
+      "date": "2026-07-31",
+      "title": "分布式执行与 Hot Key",
+      "focus": "Scale and Hot Keys",
+      "page": "week2/day-5.html",
+      "case_id": "",
+      "time_blocks": [
+        {
+          "time": "07:55–08:15",
+          "task": "回忆\n不看资料复述昨日设计；写出今天要验证的一条假设。"
+        },
+        {
+          "time": "08:15–09:25",
+          "task": "原文\n依次阅读：Consistent Hashing → Distributed Cache → Rate Limiter。只读页面下方列出的小节。"
+        },
+        {
+          "time": "09:25–10:20",
+          "task": "白板\n完成 scale deep dive：Redis cluster、consistent hashing、tenant hot key、局部配额与隔离。"
+        },
+        {
+          "time": "15:30–16:45",
+          "task": "算法\n完成 3 道 Two Pointers；每题记录 pattern、invariant、复杂度和错因。"
+        },
+        {
+          "time": "20:30–21:30",
+          "task": "口述\n脱稿讲当天产出；按修复规则：如果直接随机分片 counter，说明如何保证总体配额不会失真。"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Consistent Hashing",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/core-concepts/consistent-hashing",
+          "acceptance": "验收：能讲 virtual nodes 与 key placement。"
+        },
+        {
+          "title": "Distributed Cache",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/distributed-cache",
+          "acceptance": "验收：能说明 cluster、replication、eviction 的边界。"
+        },
+        {
+          "title": "Rate Limiter",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/distributed-rate-limiter",
+          "acceptance": "验收：能把 hot key 回答接回限流语义。"
+        }
+      ],
+      "deliverable": "完成 scale deep dive：Redis cluster、consistent hashing、tenant hot key、局部配额与隔离。",
+      "mastery": "能解释 virtual nodes、hot tenant、cluster failover 与分片对配额语义的影响。",
+      "repair": "如果直接随机分片 counter，说明如何保证总体配额不会失真。",
+      "algorithms": {
+        "required": [
+          {
+            "label": "必做：Boats to Save People",
+            "url": "https://leetcode.com/problems/boats-to-save-people/"
+          },
+          {
+            "label": "必做：Backspace String Compare",
+            "url": "https://leetcode.com/problems/backspace-string-compare/"
+          },
+          {
+            "label": "复盘：4Sum",
+            "url": "https://leetcode.com/problems/4sum/"
+          }
+        ],
+        "optional": [
+          {
+            "label": "选做：Move Zeroes Speed Run",
+            "url": "https://leetcode.com/problems/move-zeroes/"
+          },
+          {
+            "label": "选做：Valid Palindrome Speed Run",
+            "url": "https://leetcode.com/problems/valid-palindrome/"
+          },
+          {
+            "label": "选做：Sort Colors Review",
+            "url": "https://leetcode.com/problems/sort-colors/"
+          }
+        ]
+      },
+      "source_status": "transitional-generated-from-html"
+    },
+    {
+      "day": 6,
+      "date": "2026-08-01",
+      "title": "故障、多地域与运维",
+      "focus": "Failure and Operations",
+      "page": "week2/day-6.html",
+      "case_id": "",
+      "time_blocks": [
+        {
+          "time": "08:30–10:30",
+          "task": "原文与深挖\n阅读：CAP Theorem → Redis → 第九章：分布式系统的麻烦；补齐所有 failure path。"
+        },
+        {
+          "time": "10:45–12:00",
+          "task": "白板\n写 failure matrix：Redis timeout、policy lag、hot key、network partition、multi-region overshoot。"
+        },
+        {
+          "time": "14:30–15:45",
+          "task": "算法\n完成 3 道 Two Pointers 限时题；重做本周最慢题。"
+        },
+        {
+          "time": "20:30–21:30",
+          "task": "口述\n用 15 分钟讲主项目、15 分钟讲迁移题、15 分钟讲故障与指标。"
+        }
+      ],
+      "sources": [
+        {
+          "title": "CAP Theorem",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/deep-dives/cap-theorem",
+          "acceptance": "验收：能解释 partition 下的 consistency tradeoff。"
+        },
+        {
+          "title": "Redis",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/deep-dives/redis",
+          "acceptance": "验收：能说明 Redis failover 的影响。"
+        },
+        {
+          "title": "第九章：分布式系统的麻烦",
+          "provider": "DDIA",
+          "url": "https://ddia.vonng.com/ch9/",
+          "acceptance": "验收：能用网络故障和时钟解释分布式不确定性。"
+        }
+      ],
+      "deliverable": "写 failure matrix：Redis timeout、policy lag、hot key、network partition、multi-region overshoot。",
+      "mastery": "每项有 fail-open/closed 决策、监控指标、降级动作和恢复条件。",
+      "repair": "如果只画 happy path，补 bypass、deny rate、Redis latency、policy lag 告警。",
+      "algorithms": {
+        "required": [
+          {
+            "label": "复盘：Trapping Rain Water",
+            "url": "https://leetcode.com/problems/trapping-rain-water/"
+          },
+          {
+            "label": "限时：3Sum",
+            "url": "https://leetcode.com/problems/3sum/"
+          },
+          {
+            "label": "限时：Two Sum II",
+            "url": "https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/"
+          }
+        ],
+        "optional": [
+          {
+            "label": "选做：Container Speed Run",
+            "url": "https://leetcode.com/problems/container-with-most-water/"
+          },
+          {
+            "label": "选做：Valid Palindrome II",
+            "url": "https://leetcode.com/problems/valid-palindrome-ii/"
+          },
+          {
+            "label": "选做：4Sum Review",
+            "url": "https://leetcode.com/problems/4sum/"
+          }
+        ]
+      },
+      "source_status": "transitional-generated-from-html"
+    },
+    {
+      "day": 7,
+      "date": "2026-08-02",
+      "title": "Distributed Rate Limiter Mock",
+      "focus": "Mock",
+      "page": "week2/day-7.html",
+      "case_id": "",
+      "time_blocks": [
+        {
+          "time": "09:00–09:45",
+          "task": "Mock\n按面试时间盒作答；不看讲义。"
+        },
+        {
+          "time": "10:00–11:15",
+          "task": "评分与修复\n完成一场 45 分钟 mock：范围、算法、Redis、HLD、两个 failure deep dive。"
+        },
+        {
+          "time": "14:00–15:15",
+          "task": "算法\n完成 3 道 Two Pointers 限时复盘题。"
+        },
+        {
+          "time": "20:30–21:00",
+          "task": "周复盘\n更新错题、设计决策和下周第 1 天的预读清单。"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Rate Limiter",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/distributed-rate-limiter",
+          "acceptance": "验收：能按 Senior 预期完成主线。"
+        },
+        {
+          "title": "Consistent Hashing",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/deep-dives/consistent-hashing",
+          "acceptance": "验收：能接住 consistent hashing 与 failure 追问。"
+        },
+        {
+          "title": "CAP Theorem",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/deep-dives/cap-theorem",
+          "acceptance": "验收：能说清 multi-region tradeoff。"
+        }
+      ],
+      "deliverable": "完成一场 45 分钟 mock：范围、算法、Redis、HLD、两个 failure deep dive。",
+      "mastery": "75/100 以上；不得漏 429、token bucket、Lua/hot key、Redis outage。",
+      "repair": "最低分维度做一次 15 分钟 repair 后复测。",
+      "algorithms": {
+        "required": [
+          {
+            "label": "限时：3Sum",
+            "url": "https://leetcode.com/problems/3sum/"
+          },
+          {
+            "label": "限时：Container With Most Water",
+            "url": "https://leetcode.com/problems/container-with-most-water/"
+          },
+          {
+            "label": "限时：Trapping Rain Water",
+            "url": "https://leetcode.com/problems/trapping-rain-water/"
+          }
+        ],
+        "optional": [
+          {
+            "label": "选做：Valid Palindrome Speed Run",
+            "url": "https://leetcode.com/problems/valid-palindrome/"
+          },
+          {
+            "label": "选做：Two Sum II Speed Run",
+            "url": "https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/"
+          },
+          {
+            "label": "选做：Sort Colors Speed Run",
+            "url": "https://leetcode.com/problems/sort-colors/"
+          }
+        ]
+      },
+      "source_status": "transitional-generated-from-html"
+    }
+  ]
+}

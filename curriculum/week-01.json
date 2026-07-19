@@ -1,0 +1,215 @@
+{
+  "schema_version": "1.0",
+  "week": 1,
+  "title": "URL Shortener / Bitly",
+  "date_range": {"start": "2026-07-20", "end": "2026-07-26"},
+  "case_ids": ["bitly-core"],
+  "algorithm_block": "Arrays & Hashing",
+  "pages": {
+    "overview": "week1-action-guide.html",
+    "lecture": "week1/lecture.html",
+    "qa": "week1/staff-qa.html",
+    "mock": "week1/live-mock.html",
+    "scorecard": "week1/scorecard.html"
+  },
+  "days": [
+    {
+      "day": 1,
+      "date": "2026-07-20",
+      "title": "面试操作系统",
+      "focus": "问题框定",
+      "page": "week1/day-1-interview-os.html",
+      "case_id": "bitly-core",
+      "time_blocks": [
+        {"time": "07:55-08:15", "task": "不看资料复述昨天结论，写出今天验证的一条假设。"},
+        {"time": "08:15-09:25", "task": "阅读 Introduction、How to Prepare、Delivery Framework 与 DDIA Chapter 2。"},
+        {"time": "09:25-10:20", "task": "写 Bitly interview control sheet：边界、用户、时间盒与答题顺序。"},
+        {"time": "15:30-16:45", "task": "完成 Arrays & Hashing 三题，并记录 pattern、invariant、复杂度与错因。"},
+        {"time": "20:30-21:30", "task": "脱稿讲当天产出；先范围和 NFR，后画图。"}
+      ],
+      "sources": [
+        {"title": "Introduction", "provider": "Hello Interview", "url": "https://www.hellointerview.com/learn/system-design/in-a-hurry/introduction", "acceptance": "能说明系统设计面试是在用工程判断推进模糊问题。"},
+        {"title": "How to Prepare for System Design Interviews", "provider": "Hello Interview", "url": "https://www.hellointerview.com/learn/system-design/in-a-hurry/how-to-prepare", "acceptance": "知道准备目标是可迁移框架，而不是平行泛读。"},
+        {"title": "Delivery Framework", "provider": "Hello Interview", "url": "https://www.hellointerview.com/learn/system-design/in-a-hurry/delivery", "acceptance": "能背出时间盒并解释每段的目的。"},
+        {"title": "第二章：数据系统的目标", "provider": "DDIA", "url": "https://ddia.vonng.com/ch2/", "acceptance": "能把可靠性、可伸缩性与可维护性转成 NFR。"}
+      ],
+      "deliverable": "一页 Bitly interview control sheet。",
+      "mastery": "能用 30 秒说明题目边界、NFR、暂缓项与后续答题顺序。",
+      "repair": "若先画服务盒子，重做：先写问题边界与 NFR。",
+      "algorithms": {
+        "required": [
+          {"title": "Contains Duplicate", "url": "https://leetcode.com/problems/contains-duplicate/"},
+          {"title": "Valid Anagram", "url": "https://leetcode.com/problems/valid-anagram/"},
+          {"title": "Two Sum", "url": "https://leetcode.com/problems/two-sum/"}
+        ],
+        "optional": [
+          {"title": "Ransom Note", "url": "https://leetcode.com/problems/ransom-note/"},
+          {"title": "Contains Duplicate II", "url": "https://leetcode.com/problems/contains-duplicate-ii/"}
+        ]
+      }
+    },
+    {
+      "day": 2,
+      "date": "2026-07-21",
+      "title": "需求边界与 NFR",
+      "focus": "从功能清单收敛到可设计的问题",
+      "page": "week1/day-2-requirements.html",
+      "case_id": "bitly-core",
+      "sources": [
+        {"title": "Bitly", "provider": "Hello Interview", "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly", "acceptance": "能输出主线 FR 与量化 NFR，不把所有功能塞进第一版。"},
+        {"title": "Delivery Framework", "provider": "Hello Interview", "url": "https://www.hellointerview.com/learn/system-design/in-a-hurry/delivery", "acceptance": "能在 5 分钟完成范围收敛与量级假设。"},
+        {"title": "第二章：数据系统的目标", "provider": "DDIA", "url": "https://ddia.vonng.com/ch2/", "acceptance": "能把 p95/p99、可用性和吞吐写成可讨论目标。"}
+      ],
+      "deliverable": "Bitly FR / NFR / out-of-scope 三栏表。",
+      "mastery": "每一个 NFR 都能说明它如何改变设计。",
+      "repair": "删掉没有设计影响的需求，再用一句话补上量化 NFR。",
+      "algorithms": {
+        "required": [
+          {"title": "Group Anagrams", "url": "https://leetcode.com/problems/group-anagrams/"},
+          {"title": "Top K Frequent Elements", "url": "https://leetcode.com/problems/top-k-frequent-elements/"},
+          {"title": "Two Sum (review)", "url": "https://leetcode.com/problems/two-sum/"}
+        ],
+        "optional": [
+          {"title": "Sort Characters By Frequency", "url": "https://leetcode.com/problems/sort-characters-by-frequency/"},
+          {"title": "Majority Element", "url": "https://leetcode.com/problems/majority-element/"}
+        ]
+      }
+    },
+    {
+      "day": 3,
+      "date": "2026-07-22",
+      "title": "API 契约",
+      "focus": "资源、状态码、身份与重试边界",
+      "page": "week1/day-3-api.html",
+      "case_id": "bitly-core",
+      "sources": [
+        {"title": "API Design", "provider": "Hello Interview", "url": "https://www.hellointerview.com/learn/system-design/core-concepts/api-design", "acceptance": "能解释 short link 创建是 POST、跳转是 GET、身份来自 auth context。"},
+        {"title": "Bitly", "provider": "Hello Interview", "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly", "acceptance": "能覆盖 POST /urls、GET /{short_code}、302、410、404。"}
+      ],
+      "deliverable": "POST /urls 与 GET /{short_code} 的 contract table。",
+      "mastery": "能说明 302、404、410、409 与 idempotency 的语义。",
+      "repair": "把含糊的接口名替换为 method、path、请求、响应和失败契约。",
+      "algorithms": {
+        "required": [
+          {"title": "Product of Array Except Self", "url": "https://leetcode.com/problems/product-of-array-except-self/"},
+          {"title": "Group Anagrams (review)", "url": "https://leetcode.com/problems/group-anagrams/"},
+          {"title": "Two Sum (review)", "url": "https://leetcode.com/problems/two-sum/"}
+        ],
+        "optional": [
+          {"title": "Find Pivot Index", "url": "https://leetcode.com/problems/find-pivot-index/"},
+          {"title": "Insert Delete GetRandom O(1)", "url": "https://leetcode.com/problems/insert-delete-getrandom-o1/"}
+        ]
+      }
+    },
+    {
+      "day": 4,
+      "date": "2026-07-23",
+      "title": "数据模型与真实来源",
+      "focus": "从访问路径反推 schema 与 index",
+      "page": "week1/day-4-data-model.html",
+      "case_id": "bitly-core",
+      "sources": [
+        {"title": "Data Modeling", "provider": "Hello Interview", "url": "https://www.hellointerview.com/learn/system-design/core-concepts/data-modeling", "acceptance": "能从访问路径推出 url_mappings 表和索引。"},
+        {"title": "第三章：数据模型与查询语言", "provider": "DDIA", "url": "https://ddia.vonng.com/ch3/", "acceptance": "知道关系模型足够清晰，不需要为技术名词换模型。"},
+        {"title": "第四章：存储与检索", "provider": "DDIA", "url": "https://ddia.vonng.com/ch4/", "acceptance": "能解释索引加速 redirect lookup 的同时增加写成本。"},
+        {"title": "Bitly", "provider": "Hello Interview", "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly", "acceptance": "产出 URL mapping table 与 index plan。"}
+      ],
+      "deliverable": "url_mappings schema、index plan 与 source-of-truth 说明。",
+      "mastery": "能解释 cache 不拥有 expiry 或 disabled 的最终语义。",
+      "repair": "从 GET /{short_code} 重新反推字段和索引，删掉不能解释的字段。",
+      "algorithms": {
+        "required": [
+          {"title": "Valid Sudoku", "url": "https://leetcode.com/problems/valid-sudoku/"},
+          {"title": "Longest Consecutive Sequence", "url": "https://leetcode.com/problems/longest-consecutive-sequence/"},
+          {"title": "Product of Array Except Self (review)", "url": "https://leetcode.com/problems/product-of-array-except-self/"}
+        ],
+        "optional": [
+          {"title": "Set Matrix Zeroes", "url": "https://leetcode.com/problems/set-matrix-zeroes/"},
+          {"title": "Missing Number", "url": "https://leetcode.com/problems/missing-number/"}
+        ]
+      }
+    },
+    {
+      "day": 5,
+      "date": "2026-07-24",
+      "title": "容量判断",
+      "focus": "用数量级决定 cache、replica 与 sharding 时机",
+      "page": "week1/day-5-capacity.html",
+      "case_id": "bitly-core",
+      "sources": [
+        {"title": "Numbers to Know", "provider": "Hello Interview", "url": "https://www.hellointerview.com/learn/system-design/core-concepts/numbers-to-know", "acceptance": "能把数量级转为 cache、replica 或 sharding 决策。"},
+        {"title": "Bitly", "provider": "Hello Interview", "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly", "acceptance": "能解释 1B URLs 约 500GB 不等于必须分片。"},
+        {"title": "第二章：数据系统的目标", "provider": "DDIA", "url": "https://ddia.vonng.com/ch2/", "acceptance": "把 latency、throughput 与 availability 连接到 NFR。"}
+      ],
+      "deliverable": "storage、average/peak QPS、cache hit 与 DB fallback 的估算表。",
+      "mastery": "能以证据说明现在不分片，以及未来的触发条件。",
+      "repair": "删掉无来源的大数字，明确每个假设和它改变的架构选择。",
+      "algorithms": {
+        "required": [
+          {"title": "Subarray Sum Equals K", "url": "https://leetcode.com/problems/subarray-sum-equals-k/"},
+          {"title": "Majority Element", "url": "https://leetcode.com/problems/majority-element/"},
+          {"title": "Longest Consecutive Sequence (review)", "url": "https://leetcode.com/problems/longest-consecutive-sequence/"}
+        ],
+        "optional": [
+          {"title": "Continuous Subarray Sum", "url": "https://leetcode.com/problems/continuous-subarray-sum/"},
+          {"title": "Find All Duplicates in an Array", "url": "https://leetcode.com/problems/find-all-duplicates-in-an-array/"}
+        ]
+      }
+    },
+    {
+      "day": 6,
+      "date": "2026-07-25",
+      "title": "高层设计与请求路径",
+      "focus": "create 与 redirect 分路径，并选择两个 deep dives",
+      "page": "week1/day-6-hld.html",
+      "case_id": "bitly-core",
+      "sources": [
+        {"title": "Networking Essentials", "provider": "Hello Interview", "url": "https://www.hellointerview.com/learn/system-design/core-concepts/networking-essentials", "acceptance": "能讲 redirect request 经由 DNS、LB/CDN、service、cache、DB。"},
+        {"title": "Key Technologies", "provider": "Hello Interview", "url": "https://www.hellointerview.com/learn/system-design/in-a-hurry/key-technologies", "acceptance": "知道适合 cache/CDN 的数据以及 TTL 与失效风险。"},
+        {"title": "Bitly", "provider": "Hello Interview", "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly", "acceptance": "能画 create flow、redirect flow，并补两个 deep dive。"}
+      ],
+      "deliverable": "一张区分 create 与 redirect 的 HLD，附短码与 fast redirect 两个 deep dive。",
+      "mastery": "能说明每个组件在哪里解决什么瓶颈或正确性边界。",
+      "repair": "删掉没有理由的服务盒子，只保留能解释主线或风险的组件。",
+      "algorithms": {
+        "required": [
+          {"title": "Sort Characters By Frequency", "url": "https://leetcode.com/problems/sort-characters-by-frequency/"},
+          {"title": "Intersection of Two Arrays", "url": "https://leetcode.com/problems/intersection-of-two-arrays/"},
+          {"title": "Top K Frequent Elements (review)", "url": "https://leetcode.com/problems/top-k-frequent-elements/"}
+        ],
+        "optional": [
+          {"title": "Intersection of Two Arrays II", "url": "https://leetcode.com/problems/intersection-of-two-arrays-ii/"},
+          {"title": "Unique Number of Occurrences", "url": "https://leetcode.com/problems/unique-number-of-occurrences/"}
+        ]
+      }
+    },
+    {
+      "day": 7,
+      "date": "2026-07-26",
+      "title": "模拟面试与修复",
+      "focus": "45 分钟 senior mock、证据评分与最弱维度 repair",
+      "page": "week1/day-7-mock.html",
+      "case_id": "bitly-core",
+      "sources": [
+        {"title": "Bitly", "provider": "Hello Interview", "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly", "acceptance": "按 Senior 期望复盘漏项。"},
+        {"title": "Delivery Framework", "provider": "Hello Interview", "url": "https://www.hellointerview.com/learn/system-design/in-a-hurry/delivery", "acceptance": "检查时间盒是否失控。"},
+        {"title": "NeetCode 150 Dashboard", "provider": "算法", "url": "https://neetcode.io/practice", "acceptance": "只标记本周错题，作为 Week 2 warm-up。"}
+      ],
+      "deliverable": "45 分钟 Bitly mock、评分证据、一个 15 分钟 repair note。",
+      "mastery": "总分不低于 75，且没有 rubric 中的 critical miss。",
+      "repair": "最低分维度完成定向修复后，做一次 15 分钟压缩复测。",
+      "algorithms": {
+        "required": [
+          {"title": "Group Anagrams (timed)", "url": "https://leetcode.com/problems/group-anagrams/"},
+          {"title": "Product of Array Except Self (timed)", "url": "https://leetcode.com/problems/product-of-array-except-self/"},
+          {"title": "Valid Sudoku (timed)", "url": "https://leetcode.com/problems/valid-sudoku/"}
+        ],
+        "optional": [
+          {"title": "Two Sum (rapid review)", "url": "https://leetcode.com/problems/two-sum/"},
+          {"title": "Valid Anagram (rapid review)", "url": "https://leetcode.com/problems/valid-anagram/"},
+          {"title": "Top K Frequent Elements (rapid review)", "url": "https://leetcode.com/problems/top-k-frequent-elements/"}
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,600 @@
+{
+  "schema_version": "1.0",
+  "week": 14,
+  "title": "Week 14 transitional curriculum",
+  "source_status": "transitional-generated-from-html",
+  "days": [
+    {
+      "day": 1,
+      "date": "2026-10-19",
+      "title": "Metrics Monitoring：范围与 NFR",
+      "focus": "主项目范围",
+      "page": "week14/day-1.html",
+      "case_id": "",
+      "time_blocks": [
+        {
+          "time": "07:55–08:15",
+          "task": "回忆\n不看资料复述昨日设计；写出今天要验证的一条假设。"
+        },
+        {
+          "time": "08:15–09:25",
+          "task": "原文\n依次阅读：Metrics Monitoring → 第二章：数据系统的目标 → API Design。只读页面下方列出的小节。"
+        },
+        {
+          "time": "09:25–10:20",
+          "task": "白板\n写 Metrics Monitoring requirements matrix：FR、NFR、out of scope、success metric。"
+        },
+        {
+          "time": "15:30–16:45",
+          "task": "算法\n完成 3 道 2-D DP -> Greedy -> Math；每题记录 pattern、invariant、复杂度和错因。"
+        },
+        {
+          "time": "20:30–21:30",
+          "task": "口述\n脱稿讲当天产出；按修复规则：若先画盒子，回到需求、约束与 NFR。"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Metrics Monitoring",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/metrics-monitoring",
+          "acceptance": "验收：能定义主用户路径、FR/NFR、范围与成功指标。"
+        },
+        {
+          "title": "第二章：数据系统的目标",
+          "provider": "DDIA",
+          "url": "https://ddia.vonng.com/ch2/",
+          "acceptance": "验收：能把可靠性、可伸缩性、可维护性写进 NFR。"
+        },
+        {
+          "title": "API Design",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/core-concepts/api-design",
+          "acceptance": "验收：能从范围推出接口边界。"
+        }
+      ],
+      "deliverable": "写 Metrics Monitoring requirements matrix：FR、NFR、out of scope、success metric。",
+      "mastery": "范围可在 5 分钟内收敛；每个 NFR 均有量级或业务后果。",
+      "repair": "若先画盒子，回到需求、约束与 NFR。",
+      "algorithms": {
+        "required": [
+          {
+            "label": "必做：Unique Paths",
+            "url": "https://leetcode.com/problems/unique-paths/"
+          },
+          {
+            "label": "必做：Longest Common Subsequence",
+            "url": "https://leetcode.com/problems/longest-common-subsequence/"
+          },
+          {
+            "label": "必做：Stock with Cooldown",
+            "url": "https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/"
+          }
+        ],
+        "optional": [
+          {
+            "label": "选做：Minimum Path Sum",
+            "url": "https://leetcode.com/problems/minimum-path-sum/"
+          },
+          {
+            "label": "选做：Triangle",
+            "url": "https://leetcode.com/problems/triangle/"
+          },
+          {
+            "label": "选做：Maximal Square",
+            "url": "https://leetcode.com/problems/maximal-square/"
+          }
+        ]
+      },
+      "source_status": "transitional-generated-from-html"
+    },
+    {
+      "day": 2,
+      "date": "2026-10-20",
+      "title": "Metrics Monitoring：API、状态与数据",
+      "focus": "主项目数据与 API",
+      "page": "week14/day-2.html",
+      "case_id": "",
+      "time_blocks": [
+        {
+          "time": "07:55–08:15",
+          "task": "回忆\n不看资料复述昨日设计；写出今天要验证的一条假设。"
+        },
+        {
+          "time": "08:15–09:25",
+          "task": "原文\n依次阅读：Metrics Monitoring → Data Modeling → 第三章：数据模型与查询语言。只读页面下方列出的小节。"
+        },
+        {
+          "time": "09:25–10:20",
+          "task": "白板\n写 Metrics Monitoring API + schema：主体、key、访问模式、权限与错误语义。"
+        },
+        {
+          "time": "15:30–16:45",
+          "task": "算法\n完成 3 道 2-D DP -> Greedy -> Math；每题记录 pattern、invariant、复杂度和错因。"
+        },
+        {
+          "time": "20:30–21:30",
+          "task": "口述\n脱稿讲当天产出；按修复规则：若 schema 无法解释查询路径，重写 key 与 index。"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Metrics Monitoring",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/metrics-monitoring",
+          "acceptance": "验收：能从需求推出实体、访问模式与权限边界。"
+        },
+        {
+          "title": "Data Modeling",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/core-concepts/data-modeling",
+          "acceptance": "验收：能从访问路径推出 keys、indexes 与 schema。"
+        },
+        {
+          "title": "第三章：数据模型与查询语言",
+          "provider": "DDIA",
+          "url": "https://ddia.vonng.com/ch3/",
+          "acceptance": "验收：能解释数据模型取舍。"
+        }
+      ],
+      "deliverable": "写 Metrics Monitoring API + schema：主体、key、访问模式、权限与错误语义。",
+      "mastery": "接口、状态与 schema 可从访问路径推出；权限和错误码明确。",
+      "repair": "若 schema 无法解释查询路径，重写 key 与 index。",
+      "algorithms": {
+        "required": [
+          {
+            "label": "必做：Edit Distance",
+            "url": "https://leetcode.com/problems/edit-distance/"
+          },
+          {
+            "label": "必做：Interleaving String",
+            "url": "https://leetcode.com/problems/interleaving-string/"
+          },
+          {
+            "label": "复盘：Unique Paths",
+            "url": "https://leetcode.com/problems/unique-paths/"
+          }
+        ],
+        "optional": [
+          {
+            "label": "选做：Regular Expression Matching",
+            "url": "https://leetcode.com/problems/regular-expression-matching/"
+          },
+          {
+            "label": "选做：Wildcard Matching",
+            "url": "https://leetcode.com/problems/wildcard-matching/"
+          },
+          {
+            "label": "选做：Delete Operation Two Strings",
+            "url": "https://leetcode.com/problems/delete-operation-for-two-strings/"
+          }
+        ]
+      },
+      "source_status": "transitional-generated-from-html"
+    },
+    {
+      "day": 3,
+      "date": "2026-10-21",
+      "title": "Metrics Monitoring：核心路径与容量",
+      "focus": "主项目核心路径",
+      "page": "week14/day-3.html",
+      "case_id": "",
+      "time_blocks": [
+        {
+          "time": "07:55–08:15",
+          "task": "回忆\n不看资料复述昨日设计；写出今天要验证的一条假设。"
+        },
+        {
+          "time": "08:15–09:25",
+          "task": "原文\n依次阅读：Metrics Monitoring → Scaling Writes → 第四章：存储与检索。只读页面下方列出的小节。"
+        },
+        {
+          "time": "09:25–10:20",
+          "task": "白板\n画 Metrics Monitoring 主路径：请求/事件、状态变化、同步与异步边界，并写 capacity sheet。"
+        },
+        {
+          "time": "15:30–16:45",
+          "task": "算法\n完成 3 道 2-D DP -> Greedy -> Math；每题记录 pattern、invariant、复杂度和错因。"
+        },
+        {
+          "time": "20:30–21:30",
+          "task": "口述\n脱稿讲当天产出；按修复规则：若同步链路过长，重新划分 durable state 与 queue boundary。"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Metrics Monitoring",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/metrics-monitoring",
+          "acceptance": "验收：能画出核心请求或事件路径。"
+        },
+        {
+          "title": "Scaling Writes",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/patterns/scaling-writes",
+          "acceptance": "验收：能把模式落到具体组件与状态。"
+        },
+        {
+          "title": "第四章：存储与检索",
+          "provider": "DDIA",
+          "url": "https://ddia.vonng.com/ch4/",
+          "acceptance": "验收：能说明存储与索引影响。"
+        }
+      ],
+      "deliverable": "画 Metrics Monitoring 主路径：请求/事件、状态变化、同步与异步边界，并写 capacity sheet。",
+      "mastery": "能分清 hot path、durable state、async work 与 retry boundary。",
+      "repair": "若同步链路过长，重新划分 durable state 与 queue boundary。",
+      "algorithms": {
+        "required": [
+          {
+            "label": "必做：Distinct Subsequences",
+            "url": "https://leetcode.com/problems/distinct-subsequences/"
+          },
+          {
+            "label": "必做：Burst Balloons",
+            "url": "https://leetcode.com/problems/burst-balloons/"
+          },
+          {
+            "label": "复盘：Edit Distance",
+            "url": "https://leetcode.com/problems/edit-distance/"
+          }
+        ],
+        "optional": [
+          {
+            "label": "选做：Palindrome Partitioning II",
+            "url": "https://leetcode.com/problems/palindrome-partitioning-ii/"
+          },
+          {
+            "label": "选做：Cherry Pickup II",
+            "url": "https://leetcode.com/problems/cherry-pickup-ii/"
+          },
+          {
+            "label": "选做：Stone Game",
+            "url": "https://leetcode.com/problems/stone-game/"
+          }
+        ]
+      },
+      "source_status": "transitional-generated-from-html"
+    },
+    {
+      "day": 4,
+      "date": "2026-10-22",
+      "title": "迁移：Strava",
+      "focus": "迁移题拆解",
+      "page": "week14/day-4.html",
+      "case_id": "",
+      "time_blocks": [
+        {
+          "time": "07:55–08:15",
+          "task": "回忆\n不看资料复述昨日设计；写出今天要验证的一条假设。"
+        },
+        {
+          "time": "08:15–09:25",
+          "task": "原文\n依次阅读：Strava → Scaling Writes → YouTube Top K。只读页面下方列出的小节。"
+        },
+        {
+          "time": "09:25–10:20",
+          "task": "白板\n用 75 分钟拆 Strava：范围、核心状态、HLD、一个 activity ingestion / feeds / leaderboards deep dive。"
+        },
+        {
+          "time": "15:30–16:45",
+          "task": "算法\n完成 3 道 2-D DP -> Greedy -> Math；每题记录 pattern、invariant、复杂度和错因。"
+        },
+        {
+          "time": "20:30–21:30",
+          "task": "口述\n脱稿讲当天产出；按修复规则：若把迁移题照抄主项目，先写出它不同的状态、SLO 和 failure mode。"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Strava",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/strava",
+          "acceptance": "验收：能用 Strava 验证 activity ingestion / feeds / leaderboards 的迁移能力。"
+        },
+        {
+          "title": "Scaling Writes",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/patterns/scaling-writes",
+          "acceptance": "验收：能把共用模式落到新的状态和请求路径。"
+        },
+        {
+          "title": "YouTube Top K",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/top-k",
+          "acceptance": "验收：能完成该题最关键的 tradeoff。"
+        }
+      ],
+      "deliverable": "用 75 分钟拆 Strava：范围、核心状态、HLD、一个 activity ingestion / feeds / leaderboards deep dive。",
+      "mastery": "能解释 Strava 与主项目相同模式下不同的正确性要求。",
+      "repair": "若把迁移题照抄主项目，先写出它不同的状态、SLO 和 failure mode。",
+      "algorithms": {
+        "required": [
+          {
+            "label": "必做：Maximum Subarray",
+            "url": "https://leetcode.com/problems/maximum-subarray/"
+          },
+          {
+            "label": "必做：Jump Game",
+            "url": "https://leetcode.com/problems/jump-game/"
+          },
+          {
+            "label": "必做：Best Time Stock II",
+            "url": "https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/"
+          }
+        ],
+        "optional": [
+          {
+            "label": "选做：Can Place Flowers",
+            "url": "https://leetcode.com/problems/can-place-flowers/"
+          },
+          {
+            "label": "选做：Partition Labels",
+            "url": "https://leetcode.com/problems/partition-labels/"
+          },
+          {
+            "label": "选做：Valid Parenthesis String",
+            "url": "https://leetcode.com/problems/valid-parenthesis-string/"
+          }
+        ]
+      },
+      "source_status": "transitional-generated-from-html"
+    },
+    {
+      "day": 5,
+      "date": "2026-10-23",
+      "title": "迁移：Metrics Monitoring",
+      "focus": "迁移题 / 主项目深挖",
+      "page": "week14/day-5.html",
+      "case_id": "",
+      "time_blocks": [
+        {
+          "time": "07:55–08:15",
+          "task": "回忆\n不看资料复述昨日设计；写出今天要验证的一条假设。"
+        },
+        {
+          "time": "08:15–09:25",
+          "task": "原文\n依次阅读：Metrics Monitoring → Scaling Writes → Time Series Databases → 第十一章：批处理 → Numbers to Know。只读页面下方列出的小节。"
+        },
+        {
+          "time": "09:25–10:20",
+          "task": "白板\n用 75 分钟拆 Metrics Monitoring：范围、核心状态、HLD、一个 ingestion / aggregation / querying deep dive。"
+        },
+        {
+          "time": "15:30–16:45",
+          "task": "算法\n完成 3 道 2-D DP -> Greedy -> Math；每题记录 pattern、invariant、复杂度和错因。"
+        },
+        {
+          "time": "20:30–21:30",
+          "task": "口述\n脱稿讲当天产出；按修复规则：若只背概念，补具体状态、算法或 failure sequence。"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Metrics Monitoring",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/metrics-monitoring",
+          "acceptance": "验收：能用 Metrics Monitoring 验证 ingestion / aggregation / querying 的设计判断。"
+        },
+        {
+          "title": "Scaling Writes",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/patterns/scaling-writes",
+          "acceptance": "验收：能从模式解释组件和边界。"
+        },
+        {
+          "title": "Time Series Databases",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/deep-dives/time-series-databases",
+          "acceptance": "验收：能讲清机制、取舍与 failure path。"
+        },
+        {
+          "title": "第十一章：批处理",
+          "provider": "DDIA",
+          "url": "https://ddia.vonng.com/ch11/",
+          "acceptance": "验收：能把该技术放入当前项目的 deep dive。"
+        },
+        {
+          "title": "Numbers to Know",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/deep-dives/numbers-to-know",
+          "acceptance": "验收：能把该技术放入当前项目的 deep dive。"
+        }
+      ],
+      "deliverable": "用 75 分钟拆 Metrics Monitoring：范围、核心状态、HLD、一个 ingestion / aggregation / querying deep dive。",
+      "mastery": "能把 Metrics Monitoring 讲到组件行为、触发条件与失败模式。",
+      "repair": "若只背概念，补具体状态、算法或 failure sequence。",
+      "algorithms": {
+        "required": [
+          {
+            "label": "必做：Gas Station",
+            "url": "https://leetcode.com/problems/gas-station/"
+          },
+          {
+            "label": "必做：Hand of Straights",
+            "url": "https://leetcode.com/problems/hand-of-straights/"
+          },
+          {
+            "label": "必做：Merge Triplets",
+            "url": "https://leetcode.com/problems/merge-triplets-to-form-target-triplet/"
+          }
+        ],
+        "optional": [
+          {
+            "label": "选做：Min Arrows",
+            "url": "https://leetcode.com/problems/minimum-number-of-arrows-to-burst-balloons/"
+          },
+          {
+            "label": "选做：Non-overlap Review",
+            "url": "https://leetcode.com/problems/non-overlapping-intervals/"
+          },
+          {
+            "label": "选做：Queue Reconstruction",
+            "url": "https://leetcode.com/problems/queue-reconstruction-by-height/"
+          }
+        ]
+      },
+      "source_status": "transitional-generated-from-html"
+    },
+    {
+      "day": 6,
+      "date": "2026-10-24",
+      "title": "Metrics Monitoring：Failure 与运维",
+      "focus": "故障桥接",
+      "page": "week14/day-6.html",
+      "case_id": "",
+      "time_blocks": [
+        {
+          "time": "08:30–10:30",
+          "task": "原文与深挖\n阅读：Metrics Monitoring → 第九章：分布式系统的麻烦 → CAP Theorem；补齐所有 failure path。"
+        },
+        {
+          "time": "10:45–12:00",
+          "task": "白板\n写 Metrics Monitoring 与 Strava 的 failure matrix：检测、降级、恢复、SLO。"
+        },
+        {
+          "time": "14:30–15:45",
+          "task": "算法\n完成 3 道 2-D DP -> Greedy -> Math 限时题；重做本周最慢题。"
+        },
+        {
+          "time": "20:30–21:30",
+          "task": "口述\n用 15 分钟讲主项目、15 分钟讲迁移题、15 分钟讲故障与指标。"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Metrics Monitoring",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/metrics-monitoring",
+          "acceptance": "验收：能覆盖主项目的故障、降级与恢复。"
+        },
+        {
+          "title": "第九章：分布式系统的麻烦",
+          "provider": "DDIA",
+          "url": "https://ddia.vonng.com/ch9/",
+          "acceptance": "验收：能说明网络、时钟与 partial failure。"
+        },
+        {
+          "title": "CAP Theorem",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/deep-dives/cap-theorem",
+          "acceptance": "验收：能明确 consistency / availability 取舍。"
+        }
+      ],
+      "deliverable": "写 Metrics Monitoring 与 Strava 的 failure matrix：检测、降级、恢复、SLO。",
+      "mastery": "每个故障有监控、明确的降级选择与恢复条件。",
+      "repair": "若只有 happy path，补 timeout、retry、partial failure 与指标。",
+      "algorithms": {
+        "required": [
+          {
+            "label": "必做：Rotate Image",
+            "url": "https://leetcode.com/problems/rotate-image/"
+          },
+          {
+            "label": "必做：Spiral Matrix",
+            "url": "https://leetcode.com/problems/spiral-matrix/"
+          },
+          {
+            "label": "必做：Counting Bits",
+            "url": "https://leetcode.com/problems/counting-bits/"
+          }
+        ],
+        "optional": [
+          {
+            "label": "选做：Reverse Integer",
+            "url": "https://leetcode.com/problems/reverse-integer/"
+          },
+          {
+            "label": "选做：Plus One",
+            "url": "https://leetcode.com/problems/plus-one/"
+          },
+          {
+            "label": "选做：Pow(x,n)",
+            "url": "https://leetcode.com/problems/powx-n/"
+          }
+        ]
+      },
+      "source_status": "transitional-generated-from-html"
+    },
+    {
+      "day": 7,
+      "date": "2026-10-25",
+      "title": "Metrics Monitoring Mock + Strava 压缩题",
+      "focus": "Mock 与修复",
+      "page": "week14/day-7.html",
+      "case_id": "",
+      "time_blocks": [
+        {
+          "time": "09:00–09:45",
+          "task": "Mock\n按面试时间盒作答；不看讲义。"
+        },
+        {
+          "time": "10:00–11:15",
+          "task": "评分与修复\n完成 Metrics Monitoring 45 分钟 mock；再做 Strava 20 分钟压缩设计与 repair note。"
+        },
+        {
+          "time": "14:00–15:15",
+          "task": "算法\n完成 3 道 2-D DP -> Greedy -> Math 限时复盘题。"
+        },
+        {
+          "time": "20:30–21:00",
+          "task": "周复盘\n更新错题、设计决策和下周第 1 天的预读清单。"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Metrics Monitoring",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/metrics-monitoring",
+          "acceptance": "验收：能在 mock 中完成主线并接住追问。"
+        },
+        {
+          "title": "Strava",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/strava",
+          "acceptance": "验收：能在压缩题中迁移本周的核心判断。"
+        },
+        {
+          "title": "第十三章：数据系统的未来",
+          "provider": "DDIA",
+          "url": "https://ddia.vonng.com/ch13/",
+          "acceptance": "验收：能说明演化、backfill 或端到端正确性。"
+        }
+      ],
+      "deliverable": "完成 Metrics Monitoring 45 分钟 mock；再做 Strava 20 分钟压缩设计与 repair note。",
+      "mastery": "主项目 75/100 以上；迁移题能在 20 分钟完成可辩护主线。",
+      "repair": "最低分维度做 15 分钟 repair 后复测。",
+      "algorithms": {
+        "required": [
+          {
+            "label": "限时：LCS",
+            "url": "https://leetcode.com/problems/longest-common-subsequence/"
+          },
+          {
+            "label": "限时：Jump Game",
+            "url": "https://leetcode.com/problems/jump-game/"
+          },
+          {
+            "label": "限时：Rotate Image",
+            "url": "https://leetcode.com/problems/rotate-image/"
+          }
+        ],
+        "optional": [
+          {
+            "label": "选做：Edit Distance Review",
+            "url": "https://leetcode.com/problems/edit-distance/"
+          },
+          {
+            "label": "选做：Max Subarray Review",
+            "url": "https://leetcode.com/problems/maximum-subarray/"
+          },
+          {
+            "label": "选做：Counting Bits Review",
+            "url": "https://leetcode.com/problems/counting-bits/"
+          }
+        ]
+      },
+      "source_status": "transitional-generated-from-html"
+    }
+  ]
+}

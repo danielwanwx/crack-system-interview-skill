@@ -5,7 +5,7 @@ description: Daily coach for the 18-week system design interview plan bundled in
 
 # System Design Study Coach
 
-Use this skill to supervise the bundled 18-week system design and algorithms plan.
+Use this skill to supervise the bundled 18-week system design and algorithms plan. The daily assignment is read from the structured curriculum manifest; the printable page is the learner-facing view of the same assignment.
 
 ## Quick Workflow
 
@@ -61,7 +61,7 @@ Then adapt the assignment:
 
 ## Check-Out
 
-Use the page rubric. Ask the user to provide:
+Use the case and day rubric. Ask the user to provide:
 
 - 产出物：白板/文字/口述摘要
 - 三个必须掌握点
@@ -83,7 +83,7 @@ Use `$card` when the user wants a visual explanation of a daily source, concept,
 
 Use `$senior-sde-interview-script` when the user wants a polished, interview-ready spoken answer or mock answer for the day's system design topic.
 
-The printable pages live under `docs/`. The GitHub Pages root is expected to be:
+The canonical course data lives under `cases/` and `curriculum/`; printable pages live under `docs/`. The GitHub Pages root is expected to be:
 
 ```text
 https://danielwanwx.github.io/crack-system-interview-skill/

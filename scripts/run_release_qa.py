@@ -14,8 +14,10 @@ import json
 import math
 import os
 import re
+import shutil
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 from typing import Any
 
@@ -165,6 +167,11 @@ REQUIRED_PATHS = [
     "plugins/crack-system-interview-skill/skills/system-design-study-coach/scripts/plan_lookup.py",
     "docs/index.html",
     "docs/system-design-project-route.html",
+    "cases/schema/interview-case.schema.json",
+    "cases/week-01/bitly-core.case.json",
+    "curriculum/week-01.json",
+    "scripts/bootstrap_curriculum_from_html.py",
+    "scripts/sync_plugin_content.py",
     "scripts/fetch_url_text.py",
     "scripts/render_interview_card.py",
     "scripts/run_hello_interview_visual_smoke.py",
@@ -490,6 +497,16 @@ def validate_packaging() -> None:
         if copy_path.read_bytes() != canonical_lookup:
             raise AssertionError(f"Study coach lookup copy is out of sync: {copy_text}")
 
+    curriculum = ROOT / "curriculum"
+    packaged_curriculum = ROOT / "plugins/crack-system-interview-skill/curriculum"
+    source_files = sorted(path.relative_to(curriculum) for path in curriculum.glob("week-*.json"))
+    packaged_files = sorted(path.relative_to(packaged_curriculum) for path in packaged_curriculum.glob("week-*.json"))
+    if source_files != packaged_files:
+        raise AssertionError("Plugin curriculum files are out of sync")
+    for relative_path in source_files:
+        if (packaged_curriculum / relative_path).read_bytes() != (curriculum / relative_path).read_bytes():
+            raise AssertionError(f"Plugin curriculum is out of sync: {relative_path}")
+
 
 def compile_python() -> None:
     paths = [
@@ -597,6 +614,67 @@ def validate_study_coach_lookup() -> None:
             if not (ROOT / "docs" / item["path"]).exists():
                 raise AssertionError(f"{script_text}: missing day page {item['path']}")
 
+    plugin_root = ROOT / "plugins/crack-system-interview-skill"
+    with tempfile.TemporaryDirectory(prefix="crack-system-interview-plugin-") as temp_dir:
+        isolated_plugin = Path(temp_dir) / "plugin"
+        shutil.copytree(plugin_root, isolated_plugin)
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(isolated_plugin / "skills/system-design-study-coach/scripts/plan_lookup.py"),
+                "--week",
+                "18",
+                "--day",
+                "7",
+                "--base-url",
+                "https://danielwanwx.github.io/crack-system-interview-skill",
+                "--format",
+                "json",
+            ],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        item = json.loads(result.stdout)
+        expected_url = "https://danielwanwx.github.io/crack-system-interview-skill/week18/day-7.html"
+        if item.get("public_url") != expected_url:
+            raise AssertionError("Isolated plugin study coach did not return the Week 18 public URL")
+
+
+def validate_case_library() -> None:
+    schema = load_json(ROOT / "cases/schema/interview-case.schema.json")
+    required_fields = schema["required"]
+    cases: dict[str, dict] = {}
+    for case_path in sorted((ROOT / "cases").glob("week-*/*.case.json")):
+        case = load_json(case_path)
+        missing = [field for field in required_fields if field not in case]
+        if missing:
+            raise AssertionError(f"{case_path.name}: missing case fields {missing}")
+        if case["schema_version"] != "1.0":
+            raise AssertionError(f"{case_path.name}: unsupported schema version")
+        if sum(item["weight"] for item in case["rubric"]["dimensions"]) != 100:
+            raise AssertionError(f"{case_path.name}: rubric weights must total 100")
+        cases[case["id"]] = case
+
+    curriculum_files = sorted((ROOT / "curriculum").glob("week-*.json"))
+    expected_weeks = list(range(1, 19))
+    actual_weeks = [int(path.stem.removeprefix("week-")) for path in curriculum_files]
+    if actual_weeks != expected_weeks:
+        raise AssertionError(f"Curriculum weeks must be 1-18, got {actual_weeks}")
+    for week_path in curriculum_files:
+        week = load_json(week_path)
+        days = week.get("days", [])
+        if [item.get("day") for item in days] != list(range(1, 8)):
+            raise AssertionError(f"{week_path.name}: days must be 1-7 in order")
+        for day in days:
+            if len(day.get("algorithms", {}).get("required", [])) != 3:
+                raise AssertionError(f"{week_path.name}: Day {day.get('day')} needs exactly 3 required algorithms")
+            if not (ROOT / "docs" / day["page"]).exists():
+                raise AssertionError(f"{week_path.name}: missing page {day['page']}")
+            case_id = day.get("case_id")
+            if case_id and case_id not in cases:
+                raise AssertionError(f"{week_path.name}: unknown case_id {case_id}")
+
 
 def run_release_cases(out_dir: Path, renderer: Path) -> None:
     case_paths = sorted(SMOKE_CASE_DIR.glob("*.json")) + sorted(RELEASE_CASE_DIR.glob("*.json"))
@@ -662,6 +740,7 @@ def main() -> None:
     compile_python()
     validate_text_wrapping(args.renderer)
     validate_url_fetch_outline()
+    validate_case_library()
     validate_study_coach_lookup()
     run_release_cases(args.out, args.renderer)
     print("RELEASE_QA_PASS")

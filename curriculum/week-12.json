@@ -1,0 +1,588 @@
+{
+  "schema_version": "1.0",
+  "week": 12,
+  "title": "Week 12 transitional curriculum",
+  "source_status": "transitional-generated-from-html",
+  "days": [
+    {
+      "day": 1,
+      "date": "2026-10-05",
+      "title": "Yelp：范围与 NFR",
+      "focus": "主项目范围",
+      "page": "week12/day-1.html",
+      "case_id": "",
+      "time_blocks": [
+        {
+          "time": "07:55–08:15",
+          "task": "回忆\n不看资料复述昨日设计；写出今天要验证的一条假设。"
+        },
+        {
+          "time": "08:15–09:25",
+          "task": "原文\n依次阅读：Yelp → 第二章：数据系统的目标 → API Design。只读页面下方列出的小节。"
+        },
+        {
+          "time": "09:25–10:20",
+          "task": "白板\n写 Yelp requirements matrix：FR、NFR、out of scope、success metric。"
+        },
+        {
+          "time": "15:30–16:45",
+          "task": "算法\n完成 3 道 Intervals；每题记录 pattern、invariant、复杂度和错因。"
+        },
+        {
+          "time": "20:30–21:30",
+          "task": "口述\n脱稿讲当天产出；按修复规则：若先画盒子，回到需求、约束与 NFR。"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Yelp",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/yelp",
+          "acceptance": "验收：能定义主用户路径、FR/NFR、范围与成功指标。"
+        },
+        {
+          "title": "第二章：数据系统的目标",
+          "provider": "DDIA",
+          "url": "https://ddia.vonng.com/ch2/",
+          "acceptance": "验收：能把可靠性、可伸缩性、可维护性写进 NFR。"
+        },
+        {
+          "title": "API Design",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/core-concepts/api-design",
+          "acceptance": "验收：能从范围推出接口边界。"
+        }
+      ],
+      "deliverable": "写 Yelp requirements matrix：FR、NFR、out of scope、success metric。",
+      "mastery": "范围可在 5 分钟内收敛；每个 NFR 均有量级或业务后果。",
+      "repair": "若先画盒子，回到需求、约束与 NFR。",
+      "algorithms": {
+        "required": [
+          {
+            "label": "必做：Merge Intervals",
+            "url": "https://leetcode.com/problems/merge-intervals/"
+          },
+          {
+            "label": "必做：Insert Interval",
+            "url": "https://leetcode.com/problems/insert-interval/"
+          },
+          {
+            "label": "必做：Summary Ranges",
+            "url": "https://leetcode.com/problems/summary-ranges/"
+          }
+        ],
+        "optional": [
+          {
+            "label": "选做：Teemo Attacking",
+            "url": "https://leetcode.com/problems/teemo-attacking/"
+          },
+          {
+            "label": "选做：Range Addition",
+            "url": "https://leetcode.com/problems/range-addition/"
+          },
+          {
+            "label": "选做：Missing Ranges",
+            "url": "https://leetcode.com/problems/missing-ranges/"
+          }
+        ]
+      },
+      "source_status": "transitional-generated-from-html"
+    },
+    {
+      "day": 2,
+      "date": "2026-10-06",
+      "title": "Yelp：API、状态与数据",
+      "focus": "主项目数据与 API",
+      "page": "week12/day-2.html",
+      "case_id": "",
+      "time_blocks": [
+        {
+          "time": "07:55–08:15",
+          "task": "回忆\n不看资料复述昨日设计；写出今天要验证的一条假设。"
+        },
+        {
+          "time": "08:15–09:25",
+          "task": "原文\n依次阅读：Yelp → Data Modeling → 第三章：数据模型与查询语言。只读页面下方列出的小节。"
+        },
+        {
+          "time": "09:25–10:20",
+          "task": "白板\n写 Yelp API + schema：主体、key、访问模式、权限与错误语义。"
+        },
+        {
+          "time": "15:30–16:45",
+          "task": "算法\n完成 3 道 Intervals；每题记录 pattern、invariant、复杂度和错因。"
+        },
+        {
+          "time": "20:30–21:30",
+          "task": "口述\n脱稿讲当天产出；按修复规则：若 schema 无法解释查询路径，重写 key 与 index。"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Yelp",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/yelp",
+          "acceptance": "验收：能从需求推出实体、访问模式与权限边界。"
+        },
+        {
+          "title": "Data Modeling",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/core-concepts/data-modeling",
+          "acceptance": "验收：能从访问路径推出 keys、indexes 与 schema。"
+        },
+        {
+          "title": "第三章：数据模型与查询语言",
+          "provider": "DDIA",
+          "url": "https://ddia.vonng.com/ch3/",
+          "acceptance": "验收：能解释数据模型取舍。"
+        }
+      ],
+      "deliverable": "写 Yelp API + schema：主体、key、访问模式、权限与错误语义。",
+      "mastery": "接口、状态与 schema 可从访问路径推出；权限和错误码明确。",
+      "repair": "若 schema 无法解释查询路径，重写 key 与 index。",
+      "algorithms": {
+        "required": [
+          {
+            "label": "必做：Non-overlapping Intervals",
+            "url": "https://leetcode.com/problems/non-overlapping-intervals/"
+          },
+          {
+            "label": "必做：Remove Covered Intervals",
+            "url": "https://leetcode.com/problems/remove-covered-intervals/"
+          },
+          {
+            "label": "复盘：Merge Intervals",
+            "url": "https://leetcode.com/problems/merge-intervals/"
+          }
+        ],
+        "optional": [
+          {
+            "label": "选做：Min Arrows Balloons",
+            "url": "https://leetcode.com/problems/minimum-number-of-arrows-to-burst-balloons/"
+          },
+          {
+            "label": "选做：Partition Labels",
+            "url": "https://leetcode.com/problems/partition-labels/"
+          },
+          {
+            "label": "选做：Interval List Intersections",
+            "url": "https://leetcode.com/problems/interval-list-intersections/"
+          }
+        ]
+      },
+      "source_status": "transitional-generated-from-html"
+    },
+    {
+      "day": 3,
+      "date": "2026-10-07",
+      "title": "Yelp：核心路径与容量",
+      "focus": "主项目核心路径",
+      "page": "week12/day-3.html",
+      "case_id": "",
+      "time_blocks": [
+        {
+          "time": "07:55–08:15",
+          "task": "回忆\n不看资料复述昨日设计；写出今天要验证的一条假设。"
+        },
+        {
+          "time": "08:15–09:25",
+          "task": "原文\n依次阅读：Yelp → Data Modeling → 第四章：存储与检索。只读页面下方列出的小节。"
+        },
+        {
+          "time": "09:25–10:20",
+          "task": "白板\n画 Yelp 主路径：请求/事件、状态变化、同步与异步边界，并写 capacity sheet。"
+        },
+        {
+          "time": "15:30–16:45",
+          "task": "算法\n完成 3 道 Intervals；每题记录 pattern、invariant、复杂度和错因。"
+        },
+        {
+          "time": "20:30–21:30",
+          "task": "口述\n脱稿讲当天产出；按修复规则：若同步链路过长，重新划分 durable state 与 queue boundary。"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Yelp",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/yelp",
+          "acceptance": "验收：能画出核心请求或事件路径。"
+        },
+        {
+          "title": "Data Modeling",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/core-concepts/data-modeling",
+          "acceptance": "验收：能把模式落到具体组件与状态。"
+        },
+        {
+          "title": "第四章：存储与检索",
+          "provider": "DDIA",
+          "url": "https://ddia.vonng.com/ch4/",
+          "acceptance": "验收：能说明存储与索引影响。"
+        }
+      ],
+      "deliverable": "画 Yelp 主路径：请求/事件、状态变化、同步与异步边界，并写 capacity sheet。",
+      "mastery": "能分清 hot path、durable state、async work 与 retry boundary。",
+      "repair": "若同步链路过长，重新划分 durable state 与 queue boundary。",
+      "algorithms": {
+        "required": [
+          {
+            "label": "必做：Meeting Rooms",
+            "url": "https://leetcode.com/problems/meeting-rooms/"
+          },
+          {
+            "label": "必做：Meeting Rooms II",
+            "url": "https://leetcode.com/problems/meeting-rooms-ii/"
+          },
+          {
+            "label": "复盘：Insert Interval",
+            "url": "https://leetcode.com/problems/insert-interval/"
+          }
+        ],
+        "optional": [
+          {
+            "label": "选做：Meeting Scheduler",
+            "url": "https://leetcode.com/problems/meeting-scheduler/"
+          },
+          {
+            "label": "选做：Max Events Attended",
+            "url": "https://leetcode.com/problems/maximum-number-of-events-that-can-be-attended/"
+          },
+          {
+            "label": "选做：Divide Intervals Groups",
+            "url": "https://leetcode.com/problems/divide-intervals-into-minimum-number-of-groups/"
+          }
+        ]
+      },
+      "source_status": "transitional-generated-from-html"
+    },
+    {
+      "day": 4,
+      "date": "2026-10-08",
+      "title": "迁移：Food Review App",
+      "focus": "迁移题拆解",
+      "page": "week12/day-4.html",
+      "case_id": "",
+      "time_blocks": [
+        {
+          "time": "07:55–08:15",
+          "task": "回忆\n不看资料复述昨日设计；写出今天要验证的一条假设。"
+        },
+        {
+          "time": "08:15–09:25",
+          "task": "原文\n依次阅读：Hello Interview Guided Practice → Data Modeling → Elasticsearch。只读页面下方列出的小节。"
+        },
+        {
+          "time": "09:25–10:20",
+          "task": "白板\n用 75 分钟拆 Food Review App：范围、核心状态、HLD、一个 geo search / ranking / moderation deep dive。"
+        },
+        {
+          "time": "15:30–16:45",
+          "task": "算法\n完成 3 道 Intervals；每题记录 pattern、invariant、复杂度和错因。"
+        },
+        {
+          "time": "20:30–21:30",
+          "task": "口述\n脱稿讲当天产出；按修复规则：若把迁移题照抄主项目，先写出它不同的状态、SLO 和 failure mode。"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Hello Interview Guided Practice",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/in-a-hurry/problem-breakdowns",
+          "acceptance": "验收：能用 Food Review App 验证 geo search / ranking / moderation 的迁移能力。"
+        },
+        {
+          "title": "Data Modeling",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/core-concepts/data-modeling",
+          "acceptance": "验收：能把共用模式落到新的状态和请求路径。"
+        },
+        {
+          "title": "Elasticsearch",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/deep-dives/elasticsearch",
+          "acceptance": "验收：能完成该题最关键的 tradeoff。"
+        }
+      ],
+      "deliverable": "用 75 分钟拆 Food Review App：范围、核心状态、HLD、一个 geo search / ranking / moderation deep dive。",
+      "mastery": "能解释 Food Review App 与主项目相同模式下不同的正确性要求。",
+      "repair": "若把迁移题照抄主项目，先写出它不同的状态、SLO 和 failure mode。",
+      "algorithms": {
+        "required": [
+          {
+            "label": "必做：Minimum Interval Include Query",
+            "url": "https://leetcode.com/problems/minimum-interval-to-include-each-query/"
+          },
+          {
+            "label": "必做：Data Stream as Disjoint Intervals",
+            "url": "https://leetcode.com/problems/data-stream-as-disjoint-intervals/"
+          },
+          {
+            "label": "复盘：Non-overlap",
+            "url": "https://leetcode.com/problems/non-overlapping-intervals/"
+          }
+        ],
+        "optional": [
+          {
+            "label": "选做：Range Module",
+            "url": "https://leetcode.com/problems/range-module/"
+          },
+          {
+            "label": "选做：Count Ways Group Ranges",
+            "url": "https://leetcode.com/problems/count-ways-to-group-overlapping-ranges/"
+          },
+          {
+            "label": "选做：Road Addition Queries",
+            "url": "https://leetcode.com/problems/shortest-distance-after-road-addition-queries-i/"
+          }
+        ]
+      },
+      "source_status": "transitional-generated-from-html"
+    },
+    {
+      "day": 5,
+      "date": "2026-10-09",
+      "title": "迁移：Yelp",
+      "focus": "迁移题 / 主项目深挖",
+      "page": "week12/day-5.html",
+      "case_id": "",
+      "time_blocks": [
+        {
+          "time": "07:55–08:15",
+          "task": "回忆\n不看资料复述昨日设计；写出今天要验证的一条假设。"
+        },
+        {
+          "time": "08:15–09:25",
+          "task": "原文\n依次阅读：Yelp → Data Modeling → Elasticsearch。只读页面下方列出的小节。"
+        },
+        {
+          "time": "09:25–10:20",
+          "task": "白板\n用 75 分钟拆 Yelp：范围、核心状态、HLD、一个 geo search / ranking deep dive。"
+        },
+        {
+          "time": "15:30–16:45",
+          "task": "算法\n完成 3 道 Intervals；每题记录 pattern、invariant、复杂度和错因。"
+        },
+        {
+          "time": "20:30–21:30",
+          "task": "口述\n脱稿讲当天产出；按修复规则：若只背概念，补具体状态、算法或 failure sequence。"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Yelp",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/yelp",
+          "acceptance": "验收：能用 Yelp 验证 geo search / ranking 的设计判断。"
+        },
+        {
+          "title": "Data Modeling",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/core-concepts/data-modeling",
+          "acceptance": "验收：能从模式解释组件和边界。"
+        },
+        {
+          "title": "Elasticsearch",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/deep-dives/elasticsearch",
+          "acceptance": "验收：能讲清机制、取舍与 failure path。"
+        }
+      ],
+      "deliverable": "用 75 分钟拆 Yelp：范围、核心状态、HLD、一个 geo search / ranking deep dive。",
+      "mastery": "能把 Yelp 讲到组件行为、触发条件与失败模式。",
+      "repair": "若只背概念，补具体状态、算法或 failure sequence。",
+      "algorithms": {
+        "required": [
+          {
+            "label": "必做：Employee Free Time",
+            "url": "https://leetcode.com/problems/employee-free-time/"
+          },
+          {
+            "label": "必做：Car Pooling",
+            "url": "https://leetcode.com/problems/car-pooling/"
+          },
+          {
+            "label": "复盘：Meeting Rooms II",
+            "url": "https://leetcode.com/problems/meeting-rooms-ii/"
+          }
+        ],
+        "optional": [
+          {
+            "label": "选做：Describe the Painting",
+            "url": "https://leetcode.com/problems/describe-the-painting/"
+          },
+          {
+            "label": "选做：The Skyline Problem",
+            "url": "https://leetcode.com/problems/the-skyline-problem/"
+          },
+          {
+            "label": "选做：My Calendar III",
+            "url": "https://leetcode.com/problems/my-calendar-iii/"
+          }
+        ]
+      },
+      "source_status": "transitional-generated-from-html"
+    },
+    {
+      "day": 6,
+      "date": "2026-10-10",
+      "title": "Yelp：Failure 与运维",
+      "focus": "故障桥接",
+      "page": "week12/day-6.html",
+      "case_id": "",
+      "time_blocks": [
+        {
+          "time": "08:30–10:30",
+          "task": "原文与深挖\n阅读：Yelp → 第九章：分布式系统的麻烦 → CAP Theorem；补齐所有 failure path。"
+        },
+        {
+          "time": "10:45–12:00",
+          "task": "白板\n写 Yelp 与 Food Review App 的 failure matrix：检测、降级、恢复、SLO。"
+        },
+        {
+          "time": "14:30–15:45",
+          "task": "算法\n完成 3 道 Intervals 限时题；重做本周最慢题。"
+        },
+        {
+          "time": "20:30–21:30",
+          "task": "口述\n用 15 分钟讲主项目、15 分钟讲迁移题、15 分钟讲故障与指标。"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Yelp",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/yelp",
+          "acceptance": "验收：能覆盖主项目的故障、降级与恢复。"
+        },
+        {
+          "title": "第九章：分布式系统的麻烦",
+          "provider": "DDIA",
+          "url": "https://ddia.vonng.com/ch9/",
+          "acceptance": "验收：能说明网络、时钟与 partial failure。"
+        },
+        {
+          "title": "CAP Theorem",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/deep-dives/cap-theorem",
+          "acceptance": "验收：能明确 consistency / availability 取舍。"
+        }
+      ],
+      "deliverable": "写 Yelp 与 Food Review App 的 failure matrix：检测、降级、恢复、SLO。",
+      "mastery": "每个故障有监控、明确的降级选择与恢复条件。",
+      "repair": "若只有 happy path，补 timeout、retry、partial failure 与指标。",
+      "algorithms": {
+        "required": [
+          {
+            "label": "限时：My Calendar I",
+            "url": "https://leetcode.com/problems/my-calendar-i/"
+          },
+          {
+            "label": "限时：My Calendar II",
+            "url": "https://leetcode.com/problems/my-calendar-ii/"
+          },
+          {
+            "label": "复盘：Minimum Interval",
+            "url": "https://leetcode.com/problems/minimum-interval-to-include-each-query/"
+          }
+        ],
+        "optional": [
+          {
+            "label": "选做：Insert Review",
+            "url": "https://leetcode.com/problems/insert-interval/"
+          },
+          {
+            "label": "选做：Car Pooling Review",
+            "url": "https://leetcode.com/problems/car-pooling/"
+          },
+          {
+            "label": "选做：Free Time Review",
+            "url": "https://leetcode.com/problems/employee-free-time/"
+          }
+        ]
+      },
+      "source_status": "transitional-generated-from-html"
+    },
+    {
+      "day": 7,
+      "date": "2026-10-11",
+      "title": "Yelp Mock + Food Review App 压缩题",
+      "focus": "Mock 与修复",
+      "page": "week12/day-7.html",
+      "case_id": "",
+      "time_blocks": [
+        {
+          "time": "09:00–09:45",
+          "task": "Mock\n按面试时间盒作答；不看讲义。"
+        },
+        {
+          "time": "10:00–11:15",
+          "task": "评分与修复\n完成 Yelp 45 分钟 mock；再做 Food Review App 20 分钟压缩设计与 repair note。"
+        },
+        {
+          "time": "14:00–15:15",
+          "task": "算法\n完成 3 道 Intervals 限时复盘题。"
+        },
+        {
+          "time": "20:30–21:00",
+          "task": "周复盘\n更新错题、设计决策和下周第 1 天的预读清单。"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Yelp",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/yelp",
+          "acceptance": "验收：能在 mock 中完成主线并接住追问。"
+        },
+        {
+          "title": "Hello Interview Guided Practice",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/in-a-hurry/problem-breakdowns",
+          "acceptance": "验收：能在压缩题中迁移本周的核心判断。"
+        },
+        {
+          "title": "第十三章：数据系统的未来",
+          "provider": "DDIA",
+          "url": "https://ddia.vonng.com/ch13/",
+          "acceptance": "验收：能说明演化、backfill 或端到端正确性。"
+        }
+      ],
+      "deliverable": "完成 Yelp 45 分钟 mock；再做 Food Review App 20 分钟压缩设计与 repair note。",
+      "mastery": "主项目 75/100 以上；迁移题能在 20 分钟完成可辩护主线。",
+      "repair": "最低分维度做 15 分钟 repair 后复测。",
+      "algorithms": {
+        "required": [
+          {
+            "label": "限时：Merge Intervals",
+            "url": "https://leetcode.com/problems/merge-intervals/"
+          },
+          {
+            "label": "限时：Meeting Rooms II",
+            "url": "https://leetcode.com/problems/meeting-rooms-ii/"
+          },
+          {
+            "label": "限时：Minimum Interval",
+            "url": "https://leetcode.com/problems/minimum-interval-to-include-each-query/"
+          }
+        ],
+        "optional": [
+          {
+            "label": "选做：Non-overlap Review",
+            "url": "https://leetcode.com/problems/non-overlapping-intervals/"
+          },
+          {
+            "label": "选做：Calendar I Review",
+            "url": "https://leetcode.com/problems/my-calendar-i/"
+          },
+          {
+            "label": "选做：Calendar II Review",
+            "url": "https://leetcode.com/problems/my-calendar-ii/"
+          }
+        ]
+      },
+      "source_status": "transitional-generated-from-html"
+    }
+  ]
+}

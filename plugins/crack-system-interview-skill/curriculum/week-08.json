@@ -1,0 +1,588 @@
+{
+  "schema_version": "1.0",
+  "week": 8,
+  "title": "Week 8 transitional curriculum",
+  "source_status": "transitional-generated-from-html",
+  "days": [
+    {
+      "day": 1,
+      "date": "2026-09-07",
+      "title": "Payment System：范围与 NFR",
+      "focus": "主项目范围",
+      "page": "week8/day-1.html",
+      "case_id": "",
+      "time_blocks": [
+        {
+          "time": "07:55–08:15",
+          "task": "回忆\n不看资料复述昨日设计；写出今天要验证的一条假设。"
+        },
+        {
+          "time": "08:15–09:25",
+          "task": "原文\n依次阅读：Payment System → 第二章：数据系统的目标 → API Design。只读页面下方列出的小节。"
+        },
+        {
+          "time": "09:25–10:20",
+          "task": "白板\n写 Payment System requirements matrix：FR、NFR、out of scope、success metric。"
+        },
+        {
+          "time": "15:30–16:45",
+          "task": "算法\n完成 3 道 Tries -> Heap/Priority Queue；每题记录 pattern、invariant、复杂度和错因。"
+        },
+        {
+          "time": "20:30–21:30",
+          "task": "口述\n脱稿讲当天产出；按修复规则：若先画盒子，回到需求、约束与 NFR。"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Payment System",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/payment-system",
+          "acceptance": "验收：能定义主用户路径、FR/NFR、范围与成功指标。"
+        },
+        {
+          "title": "第二章：数据系统的目标",
+          "provider": "DDIA",
+          "url": "https://ddia.vonng.com/ch2/",
+          "acceptance": "验收：能把可靠性、可伸缩性、可维护性写进 NFR。"
+        },
+        {
+          "title": "API Design",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/core-concepts/api-design",
+          "acceptance": "验收：能从范围推出接口边界。"
+        }
+      ],
+      "deliverable": "写 Payment System requirements matrix：FR、NFR、out of scope、success metric。",
+      "mastery": "范围可在 5 分钟内收敛；每个 NFR 均有量级或业务后果。",
+      "repair": "若先画盒子，回到需求、约束与 NFR。",
+      "algorithms": {
+        "required": [
+          {
+            "label": "必做：Implement Trie",
+            "url": "https://leetcode.com/problems/implement-trie-prefix-tree/"
+          },
+          {
+            "label": "必做：Design Add/Search Words",
+            "url": "https://leetcode.com/problems/design-add-and-search-words-data-structure/"
+          },
+          {
+            "label": "必做：Word Search",
+            "url": "https://leetcode.com/problems/word-search/"
+          }
+        ],
+        "optional": [
+          {
+            "label": "选做：Replace Words",
+            "url": "https://leetcode.com/problems/replace-words/"
+          },
+          {
+            "label": "选做：Longest Word Dictionary",
+            "url": "https://leetcode.com/problems/longest-word-in-dictionary/"
+          },
+          {
+            "label": "选做：Map Sum Pairs",
+            "url": "https://leetcode.com/problems/map-sum-pairs/"
+          }
+        ]
+      },
+      "source_status": "transitional-generated-from-html"
+    },
+    {
+      "day": 2,
+      "date": "2026-09-08",
+      "title": "Payment System：API、状态与数据",
+      "focus": "主项目数据与 API",
+      "page": "week8/day-2.html",
+      "case_id": "",
+      "time_blocks": [
+        {
+          "time": "07:55–08:15",
+          "task": "回忆\n不看资料复述昨日设计；写出今天要验证的一条假设。"
+        },
+        {
+          "time": "08:15–09:25",
+          "task": "原文\n依次阅读：Payment System → Data Modeling → 第三章：数据模型与查询语言。只读页面下方列出的小节。"
+        },
+        {
+          "time": "09:25–10:20",
+          "task": "白板\n写 Payment System API + schema：主体、key、访问模式、权限与错误语义。"
+        },
+        {
+          "time": "15:30–16:45",
+          "task": "算法\n完成 3 道 Tries -> Heap/Priority Queue；每题记录 pattern、invariant、复杂度和错因。"
+        },
+        {
+          "time": "20:30–21:30",
+          "task": "口述\n脱稿讲当天产出；按修复规则：若 schema 无法解释查询路径，重写 key 与 index。"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Payment System",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/payment-system",
+          "acceptance": "验收：能从需求推出实体、访问模式与权限边界。"
+        },
+        {
+          "title": "Data Modeling",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/core-concepts/data-modeling",
+          "acceptance": "验收：能从访问路径推出 keys、indexes 与 schema。"
+        },
+        {
+          "title": "第三章：数据模型与查询语言",
+          "provider": "DDIA",
+          "url": "https://ddia.vonng.com/ch3/",
+          "acceptance": "验收：能解释数据模型取舍。"
+        }
+      ],
+      "deliverable": "写 Payment System API + schema：主体、key、访问模式、权限与错误语义。",
+      "mastery": "接口、状态与 schema 可从访问路径推出；权限和错误码明确。",
+      "repair": "若 schema 无法解释查询路径，重写 key 与 index。",
+      "algorithms": {
+        "required": [
+          {
+            "label": "必做：Word Search II",
+            "url": "https://leetcode.com/problems/word-search-ii/"
+          },
+          {
+            "label": "复盘：Implement Trie",
+            "url": "https://leetcode.com/problems/implement-trie-prefix-tree/"
+          },
+          {
+            "label": "复盘：Add/Search Words",
+            "url": "https://leetcode.com/problems/design-add-and-search-words-data-structure/"
+          }
+        ],
+        "optional": [
+          {
+            "label": "选做：Palindrome Pairs",
+            "url": "https://leetcode.com/problems/palindrome-pairs/"
+          },
+          {
+            "label": "选做：Search Suggestions System",
+            "url": "https://leetcode.com/problems/search-suggestions-system/"
+          },
+          {
+            "label": "选做：Stream of Characters",
+            "url": "https://leetcode.com/problems/stream-of-characters/"
+          }
+        ]
+      },
+      "source_status": "transitional-generated-from-html"
+    },
+    {
+      "day": 3,
+      "date": "2026-09-09",
+      "title": "Payment System：核心路径与容量",
+      "focus": "主项目核心路径",
+      "page": "week8/day-3.html",
+      "case_id": "",
+      "time_blocks": [
+        {
+          "time": "07:55–08:15",
+          "task": "回忆\n不看资料复述昨日设计；写出今天要验证的一条假设。"
+        },
+        {
+          "time": "08:15–09:25",
+          "task": "原文\n依次阅读：Payment System → Multi-step Processes → 第四章：存储与检索。只读页面下方列出的小节。"
+        },
+        {
+          "time": "09:25–10:20",
+          "task": "白板\n画 Payment System 主路径：请求/事件、状态变化、同步与异步边界，并写 capacity sheet。"
+        },
+        {
+          "time": "15:30–16:45",
+          "task": "算法\n完成 3 道 Tries -> Heap/Priority Queue；每题记录 pattern、invariant、复杂度和错因。"
+        },
+        {
+          "time": "20:30–21:30",
+          "task": "口述\n脱稿讲当天产出；按修复规则：若同步链路过长，重新划分 durable state 与 queue boundary。"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Payment System",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/payment-system",
+          "acceptance": "验收：能画出核心请求或事件路径。"
+        },
+        {
+          "title": "Multi-step Processes",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/patterns/multi-step-processes",
+          "acceptance": "验收：能把模式落到具体组件与状态。"
+        },
+        {
+          "title": "第四章：存储与检索",
+          "provider": "DDIA",
+          "url": "https://ddia.vonng.com/ch4/",
+          "acceptance": "验收：能说明存储与索引影响。"
+        }
+      ],
+      "deliverable": "画 Payment System 主路径：请求/事件、状态变化、同步与异步边界，并写 capacity sheet。",
+      "mastery": "能分清 hot path、durable state、async work 与 retry boundary。",
+      "repair": "若同步链路过长，重新划分 durable state 与 queue boundary。",
+      "algorithms": {
+        "required": [
+          {
+            "label": "必做：Kth Largest in Array",
+            "url": "https://leetcode.com/problems/kth-largest-element-in-an-array/"
+          },
+          {
+            "label": "必做：Last Stone Weight",
+            "url": "https://leetcode.com/problems/last-stone-weight/"
+          },
+          {
+            "label": "必做：Kth Largest Stream",
+            "url": "https://leetcode.com/problems/kth-largest-element-in-a-stream/"
+          }
+        ],
+        "optional": [
+          {
+            "label": "选做：Relative Ranks",
+            "url": "https://leetcode.com/problems/relative-ranks/"
+          },
+          {
+            "label": "选做：Take Gifts",
+            "url": "https://leetcode.com/problems/take-gifts-from-the-richest-pile/"
+          },
+          {
+            "label": "选做：Seat Reservation Manager",
+            "url": "https://leetcode.com/problems/seat-reservation-manager/"
+          }
+        ]
+      },
+      "source_status": "transitional-generated-from-html"
+    },
+    {
+      "day": 4,
+      "date": "2026-09-10",
+      "title": "迁移：Robinhood",
+      "focus": "迁移题拆解",
+      "page": "week8/day-4.html",
+      "case_id": "",
+      "time_blocks": [
+        {
+          "time": "07:55–08:15",
+          "task": "回忆\n不看资料复述昨日设计；写出今天要验证的一条假设。"
+        },
+        {
+          "time": "08:15–09:25",
+          "task": "原文\n依次阅读：Robinhood → Multi-step Processes → 第十章：一致性与共识。只读页面下方列出的小节。"
+        },
+        {
+          "time": "09:25–10:20",
+          "task": "白板\n用 75 分钟拆 Robinhood：范围、核心状态、HLD、一个 orders / portfolio / market data deep dive。"
+        },
+        {
+          "time": "15:30–16:45",
+          "task": "算法\n完成 3 道 Tries -> Heap/Priority Queue；每题记录 pattern、invariant、复杂度和错因。"
+        },
+        {
+          "time": "20:30–21:30",
+          "task": "口述\n脱稿讲当天产出；按修复规则：若把迁移题照抄主项目，先写出它不同的状态、SLO 和 failure mode。"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Robinhood",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/robinhood",
+          "acceptance": "验收：能用 Robinhood 验证 orders / portfolio / market data 的迁移能力。"
+        },
+        {
+          "title": "Multi-step Processes",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/patterns/multi-step-processes",
+          "acceptance": "验收：能把共用模式落到新的状态和请求路径。"
+        },
+        {
+          "title": "第十章：一致性与共识",
+          "provider": "DDIA",
+          "url": "https://ddia.vonng.com/ch10/",
+          "acceptance": "验收：能完成该题最关键的 tradeoff。"
+        }
+      ],
+      "deliverable": "用 75 分钟拆 Robinhood：范围、核心状态、HLD、一个 orders / portfolio / market data deep dive。",
+      "mastery": "能解释 Robinhood 与主项目相同模式下不同的正确性要求。",
+      "repair": "若把迁移题照抄主项目，先写出它不同的状态、SLO 和 failure mode。",
+      "algorithms": {
+        "required": [
+          {
+            "label": "必做：K Closest Points",
+            "url": "https://leetcode.com/problems/k-closest-points-to-origin/"
+          },
+          {
+            "label": "复盘：Top K Frequent Elements",
+            "url": "https://leetcode.com/problems/top-k-frequent-elements/"
+          },
+          {
+            "label": "必做：Task Scheduler",
+            "url": "https://leetcode.com/problems/task-scheduler/"
+          }
+        ],
+        "optional": [
+          {
+            "label": "选做：Reorganize String",
+            "url": "https://leetcode.com/problems/reorganize-string/"
+          },
+          {
+            "label": "选做：Single Threaded CPU",
+            "url": "https://leetcode.com/problems/single-threaded-cpu/"
+          },
+          {
+            "label": "选做：Meeting Rooms II",
+            "url": "https://leetcode.com/problems/meeting-rooms-ii/"
+          }
+        ]
+      },
+      "source_status": "transitional-generated-from-html"
+    },
+    {
+      "day": 5,
+      "date": "2026-09-11",
+      "title": "迁移：Donations Website",
+      "focus": "迁移题 / 主项目深挖",
+      "page": "week8/day-5.html",
+      "case_id": "",
+      "time_blocks": [
+        {
+          "time": "07:55–08:15",
+          "task": "回忆\n不看资料复述昨日设计；写出今天要验证的一条假设。"
+        },
+        {
+          "time": "08:15–09:25",
+          "task": "原文\n依次阅读：Hello Interview Guided Practice → Multi-step Processes → 第八章：事务。只读页面下方列出的小节。"
+        },
+        {
+          "time": "09:25–10:20",
+          "task": "白板\n用 75 分钟拆 Donations Website：范围、核心状态、HLD、一个 payments / idempotency / audit deep dive。"
+        },
+        {
+          "time": "15:30–16:45",
+          "task": "算法\n完成 3 道 Tries -> Heap/Priority Queue；每题记录 pattern、invariant、复杂度和错因。"
+        },
+        {
+          "time": "20:30–21:30",
+          "task": "口述\n脱稿讲当天产出；按修复规则：若只背概念，补具体状态、算法或 failure sequence。"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Hello Interview Guided Practice",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/in-a-hurry/problem-breakdowns",
+          "acceptance": "验收：能用 Donations Website 验证 payments / idempotency / audit 的设计判断。"
+        },
+        {
+          "title": "Multi-step Processes",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/patterns/multi-step-processes",
+          "acceptance": "验收：能从模式解释组件和边界。"
+        },
+        {
+          "title": "第八章：事务",
+          "provider": "DDIA",
+          "url": "https://ddia.vonng.com/ch8/",
+          "acceptance": "验收：能讲清机制、取舍与 failure path。"
+        }
+      ],
+      "deliverable": "用 75 分钟拆 Donations Website：范围、核心状态、HLD、一个 payments / idempotency / audit deep dive。",
+      "mastery": "能把 Donations Website 讲到组件行为、触发条件与失败模式。",
+      "repair": "若只背概念，补具体状态、算法或 failure sequence。",
+      "algorithms": {
+        "required": [
+          {
+            "label": "必做：Find Median from Data Stream",
+            "url": "https://leetcode.com/problems/find-median-from-data-stream/"
+          },
+          {
+            "label": "复盘：Merge K Sorted Lists",
+            "url": "https://leetcode.com/problems/merge-k-sorted-lists/"
+          },
+          {
+            "label": "复盘：K Closest",
+            "url": "https://leetcode.com/problems/k-closest-points-to-origin/"
+          }
+        ],
+        "optional": [
+          {
+            "label": "选做：IPO",
+            "url": "https://leetcode.com/problems/ipo/"
+          },
+          {
+            "label": "选做：Smallest Range",
+            "url": "https://leetcode.com/problems/smallest-range-covering-elements-from-k-lists/"
+          },
+          {
+            "label": "选做：Sliding Window Median",
+            "url": "https://leetcode.com/problems/sliding-window-median/"
+          }
+        ]
+      },
+      "source_status": "transitional-generated-from-html"
+    },
+    {
+      "day": 6,
+      "date": "2026-09-12",
+      "title": "Payment System：Failure 与运维",
+      "focus": "故障桥接",
+      "page": "week8/day-6.html",
+      "case_id": "",
+      "time_blocks": [
+        {
+          "time": "08:30–10:30",
+          "task": "原文与深挖\n阅读：Payment System → 第九章：分布式系统的麻烦 → CAP Theorem；补齐所有 failure path。"
+        },
+        {
+          "time": "10:45–12:00",
+          "task": "白板\n写 Payment System 与 Robinhood 的 failure matrix：检测、降级、恢复、SLO。"
+        },
+        {
+          "time": "14:30–15:45",
+          "task": "算法\n完成 3 道 Tries -> Heap/Priority Queue 限时题；重做本周最慢题。"
+        },
+        {
+          "time": "20:30–21:30",
+          "task": "口述\n用 15 分钟讲主项目、15 分钟讲迁移题、15 分钟讲故障与指标。"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Payment System",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/payment-system",
+          "acceptance": "验收：能覆盖主项目的故障、降级与恢复。"
+        },
+        {
+          "title": "第九章：分布式系统的麻烦",
+          "provider": "DDIA",
+          "url": "https://ddia.vonng.com/ch9/",
+          "acceptance": "验收：能说明网络、时钟与 partial failure。"
+        },
+        {
+          "title": "CAP Theorem",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/deep-dives/cap-theorem",
+          "acceptance": "验收：能明确 consistency / availability 取舍。"
+        }
+      ],
+      "deliverable": "写 Payment System 与 Robinhood 的 failure matrix：检测、降级、恢复、SLO。",
+      "mastery": "每个故障有监控、明确的降级选择与恢复条件。",
+      "repair": "若只有 happy path，补 timeout、retry、partial failure 与指标。",
+      "algorithms": {
+        "required": [
+          {
+            "label": "限时：Word Search II",
+            "url": "https://leetcode.com/problems/word-search-ii/"
+          },
+          {
+            "label": "限时：Task Scheduler",
+            "url": "https://leetcode.com/problems/task-scheduler/"
+          },
+          {
+            "label": "复盘：Median Stream",
+            "url": "https://leetcode.com/problems/find-median-from-data-stream/"
+          }
+        ],
+        "optional": [
+          {
+            "label": "选做：Add/Search Review",
+            "url": "https://leetcode.com/problems/design-add-and-search-words-data-structure/"
+          },
+          {
+            "label": "选做：Last Stone Speed Run",
+            "url": "https://leetcode.com/problems/last-stone-weight/"
+          },
+          {
+            "label": "选做：Top K Speed Run",
+            "url": "https://leetcode.com/problems/top-k-frequent-elements/"
+          }
+        ]
+      },
+      "source_status": "transitional-generated-from-html"
+    },
+    {
+      "day": 7,
+      "date": "2026-09-13",
+      "title": "Payment System Mock + Robinhood 压缩题",
+      "focus": "Mock 与修复",
+      "page": "week8/day-7.html",
+      "case_id": "",
+      "time_blocks": [
+        {
+          "time": "09:00–09:45",
+          "task": "Mock\n按面试时间盒作答；不看讲义。"
+        },
+        {
+          "time": "10:00–11:15",
+          "task": "评分与修复\n完成 Payment System 45 分钟 mock；再做 Robinhood 20 分钟压缩设计与 repair note。"
+        },
+        {
+          "time": "14:00–15:15",
+          "task": "算法\n完成 3 道 Tries -> Heap/Priority Queue 限时复盘题。"
+        },
+        {
+          "time": "20:30–21:00",
+          "task": "周复盘\n更新错题、设计决策和下周第 1 天的预读清单。"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Payment System",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/payment-system",
+          "acceptance": "验收：能在 mock 中完成主线并接住追问。"
+        },
+        {
+          "title": "Robinhood",
+          "provider": "Hello Interview",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/robinhood",
+          "acceptance": "验收：能在压缩题中迁移本周的核心判断。"
+        },
+        {
+          "title": "第十三章：数据系统的未来",
+          "provider": "DDIA",
+          "url": "https://ddia.vonng.com/ch13/",
+          "acceptance": "验收：能说明演化、backfill 或端到端正确性。"
+        }
+      ],
+      "deliverable": "完成 Payment System 45 分钟 mock；再做 Robinhood 20 分钟压缩设计与 repair note。",
+      "mastery": "主项目 75/100 以上；迁移题能在 20 分钟完成可辩护主线。",
+      "repair": "最低分维度做 15 分钟 repair 后复测。",
+      "algorithms": {
+        "required": [
+          {
+            "label": "限时：Implement Trie",
+            "url": "https://leetcode.com/problems/implement-trie-prefix-tree/"
+          },
+          {
+            "label": "限时：Kth Largest",
+            "url": "https://leetcode.com/problems/kth-largest-element-in-an-array/"
+          },
+          {
+            "label": "限时：Median Stream",
+            "url": "https://leetcode.com/problems/find-median-from-data-stream/"
+          }
+        ],
+        "optional": [
+          {
+            "label": "选做：Word Search Review",
+            "url": "https://leetcode.com/problems/word-search/"
+          },
+          {
+            "label": "选做：Task Scheduler Review",
+            "url": "https://leetcode.com/problems/task-scheduler/"
+          },
+          {
+            "label": "选做：K Closest Review",
+            "url": "https://leetcode.com/problems/k-closest-points-to-origin/"
+          }
+        ]
+      },
+      "source_status": "transitional-generated-from-html"
+    }
+  ]
+}

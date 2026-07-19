@@ -3,12 +3,12 @@
   "owner": {
     "name": "Daniel Wan"
   },
-  "description": "System design interview prep skills with Excalidraw-style cards, senior talk tracks, and an 18-week study coach.",
+  "description": "Case-driven system design interview prep with visual study cards, senior talk tracks, and an 18-week repair loop.",
   "plugins": [
     {
       "name": "crack-system-interview-skill",
       "source": "./plugins/crack-system-interview-skill",
-      "description": "Turn pasted text into diagram-first Excalidraw visuals, or supervise the bundled 18-week system design plan.",
+      "description": "Turn sources into visual study cards, or supervise the bundled 18-week case-driven system design plan.",
       "version": "0.6.0",
       "author": {
         "name": "Daniel Wan"

@@ -12,9 +12,11 @@ from pathlib import Path
 def find_repo_root() -> Path:
     here = Path(__file__).resolve()
     for parent in here.parents:
-        if (parent / "docs" / "system-design-project-route.html").exists():
+        if (parent / "docs" / "system-design-project-route.html").exists() and (parent / "curriculum").is_dir():
             return parent
-    raise SystemExit("Could not find docs/system-design-project-route.html from script path.")
+        if (parent / "skills").is_dir() and (parent / "curriculum").is_dir():
+            return parent
+    raise SystemExit("Could not find a bundled curriculum from script path.")
 
 
 def clean_html(value: str) -> str:
@@ -88,15 +90,73 @@ def parse_day(path: Path, docs_root: Path) -> dict:
         "rubric": rubric,
         "algorithms": {"required": required, "optional": optional},
         "path": relative_path,
+        "source_format": "html-fallback",
+    }
+
+
+def parse_manifest_day(week_doc: dict, item: dict) -> dict:
+    week = int(week_doc["week"])
+    day = int(item["day"])
+    sources = [
+        {
+            "title": source["title"],
+            "label": source.get("provider", ""),
+            "url": source["url"],
+            "acceptance": source.get("acceptance", ""),
+        }
+        for source in item.get("sources", [])
+    ]
+    algorithms = item.get("algorithms", {})
+
+    def normalize_links(items: list[dict]) -> list[dict[str, str]]:
+        return [
+            {"label": link.get("label") or link.get("title", ""), "url": link["url"]}
+            for link in items
+        ]
+
+    rubric = {block["time"]: block["task"] for block in item.get("time_blocks", [])}
+    rubric.update(
+        {
+            "产出物": item.get("deliverable", ""),
+            "必须掌握": item.get("mastery", ""),
+            "修复规则": item.get("repair", ""),
+        }
+    )
+    return {
+        "week": week,
+        "day": day,
+        "date": item["date"],
+        "eyebrow": f"第 {week} 周 · 第 {day} 天 · {item['date']} · {item.get('focus', '')}",
+        "title": item["title"],
+        "deck": item.get("focus", ""),
+        "sources": sources,
+        "rubric": rubric,
+        "algorithms": {
+            "required": normalize_links(list(algorithms.get("required", []))),
+            "optional": normalize_links(list(algorithms.get("optional", []))),
+        },
+        "path": item["page"],
+        "case_id": item.get("case_id", ""),
+        "source_format": "curriculum-manifest",
     }
 
 
 def load_plan(repo_root: Path) -> list[dict]:
     docs_root = repo_root / "docs"
-    pages = []
+    pages_by_key: dict[tuple[int, int], dict] = {}
+    curriculum_root = repo_root / "curriculum"
+    for path in sorted(curriculum_root.glob("week-*.json")):
+        week_doc = json.loads(path.read_text(encoding="utf-8"))
+        for item in week_doc.get("days", []):
+            parsed = parse_manifest_day(week_doc, item)
+            key = (parsed["week"], parsed["day"])
+            if key in pages_by_key:
+                raise ValueError(f"Duplicate curriculum day: Week {key[0]} Day {key[1]}")
+            pages_by_key[key] = parsed
     for path in sorted(docs_root.glob("week*/day-*.html")):
-        pages.append(parse_day(path, docs_root))
-    return pages
+        parsed = parse_day(path, docs_root)
+        pages_by_key.setdefault((parsed["week"], parsed["day"]), parsed)
+    return [pages_by_key[key] for key in sorted(pages_by_key)]
 
 
 def select_day(plan: list[dict], args: argparse.Namespace) -> dict:
