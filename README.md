@@ -1,5 +1,7 @@
 # Crack System Interview Skill
 
+[![Curriculum source and coverage QA](https://github.com/danielwanwx/crack-system-interview-skill/actions/workflows/curriculum-qa.yml/badge.svg)](https://github.com/danielwanwx/crack-system-interview-skill/actions/workflows/curriculum-qa.yml)
+
 A cross-agent plugin/skill package for system design interview preparation. It uses a case-driven loop: learn the mechanism, design under constraints, speak the answer, run a mock, then repair the weakest decision.
 
 The package has three main entrypoints:
