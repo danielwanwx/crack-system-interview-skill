@@ -3,131 +3,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>第 1 周行动指南 - URL Shortener / Bitly</title>
-  <link rel="icon" href="data:,">
-  <link rel="stylesheet" href="week1/style.css">
+  <meta name="description" content="每个项目都有完整通读日与 Deep Dive/Senior 修复日；复杂度只改变项目数量，不删除学习环节。">
+  <title>第 1 周 · 读扩展、大文件与同步正确性 · 12 周系统设计完整学习路线</title>
+  <link rel="stylesheet" href="assets/curriculum.css">
 </head>
 <body>
-
-  <header class="topbar">
-    <nav class="shell nav">
-      <a class="brand" href="project-driven-picture.html"><span class="mark"></span> 项目化系统设计</a>
-      <div class="navlinks"><a href="project-driven-picture.html">全局图</a><a href="week1-action-guide.html">第 1 周</a><a href="week1/lecture.html">讲义</a><a href="week1/staff-qa.html">Staff Q&A</a><a href="week1/live-mock.html">Live Mock</a><a href="week1/scorecard.html">评分表</a></div>
-    </nav>
-  </header>
-  <main class="shell">
-
-    <section class="hero">
-      <div>
-        <div class="eyebrow">第 1 周 · 2026-07-20 至 2026-07-26 · 主项目</div>
-        <h1>URL Shortener / Bitly</h1>
-        <div class="pill-row">
-          <a class="pill" href="project-driven-picture.html">全局图</a>
-          <a class="pill" href="week1/lecture.html">深度讲义</a>
-          <a class="pill" href="week1/staff-qa.html">Staff Q&A</a>
-          <a class="pill" href="week1/live-mock.html">Live Mock</a>
-          <a class="pill" href="week1/scorecard.html">评分表</a>
-        </div>
-      </div>
-      <aside class="hero-panel">
-        <div class="metric"><b>1</b><span>主系统</span></div>
-        <div class="metric"><b>7</b><span>项目层</span></div>
-        <div class="metric"><b>21</b><span>算法题位</span></div>
-        <div class="metric"><b>75+</b><span>mock 通过线</span></div>
-      </aside>
-    </section>
-
-    <section class="section">
-      <div class="section-head"><h2>本周项目定义</h2><p class="section-copy">创建短链接，按短码跳转到原始 URL。</p></div>
-      <div class="grid-3">
-        <article class="tile"><div class="kicker">核心路径</div><h3>创建和跳转</h3><p>POST /urls 创建映射，GET /{short_code} 返回 302 redirect。</p></article>
-        <article class="tile"><div class="kicker">Senior 标尺</div><h3>用数字做取舍</h3><p>1B URLs 约 500GB，不自动推出分片。先看 redirect QPS 和 p99。</p></article>
-        <article class="tile"><div class="kicker">Staff 信号</div><h3>主动讲失败</h3><p>collision、counter outage、cache stampede、DB failover、expired links、abuse。</p></article>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="section-head"><h2>本周交付</h2></div>
-      <div class="two-col">
-        <div>
-          <div class="kicker">必须交付</div>
-          <ul class="compact-list">
-            <li><span class="box"></span><span>Requirements matrix：FR、NFR、out of scope、design impact。</span></li>
-            <li><span class="box"></span><span>API contract：POST /urls、GET /{short_code}、302、410、404、idempotency。</span></li>
-            <li><span class="box"></span><span>Schema + index：url_mappings、short_code unique index、expires_at。</span></li>
-            <li><span class="box"></span><span>Capacity sheet：storage、QPS、cache hit、DB lookup。</span></li>
-            <li><span class="box"></span><span>HLD whiteboard：create flow、redirect flow、cache miss、failure path。</span></li>
-          </ul>
-        </div>
-        <div>
-          <div class="kicker">Applied AI 叠加</div>
-          <ul class="compact-list">
-            <li><span class="box"></span><span>如果产品加 AI title/summary/safety scan，必须异步执行。</span></li>
-            <li><span class="box"></span><span>LLM 绝不进入 redirect hot path，避免 p99 和 availability 被模型调用拖垮。</span></li>
-            <li><span class="box"></span><span>AI 输出必须有 schema、eval、trace、fallback、manual review 边界。</span></li>
-            <li><span class="box"></span><span>这个 overlay 只建立思维方式，不把 Week 1 变成 AI 系统题。</span></li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="section-head"><h2>7 天推进</h2></div>
-      <div class="route">
-        <div class="row asset-row" id="day-1">
-          <div class="kicker">第 1 天<br>问题框定</div>
-          <h3><a href="week1/day-1-interview-os.html">面试操作系统</a></h3>
-          <p>写一页 Bitly interview control sheet：问题定义、目标用户、主线范围、暂缓范围、时间盒、最后 35 分钟答题顺序。<br><strong>算法：</strong>Arrays & Hashing</p>
-          <a class="button" href="week1/day-1-interview-os.html">进入</a>
-        </div>
-        <div class="row asset-row" id="day-2">
-          <div class="kicker">第 2 天<br>需求边界</div>
-          <h3><a href="week1/day-2-requirements.html">需求边界与 NFR</a></h3>
-          <p>产出 Bitly requirements matrix：FR、NFR、out of scope、design impact 四列。<br><strong>算法：</strong>Arrays & Hashing</p>
-          <a class="button" href="week1/day-2-requirements.html">进入</a>
-        </div>
-        <div class="row asset-row" id="day-3">
-          <div class="kicker">第 3 天<br>API 契约</div>
-          <h3><a href="week1/day-3-api.html">API 契约</a></h3>
-          <p>写 API contract table：method、path、request、response、status code、retry/idempotency、auth assumption。<br><strong>算法：</strong>Arrays & Hashing</p>
-          <a class="button" href="week1/day-3-api.html">进入</a>
-        </div>
-        <div class="row asset-row" id="day-4">
-          <div class="kicker">第 4 天<br>状态模型</div>
-          <h3><a href="week1/day-4-data-model.html">数据模型与真实来源</a></h3>
-          <p>写 schema + index plan：url_mappings、users optional、unique short_code index、owner lookup index、expires_at 行为。<br><strong>算法：</strong>Arrays & Hashing</p>
-          <a class="button" href="week1/day-4-data-model.html">进入</a>
-        </div>
-        <div class="row asset-row" id="day-5">
-          <div class="kicker">第 5 天<br>容量与扩展</div>
-          <h3><a href="week1/day-5-capacity.html">容量判断</a></h3>
-          <p>写 capacity sheet：URL 存储、redirect QPS、create QPS、cache hit ratio、DB lookup、带宽粗估。<br><strong>算法：</strong>Arrays & Hashing</p>
-          <a class="button" href="week1/day-5-capacity.html">进入</a>
-        </div>
-        <div class="row asset-row" id="day-6">
-          <div class="kicker">第 6 天<br>高层设计与深挖</div>
-          <h3><a href="week1/day-6-hld.html">高层设计与请求路径</a></h3>
-          <p>画 HLD：client、API gateway/LB、write service、read service、cache、DB、analytics queue optional，并编号 redirect path。<br><strong>算法：</strong>Arrays & Hashing</p>
-          <a class="button" href="week1/day-6-hld.html">进入</a>
-        </div>
-        <div class="row asset-row" id="day-7">
-          <div class="kicker">第 7 天<br>模拟与修复</div>
-          <h3><a href="week1/day-7-mock.html">模拟面试与修复</a></h3>
-          <p>完成一场 mock 录音或白板截图，并写 repair note：最低分维度、漏掉原因、下一版修复句。<br><strong>算法：</strong>Arrays & Hashing</p>
-          <a class="button" href="week1/day-7-mock.html">进入</a>
-        </div></div>
-    </section>
-
-    <section class="section">
-      <div class="section-head"><h2>通过线</h2><p class="section-copy">35-45 分钟 mock ≥ 75 / 100。</p></div>
-      <div class="grid-3">
-        <article class="tile tight"><div class="kicker">不能漏</div><h3>四个关键点</h3><p>短码唯一性、redirect hot path、DB source of truth、capacity before sharding。</p></article>
-        <article class="tile tight"><div class="kicker">Repair</div><h3>最低维度重写</h3><p>如果 API、schema、capacity、failure 任一维度低于 60%，当天重写。</p></article>
-        <article class="tile tight"><div class="kicker">下一周</div><h3>迁移到缓存与限流</h3><p>Week 2 不换学习方法，只换主系统。</p></article>
-      </div>
-    </section>
-
-    <footer class="footer">第 1 周完成后进入第 2 周：限流与缓存基础设施。</footer>
+  <header class="site-header"><a class="brand" href="index.html"><span>CS</span> Crack System</a><nav aria-label="主导航"><a href="index.html">首页</a><a href="system-design-project-route.html">12 周路线</a><a href="coverage-matrix.html">30 题矩阵</a><a href="week1-action-guide.html">第 1 周</a><a href="week1/lecture.html">中文讲义</a><a href="week1/staff-qa.html">Staff Q&amp;A</a><a href="week1/live-mock.html">Live Mock</a><a href="week1/scorecard.html">复盘</a></nav></header>
+  <main>
+    <section class="hero compact"><p class="eyebrow">Week 01 Action Guide</p><h1>第 1 周 · 读扩展、大文件与同步正确性</h1><p class="lede">每个项目都有完整通读日与 Deep Dive/Senior 修复日；复杂度只改变项目数量，不删除学习环节。</p></section>
+    <section class="metrics"><div><span>项目</span><strong>2</strong></div><div><span>学习日</span><strong>7</strong></div><div><span>算法</span><strong>21</strong></div><div><span>源锚点</span><strong>55</strong></div></section><section class="panel"><div class="section-heading"><div><p class="kicker">Project calendar</p><h2>本周日历与精确时间</h2></div><div class="page-actions"><a class="button" href="week1/lecture.html">中文讲义</a><a class="button secondary" href="week1/staff-qa.html">Staff Q&A</a><a class="button secondary" href="week1/live-mock.html">Mock</a><a class="button secondary" href="week1/scorecard.html">复盘</a></div></div><div class="table-wrap"><table class="calendar"><thead><tr><th>日期</th><th>任务</th><th>固定时段</th><th>产出</th></tr></thead><tbody><tr><td>Day 1<small>2026-07-27</small></td><th><a href="week1/day-1.html">Bitly · 完整通读</a></th><td>07:30–08:30<br>12:20–12:50<br>19:30–22:10</td><td>一张可在 15 分钟讲完的 Bitly 初版白板：FR/NFR、POST /urls、GET /{short_code}、URLMapping schema、create path 与 redirect path。</td></tr><tr><td>Day 2<small>2026-07-28</small></td><th><a href="week1/day-2.html">Bitly · Deep Dive 与 Senior 修复</a></th><td>07:30–08:30<br>12:20–12:50<br>19:30–22:10</td><td>短码分配器、cache-aside redirect、热点与故障矩阵，以及从单库到多地域的触发条件。</td></tr><tr><td>Day 3<small>2026-07-29</small></td><th><a href="week1/day-3.html">Dropbox · 完整通读</a></th><td>07:30–08:30<br>12:20–12:50<br>19:30–22:10</td><td>一张包含 upload、download、share、sync 四条主路径的 Dropbox 白板，分清 blob、metadata、ACL、version 与 change log。</td></tr><tr><td>Day 4<small>2026-07-30</small></td><th><a href="week1/day-4.html">Dropbox · Deep Dive 与 Senior 修复</a></th><td>07:30–08:30<br>12:20–12:50<br>19:30–22:10</td><td>resumable multipart、metadata/blob 一致性、change-log cursor、冲突副本、ACL 撤销和 failure matrix。</td></tr><tr><td>Day 5<small>2026-07-31</small></td><th><a href="week1/day-5.html">API、数据、缓存、Blob 与一致性校准</a></th><td>07:30–08:30<br>12:20–12:50<br>19:30–22:10</td><td>一张双数据面架构图，加一份不少于 8 行的决策表；每行必须写 API、主存储、索引或缓存、失效信号、一致性目标和失败后的恢复动作。</td></tr><tr><td>Day 6<small>2026-08-01</small></td><th><a href="week1/day-6.html">Bitly + Dropbox 双题 Mock</a></th><td>07:30–08:30<br>12:20–12:50<br>19:30–22:10</td><td>一份完整白板录像或逐分钟笔记，外加一张追问证据表；表中记录每次澄清、容量假设、方案取舍、失败模式和面试官提示。</td></tr><tr><td>Day 7<small>2026-08-02</small></td><th><a href="week1/day-7.html">证据复盘与最弱维度复测</a></th><td>07:30–08:30<br>12:20–12:50<br>19:30–22:10</td><td>一份按严重度排序的缺陷账本和一段 15 分钟无提示复测；每条缺陷包含原回答、反例、正确不变量、修复步骤及新证据。</td></tr></tbody></table></div></section><section><div class="section-heading"><div><p class="kicker">不是主项目/迁移项目</p><h2>读扩展、大文件与同步正确性</h2></div></div><div class="card-grid"><article class="project-card"><p class="kicker">完整项目闭环</p><h3>Bitly</h3><p><strong>Read：</strong>一张可在 15 分钟讲完的 Bitly 初版白板：FR/NFR、POST /urls、GET /{short_code}、URLMapping schema、create path 与 redirect path。</p><p><strong>Deep：</strong>短码分配器、cache-aside redirect、热点与故障矩阵，以及从单库到多地域的触发条件。</p><ul class="source-list"><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly#understanding-the-problem" target="_blank" rel="noreferrer">Bitly · Understanding the Problem</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly#high-level-design" target="_blank" rel="noreferrer">Bitly · High-Level Design</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly#potential-deep-dives" target="_blank" rel="noreferrer">Bitly · Potential Deep Dives</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly#1-how-can-we-ensure-short-urls-are-unique" target="_blank" rel="noreferrer">Bitly · 1) How can we ensure short urls are unique?</a></li></ul></article><article class="project-card"><p class="kicker">完整项目闭环</p><h3>Dropbox</h3><p><strong>Read：</strong>一张包含 upload、download、share、sync 四条主路径的 Dropbox 白板，分清 blob、metadata、ACL、version 与 change log。</p><p><strong>Deep：</strong>resumable multipart、metadata/blob 一致性、change-log cursor、冲突副本、ACL 撤销和 failure matrix。</p><ul class="source-list"><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/dropbox#understanding-the-problem" target="_blank" rel="noreferrer">Dropbox · Understanding the Problem</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/dropbox#high-level-design" target="_blank" rel="noreferrer">Dropbox · High-Level Design</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/dropbox#potential-deep-dives" target="_blank" rel="noreferrer">Dropbox · Potential Deep Dives</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/dropbox#1-how-can-you-support-large-files" target="_blank" rel="noreferrer">Dropbox · 1) How can you support large files?</a></li></ul></article></div></section><section class="panel audio"><div class="section-heading"><div><p class="kicker">2 分钟中文讲译预听</p><h2>Week 1｜Bitly 与 Dropbox 两分钟预听</h2></div><span class="badge">不自动生成</span></div><p class="script" id="audio-script">这一周用两道看似简单、实际边界完全不同的题建立系统设计的基本动作。Bitly 是极端读多写少：创建短链时要保证 short code 唯一，跳转时则要在一百毫秒内从短码找到原始 URL。先从 API 和访问路径反推数据模型，再判断 Postgres 的唯一索引是否已经足够；只有读流量和热点证明确实需要时，才加入 cache、replica 或 CDN。Dropbox 的困难不是把文件放进对象存储，而是把大字节内容、metadata、权限和多设备同步拆成可恢复的协议。客户端用预签名 URL 分片上传，完成后再以 idempotency key 提交 metadata；对象已经上传但提交失败时，保留可重试状态并延迟回收孤儿 blob。同步正确性来自 change log、cursor 和 pull repair，WebSocket 只负责更快通知。两题放在一起训练一个核心判断：组件名不是答案，必须说清权威状态在哪里、每条请求如何改变状态、失败后用户看到什么，以及什么时候才值得增加复杂度。试听后请先关掉讲义，用一张白板分别重建两题的权威状态和失败路径；只有能解释缓存过期、孤儿对象与权限撤销的修复上界，才算真正完成这一周。</p><div class="audio-actions"><button class="button" type="button" data-copy="#audio-script">复制讲译脚本</button><a class="button secondary" href="https://elevenlabs.io/docs/eleven-creative/playground/text-to-speech#text-input" target="_blank" rel="noreferrer">Text to Speech · Text input</a></div><dl class="config"><div><dt>默认 Voice</dt><dd>Siqi Liu - Calm, Warm and Gentle</dd></div><div><dt>默认 Model</dt><dd>Eleven v3</dd></div><div><dt>Credits</dt><dd>页面不调用 API，不批量生成；仅在用户主动选择时进入可选入口。</dd></div></dl></section>
   </main>
+  <footer>由可验证源清单生成 · 外链标题与锚点在构建前逐一在线核验 · 12 周系统设计完整学习路线</footer>
+  <script src="assets/curriculum.js"></script>
 </body>
 </html>

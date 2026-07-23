@@ -3,59 +3,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>第 7 周行动指南 - 高竞争交易</title>
-  <link rel="stylesheet" href="week1/style.css">
+  <meta name="description" content="每个项目都有完整通读日与 Deep Dive/Senior 修复日；复杂度只改变项目数量，不删除学习环节。">
+  <title>第 7 周 · 市场数据、订单与地理调度 · 12 周系统设计完整学习路线</title>
+  <link rel="stylesheet" href="assets/curriculum.css">
 </head>
 <body>
-  <header class="topbar"><nav class="shell nav"><a class="brand" href="week7-action-guide.html"><span class="mark"></span> 第7周 / 高竞争交易</a><div class="navlinks"><a href="week7/day-1.html">第1天</a><a href="week7/day-2.html">第2天</a><a href="week7/day-3.html">第3天</a><a href="week7/day-4.html">第4天</a><a href="week7/day-5.html">第5天</a><a href="week7/day-6.html">第6天</a><a href="week7/day-7.html">第7天</a><a href="week7/lecture.html">讲义</a><a href="week7/staff-qa.html">Staff Q&A</a><a href="week7/live-mock.html">Live Mock</a><a href="week7/scorecard.html">评分表</a></div></nav></header>
-  <main class="shell">
-    <section class="hero"><div><div class="eyebrow">第 7 周 · 2026-08-31 至 2026-09-06</div><h1>高竞争交易</h1><div class="pill-row"><a class="pill" href="week7/lecture.html">深度讲义</a><a class="pill" href="week7/staff-qa.html">Staff Q&A</a><a class="pill" href="week7/live-mock.html">Live Mock</a><a class="pill" href="week7/scorecard.html">评分表</a></div></div><aside class="hero-panel"><div class="metric"><b>7</b><span>天训练任务</span></div><div class="metric"><b>21</b><span>算法题位</span></div><div class="metric"><b>Trees</b><span>本周算法 tag/block</span></div><div class="metric"><b>75+</b><span>周末 mock 通过线</span></div></aside></section>
-    <section class="section"><div class="section-head"><h2>本周必做</h2></div><div class="two-col"><div><div class="kicker">掌握</div><ul class="compact-list"><li><span class="box"></span><span>主项目 Ticketmaster：requirements、API/schema、HLD、capacity、两个 deep dives。</span></li><li><span class="box"></span><span>迁移项目：Online Auction 只做可辩护的范围、核心状态、HLD 与一个 deep dive。</span></li><li><span class="box"></span><span>每天完成原文阅读、白板产出、3 道同一 NeetCode tag 题。</span></li></ul></div><div><div class="kicker">暂不展开</div><ul class="compact-list"><li><span class="box"></span><span>不属于主线的二级功能只记录，不展开。</span></li><li><span class="box"></span><span>拓展阅读只用于修正设计，不替代当天产出。</span></li></ul></div></div></section>
-    <section class="section"><div class="section-head"><h2>时间线</h2></div><div class="route">
-        <div class="row row-day-index" id="day-1">
-          <div class="kicker">2026-08-31 周一</div>
-          <h3><a href="week7/day-1.html">第 1 天：Ticketmaster：范围与 NFR</a></h3>
-          <p>写 Ticketmaster requirements matrix：FR、NFR、out of scope、success metric。</p>
-          <a class="button" href="week7/day-1.html">进入</a>
-        </div>
-        <div class="row row-day-index" id="day-2">
-          <div class="kicker">2026-09-01 周二</div>
-          <h3><a href="week7/day-2.html">第 2 天：Ticketmaster：API、状态与数据</a></h3>
-          <p>写 Ticketmaster API + schema：主体、key、访问模式、权限与错误语义。</p>
-          <a class="button" href="week7/day-2.html">进入</a>
-        </div>
-        <div class="row row-day-index" id="day-3">
-          <div class="kicker">2026-09-02 周三</div>
-          <h3><a href="week7/day-3.html">第 3 天：Ticketmaster：核心路径与容量</a></h3>
-          <p>画 Ticketmaster 主路径：请求/事件、状态变化、同步与异步边界，并写 capacity sheet。</p>
-          <a class="button" href="week7/day-3.html">进入</a>
-        </div>
-        <div class="row row-day-index" id="day-4">
-          <div class="kicker">2026-09-03 周四</div>
-          <h3><a href="week7/day-4.html">第 4 天：迁移：Online Auction</a></h3>
-          <p>用 75 分钟拆 Online Auction：范围、核心状态、HLD、一个 bidding / contention / consistency deep dive。</p>
-          <a class="button" href="week7/day-4.html">进入</a>
-        </div>
-        <div class="row row-day-index" id="day-5">
-          <div class="kicker">2026-09-04 周五</div>
-          <h3><a href="week7/day-5.html">第 5 天：迁移：Ticketmaster</a></h3>
-          <p>用 75 分钟拆 Ticketmaster：范围、核心状态、HLD、一个 seat holds / contention / checkout deep dive。</p>
-          <a class="button" href="week7/day-5.html">进入</a>
-        </div>
-        <div class="row row-day-index" id="day-6">
-          <div class="kicker">2026-09-05 周六</div>
-          <h3><a href="week7/day-6.html">第 6 天：Ticketmaster：Failure 与运维</a></h3>
-          <p>写 Ticketmaster 与 Online Auction 的 failure matrix：检测、降级、恢复、SLO。</p>
-          <a class="button" href="week7/day-6.html">进入</a>
-        </div>
-        <div class="row row-day-index" id="day-7">
-          <div class="kicker">2026-09-06 周日</div>
-          <h3><a href="week7/day-7.html">第 7 天：Ticketmaster Mock + Online Auction 压缩题</a></h3>
-          <p>完成 Ticketmaster 45 分钟 mock；再做 Online Auction 20 分钟压缩设计与 repair note。</p>
-          <a class="button" href="week7/day-7.html">进入</a>
-        </div></div></section>
-    <section class="section"><div class="section-head"><h2>通过线</h2><div class="section-copy"><p>45 分钟完成 Ticketmaster 主线；20 分钟完成 Online Auction 迁移题。</p><p>系统设计评分不低于 75 / 100。</p><p>当周 NeetCode tag 完成并记录错题。</p></div></div></section>
-    <footer class="footer">Generated by the printable-plan loop. Review report: week-generation-review.md</footer>
+  <header class="site-header"><a class="brand" href="index.html"><span>CS</span> Crack System</a><nav aria-label="主导航"><a href="index.html">首页</a><a href="system-design-project-route.html">12 周路线</a><a href="coverage-matrix.html">30 题矩阵</a><a href="week7-action-guide.html">第 7 周</a><a href="week7/lecture.html">中文讲义</a><a href="week7/staff-qa.html">Staff Q&amp;A</a><a href="week7/live-mock.html">Live Mock</a><a href="week7/scorecard.html">复盘</a></nav></header>
+  <main>
+    <section class="hero compact"><p class="eyebrow">Week 07 Action Guide</p><h1>第 7 周 · 市场数据、订单与地理调度</h1><p class="lede">每个项目都有完整通读日与 Deep Dive/Senior 修复日；复杂度只改变项目数量，不删除学习环节。</p></section>
+    <section class="metrics"><div><span>项目</span><strong>2</strong></div><div><span>学习日</span><strong>7</strong></div><div><span>算法</span><strong>21</strong></div><div><span>源锚点</span><strong>55</strong></div></section><section class="panel"><div class="section-heading"><div><p class="kicker">Project calendar</p><h2>本周日历与精确时间</h2></div><div class="page-actions"><a class="button" href="week7/lecture.html">中文讲义</a><a class="button secondary" href="week7/staff-qa.html">Staff Q&A</a><a class="button secondary" href="week7/live-mock.html">Mock</a><a class="button secondary" href="week7/scorecard.html">复盘</a></div></div><div class="table-wrap"><table class="calendar"><thead><tr><th>日期</th><th>任务</th><th>固定时段</th><th>产出</th></tr></thead><tbody><tr><td>Day 1<small>2026-09-07</small></td><th><a href="week7/day-1.html">Robinhood · 完整通读</a></th><td>07:30–08:30<br>12:20–12:50<br>19:30–22:10</td><td>一张区分行情读取与订单写入的 Robinhood 白板：quote subscription、order command、broker callback、portfolio projection 与两条端到端时序。</td></tr><tr><td>Day 2<small>2026-09-08</small></td><th><a href="week7/day-2.html">Robinhood · Deep Dive 与 Senior 修复</a></th><td>07:30–08:30<br>12:20–12:50<br>19:30–22:10</td><td>行情分区与 fanout、订单状态机、外部回报去重、partial fill/cancel race、热点降级和 reconciliation runbook。</td></tr><tr><td>Day 3<small>2026-09-09</small></td><th><a href="week7/day-3.html">Uber · 完整通读</a></th><td>07:30–08:30<br>12:20–12:50<br>19:30–22:10</td><td>一张包含 fare estimate、ride request、driver location、matching、reservation 与 trip lifecycle 的 Uber 白板。</td></tr><tr><td>Day 4<small>2026-09-10</small></td><th><a href="week7/day-4.html">Uber · Deep Dive 与 Senior 修复</a></th><td>07:30–08:30<br>12:20–12:50<br>19:30–22:10</td><td>位置分层、geo index、司机 reservation、持久化派单队列、超时重匹配、geo-sharding 与跨边界 runbook。</td></tr><tr><td>Day 5<small>2026-09-11</small></td><th><a href="week7/day-5.html">实时更新、外部系统与一致性边界</a></th><td>07:30–08:30<br>12:20–12:50<br>19:30–22:10</td><td>一张四通道时序图：行情、订单、司机位置、派单；每条标出事件键、允许乱序窗口、真相源、降采样/背压及客户端恢复游标。</td></tr><tr><td>Day 6<small>2026-09-12</small></td><th><a href="week7/day-6.html">Robinhood + Uber 双题 Mock</a></th><td>07:30–08:30<br>12:20–12:50<br>19:30–22:10</td><td>一份主 Mock 记录与一份 30 分钟切题追问稿，另附“可近似/不可近似”决策清单及每项理由。</td></tr><tr><td>Day 7<small>2026-09-13</small></td><th><a href="week7/day-7.html">订单与位置热点复测</a></th><td>07:30–08:30<br>12:20–12:50<br>19:30–22:10</td><td>一份热点负载表与前后架构差异图；至少包含键分布、峰值 QPS、单节点上限、拆分策略、准确性或延迟代价和回滚阈值。</td></tr></tbody></table></div></section><section><div class="section-heading"><div><p class="kicker">不是主项目/迁移项目</p><h2>市场数据、订单与地理调度</h2></div></div><div class="card-grid"><article class="project-card"><p class="kicker">完整项目闭环</p><h3>Robinhood</h3><p><strong>Read：</strong>一张区分行情读取与订单写入的 Robinhood 白板：quote subscription、order command、broker callback、portfolio projection 与两条端到端时序。</p><p><strong>Deep：</strong>行情分区与 fanout、订单状态机、外部回报去重、partial fill/cancel race、热点降级和 reconciliation runbook。</p><ul class="source-list"><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/robinhood#understanding-the-problem" target="_blank" rel="noreferrer">Robinhood · Understanding the Problem</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/robinhood#high-level-design" target="_blank" rel="noreferrer">Robinhood · High-Level Design</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/robinhood#potential-deep-dives" target="_blank" rel="noreferrer">Robinhood · Potential Deep Dives</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/robinhood#1-how-can-the-system-scale-up-live-price-updates" target="_blank" rel="noreferrer">Robinhood · 1) How can the system scale up live price updates?</a></li></ul></article><article class="project-card"><p class="kicker">完整项目闭环</p><h3>Uber</h3><p><strong>Read：</strong>一张包含 fare estimate、ride request、driver location、matching、reservation 与 trip lifecycle 的 Uber 白板。</p><p><strong>Deep：</strong>位置分层、geo index、司机 reservation、持久化派单队列、超时重匹配、geo-sharding 与跨边界 runbook。</p><ul class="source-list"><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/uber#understanding-the-problem" target="_blank" rel="noreferrer">Uber · Understanding the Problem</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/uber#high-level-design" target="_blank" rel="noreferrer">Uber · High-Level Design</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/uber#potential-deep-dives" target="_blank" rel="noreferrer">Uber · Potential Deep Dives</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/uber#1-how-do-we-handle-frequent-driver-location-updates-and-efficient-proximity-searches-on-location-data" target="_blank" rel="noreferrer">Uber · 1) How do we handle frequent driver location updates and efficient proximity searches on location data?</a></li></ul></article></div></section><section class="panel audio"><div class="section-heading"><div><p class="kicker">2 分钟中文讲译预听</p><h2>Week 7｜Robinhood 与 Uber 两分钟预听</h2></div><span class="badge">不自动生成</span></div><p class="script" id="audio-script">这一周把两种高频实时系统放在一起比较。Robinhood 的行情流允许短暂陈旧，却必须让订单状态和经纪商回报可追溯；Uber 的司机位置可以近似，却不能把同一司机同时承诺给两位乘客。学习时先为每个系统画两条不同语义的路径：Robinhood 的 market-data fanout 与 order lifecycle，Uber 的 location ingestion 与 ride matching。行情和位置都要面对热点、背压、断线重连和客户端续传，但正确性边界不同。订单应由幂等 command、单调状态机和外部回报驱动，任何超时都先查询已有状态，不能盲目重发；派单则以有 TTL 的 reservation 或条件更新锁住司机，再由可持久化工作流处理接受、拒绝、超时和重新匹配。容量扩展也不从“上 Kafka、做分片”开始，而从符号热度、地理密度、更新频率、消费者速度和过期窗口开始。最终 mock 要能主动回答三个问题：哪些数据允许旧、哪些动作绝不能重复、哪个指标证明系统正在失控。把这三个答案讲清楚，实时系统才从组件图变成可恢复的产品协议。</p><div class="audio-actions"><button class="button" type="button" data-copy="#audio-script">复制讲译脚本</button><a class="button secondary" href="https://elevenlabs.io/docs/eleven-creative/playground/text-to-speech#text-input" target="_blank" rel="noreferrer">Text to Speech · Text input</a></div><dl class="config"><div><dt>默认 Voice</dt><dd>Siqi Liu - Calm, Warm and Gentle</dd></div><div><dt>默认 Model</dt><dd>Eleven v3</dd></div><div><dt>Credits</dt><dd>页面不调用 API，不批量生成；仅在用户主动选择时进入可选入口。</dd></div></dl></section>
   </main>
+  <footer>由可验证源清单生成 · 外链标题与锚点在构建前逐一在线核验 · 12 周系统设计完整学习路线</footer>
+  <script src="assets/curriculum.js"></script>
 </body>
 </html>

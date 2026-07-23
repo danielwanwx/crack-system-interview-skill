@@ -6,7 +6,7 @@ The package has three main entrypoints:
 
 - `$card` turns dense sources into source-aligned Excalidraw study cards and concise explanatory talk tracks.
 - `$senior-sde-interview-script` turns concepts or prompts into senior-candidate interview answers with a minimal supporting whiteboard.
-- `$system-design-study-coach` supervises the bundled 18-week system design and algorithms plan.
+- `$system-design-study-coach` supervises the bundled 12-week, 30-project system design and algorithms plan.
 
 The shared target model is an `Interview Case`: one structured record for the prompt, requirements, estimates, API, data model, architecture, deep dives, interviewer follow-ups, reference answer, rubric, and repair tasks. The three entrypoints are designed to become different views of the same case rather than separate content silos.
 
@@ -16,7 +16,11 @@ The printable plan is available through GitHub Pages when this repository is pub
 https://danielwanwx.github.io/crack-system-interview-skill/
 ```
 
-The current route begins on 2026-07-20 and ends on 2026-11-22. Open `system-design-project-route.html` from the Pages root for the 18-week overview.
+The current route begins on 2026-07-27 and ends on 2026-10-18. Open
+`system-design-project-route.html` from the Pages root for the 12-week
+overview, or `coverage-matrix.html` for proof that all 30 current Hello
+Interview System Design Question Breakdowns have both a complete-read day and
+a Deep Dive/Senior repair day.
 
 It uses native Excalidraw blocks: dashed task/constraints frames, semantic component blocks, black arrows, circles/squares/rectangles, and sticky notes for gotchas. It avoids decorative component icons by default so layout stays clean and predictable. `$card` is the visual study-card entrypoint for articles, URLs, notes, and dense concepts. `$senior-sde-interview-script` is the interview-expression entrypoint for 30/90-second answers, senior/principal phrasing, bilingual rehearsal, and mock responses. Output language defaults to English, and users can request Chinese or another language in the prompt.
 
@@ -52,7 +56,17 @@ Claude Code local testing:
 claude --plugin-dir ./plugins/crack-system-interview-skill
 ```
 
-The rest of the tree is packaging and release infrastructure: `cases/` contains native Interview Cases, `curriculum/` is the Coach runtime schedule, and `plugins/` contains the cross-host package. Week 1 is the first native case migration; Weeks 2-18 are structured transition manifests captured from the current published plan and will be upgraded case by case. `card/` is the standalone visual study-card skill, `senior-sde-interview-script/` is the standalone interview-expression skill, `system-design-study-coach/` is the standalone daily study coach, `docs/` is the GitHub Pages study plan, and `examples/` plus `scripts/` are release QA.
+The rest of the tree is packaging and release infrastructure: `cases/`
+contains the 30 complete project cases; `sources/source-manifest.json` stores
+reviewed exact titles, headings, and fragments; `curriculum/` is the Coach
+runtime schedule; and `plugins/` contains the cross-host package. Every week
+also carries a two-minute Chinese audio-preview script. Its recorded default is
+`Siqi Liu - Calm, Warm and Gentle` with `Eleven v3`; pages never call
+ElevenLabs or consume credits automatically. `card/` is the standalone visual
+study-card skill, `senior-sde-interview-script/` is the standalone
+interview-expression skill, `system-design-study-coach/` is the standalone
+daily study coach, `docs/` is the generated GitHub Pages study plan, and
+`examples/` plus `scripts/` are release QA.
 
 ## Simplest Usage
 
@@ -202,7 +216,7 @@ plugins/crack-system-interview-skill/
 card/                                                # standalone short skill copy
 senior-sde-interview-script/                         # standalone skill copy
 system-design-study-coach/                           # standalone daily study coach
-docs/                                                # GitHub Pages 18-week study plan
+docs/                                                # GitHub Pages 12-week study plan
 scripts/                                             # repo-level renderer test copy
 ```
 
@@ -309,7 +323,22 @@ Use $card bilingual English and Chinese: <paste text here>
 
 ## Release QA
 
-Before cutting a release, run the full offline gate:
+The curriculum build is fail-closed and begins with live verification of every
+reviewed source title, heading, fragment, the exact 30-item Hello Interview
+roster, and every LeetCode slug/title:
+
+```bash
+python3 scripts/build_curriculum.py
+python3 scripts/sync_plugin_content.py
+python3 scripts/qa_curriculum.py --no-live
+```
+
+`--no-live` is only for the immediately following QA step because the build in
+the same release command has already performed the live gate. Running
+`qa_curriculum.py` by itself performs the live checks again. If any source
+cannot be verified, generation stops before writing pages.
+
+Before cutting a release, also run the full offline renderer/plugin gate:
 
 ```bash
 python3 scripts/run_release_qa.py --out /tmp/hello-interview-release-qa

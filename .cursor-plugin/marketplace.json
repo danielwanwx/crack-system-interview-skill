@@ -4,13 +4,13 @@
     "name": "Daniel Wan"
   },
   "metadata": {
-    "description": "Case-driven system design interview prep with visual study cards, senior talk tracks, and an 18-week repair loop."
+    "description": "Case-driven system design prep with visual cards, senior talk tracks, and a verified 12-week, 30-project repair loop."
   },
   "plugins": [
     {
       "name": "crack-system-interview-skill",
       "source": "plugins/crack-system-interview-skill",
-      "description": "Turn sources into visual study cards, or supervise the bundled 18-week case-driven system design plan."
+      "description": "Turn sources into visual study cards, or supervise the verified 12-week, 30-project system design plan."
     }
   ]
 }

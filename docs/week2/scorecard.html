@@ -1,8 +1,19 @@
 <!doctype html>
 <html lang="zh-CN">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>第 2 周评分表</title><link rel="stylesheet" href="../week1/style.css"></head>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="把最弱的一项变成下一次可复测的具体动作。">
+  <title>第 2 周评分与修复 · 12 周系统设计完整学习路线</title>
+  <link rel="stylesheet" href="../assets/curriculum.css">
+</head>
 <body>
-  <header class="topbar"><nav class="shell nav"><a class="brand" href="../week2-action-guide.html"><span class="mark"></span> 第 2 周</a><div class="navlinks"><a href="day-7.html">第 7 天</a><a href="../week2-action-guide.html">周概览</a></div></nav></header>
-  <main class="shell"><section class="day-hero"><div class="eyebrow">第 2 周最终闸门</div><h1>评分表</h1></section><section class="section"><table class="rubric"><tr><th>维度</th><th>分值</th><th>通过信号</th></tr><tr><td>需求与范围</td><td>15</td><td>FR/NFR 清晰，暂缓范围明确。</td></tr><tr><td>API / 数据模型</td><td>15</td><td>接口、事件或 schema 能从需求推出。</td></tr><tr><td>HLD / 请求路径</td><td>20</td><td>主流程、读写路径、失败路径可解释。</td></tr><tr><td>Deep Dive</td><td>25</td><td>能主动讲 tradeoff、scale trigger、failure mode。</td></tr><tr><td>算法 tag</td><td>15</td><td>Two Pointers 本周题位完成并记录错题。</td></tr><tr><td>沟通</td><td>10</td><td>时间受控，追问能接住。</td></tr></table></section><footer class="footer">低于 75 分：修复最低维度后复测。</footer></main>
+  <header class="site-header"><a class="brand" href="../index.html"><span>CS</span> Crack System</a><nav aria-label="主导航"><a href="../index.html">首页</a><a href="../system-design-project-route.html">12 周路线</a><a href="../coverage-matrix.html">30 题矩阵</a><a href="../week2-action-guide.html">第 2 周</a><a href="../week2/lecture.html">中文讲义</a><a href="../week2/staff-qa.html">Staff Q&amp;A</a><a href="../week2/live-mock.html">Live Mock</a><a href="../week2/scorecard.html">复盘</a></nav></header>
+  <main>
+    <section class="hero compact"><p class="eyebrow">Week 02 · Scorecard</p><h1>第 2 周评分与修复</h1><p class="lede">把最弱的一项变成下一次可复测的具体动作。</p></section>
+    <section class="panel print-only-friendly"><p class="kicker">Evidence, not vibes</p><h2>0–3 分量表</h2><p>0=缺失；1=提示后能补；2=独立完成；3=能解释替代方案、失效与演进触发器。只记可引用的回答或白板证据。</p><div class="table-wrap"><table class="scorecard"><thead><tr><th>维度</th><th>可观察信号</th><th>分数</th><th>证据</th></tr></thead><tbody><tr><th>问题框定</th><td>FR/NFR 可量化；范围与失败语义明确。</td><td class="score-box">□ 0　□ 1　□ 2　□ 3</td><td class="notes"></td></tr><tr><th>API 与数据</th><td>契约、幂等键、索引、权威状态能互相推导。</td><td class="score-box">□ 0　□ 1　□ 2　□ 3</td><td class="notes"></td></tr><tr><th>高层设计</th><td>先有可工作基线；组件由需求或瓶颈证明。</td><td class="score-box">□ 0　□ 1　□ 2　□ 3</td><td class="notes"></td></tr><tr><th>Deep Dive</th><td>能讲机制、阈值、替代方案与故障时序。</td><td class="score-box">□ 0　□ 1　□ 2　□ 3</td><td class="notes"></td></tr><tr><th>Senior 判断</th><td>主动管理歧义、取舍、演进和跨团队边界。</td><td class="score-box">□ 0　□ 1　□ 2　□ 3</td><td class="notes"></td></tr><tr><th>可靠性</th><td>检测、隔离、重试/补偿、恢复与可观测性闭环。</td><td class="score-box">□ 0　□ 1　□ 2　□ 3</td><td class="notes"></td></tr><tr><th>表达</th><td>白板可读，先结论再证据，追问后能修正。</td><td class="score-box">□ 0　□ 1　□ 2　□ 3</td><td class="notes"></td></tr></tbody></table></div></section><section class="two-col"><article class="panel"><p class="kicker">本周覆盖</p><h2>项目</h2><ul><li>Rate Limiter</li><li>Distributed Cache</li><li>Job Scheduler</li></ul><h3>三条复盘句</h3><ol><li>我在哪一个追问开始失去因果链？</li><li>哪一个组件没有需求或瓶颈证据？</li><li>改写题后，我能否迁移同一判断？</li></ol></article><article class="panel"><p class="kicker">Repair contract</p><h2>最低维度修复单</h2><p>最低维度：________________</p><p>失败证据：________________</p><p>精确源锚点：______________</p><p>删除/改写：_______________</p><p>复测题：__________________</p><p>复测证据：________________</p><div class="repair"><strong>完成定义</strong><p>不是“看懂了”，而是在新问法下独立得到正确判断。</p></div></article></section>
+  </main>
+  <footer>由可验证源清单生成 · 外链标题与锚点在构建前逐一在线核验 · 12 周系统设计完整学习路线</footer>
+  <script src="../assets/curriculum.js"></script>
 </body>
 </html>

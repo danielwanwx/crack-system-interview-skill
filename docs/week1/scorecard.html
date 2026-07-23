@@ -3,73 +3,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>第 1 周评分表 - URL Shortener / Bitly</title>
-  <link rel="icon" href="data:,">
-  <link rel="stylesheet" href="../week1/style.css">
+  <meta name="description" content="把最弱的一项变成下一次可复测的具体动作。">
+  <title>第 1 周评分与修复 · 12 周系统设计完整学习路线</title>
+  <link rel="stylesheet" href="../assets/curriculum.css">
 </head>
 <body>
-
-  <header class="topbar">
-    <nav class="shell nav">
-      <a class="brand" href="../project-driven-picture.html"><span class="mark"></span> 项目化系统设计</a>
-      <div class="navlinks"><a href="../project-driven-picture.html">全局图</a><a href="../week1-action-guide.html">第 1 周</a><a href="lecture.html">讲义</a><a href="staff-qa.html">Staff Q&A</a><a href="live-mock.html">Live Mock</a><a href="scorecard.html">评分表</a></div>
-    </nav>
-  </header>
-  <main class="shell">
-
-    <section class="day-hero">
-      <div class="eyebrow">第 1 周评分表 · URL Shortener / Bitly</div>
-      <h1>75 分以上才进入 Week 2</h1>
-      <div class="day-meta"><span>满分 100</span><span>通过线 75</span><span>关键漏项直接重做</span></div>
-    </section>
-
-    <section class="section">
-      <table class="matrix">
-        <tr><th>维度</th><th>分值</th><th>验收标准</th></tr>
-        <tr><td>Problem framing</td><td>10</td><td>能收敛范围，明确 create path / redirect path，说明 out of scope。</td></tr>
-        <tr><td>Requirements / NFR</td><td>15</td><td>FR 清楚，NFR 有数字，且每个 NFR 对应设计影响。</td></tr>
-        <tr><td>API contract</td><td>15</td><td>覆盖 POST /urls、GET /{short_code}、302、410、404、409、auth context、重试/幂等。</td></tr>
-        <tr><td>Data model</td><td>15</td><td>url_mappings 表、short_code unique index、expires_at、disabled、source of truth 清楚。</td></tr>
-        <tr><td>Capacity</td><td>15</td><td>能估算 1B URLs、redirect QPS、cache hit、DB fallback，并避免过早分片。</td></tr>
-        <tr><td>HLD</td><td>15</td><td>create flow 和 redirect flow 分开，cache/DB/LB/CDN 位置合理。</td></tr>
-        <tr><td>Deep dives / failure</td><td>15</td><td>能讲短码生成、fast redirect、cache miss、DB down、hot key、counter outage。</td></tr>
-      </table>
-    </section>
-
-    <section class="section">
-      <div class="section-head"><h2>Critical misses</h2><p class="section-copy">出现下面任一情况，即使总分看似够，也要重做一次 15 分钟压缩版。</p></div>
-      <div class="two-col">
-        <div>
-          <ul class="compact-list">
-            <li><span class="box"></span><span>没有说明 short_code 唯一性。</span></li>
-            <li><span class="box"></span><span>没有 302 / 410 / 404 语义。</span></li>
-            <li><span class="box"></span><span>把 cache 当成 source of truth。</span></li>
-            <li><span class="box"></span><span>没有估算就直接 sharding。</span></li>
-          </ul>
-        </div>
-        <div>
-          <ul class="compact-list">
-            <li><span class="box"></span><span>redirect path 依赖同步 analytics 或 AI 调用。</span></li>
-            <li><span class="box"></span><span>没有 cache miss / DB down failure path。</span></li>
-            <li><span class="box"></span><span>API 没有错误码和重试边界。</span></li>
-            <li><span class="box"></span><span>Staff Q&A 少于 8 题能答清。</span></li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="section-head"><h2>Repair loop</h2><p class="section-copy">低分维度不要只写“复习”。必须生成一个可执行修复动作。</p></div>
-      <table class="matrix">
-        <tr><th>低分维度</th><th>修复动作</th><th>复测</th></tr>
-        <tr><td>API</td><td>重写 API contract table，补 status code 和 idempotency。</td><td>用 Day 3 口述 5 分钟。</td></tr>
-        <tr><td>Data model</td><td>从 redirect lookup 反推 schema 和 index，不保留无解释字段。</td><td>用 Day 4 口述 5 分钟。</td></tr>
-        <tr><td>Capacity</td><td>重新估算 storage / QPS / cache hit / DB lookup。</td><td>用 Day 5 口述 5 分钟。</td></tr>
-        <tr><td>Failure</td><td>补 cache miss、DB down、hot key、counter outage、expired link。</td><td>用 Staff Q&A 抽 4 题。</td></tr>
-      </table>
-    </section>
-
-    <footer class="footer">Scorecard · 分数必须来自一次真实口述或白板演练。</footer>
+  <header class="site-header"><a class="brand" href="../index.html"><span>CS</span> Crack System</a><nav aria-label="主导航"><a href="../index.html">首页</a><a href="../system-design-project-route.html">12 周路线</a><a href="../coverage-matrix.html">30 题矩阵</a><a href="../week1-action-guide.html">第 1 周</a><a href="../week1/lecture.html">中文讲义</a><a href="../week1/staff-qa.html">Staff Q&amp;A</a><a href="../week1/live-mock.html">Live Mock</a><a href="../week1/scorecard.html">复盘</a></nav></header>
+  <main>
+    <section class="hero compact"><p class="eyebrow">Week 01 · Scorecard</p><h1>第 1 周评分与修复</h1><p class="lede">把最弱的一项变成下一次可复测的具体动作。</p></section>
+    <section class="panel print-only-friendly"><p class="kicker">Evidence, not vibes</p><h2>0–3 分量表</h2><p>0=缺失；1=提示后能补；2=独立完成；3=能解释替代方案、失效与演进触发器。只记可引用的回答或白板证据。</p><div class="table-wrap"><table class="scorecard"><thead><tr><th>维度</th><th>可观察信号</th><th>分数</th><th>证据</th></tr></thead><tbody><tr><th>问题框定</th><td>FR/NFR 可量化；范围与失败语义明确。</td><td class="score-box">□ 0　□ 1　□ 2　□ 3</td><td class="notes"></td></tr><tr><th>API 与数据</th><td>契约、幂等键、索引、权威状态能互相推导。</td><td class="score-box">□ 0　□ 1　□ 2　□ 3</td><td class="notes"></td></tr><tr><th>高层设计</th><td>先有可工作基线；组件由需求或瓶颈证明。</td><td class="score-box">□ 0　□ 1　□ 2　□ 3</td><td class="notes"></td></tr><tr><th>Deep Dive</th><td>能讲机制、阈值、替代方案与故障时序。</td><td class="score-box">□ 0　□ 1　□ 2　□ 3</td><td class="notes"></td></tr><tr><th>Senior 判断</th><td>主动管理歧义、取舍、演进和跨团队边界。</td><td class="score-box">□ 0　□ 1　□ 2　□ 3</td><td class="notes"></td></tr><tr><th>可靠性</th><td>检测、隔离、重试/补偿、恢复与可观测性闭环。</td><td class="score-box">□ 0　□ 1　□ 2　□ 3</td><td class="notes"></td></tr><tr><th>表达</th><td>白板可读，先结论再证据，追问后能修正。</td><td class="score-box">□ 0　□ 1　□ 2　□ 3</td><td class="notes"></td></tr></tbody></table></div></section><section class="two-col"><article class="panel"><p class="kicker">本周覆盖</p><h2>项目</h2><ul><li>Bitly</li><li>Dropbox</li></ul><h3>三条复盘句</h3><ol><li>我在哪一个追问开始失去因果链？</li><li>哪一个组件没有需求或瓶颈证据？</li><li>改写题后，我能否迁移同一判断？</li></ol></article><article class="panel"><p class="kicker">Repair contract</p><h2>最低维度修复单</h2><p>最低维度：________________</p><p>失败证据：________________</p><p>精确源锚点：______________</p><p>删除/改写：_______________</p><p>复测题：__________________</p><p>复测证据：________________</p><div class="repair"><strong>完成定义</strong><p>不是“看懂了”，而是在新问法下独立得到正确判断。</p></div></article></section>
   </main>
+  <footer>由可验证源清单生成 · 外链标题与锚点在构建前逐一在线核验 · 12 周系统设计完整学习路线</footer>
+  <script src="../assets/curriculum.js"></script>
 </body>
 </html>

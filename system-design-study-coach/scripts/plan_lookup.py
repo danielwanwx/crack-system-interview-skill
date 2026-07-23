@@ -1,229 +1,138 @@
 #!/usr/bin/env python3
+"""Look up one day from the generated 12-week curriculum manifests."""
+
 from __future__ import annotations
 
 import argparse
 import json
-import re
 from datetime import date
-from html import unescape
 from pathlib import Path
+from typing import Any
+from urllib.parse import urljoin
 
 
-def find_repo_root() -> Path:
+def find_curriculum_root() -> Path:
     here = Path(__file__).resolve()
     for parent in here.parents:
-        if (parent / "docs" / "system-design-project-route.html").exists() and (parent / "curriculum").is_dir():
-            return parent
-        if (parent / "skills").is_dir() and (parent / "curriculum").is_dir():
-            return parent
-    raise SystemExit("Could not find a bundled curriculum from script path.")
+        candidate = parent / "curriculum"
+        if (candidate / "week-01.json").exists():
+            return candidate
+    raise SystemExit("Could not find the bundled 12-week curriculum.")
 
 
-def clean_html(value: str) -> str:
-    value = re.sub(r"<br\s*/?>", "\n", value)
-    value = re.sub(r"<[^>]+>", "", value)
-    value = unescape(value)
-    return re.sub(r"[ \t]+", " ", value).strip()
+def load_plan(curriculum_root: Path) -> list[dict[str, Any]]:
+    plan: list[dict[str, Any]] = []
+    paths = sorted(curriculum_root.glob("week-*.json"))
+    if len(paths) != 12:
+        raise SystemExit(f"Expected 12 week manifests, found {len(paths)}.")
+    for expected_week, path in enumerate(paths, start=1):
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        week = int(payload["week"])
+        if week != expected_week:
+            raise SystemExit(f"Expected Week {expected_week}, found Week {week}.")
+        days = payload.get("days", [])
+        if len(days) != 7:
+            raise SystemExit(f"Week {week} must contain exactly seven days.")
+        for expected_day, item in enumerate(days, start=1):
+            if int(item["day"]) != expected_day:
+                raise SystemExit(
+                    f"Week {week}: expected Day {expected_day}, found {item['day']}."
+                )
+            plan.append(dict(item))
+    return plan
 
 
-def first(pattern: str, text: str, default: str = "") -> str:
-    match = re.search(pattern, text, re.S)
-    return clean_html(match.group(1)) if match else default
-
-
-def extract_links(html: str) -> list[dict[str, str]]:
-    return [
-        {"label": clean_html(label), "url": unescape(url)}
-        for url, label in re.findall(r'<a href="([^"]+)">(.+?)</a>', html, re.S)
-    ]
-
-
-def parse_day(path: Path, docs_root: Path) -> dict:
-    text = path.read_text(encoding="utf-8")
-    relative_path = path.relative_to(docs_root).as_posix()
-    week_match = re.search(r"week(\d+)/day-(\d+)(?:-[^/]+)?\.html$", relative_path)
-    if not week_match:
-        raise ValueError(f"Not a day page: {path}")
-    week = int(week_match.group(1))
-    day = int(week_match.group(2))
-    eyebrow = first(r'<div class="eyebrow">(.+?)</div>', text)
-    date_match = re.search(r"(\d{4}-\d{2}-\d{2})", eyebrow)
-
-    source_titles = re.findall(
-        r'<div class="source-title"><a href="([^"]+)">(.+?)</a><span>(.+?)</span></div>',
-        text,
-        re.S,
-    )
-    proofs = re.findall(r'<div class="proof">(.+?)</div>', text, re.S)
-    sources = []
-    for idx, (url, title, label) in enumerate(source_titles):
-        sources.append(
-            {
-                "title": clean_html(title),
-                "label": clean_html(label),
-                "url": unescape(url),
-                "acceptance": clean_html(proofs[idx]) if idx < len(proofs) else "",
-            }
-        )
-
-    rubric = {
-        clean_html(th): clean_html(td)
-        for th, td in re.findall(r"<tr><th>(.+?)</th><td>(.+?)</td></tr>", text, re.S)
-    }
-
-    algo_match = re.search(r'<div class="algo-pack">(.+?)</div>\s*</section>', text, re.S)
-    algo_html = algo_match.group(1) if algo_match else ""
-    algo_links = extract_links(algo_html)
-    required, optional = [], []
-    for link in algo_links:
-        target = optional if link["label"].startswith(("选做：", "快刷：")) else required
-        target.append(link)
-
-    return {
-        "week": week,
-        "day": day,
-        "date": date_match.group(1) if date_match else "",
-        "eyebrow": eyebrow,
-        "title": first(r"<h1>(.+?)</h1>", text),
-        "deck": first(r'<p class="deck">(.+?)</p>', text),
-        "sources": sources,
-        "rubric": rubric,
-        "algorithms": {"required": required, "optional": optional},
-        "path": relative_path,
-        "source_format": "html-fallback",
-    }
-
-
-def parse_manifest_day(week_doc: dict, item: dict) -> dict:
-    week = int(week_doc["week"])
-    day = int(item["day"])
-    sources = [
-        {
-            "title": source["title"],
-            "label": source.get("provider", ""),
-            "url": source["url"],
-            "acceptance": source.get("acceptance", ""),
-        }
-        for source in item.get("sources", [])
-    ]
-    algorithms = item.get("algorithms", {})
-
-    def normalize_links(items: list[dict]) -> list[dict[str, str]]:
-        return [
-            {"label": link.get("label") or link.get("title", ""), "url": link["url"]}
-            for link in items
-        ]
-
-    rubric = {block["time"]: block["task"] for block in item.get("time_blocks", [])}
-    rubric.update(
-        {
-            "产出物": item.get("deliverable", ""),
-            "必须掌握": item.get("mastery", ""),
-            "修复规则": item.get("repair", ""),
-        }
-    )
-    return {
-        "week": week,
-        "day": day,
-        "date": item["date"],
-        "eyebrow": f"第 {week} 周 · 第 {day} 天 · {item['date']} · {item.get('focus', '')}",
-        "title": item["title"],
-        "deck": item.get("focus", ""),
-        "sources": sources,
-        "rubric": rubric,
-        "algorithms": {
-            "required": normalize_links(list(algorithms.get("required", []))),
-            "optional": normalize_links(list(algorithms.get("optional", []))),
-        },
-        "path": item["page"],
-        "case_id": item.get("case_id", ""),
-        "source_format": "curriculum-manifest",
-    }
-
-
-def load_plan(repo_root: Path) -> list[dict]:
-    docs_root = repo_root / "docs"
-    pages_by_key: dict[tuple[int, int], dict] = {}
-    curriculum_root = repo_root / "curriculum"
-    for path in sorted(curriculum_root.glob("week-*.json")):
-        week_doc = json.loads(path.read_text(encoding="utf-8"))
-        for item in week_doc.get("days", []):
-            parsed = parse_manifest_day(week_doc, item)
-            key = (parsed["week"], parsed["day"])
-            if key in pages_by_key:
-                raise ValueError(f"Duplicate curriculum day: Week {key[0]} Day {key[1]}")
-            pages_by_key[key] = parsed
-    for path in sorted(docs_root.glob("week*/day-*.html")):
-        parsed = parse_day(path, docs_root)
-        pages_by_key.setdefault((parsed["week"], parsed["day"]), parsed)
-    return [pages_by_key[key] for key in sorted(pages_by_key)]
-
-
-def select_day(plan: list[dict], args: argparse.Namespace) -> dict:
+def select_day(plan: list[dict[str, Any]], args: argparse.Namespace) -> dict[str, Any]:
     if args.date:
         matches = [item for item in plan if item["date"] == args.date]
-    elif args.week and args.day:
-        matches = [item for item in plan if item["week"] == args.week and item["day"] == args.day]
+    elif args.week is not None or args.day is not None:
+        if args.week is None or args.day is None:
+            raise SystemExit("--week and --day must be provided together.")
+        matches = [
+            item
+            for item in plan
+            if int(item["week"]) == args.week and int(item["day"]) == args.day
+        ]
     else:
         today = date.today().isoformat()
         matches = [item for item in plan if item["date"] == today]
         if not matches:
             raise SystemExit(
-                f"No plan entry for today ({today}). Pass --week N --day M or --date YYYY-MM-DD."
+                f"No plan entry for today ({today}). Pass --week N --day M "
+                "or --date YYYY-MM-DD."
             )
-    if not matches:
-        raise SystemExit("No matching day found.")
+    if len(matches) != 1:
+        raise SystemExit(f"Expected one matching day, found {len(matches)}.")
     return matches[0]
 
 
-def with_public_url(item: dict, base_url: str) -> dict:
+def with_public_url(item: dict[str, Any], base_url: str) -> dict[str, Any]:
+    result = dict(item)
     if base_url:
-        base = base_url.rstrip("/")
-        item = dict(item)
-        item["public_url"] = f"{base}/{item['path']}"
-    return item
-
-
-def render_text(item: dict) -> str:
-    lines = [
-        f"Week {item['week']} Day {item['day']} - {item['title']}",
-        item["eyebrow"],
-        "",
-        item["deck"],
-        "",
-        "Learning sources:",
+        result["public_url"] = f"{base_url.rstrip('/')}/{item['page']}"
+    page_url = str(result.get("public_url") or "")
+    result["internal_resources"] = [
+        {
+            **resource,
+            "url": (
+                urljoin(page_url, str(resource["href"]))
+                if page_url
+                else str(resource["href"])
+            ),
+        }
+        for resource in item.get("internal_resources", [])
     ]
+    return result
+
+
+def render_text(item: dict[str, Any]) -> str:
+    lines = [
+        f"Week {item['week']} Day {item['day']} · {item['date']}",
+        item["title"],
+        "",
+        "精确时间段：",
+    ]
+    for block in item["time_blocks"]:
+        lines.append(
+            f"- {block['time']} · {block['title']}: {block['instruction']}"
+        )
+    lines.extend(["", "今日源包："])
     for source in item["sources"]:
-        lines.append(f"- {source['title']} ({source['label']}): {source['url']}")
-        if source["acceptance"]:
-            lines.append(f"  {source['acceptance']}")
-    lines += ["", "Acceptance:"]
-    for key, value in item["rubric"].items():
-        lines.append(f"- {key}: {value}")
-    lines += ["", "Required algorithms:"]
-    for link in item["algorithms"]["required"]:
-        lines.append(f"- {link['label']}: {link['url']}")
-    if item["algorithms"]["optional"]:
-        lines += ["", "Optional hot problems:"]
-        for link in item["algorithms"]["optional"]:
-            lines.append(f"- {link['label']}: {link['url']}")
-    if "public_url" in item:
-        lines += ["", f"Page: {item['public_url']}"]
-    else:
-        lines += ["", f"Path: docs/{item['path']}"]
+        lines.append(
+            f"- {source['page_title']} · {source['heading']}: {source['url']}"
+        )
+    if item.get("internal_resources"):
+        lines.extend(["", "站内核对："])
+        for resource in item["internal_resources"]:
+            lines.append(f"- {resource['label']}: {resource['url']}")
+    lines.extend(["", f"产出物：{item['artifact']}", "", "验收标准："])
+    lines.extend(f"- {criterion}" for criterion in item["acceptance"])
+    lines.extend(["", f"修复路径：{item['repair']}", "", "算法三题："])
+    for problem in item["algorithms"]["problems"]:
+        lines.append(f"- {problem['title']}: {problem['url']}")
+    lines.append("")
+    lines.append(f"页面：{item.get('public_url') or 'docs/' + item['page']}")
     return "\n".join(lines)
 
 
-def main() -> int:
-    parser = argparse.ArgumentParser(description="Look up the 18-week system design plan by date or week/day.")
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Look up the verified 12-week system design plan."
+    )
     parser.add_argument("--date", help="Plan date, YYYY-MM-DD.")
-    parser.add_argument("--week", type=int, help="Week number.")
-    parser.add_argument("--day", type=int, help="Day number within the week.")
-    parser.add_argument("--base-url", default="", help="Optional GitHub Pages base URL.")
+    parser.add_argument("--week", type=int, choices=range(1, 13))
+    parser.add_argument("--day", type=int, choices=range(1, 8))
+    parser.add_argument("--base-url", default="")
     parser.add_argument("--format", choices=("text", "json"), default="text")
-    args = parser.parse_args()
+    return parser.parse_args()
 
-    item = with_public_url(select_day(load_plan(find_repo_root()), args), args.base_url)
+
+def main() -> int:
+    args = parse_args()
+    item = with_public_url(
+        select_day(load_plan(find_curriculum_root()), args),
+        args.base_url,
+    )
     if args.format == "json":
         print(json.dumps(item, ensure_ascii=False, indent=2))
     else:

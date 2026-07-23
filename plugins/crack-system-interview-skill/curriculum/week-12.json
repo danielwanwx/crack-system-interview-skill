@@ -1,588 +1,850 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "2.0",
   "week": 12,
-  "title": "Week 12 transitional curriculum",
-  "source_status": "transitional-generated-from-html",
+  "theme": "LLM 服务、GPU 调度与全路线 Capstone",
+  "start_date": "2026-10-12",
+  "end_date": "2026-10-18",
+  "algorithm_block": "dynamic-programming",
+  "projects": [
+    {
+      "slug": "chatgpt",
+      "title": "ChatGPT",
+      "complete_read_day": 1,
+      "deep_dive_day": 2
+    }
+  ],
+  "audio_preview": {
+    "title": "Week 12｜ChatGPT 服务系统两分钟预听",
+    "script": "设计 ChatGPT 时，把大模型当作一个昂贵、流式、可取消的黑盒服务，不讨论训练模型本身。用户发送消息后，API 先把 user message 以幂等方式写进 conversation，再创建 generation run；调度器根据模型、上下文长度、付费层级和 GPU 容量排队，worker 开始生成后通过 Server-Sent Events 把 token 流给客户端。客户端断线不代表 run 必须继续：要有 cancel、timeout 和 reclaim GPU 的协议。真正稀缺的不是普通 API QPS，而是 token-seconds、KV cache 和 GPU memory，所以公平调度要按预计成本而不是请求数限流。长对话每轮都重发全部历史会让首 token 延迟和成本持续增长，可以截断、摘要或缓存稳定前缀，但摘要必须带版本并保留原消息作为权威记录。生产级答案还要讲 overload shedding、模型故障回退、内容安全、租户隔离、trace 与 eval。最后记住：agent 或 tool calling 只是可选的应用层扩展；只有当任务需要动态决策时才引入，并且所有工具权限、参数校验和副作用确认都必须留在可信运行时。试听后请关掉页面，从 admission、queue、GPU、stream 到 conversation persistence 画一次完整时序，并为断线、取消、超时和重复计费分别标出唯一的修复责任方。",
+    "provider": "ElevenLabs",
+    "voice": "Siqi Liu - Calm, Warm and Gentle",
+    "model": "Eleven v3",
+    "auto_generate": false
+  },
   "days": [
     {
+      "week": 12,
       "day": 1,
-      "date": "2026-10-05",
-      "title": "Yelp：范围与 NFR",
-      "focus": "主项目范围",
+      "date": "2026-10-12",
+      "kind": "project-read",
+      "title": "ChatGPT · 完整通读",
       "page": "week12/day-1.html",
-      "case_id": "",
+      "public_url": "https://danielwanwx.github.io/crack-system-interview-skill/week12/day-1.html",
       "time_blocks": [
         {
-          "time": "07:55–08:15",
-          "task": "回忆\n不看资料复述昨日设计；写出今天要验证的一条假设。"
+          "time": "07:30–08:00",
+          "title": "算法 1",
+          "instruction": "独立作答；写出复杂度和一个反例。"
         },
         {
-          "time": "08:15–09:25",
-          "task": "原文\n依次阅读：Yelp → 第二章：数据系统的目标 → API Design。只读页面下方列出的小节。"
+          "time": "08:00–08:30",
+          "title": "算法 2",
+          "instruction": "延续同一 NeetCode tag block，不跨 tag 拼题。"
         },
         {
-          "time": "09:25–10:20",
-          "task": "白板\n写 Yelp requirements matrix：FR、NFR、out of scope、success metric。"
+          "time": "12:20–12:50",
+          "title": "算法 3",
+          "instruction": "计时完成；只记录错因与下一次修复动作。"
         },
         {
-          "time": "15:30–16:45",
-          "task": "算法\n完成 3 道 Intervals；每题记录 pattern、invariant、复杂度和错因。"
+          "time": "19:30–20:00",
+          "title": "问题框定",
+          "instruction": "先写 FR/NFR、容量假设和不做什么；暂不画扩展组件。"
         },
         {
-          "time": "20:30–21:30",
-          "task": "口述\n脱稿讲当天产出；按修复规则：若先画盒子，回到需求、约束与 NFR。"
+          "time": "20:00–21:20",
+          "title": "连续完整通读",
+          "instruction": "从 Understanding/Understand the Problem 按原文顺序读到 High-Level Design：ChatGPT。"
+        },
+        {
+          "time": "21:20–21:50",
+          "title": "关页重建",
+          "instruction": "不看答案重画 API、数据模型、读写路径和权威状态。"
+        },
+        {
+          "time": "21:50–22:10",
+          "title": "验收与修复",
+          "instruction": "逐条核对验收标准；不通过就执行当天 repair，不用补读掩盖。"
         }
       ],
       "sources": [
         {
-          "title": "Yelp",
-          "provider": "Hello Interview",
-          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/yelp",
-          "acceptance": "验收：能定义主用户路径、FR/NFR、范围与成功指标。"
+          "source_id": "hi.breakdown.chatgpt",
+          "page_title": "ChatGPT",
+          "heading": "Understanding the Problem",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/chatgpt#understanding-the-problem"
         },
         {
-          "title": "第二章：数据系统的目标",
-          "provider": "DDIA",
-          "url": "https://ddia.vonng.com/ch2/",
-          "acceptance": "验收：能把可靠性、可伸缩性、可维护性写进 NFR。"
+          "source_id": "hi.breakdown.chatgpt",
+          "page_title": "ChatGPT",
+          "heading": "Functional Requirements",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/chatgpt#functional-requirements"
         },
         {
-          "title": "API Design",
-          "provider": "Hello Interview",
-          "url": "https://www.hellointerview.com/learn/system-design/core-concepts/api-design",
-          "acceptance": "验收：能从范围推出接口边界。"
+          "source_id": "hi.breakdown.chatgpt",
+          "page_title": "ChatGPT",
+          "heading": "Non-Functional Requirements",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/chatgpt#non-functional-requirements"
+        },
+        {
+          "source_id": "hi.breakdown.chatgpt",
+          "page_title": "ChatGPT",
+          "heading": "The Set Up",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/chatgpt#the-set-up"
+        },
+        {
+          "source_id": "hi.breakdown.chatgpt",
+          "page_title": "ChatGPT",
+          "heading": "Planning the Approach",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/chatgpt#planning-the-approach"
+        },
+        {
+          "source_id": "hi.breakdown.chatgpt",
+          "page_title": "ChatGPT",
+          "heading": "Defining the Core Entities",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/chatgpt#defining-the-core-entities"
+        },
+        {
+          "source_id": "hi.breakdown.chatgpt",
+          "page_title": "ChatGPT",
+          "heading": "API or System Interface",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/chatgpt#api-or-system-interface"
+        },
+        {
+          "source_id": "hi.breakdown.chatgpt",
+          "page_title": "ChatGPT",
+          "heading": "High-Level Design",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/chatgpt#high-level-design"
         }
       ],
-      "deliverable": "写 Yelp requirements matrix：FR、NFR、out of scope、success metric。",
-      "mastery": "范围可在 5 分钟内收敛；每个 NFR 均有量级或业务后果。",
-      "repair": "若先画盒子，回到需求、约束与 NFR。",
+      "internal_resources": [],
+      "artifact": "一张区分 conversation persistence、generation run、GPU scheduler、worker 与 token stream 的 ChatGPT HLD。",
+      "acceptance": [
+        "把 LLM 当作外部黑盒，设计重点落在 serving、状态、调度、流式输出和成本。",
+        "消息写入、run 创建与重试有幂等边界，断线和取消不会留下无限消耗 GPU 的任务。",
+        "TTFT、stream smoothness、queue wait、token throughput 和 cost 有明确 SLO/指标。"
+      ],
+      "repair": "若答案开始讲 transformer 训练或向量数据库，先回到 send prompt、resume conversation 两条用户路径，重写服务状态和请求时序。",
       "algorithms": {
-        "required": [
+        "tag": "Dynamic Programming",
+        "mode": "new",
+        "problems": [
           {
-            "label": "必做：Merge Intervals",
-            "url": "https://leetcode.com/problems/merge-intervals/"
+            "title": "Climbing Stairs",
+            "slug": "climbing-stairs",
+            "url": "https://leetcode.com/problems/climbing-stairs/"
           },
           {
-            "label": "必做：Insert Interval",
-            "url": "https://leetcode.com/problems/insert-interval/"
+            "title": "Min Cost Climbing Stairs",
+            "slug": "min-cost-climbing-stairs",
+            "url": "https://leetcode.com/problems/min-cost-climbing-stairs/"
           },
           {
-            "label": "必做：Summary Ranges",
-            "url": "https://leetcode.com/problems/summary-ranges/"
-          }
-        ],
-        "optional": [
-          {
-            "label": "选做：Teemo Attacking",
-            "url": "https://leetcode.com/problems/teemo-attacking/"
-          },
-          {
-            "label": "选做：Range Addition",
-            "url": "https://leetcode.com/problems/range-addition/"
-          },
-          {
-            "label": "选做：Missing Ranges",
-            "url": "https://leetcode.com/problems/missing-ranges/"
+            "title": "House Robber",
+            "slug": "house-robber",
+            "url": "https://leetcode.com/problems/house-robber/"
           }
         ]
-      },
-      "source_status": "transitional-generated-from-html"
+      }
     },
     {
+      "week": 12,
       "day": 2,
-      "date": "2026-10-06",
-      "title": "Yelp：API、状态与数据",
-      "focus": "主项目数据与 API",
+      "date": "2026-10-13",
+      "kind": "project-deep",
+      "title": "ChatGPT · Deep Dive 与 Senior 修复",
       "page": "week12/day-2.html",
-      "case_id": "",
+      "public_url": "https://danielwanwx.github.io/crack-system-interview-skill/week12/day-2.html",
       "time_blocks": [
         {
-          "time": "07:55–08:15",
-          "task": "回忆\n不看资料复述昨日设计；写出今天要验证的一条假设。"
+          "time": "07:30–08:00",
+          "title": "算法 1",
+          "instruction": "独立作答；写出复杂度和一个反例。"
         },
         {
-          "time": "08:15–09:25",
-          "task": "原文\n依次阅读：Yelp → Data Modeling → 第三章：数据模型与查询语言。只读页面下方列出的小节。"
+          "time": "08:00–08:30",
+          "title": "算法 2",
+          "instruction": "延续同一 NeetCode tag block，不跨 tag 拼题。"
         },
         {
-          "time": "09:25–10:20",
-          "task": "白板\n写 Yelp API + schema：主体、key、访问模式、权限与错误语义。"
+          "time": "12:20–12:50",
+          "title": "算法 3",
+          "instruction": "计时完成；只记录错因与下一次修复动作。"
         },
         {
-          "time": "15:30–16:45",
-          "task": "算法\n完成 3 道 Intervals；每题记录 pattern、invariant、复杂度和错因。"
+          "time": "19:30–20:20",
+          "title": "Deep Dives",
+          "instruction": "围绕 ChatGPT 逐个回答机制、规模阈值和失败语义。"
         },
         {
-          "time": "20:30–21:30",
-          "task": "口述\n脱稿讲当天产出；按修复规则：若 schema 无法解释查询路径，重写 key 与 index。"
+          "time": "20:20–20:50",
+          "title": "精确补课",
+          "instruction": "只读今天列出的 Core / Technology / Pattern / DDIA 小节。"
+        },
+        {
+          "time": "20:50–21:30",
+          "title": "Senior/Staff 追问",
+          "instruction": "先口述回答，再对照详细答案；为每个追问写证据。"
+        },
+        {
+          "time": "21:30–22:10",
+          "title": "故障注入与修复",
+          "instruction": "把超时、重复、乱序、热点或部分失败注入白板后重答。"
         }
       ],
       "sources": [
         {
-          "title": "Yelp",
-          "provider": "Hello Interview",
-          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/yelp",
-          "acceptance": "验收：能从需求推出实体、访问模式与权限边界。"
+          "source_id": "hi.breakdown.chatgpt",
+          "page_title": "ChatGPT",
+          "heading": "Potential Deep Dives",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/chatgpt#potential-deep-dives"
         },
         {
-          "title": "Data Modeling",
-          "provider": "Hello Interview",
-          "url": "https://www.hellointerview.com/learn/system-design/core-concepts/data-modeling",
-          "acceptance": "验收：能从访问路径推出 keys、indexes 与 schema。"
+          "source_id": "hi.breakdown.chatgpt",
+          "page_title": "ChatGPT",
+          "heading": "1) How do we stream tokens back fast, and keep the stream smooth?",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/chatgpt#1-how-do-we-stream-tokens-back-fast-and-keep-the-stream-smooth"
         },
         {
-          "title": "第三章：数据模型与查询语言",
-          "provider": "DDIA",
-          "url": "https://ddia.vonng.com/ch3/",
-          "acceptance": "验收：能解释数据模型取舍。"
+          "source_id": "hi.breakdown.chatgpt",
+          "page_title": "ChatGPT",
+          "heading": "2) How do we route and schedule generation requests across GPU workers?",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/chatgpt#2-how-do-we-route-and-schedule-generation-requests-across-gpu-workers"
+        },
+        {
+          "source_id": "hi.breakdown.chatgpt",
+          "page_title": "ChatGPT",
+          "heading": "3) How do we keep heavy users from monopolizing GPUs while giving paid tiers a better experience?",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/chatgpt#3-how-do-we-keep-heavy-users-from-monopolizing-gpus-while-giving-paid-tiers-a-better-experience"
+        },
+        {
+          "source_id": "hi.breakdown.chatgpt",
+          "page_title": "ChatGPT",
+          "heading": "4) As conversations get longer, how do we control inference cost without making the assistant feel forgetful?",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/chatgpt#4-as-conversations-get-longer-how-do-we-control-inference-cost-without-making-the-assistant-feel-forgetful"
+        },
+        {
+          "source_id": "hi.breakdown.chatgpt",
+          "page_title": "ChatGPT",
+          "heading": "What is Expected at Each Level?",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/chatgpt#what-is-expected-at-each-level"
+        },
+        {
+          "source_id": "hi.breakdown.chatgpt",
+          "page_title": "ChatGPT",
+          "heading": "Senior",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/chatgpt#senior"
+        },
+        {
+          "source_id": "hi.core.api-design",
+          "page_title": "API Design",
+          "heading": "Returning Data",
+          "url": "https://www.hellointerview.com/learn/system-design/core-concepts/api-design#returning-data"
+        },
+        {
+          "source_id": "hi.pattern.realtime-updates",
+          "page_title": "Real-time Updates",
+          "heading": "Server-Sent Events (SSE): The Efficient One-Way Street",
+          "url": "https://www.hellointerview.com/learn/system-design/patterns/realtime-updates#server-sent-events-sse-the-efficient-one-way-street"
+        },
+        {
+          "source_id": "hi.pattern.realtime-updates",
+          "page_title": "Real-time Updates",
+          "heading": "\"How do you handle connection failures and reconnection?\"",
+          "url": "https://www.hellointerview.com/learn/system-design/patterns/realtime-updates#how-do-you-handle-connection-failures-and-reconnection"
+        },
+        {
+          "source_id": "hi.pattern.long-running-tasks",
+          "page_title": "Managing Long Running Tasks",
+          "heading": "The Solution",
+          "url": "https://www.hellointerview.com/learn/system-design/patterns/long-running-tasks#the-solution"
+        },
+        {
+          "source_id": "hi.core.caching",
+          "page_title": "Caching",
+          "heading": "Cache Consistency",
+          "url": "https://www.hellointerview.com/learn/system-design/core-concepts/caching#cache-consistency"
+        },
+        {
+          "source_id": "hi.core.data-modeling",
+          "page_title": "Data Modeling",
+          "heading": "Entities, Keys & Relationships",
+          "url": "https://www.hellointerview.com/learn/system-design/core-concepts/data-modeling#entities-keys--relationships"
+        },
+        {
+          "source_id": "hi.core.cap-theorem",
+          "page_title": "CAP Theorem",
+          "heading": "Different Levels of Consistency",
+          "url": "https://www.hellointerview.com/learn/system-design/core-concepts/cap-theorem#different-levels-of-consistency"
+        },
+        {
+          "source_id": "ddia.ch2",
+          "page_title": "2. 定义非功能性需求",
+          "heading": "描述性能",
+          "url": "https://ddia.vonng.com/ch2/#sec_introduction_percentiles"
+        },
+        {
+          "source_id": "ddia.ch2",
+          "page_title": "2. 定义非功能性需求",
+          "heading": "可靠性与容错",
+          "url": "https://ddia.vonng.com/ch2/#sec_introduction_reliability"
+        },
+        {
+          "source_id": "ddia.ch6",
+          "page_title": "6. 复制",
+          "heading": "复制延迟的问题",
+          "url": "https://ddia.vonng.com/ch6/#sec_replication_lag"
+        },
+        {
+          "source_id": "ddia.ch12",
+          "page_title": "第十二章：流处理",
+          "heading": "消息传递系统",
+          "url": "https://ddia.vonng.com/ch12/#sec_stream_messaging"
+        },
+        {
+          "source_id": "ddia.ch13",
+          "page_title": "第十三章：流式系统的哲学",
+          "heading": "数据库的端到端原则",
+          "url": "https://ddia.vonng.com/ch13/#sec_future_end_to_end"
+        },
+        {
+          "source_id": "openai.building-agents",
+          "page_title": "Building agents",
+          "heading": "Augmenting your agents with tools",
+          "url": "https://developers.openai.com/tracks/building-agents#augmenting-your-agents-with-tools"
+        },
+        {
+          "source_id": "anthropic.building-effective-agents",
+          "page_title": "Building effective agents",
+          "heading": "When (and when not) to use agents",
+          "url": "https://www.anthropic.com/engineering/building-effective-agents#when-and-when-not-to-use-agents"
         }
       ],
-      "deliverable": "写 Yelp API + schema：主体、key、访问模式、权限与错误语义。",
-      "mastery": "接口、状态与 schema 可从访问路径推出；权限和错误码明确。",
-      "repair": "若 schema 无法解释查询路径，重写 key 与 index。",
+      "internal_resources": [],
+      "artifact": "SSE 流、GPU admission/scheduling、按 token 成本公平限流、长上下文策略、取消与 overload failure matrix。",
+      "acceptance": [
+        "能解释 TTFT 与总生成时长不同，并处理 backpressure、断线、恢复和取消。",
+        "调度键包含模型、上下文长度、预计输出和服务层级，不用普通 FIFO 掩盖 GPU 成本。",
+        "摘要、截断与 prefix/KV cache 的质量、版本、隐私和失效风险都有 repair path。"
+      ],
+      "repair": "把一次 generation run 从 admission 到 GPU 回收画成状态机；每个转移写 timeout、cancel、retry、metric 和用户状态。",
       "algorithms": {
-        "required": [
+        "tag": "Dynamic Programming",
+        "mode": "new",
+        "problems": [
           {
-            "label": "必做：Non-overlapping Intervals",
-            "url": "https://leetcode.com/problems/non-overlapping-intervals/"
+            "title": "House Robber II",
+            "slug": "house-robber-ii",
+            "url": "https://leetcode.com/problems/house-robber-ii/"
           },
           {
-            "label": "必做：Remove Covered Intervals",
-            "url": "https://leetcode.com/problems/remove-covered-intervals/"
+            "title": "Longest Palindromic Substring",
+            "slug": "longest-palindromic-substring",
+            "url": "https://leetcode.com/problems/longest-palindromic-substring/"
           },
           {
-            "label": "复盘：Merge Intervals",
-            "url": "https://leetcode.com/problems/merge-intervals/"
-          }
-        ],
-        "optional": [
-          {
-            "label": "选做：Min Arrows Balloons",
-            "url": "https://leetcode.com/problems/minimum-number-of-arrows-to-burst-balloons/"
-          },
-          {
-            "label": "选做：Partition Labels",
-            "url": "https://leetcode.com/problems/partition-labels/"
-          },
-          {
-            "label": "选做：Interval List Intersections",
-            "url": "https://leetcode.com/problems/interval-list-intersections/"
+            "title": "Palindromic Substrings",
+            "slug": "palindromic-substrings",
+            "url": "https://leetcode.com/problems/palindromic-substrings/"
           }
         ]
-      },
-      "source_status": "transitional-generated-from-html"
+      }
     },
     {
+      "week": 12,
       "day": 3,
-      "date": "2026-10-07",
-      "title": "Yelp：核心路径与容量",
-      "focus": "主项目核心路径",
+      "date": "2026-10-14",
+      "kind": "integration",
+      "title": "流式输出、队列与 GPU 调度",
       "page": "week12/day-3.html",
-      "case_id": "",
+      "public_url": "https://danielwanwx.github.io/crack-system-interview-skill/week12/day-3.html",
       "time_blocks": [
         {
-          "time": "07:55–08:15",
-          "task": "回忆\n不看资料复述昨日设计；写出今天要验证的一条假设。"
+          "time": "07:30–08:00",
+          "title": "算法 1",
+          "instruction": "独立作答；写出复杂度和一个反例。"
         },
         {
-          "time": "08:15–09:25",
-          "task": "原文\n依次阅读：Yelp → Data Modeling → 第四章：存储与检索。只读页面下方列出的小节。"
+          "time": "08:00–08:30",
+          "title": "算法 2",
+          "instruction": "延续同一 NeetCode tag block，不跨 tag 拼题。"
         },
         {
-          "time": "09:25–10:20",
-          "task": "白板\n画 Yelp 主路径：请求/事件、状态变化、同步与异步边界，并写 capacity sheet。"
+          "time": "12:20–12:50",
+          "title": "算法 3",
+          "instruction": "计时完成；只记录错因与下一次修复动作。"
         },
         {
-          "time": "15:30–16:45",
-          "task": "算法\n完成 3 道 Intervals；每题记录 pattern、invariant、复杂度和错因。"
+          "time": "19:30–20:10",
+          "title": "请求与流式状态机",
+          "instruction": "画 admitted、queued、running、streaming、cancelled、completed/failed 转移，写 run ID、序号与断线恢复/终止语义。"
         },
         {
-          "time": "20:30–21:30",
-          "task": "口述\n脱稿讲当天产出；按修复规则：若同步链路过长，重新划分 durable state 与 queue boundary。"
+          "time": "20:10–20:50",
+          "title": "GPU 容量与批调度",
+          "instruction": "用并发、prompt/output token、batch 与显存假设估算 TTFT；设计动态 batching、队列和 worker 选择。"
+        },
+        {
+          "time": "20:50–21:30",
+          "title": "公平与过载保护",
+          "instruction": "为普通、付费和重用户制定可量化配额/权重，写饥饿保护、429/排队反馈和负载削减顺序。"
+        },
+        {
+          "time": "21:30–22:10",
+          "title": "断连取消故障演练",
+          "instruction": "分别在排队、prefill、decode 注入取消或网关断线，逐项验证传播、重复请求、GPU 回收和告警。"
         }
       ],
       "sources": [
         {
-          "title": "Yelp",
-          "provider": "Hello Interview",
-          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/yelp",
-          "acceptance": "验收：能画出核心请求或事件路径。"
+          "source_id": "hi.breakdown.chatgpt",
+          "page_title": "ChatGPT",
+          "heading": "1) How do we stream tokens back fast, and keep the stream smooth?",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/chatgpt#1-how-do-we-stream-tokens-back-fast-and-keep-the-stream-smooth"
         },
         {
-          "title": "Data Modeling",
-          "provider": "Hello Interview",
-          "url": "https://www.hellointerview.com/learn/system-design/core-concepts/data-modeling",
-          "acceptance": "验收：能把模式落到具体组件与状态。"
+          "source_id": "hi.breakdown.chatgpt",
+          "page_title": "ChatGPT",
+          "heading": "2) How do we route and schedule generation requests across GPU workers?",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/chatgpt#2-how-do-we-route-and-schedule-generation-requests-across-gpu-workers"
         },
         {
-          "title": "第四章：存储与检索",
-          "provider": "DDIA",
-          "url": "https://ddia.vonng.com/ch4/",
-          "acceptance": "验收：能说明存储与索引影响。"
+          "source_id": "hi.breakdown.chatgpt",
+          "page_title": "ChatGPT",
+          "heading": "Cancelling a run and reclaiming the GPU",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/chatgpt#cancelling-a-run-and-reclaiming-the-gpu"
         }
       ],
-      "deliverable": "画 Yelp 主路径：请求/事件、状态变化、同步与异步边界，并写 capacity sheet。",
-      "mastery": "能分清 hot path、durable state、async work 与 retry boundary。",
-      "repair": "若同步链路过长，重新划分 durable state 与 queue boundary。",
+      "internal_resources": [],
+      "artifact": "一张请求/GPU 双状态机时序图，加一份容量预算；包含 admission、优先级队列、batch 形成、prefill/decode、SSE 断连、取消、超时与显存回收。",
+      "acceptance": [
+        "明确 TTFT、inter-token latency、队列等待和吞吐四项指标，能从并发数、平均 token 与 GPU batch 容量反推排队阈值。",
+        "普通/付费/重用户公平策略可执行：写权重或配额、饥饿保护、过载拒绝和客户端重试信息。",
+        "客户端断连或取消后，控制面能识别 run、传播 cancellation、停止调度并最终释放 GPU；遗漏清理有独立告警。"
+      ],
+      "repair": "若答案把流式输出等同于 SSE 协议，退回请求状态机，逐步演练断连发生在排队、prefill、decode 三个阶段的状态与资源结果。",
       "algorithms": {
-        "required": [
+        "tag": "Dynamic Programming",
+        "mode": "new",
+        "problems": [
           {
-            "label": "必做：Meeting Rooms",
-            "url": "https://leetcode.com/problems/meeting-rooms/"
+            "title": "Decode Ways",
+            "slug": "decode-ways",
+            "url": "https://leetcode.com/problems/decode-ways/"
           },
           {
-            "label": "必做：Meeting Rooms II",
-            "url": "https://leetcode.com/problems/meeting-rooms-ii/"
+            "title": "Coin Change",
+            "slug": "coin-change",
+            "url": "https://leetcode.com/problems/coin-change/"
           },
           {
-            "label": "复盘：Insert Interval",
-            "url": "https://leetcode.com/problems/insert-interval/"
-          }
-        ],
-        "optional": [
-          {
-            "label": "选做：Meeting Scheduler",
-            "url": "https://leetcode.com/problems/meeting-scheduler/"
-          },
-          {
-            "label": "选做：Max Events Attended",
-            "url": "https://leetcode.com/problems/maximum-number-of-events-that-can-be-attended/"
-          },
-          {
-            "label": "选做：Divide Intervals Groups",
-            "url": "https://leetcode.com/problems/divide-intervals-into-minimum-number-of-groups/"
+            "title": "Maximum Product Subarray",
+            "slug": "maximum-product-subarray",
+            "url": "https://leetcode.com/problems/maximum-product-subarray/"
           }
         ]
-      },
-      "source_status": "transitional-generated-from-html"
+      }
     },
     {
+      "week": 12,
       "day": 4,
-      "date": "2026-10-08",
-      "title": "迁移：Food Review App",
-      "focus": "迁移题拆解",
+      "date": "2026-10-15",
+      "kind": "integration",
+      "title": "长上下文、缓存与推理成本",
       "page": "week12/day-4.html",
-      "case_id": "",
+      "public_url": "https://danielwanwx.github.io/crack-system-interview-skill/week12/day-4.html",
       "time_blocks": [
         {
-          "time": "07:55–08:15",
-          "task": "回忆\n不看资料复述昨日设计；写出今天要验证的一条假设。"
+          "time": "07:30–08:00",
+          "title": "算法 1",
+          "instruction": "独立作答；写出复杂度和一个反例。"
         },
         {
-          "time": "08:15–09:25",
-          "task": "原文\n依次阅读：Hello Interview Guided Practice → Data Modeling → Elasticsearch。只读页面下方列出的小节。"
+          "time": "08:00–08:30",
+          "title": "算法 2",
+          "instruction": "延续同一 NeetCode tag block，不跨 tag 拼题。"
         },
         {
-          "time": "09:25–10:20",
-          "task": "白板\n用 75 分钟拆 Food Review App：范围、核心状态、HLD、一个 geo search / ranking / moderation deep dive。"
+          "time": "12:20–12:50",
+          "title": "算法 3",
+          "instruction": "计时完成；只记录错因与下一次修复动作。"
         },
         {
-          "time": "15:30–16:45",
-          "task": "算法\n完成 3 道 Intervals；每题记录 pattern、invariant、复杂度和错因。"
+          "time": "19:30–20:10",
+          "title": "三组会话成本基线",
+          "instruction": "为短、中、超长会话估算输入/输出 token、TTFT 和 GPU 占用，确定成本或延迟超标点。"
         },
         {
-          "time": "20:30–21:30",
-          "task": "口述\n脱稿讲当天产出；按修复规则：若把迁移题照抄主项目，先写出它不同的状态、SLO 和 failure mode。"
+          "time": "20:10–20:50",
+          "title": "上下文选择策略",
+          "instruction": "分别应用截断、结构化摘要和检索，标出必须保留的用户事实、工具结果与安全约束。"
+        },
+        {
+          "time": "20:50–21:30",
+          "title": "缓存键与隔离",
+          "instruction": "设计前缀/响应缓存键、版本和失效；用跨租户、模型升级、系统提示变更三个反例验证不会误命中。"
+        },
+        {
+          "time": "21:30–22:10",
+          "title": "质量—成本验收",
+          "instruction": "计算优化前后成本与延迟，运行关键事实问答清单；任何质量护栏失败都触发降级或回退。"
         }
       ],
       "sources": [
         {
-          "title": "Hello Interview Guided Practice",
-          "provider": "Hello Interview",
-          "url": "https://www.hellointerview.com/learn/system-design/in-a-hurry/problem-breakdowns",
-          "acceptance": "验收：能用 Food Review App 验证 geo search / ranking / moderation 的迁移能力。"
+          "source_id": "hi.breakdown.chatgpt",
+          "page_title": "ChatGPT",
+          "heading": "4) As conversations get longer, how do we control inference cost without making the assistant feel forgetful?",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/chatgpt#4-as-conversations-get-longer-how-do-we-control-inference-cost-without-making-the-assistant-feel-forgetful"
         },
         {
-          "title": "Data Modeling",
-          "provider": "Hello Interview",
-          "url": "https://www.hellointerview.com/learn/system-design/core-concepts/data-modeling",
-          "acceptance": "验收：能把共用模式落到新的状态和请求路径。"
+          "source_id": "hi.breakdown.chatgpt",
+          "page_title": "ChatGPT",
+          "heading": "2) Users should be able to view past chats and resume a conversation with context carried across turns",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/chatgpt#2-users-should-be-able-to-view-past-chats-and-resume-a-conversation-with-context-carried-across-turns"
         },
         {
-          "title": "Elasticsearch",
-          "provider": "Hello Interview",
-          "url": "https://www.hellointerview.com/learn/system-design/deep-dives/elasticsearch",
-          "acceptance": "验收：能完成该题最关键的 tradeoff。"
+          "source_id": "hi.core.caching",
+          "page_title": "Caching",
+          "heading": "Cache Consistency",
+          "url": "https://www.hellointerview.com/learn/system-design/core-concepts/caching#cache-consistency"
         }
       ],
-      "deliverable": "用 75 分钟拆 Food Review App：范围、核心状态、HLD、一个 geo search / ranking / moderation deep dive。",
-      "mastery": "能解释 Food Review App 与主项目相同模式下不同的正确性要求。",
-      "repair": "若把迁移题照抄主项目，先写出它不同的状态、SLO 和 failure mode。",
+      "internal_resources": [],
+      "artifact": "一份三组会话 token 账单与上下文策略表；逐组列原始历史、保留/摘要/检索内容、缓存键、失效版本、输入成本、TTFT 与记忆质量检查。",
+      "acceptance": [
+        "至少比较滑动窗口、结构化摘要和按需检索三种策略，给出触发阈值、信息损失与适用会话。",
+        "前缀/KV 或响应缓存键包含模型、系统指令、租户/权限及版本；明确何时命中、何时绝不能跨用户复用。",
+        "用三组真实长度假设计算 token 与 GPU 时间变化，并设计关键事实召回率或任务完成率作为质量护栏。"
+      ],
+      "repair": "若成本优化只写“压缩上下文”，选一个包含用户约束和后续指代的长对话；逐句执行策略，证明保留依据并补缓存隔离测试。",
       "algorithms": {
-        "required": [
+        "tag": "Dynamic Programming",
+        "mode": "new",
+        "problems": [
           {
-            "label": "必做：Minimum Interval Include Query",
-            "url": "https://leetcode.com/problems/minimum-interval-to-include-each-query/"
+            "title": "Word Break",
+            "slug": "word-break",
+            "url": "https://leetcode.com/problems/word-break/"
           },
           {
-            "label": "必做：Data Stream as Disjoint Intervals",
-            "url": "https://leetcode.com/problems/data-stream-as-disjoint-intervals/"
+            "title": "Longest Increasing Subsequence",
+            "slug": "longest-increasing-subsequence",
+            "url": "https://leetcode.com/problems/longest-increasing-subsequence/"
           },
           {
-            "label": "复盘：Non-overlap",
-            "url": "https://leetcode.com/problems/non-overlapping-intervals/"
-          }
-        ],
-        "optional": [
-          {
-            "label": "选做：Range Module",
-            "url": "https://leetcode.com/problems/range-module/"
-          },
-          {
-            "label": "选做：Count Ways Group Ranges",
-            "url": "https://leetcode.com/problems/count-ways-to-group-overlapping-ranges/"
-          },
-          {
-            "label": "选做：Road Addition Queries",
-            "url": "https://leetcode.com/problems/shortest-distance-after-road-addition-queries-i/"
+            "title": "Partition Equal Subset Sum",
+            "slug": "partition-equal-subset-sum",
+            "url": "https://leetcode.com/problems/partition-equal-subset-sum/"
           }
         ]
-      },
-      "source_status": "transitional-generated-from-html"
+      }
     },
     {
+      "week": 12,
       "day": 5,
-      "date": "2026-10-09",
-      "title": "迁移：Yelp",
-      "focus": "迁移题 / 主项目深挖",
+      "date": "2026-10-16",
+      "kind": "integration",
+      "title": "官方 Agent 工程延伸与生产安全",
       "page": "week12/day-5.html",
-      "case_id": "",
+      "public_url": "https://danielwanwx.github.io/crack-system-interview-skill/week12/day-5.html",
       "time_blocks": [
         {
-          "time": "07:55–08:15",
-          "task": "回忆\n不看资料复述昨日设计；写出今天要验证的一条假设。"
+          "time": "07:30–08:00",
+          "title": "算法 1",
+          "instruction": "独立作答；写出复杂度和一个反例。"
         },
         {
-          "time": "08:15–09:25",
-          "task": "原文\n依次阅读：Yelp → Data Modeling → Elasticsearch。只读页面下方列出的小节。"
+          "time": "08:00–08:30",
+          "title": "算法 2",
+          "instruction": "延续同一 NeetCode tag block，不跨 tag 拼题。"
         },
         {
-          "time": "09:25–10:20",
-          "task": "白板\n用 75 分钟拆 Yelp：范围、核心状态、HLD、一个 geo search / ranking deep dive。"
+          "time": "12:20–12:50",
+          "title": "算法 3",
+          "instruction": "计时完成；只记录错因与下一次修复动作。"
         },
         {
-          "time": "15:30–16:45",
-          "task": "算法\n完成 3 道 Intervals；每题记录 pattern、invariant、复杂度和错因。"
+          "time": "19:30–20:10",
+          "title": "是否需要 Agent",
+          "instruction": "选两个任务，用确定性、开放度、反馈可得性和风险四项判据选择普通代码、workflow 或 agent，并记录反方理由。"
         },
         {
-          "time": "20:30–21:30",
-          "task": "口述\n脱稿讲当天产出；按修复规则：若只背概念，补具体状态、算法或 failure sequence。"
+          "time": "20:10–20:50",
+          "title": "工具与权限契约",
+          "instruction": "为路由后的两个工具写 schema、最小权限、超时、幂等、确认点和敏感数据边界。"
+        },
+        {
+          "time": "20:50–21:30",
+          "title": "评估器与停止条件",
+          "instruction": "建立 10 条样本、成功 rubric、最大步数/成本和 evaluator；定义低置信、高风险与循环时的人类升级。"
+        },
+        {
+          "time": "21:30–22:10",
+          "title": "生产故障桌面演练",
+          "instruction": "注入工具超时、错误路由、提示注入和成本失控，逐项写阻断、审计、恢复及回归测试。"
         }
       ],
       "sources": [
         {
-          "title": "Yelp",
-          "provider": "Hello Interview",
-          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/yelp",
-          "acceptance": "验收：能用 Yelp 验证 geo search / ranking 的设计判断。"
+          "source_id": "openai.building-agents",
+          "page_title": "Building agents",
+          "heading": "Orchestration",
+          "url": "https://developers.openai.com/tracks/building-agents#orchestration"
         },
         {
-          "title": "Data Modeling",
-          "provider": "Hello Interview",
-          "url": "https://www.hellointerview.com/learn/system-design/core-concepts/data-modeling",
-          "acceptance": "验收：能从模式解释组件和边界。"
+          "source_id": "openai.building-agents",
+          "page_title": "Building agents",
+          "heading": "Optimizing for production",
+          "url": "https://developers.openai.com/tracks/building-agents#optimizing-for-production"
         },
         {
-          "title": "Elasticsearch",
-          "provider": "Hello Interview",
-          "url": "https://www.hellointerview.com/learn/system-design/deep-dives/elasticsearch",
-          "acceptance": "验收：能讲清机制、取舍与 failure path。"
+          "source_id": "anthropic.building-effective-agents",
+          "page_title": "Building effective agents",
+          "heading": "When (and when not) to use agents",
+          "url": "https://www.anthropic.com/engineering/building-effective-agents#when-and-when-not-to-use-agents"
+        },
+        {
+          "source_id": "anthropic.building-effective-agents",
+          "page_title": "Building effective agents",
+          "heading": "Workflow: Evaluator-optimizer",
+          "url": "https://www.anthropic.com/engineering/building-effective-agents#workflow-evaluator-optimizer"
         }
       ],
-      "deliverable": "用 75 分钟拆 Yelp：范围、核心状态、HLD、一个 geo search / ranking deep dive。",
-      "mastery": "能把 Yelp 讲到组件行为、触发条件与失败模式。",
-      "repair": "若只背概念，补具体状态、算法或 failure sequence。",
+      "internal_resources": [],
+      "artifact": "一份 agent 决策记录和一张最小工作流图；包含是否使用 agent 的判据、模型/工具契约、权限、最大步数/成本、评估样本、停止条件和人工接管。",
+      "acceptance": [
+        "对一个确定性任务和一个开放任务分别论证 workflow/agent/普通代码的选择，不以“更智能”为理由。",
+        "每个工具写参数 schema、最小权限、超时、重试/幂等、敏感输出处理及需要人工确认的动作。",
+        "建立至少 10 条离线评估样本与生产护栏，覆盖任务成功、工具误用、循环、成本超限和高风险动作拦截。"
+      ],
+      "repair": "若流程只是“让模型自己决定”，将其拆成可观测节点，为每个节点补输入契约、预算和失败出口；无法评估的节点必须改回确定性代码或人工步骤。",
       "algorithms": {
-        "required": [
+        "tag": "Dynamic Programming",
+        "mode": "review",
+        "problems": [
           {
-            "label": "必做：Employee Free Time",
-            "url": "https://leetcode.com/problems/employee-free-time/"
+            "title": "Climbing Stairs",
+            "slug": "climbing-stairs",
+            "url": "https://leetcode.com/problems/climbing-stairs/"
           },
           {
-            "label": "必做：Car Pooling",
-            "url": "https://leetcode.com/problems/car-pooling/"
+            "title": "House Robber II",
+            "slug": "house-robber-ii",
+            "url": "https://leetcode.com/problems/house-robber-ii/"
           },
           {
-            "label": "复盘：Meeting Rooms II",
-            "url": "https://leetcode.com/problems/meeting-rooms-ii/"
-          }
-        ],
-        "optional": [
-          {
-            "label": "选做：Describe the Painting",
-            "url": "https://leetcode.com/problems/describe-the-painting/"
-          },
-          {
-            "label": "选做：The Skyline Problem",
-            "url": "https://leetcode.com/problems/the-skyline-problem/"
-          },
-          {
-            "label": "选做：My Calendar III",
-            "url": "https://leetcode.com/problems/my-calendar-iii/"
+            "title": "Decode Ways",
+            "slug": "decode-ways",
+            "url": "https://leetcode.com/problems/decode-ways/"
           }
         ]
-      },
-      "source_status": "transitional-generated-from-html"
+      }
     },
     {
+      "week": 12,
       "day": 6,
-      "date": "2026-10-10",
-      "title": "Yelp：Failure 与运维",
-      "focus": "故障桥接",
+      "date": "2026-10-17",
+      "kind": "mock",
+      "title": "ChatGPT Senior/Staff Live Mock",
       "page": "week12/day-6.html",
-      "case_id": "",
+      "public_url": "https://danielwanwx.github.io/crack-system-interview-skill/week12/day-6.html",
       "time_blocks": [
         {
-          "time": "08:30–10:30",
-          "task": "原文与深挖\n阅读：Yelp → 第九章：分布式系统的麻烦 → CAP Theorem；补齐所有 failure path。"
+          "time": "07:30–08:00",
+          "title": "算法 1",
+          "instruction": "独立作答；写出复杂度和一个反例。"
         },
         {
-          "time": "10:45–12:00",
-          "task": "白板\n写 Yelp 与 Food Review App 的 failure matrix：检测、降级、恢复、SLO。"
+          "time": "08:00–08:30",
+          "title": "算法 2",
+          "instruction": "延续同一 NeetCode tag block，不跨 tag 拼题。"
         },
         {
-          "time": "14:30–15:45",
-          "task": "算法\n完成 3 道 Intervals 限时题；重做本周最慢题。"
+          "time": "12:20–12:50",
+          "title": "算法 3",
+          "instruction": "计时完成；只记录错因与下一次修复动作。"
         },
         {
-          "time": "20:30–21:30",
-          "task": "口述\n用 15 分钟讲主项目、15 分钟讲迁移题、15 分钟讲故障与指标。"
+          "time": "19:30–20:15",
+          "title": "ChatGPT 完整 Live Mock",
+          "instruction": "严格计时完成需求、估算、接口、模型、HLD 与主动深挖；除澄清外不查看讲义。"
+        },
+        {
+          "time": "20:15–20:45",
+          "title": "Senior/Staff 压力追问",
+          "instruction": "连续回答 GPU 热点、付费公平、上下文成本、取消泄漏和跨区域故障，追问必须落到状态或数字。"
+        },
+        {
+          "time": "20:45–21:25",
+          "title": "证据评分",
+          "instruction": "按 breadth、depth、proactiveness 给每项定位录像时间戳，记录面试官提示和未闭环故障。"
+        },
+        {
+          "time": "21:25–22:10",
+          "title": "最低分深挖重录",
+          "instruction": "仅重录最低分段，改变并发或 token 参数，要求主动识别瓶颈并给验收与回滚。"
         }
       ],
       "sources": [
         {
-          "title": "Yelp",
-          "provider": "Hello Interview",
-          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/yelp",
-          "acceptance": "验收：能覆盖主项目的故障、降级与恢复。"
+          "source_id": "hi.breakdown.chatgpt",
+          "page_title": "ChatGPT",
+          "heading": "Potential Deep Dives",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/chatgpt#potential-deep-dives"
         },
         {
-          "title": "第九章：分布式系统的麻烦",
-          "provider": "DDIA",
-          "url": "https://ddia.vonng.com/ch9/",
-          "acceptance": "验收：能说明网络、时钟与 partial failure。"
+          "source_id": "hi.breakdown.chatgpt",
+          "page_title": "ChatGPT",
+          "heading": "Staff+",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/chatgpt#staff"
         },
         {
-          "title": "CAP Theorem",
-          "provider": "Hello Interview",
-          "url": "https://www.hellointerview.com/learn/system-design/deep-dives/cap-theorem",
-          "acceptance": "验收：能明确 consistency / availability 取舍。"
+          "source_id": "hi.senior.expectations",
+          "page_title": "The System Design Interview: What is Expected at Each Level",
+          "heading": "Proactiveness",
+          "url": "https://www.hellointerview.com/blog/the-system-design-interview-what-is-expected-at-each-level#proactiveness"
         }
       ],
-      "deliverable": "写 Yelp 与 Food Review App 的 failure matrix：检测、降级、恢复、SLO。",
-      "mastery": "每个故障有监控、明确的降级选择与恢复条件。",
-      "repair": "若只有 happy path，补 timeout、retry、partial failure 与指标。",
+      "internal_resources": [],
+      "artifact": "一份 45 分钟完整录屏/逐分钟稿、一份追问答题纸和 Staff 评分表；评分表逐项引用回答证据而非主观印象。",
+      "acceptance": [
+        "前 20 分钟完成需求、数量级、API/实体和可运行 HLD，并明确聊天历史与生成运行的不同生命周期。",
+        "至少深入回答流式平滑、GPU 路由/公平、长上下文成本、取消回收中的三题；每题含数字、失败模式和指标。",
+        "主动提出一项跨区域或模型版本迁移风险，给出发布、回滚、数据兼容和用户会话连续性方案。"
+      ],
+      "repair": "若深挖被面试官多次提示，按首次提示点截断录像，重写该处的主动风险清单；24 小时内用不同容量参数重录相同 15 分钟。",
       "algorithms": {
-        "required": [
+        "tag": "Dynamic Programming",
+        "mode": "timed",
+        "problems": [
           {
-            "label": "限时：My Calendar I",
-            "url": "https://leetcode.com/problems/my-calendar-i/"
+            "title": "Min Cost Climbing Stairs",
+            "slug": "min-cost-climbing-stairs",
+            "url": "https://leetcode.com/problems/min-cost-climbing-stairs/"
           },
           {
-            "label": "限时：My Calendar II",
-            "url": "https://leetcode.com/problems/my-calendar-ii/"
+            "title": "Longest Palindromic Substring",
+            "slug": "longest-palindromic-substring",
+            "url": "https://leetcode.com/problems/longest-palindromic-substring/"
           },
           {
-            "label": "复盘：Minimum Interval",
-            "url": "https://leetcode.com/problems/minimum-interval-to-include-each-query/"
-          }
-        ],
-        "optional": [
-          {
-            "label": "选做：Insert Review",
-            "url": "https://leetcode.com/problems/insert-interval/"
-          },
-          {
-            "label": "选做：Car Pooling Review",
-            "url": "https://leetcode.com/problems/car-pooling/"
-          },
-          {
-            "label": "选做：Free Time Review",
-            "url": "https://leetcode.com/problems/employee-free-time/"
+            "title": "Coin Change",
+            "slug": "coin-change",
+            "url": "https://leetcode.com/problems/coin-change/"
           }
         ]
-      },
-      "source_status": "transitional-generated-from-html"
+      }
     },
     {
+      "week": 12,
       "day": 7,
-      "date": "2026-10-11",
-      "title": "Yelp Mock + Food Review App 压缩题",
-      "focus": "Mock 与修复",
+      "date": "2026-10-18",
+      "kind": "repair",
+      "title": "30 题覆盖复盘与最终弱项复测",
       "page": "week12/day-7.html",
-      "case_id": "",
+      "public_url": "https://danielwanwx.github.io/crack-system-interview-skill/week12/day-7.html",
       "time_blocks": [
         {
-          "time": "09:00–09:45",
-          "task": "Mock\n按面试时间盒作答；不看讲义。"
+          "time": "07:30–08:00",
+          "title": "算法 1",
+          "instruction": "独立作答；写出复杂度和一个反例。"
         },
         {
-          "time": "10:00–11:15",
-          "task": "评分与修复\n完成 Yelp 45 分钟 mock；再做 Food Review App 20 分钟压缩设计与 repair note。"
+          "time": "08:00–08:30",
+          "title": "算法 2",
+          "instruction": "延续同一 NeetCode tag block，不跨 tag 拼题。"
         },
         {
-          "time": "14:00–15:15",
-          "task": "算法\n完成 3 道 Intervals 限时复盘题。"
+          "time": "12:20–12:50",
+          "title": "算法 3",
+          "instruction": "计时完成；只记录错因与下一次修复动作。"
         },
         {
-          "time": "20:30–21:00",
-          "task": "周复盘\n更新错题、设计决策和下周第 1 天的预读清单。"
+          "time": "19:30–20:00",
+          "title": "逐行审计 30 题",
+          "instruction": "打开覆盖矩阵和路线，逐题填通读、深挖、复述证据；记录恰好 30 行及所有缺口，不做周级合并。"
+        },
+        {
+          "time": "20:00–20:50",
+          "title": "八类分层口述抽样",
+          "instruction": "从八类各抽一题，每题限时 3 分钟口述需求、主链路、一个深挖和一次故障修复，按统一 rubric 评分。"
+        },
+        {
+          "time": "20:50–21:30",
+          "title": "唯一弱项变参复测",
+          "instruction": "选最低分机制，映射到两个不同项目；改变流量、故障或一致性参数，完成 15 分钟无提示对比复答。"
+        },
+        {
+          "time": "21:30–22:10",
+          "title": "关闭缺口与设回访",
+          "instruction": "把缺证据项目排入具体补课日期，记录复测前后分数、未关闭阻塞与 2/7/21 天复习点，生成最终完成判定。"
         }
       ],
       "sources": [
         {
-          "title": "Yelp",
-          "provider": "Hello Interview",
-          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/yelp",
-          "acceptance": "验收：能在 mock 中完成主线并接住追问。"
+          "source_id": "hi.senior.expectations",
+          "page_title": "The System Design Interview: What is Expected at Each Level",
+          "heading": "Breadth",
+          "url": "https://www.hellointerview.com/blog/the-system-design-interview-what-is-expected-at-each-level#breadth"
         },
         {
-          "title": "Hello Interview Guided Practice",
-          "provider": "Hello Interview",
-          "url": "https://www.hellointerview.com/learn/system-design/in-a-hurry/problem-breakdowns",
-          "acceptance": "验收：能在压缩题中迁移本周的核心判断。"
+          "source_id": "hi.senior.expectations",
+          "page_title": "The System Design Interview: What is Expected at Each Level",
+          "heading": "Depth",
+          "url": "https://www.hellointerview.com/blog/the-system-design-interview-what-is-expected-at-each-level#depth"
         },
         {
-          "title": "第十三章：数据系统的未来",
-          "provider": "DDIA",
-          "url": "https://ddia.vonng.com/ch13/",
-          "acceptance": "验收：能说明演化、backfill 或端到端正确性。"
+          "source_id": "hi.senior.expectations",
+          "page_title": "The System Design Interview: What is Expected at Each Level",
+          "heading": "Proactiveness",
+          "url": "https://www.hellointerview.com/blog/the-system-design-interview-what-is-expected-at-each-level#proactiveness"
+        },
+        {
+          "source_id": "ddia.ch13",
+          "page_title": "第十三章：流式系统的哲学",
+          "heading": "信任但验证",
+          "url": "https://ddia.vonng.com/ch13/#sec_future_verification"
         }
       ],
-      "deliverable": "完成 Yelp 45 分钟 mock；再做 Food Review App 20 分钟压缩设计与 repair note。",
-      "mastery": "主项目 75/100 以上；迁移题能在 20 分钟完成可辩护主线。",
-      "repair": "最低分维度做 15 分钟 repair 后复测。",
+      "internal_resources": [
+        {
+          "href": "../coverage-matrix.html",
+          "label": "30 题覆盖矩阵"
+        },
+        {
+          "href": "../system-design-project-route.html",
+          "label": "12 周项目路线"
+        }
+      ],
+      "artifact": "一份 30 行覆盖审计表和 8 题分层抽样记录：每行写项目、完整通读证据、深挖产出、最后复述日期、一个核心不变量和一个待修项；抽样题附 3 分钟口述评分。",
+      "acceptance": [
+        "覆盖矩阵恰好 30 题且逐行核对，不允许用周级勾选代替；任何缺少通读或深挖证据的项目标为未完成并给补课日期。",
+        "8 题抽样至少覆盖基础设施、实时、媒体、交易、地理、搜索/聚合、时序和 LLM 八类，每题能在 3 分钟内讲清需求、HLD、深挖与故障修复。",
+        "从抽样中只选一个最低分机制，完成 15 分钟变参复测并留下前后评分、仍存缺口和下一次复习日期。"
+      ],
+      "repair": "若 30 行存在空证据，先补对应项目而非宣布毕业；若 8 题复述依赖提示，把失败机制映射到两个不同项目做对比复答，直至同一 rubric 达标。",
       "algorithms": {
-        "required": [
+        "tag": "Dynamic Programming",
+        "mode": "timed",
+        "problems": [
           {
-            "label": "限时：Merge Intervals",
-            "url": "https://leetcode.com/problems/merge-intervals/"
+            "title": "House Robber",
+            "slug": "house-robber",
+            "url": "https://leetcode.com/problems/house-robber/"
           },
           {
-            "label": "限时：Meeting Rooms II",
-            "url": "https://leetcode.com/problems/meeting-rooms-ii/"
+            "title": "Palindromic Substrings",
+            "slug": "palindromic-substrings",
+            "url": "https://leetcode.com/problems/palindromic-substrings/"
           },
           {
-            "label": "限时：Minimum Interval",
-            "url": "https://leetcode.com/problems/minimum-interval-to-include-each-query/"
-          }
-        ],
-        "optional": [
-          {
-            "label": "选做：Non-overlap Review",
-            "url": "https://leetcode.com/problems/non-overlapping-intervals/"
-          },
-          {
-            "label": "选做：Calendar I Review",
-            "url": "https://leetcode.com/problems/my-calendar-i/"
-          },
-          {
-            "label": "选做：Calendar II Review",
-            "url": "https://leetcode.com/problems/my-calendar-ii/"
+            "title": "Maximum Product Subarray",
+            "slug": "maximum-product-subarray",
+            "url": "https://leetcode.com/problems/maximum-product-subarray/"
           }
         ]
-      },
-      "source_status": "transitional-generated-from-html"
+      }
     }
   ]
 }

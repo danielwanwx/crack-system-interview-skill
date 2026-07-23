@@ -499,13 +499,44 @@ def validate_packaging() -> None:
 
     curriculum = ROOT / "curriculum"
     packaged_curriculum = ROOT / "plugins/crack-system-interview-skill/curriculum"
-    source_files = sorted(path.relative_to(curriculum) for path in curriculum.glob("week-*.json"))
-    packaged_files = sorted(path.relative_to(packaged_curriculum) for path in packaged_curriculum.glob("week-*.json"))
+    source_files = sorted(
+        path.relative_to(curriculum)
+        for path in curriculum.rglob("*")
+        if path.is_file()
+    )
+    packaged_files = sorted(
+        path.relative_to(packaged_curriculum)
+        for path in packaged_curriculum.rglob("*")
+        if path.is_file()
+    )
     if source_files != packaged_files:
         raise AssertionError("Plugin curriculum files are out of sync")
     for relative_path in source_files:
         if (packaged_curriculum / relative_path).read_bytes() != (curriculum / relative_path).read_bytes():
             raise AssertionError(f"Plugin curriculum is out of sync: {relative_path}")
+
+    for name in ("cases", "sources"):
+        canonical_root = ROOT / name
+        packaged_root = ROOT / "plugins/crack-system-interview-skill" / name
+        canonical_files = sorted(
+            path.relative_to(canonical_root)
+            for path in canonical_root.rglob("*")
+            if path.is_file()
+        )
+        packaged_files = sorted(
+            path.relative_to(packaged_root)
+            for path in packaged_root.rglob("*")
+            if path.is_file()
+        )
+        if canonical_files != packaged_files:
+            raise AssertionError(f"Plugin {name} files are out of sync")
+        for relative_path in canonical_files:
+            if (canonical_root / relative_path).read_bytes() != (
+                packaged_root / relative_path
+            ).read_bytes():
+                raise AssertionError(
+                    f"Plugin {name} is out of sync: {relative_path}"
+                )
 
 
 def compile_python() -> None:
@@ -515,6 +546,10 @@ def compile_python() -> None:
         ROOT / "scripts/run_hello_interview_visual_smoke.py",
         ROOT / "scripts/run_release_qa.py",
         ROOT / "scripts/bootstrap_curriculum_from_html.py",
+        ROOT / "scripts/build_curriculum.py",
+        ROOT / "scripts/curriculum_model.py",
+        ROOT / "scripts/qa_curriculum.py",
+        ROOT / "scripts/verify_sources.py",
         ROOT / "scripts/sync_plugin_content.py",
         *(ROOT / copy for copy in RENDERER_COPIES),
         *(ROOT / copy for copy in URL_FETCH_COPIES),
@@ -598,7 +633,7 @@ def validate_url_fetch_outline() -> None:
 
 
 def validate_study_coach_lookup() -> None:
-    expected_days = [(1, 1), (18, 7)]
+    expected_days = [(1, 1), (12, 7)]
     for script_text in STUDY_COACH_SCRIPTS:
         script = ROOT / script_text
         for week, day in expected_days:
@@ -613,8 +648,8 @@ def validate_study_coach_lookup() -> None:
                 raise AssertionError(f"{script_text}: Week {week} Day {day} lookup returned the wrong item")
             if not item["date"] or not item["title"]:
                 raise AssertionError(f"{script_text}: Week {week} Day {day} is missing date or title")
-            if not (ROOT / "docs" / item["path"]).exists():
-                raise AssertionError(f"{script_text}: missing day page {item['path']}")
+            if not (ROOT / "docs" / item["page"]).exists():
+                raise AssertionError(f"{script_text}: missing day page {item['page']}")
 
     plugin_root = ROOT / "plugins/crack-system-interview-skill"
     with tempfile.TemporaryDirectory(prefix="crack-system-interview-plugin-") as temp_dir:
@@ -625,7 +660,7 @@ def validate_study_coach_lookup() -> None:
                 sys.executable,
                 str(isolated_plugin / "skills/system-design-study-coach/scripts/plan_lookup.py"),
                 "--week",
-                "18",
+                "12",
                 "--day",
                 "7",
                 "--base-url",
@@ -638,9 +673,9 @@ def validate_study_coach_lookup() -> None:
             text=True,
         )
         item = json.loads(result.stdout)
-        expected_url = "https://danielwanwx.github.io/crack-system-interview-skill/week18/day-7.html"
+        expected_url = "https://danielwanwx.github.io/crack-system-interview-skill/week12/day-7.html"
         if item.get("public_url") != expected_url:
-            raise AssertionError("Isolated plugin study coach did not return the Week 18 public URL")
+            raise AssertionError("Isolated plugin study coach did not return the Week 12 public URL")
 
 
 def validate_case_library() -> None:
@@ -659,18 +694,18 @@ def validate_case_library() -> None:
         cases[case["id"]] = case
 
     curriculum_files = sorted((ROOT / "curriculum").glob("week-*.json"))
-    expected_weeks = list(range(1, 19))
+    expected_weeks = list(range(1, 13))
     actual_weeks = [int(path.stem.removeprefix("week-")) for path in curriculum_files]
     if actual_weeks != expected_weeks:
-        raise AssertionError(f"Curriculum weeks must be 1-18, got {actual_weeks}")
+        raise AssertionError(f"Curriculum weeks must be 1-12, got {actual_weeks}")
     for week_path in curriculum_files:
         week = load_json(week_path)
         days = week.get("days", [])
         if [item.get("day") for item in days] != list(range(1, 8)):
             raise AssertionError(f"{week_path.name}: days must be 1-7 in order")
         for day in days:
-            if len(day.get("algorithms", {}).get("required", [])) != 3:
-                raise AssertionError(f"{week_path.name}: Day {day.get('day')} needs exactly 3 required algorithms")
+            if len(day.get("algorithms", {}).get("problems", [])) != 3:
+                raise AssertionError(f"{week_path.name}: Day {day.get('day')} needs exactly 3 algorithms")
             if not (ROOT / "docs" / day["page"]).exists():
                 raise AssertionError(f"{week_path.name}: missing page {day['page']}")
             case_id = day.get("case_id")
@@ -679,29 +714,16 @@ def validate_case_library() -> None:
 
 
 def validate_curriculum_page_alignment() -> None:
-    lookup_path = ROOT / "system-design-study-coach/scripts/plan_lookup.py"
-    spec = importlib.util.spec_from_file_location("plan_lookup_for_qa", lookup_path)
-    if spec is None or spec.loader is None:
-        raise AssertionError("Could not import the study coach lookup module")
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-
-    for week_path in sorted((ROOT / "curriculum").glob("week-*.json")):
-        week = load_json(week_path)
-        for manifest_day in week["days"]:
-            page_path = ROOT / "docs" / manifest_day["page"]
-            page_day = module.parse_day(page_path, ROOT / "docs")
-            curriculum_day = module.parse_manifest_day(week, manifest_day)
-            keys = ("week", "day", "date", "title", "path")
-            for key in keys:
-                if page_day[key] != curriculum_day[key]:
-                    raise AssertionError(
-                        f"{week_path.name}: Day {manifest_day['day']} page and curriculum disagree on {key}",
-                    )
-            if [item["url"] for item in page_day["sources"]] != [item["url"] for item in curriculum_day["sources"]]:
-                raise AssertionError(f"{week_path.name}: Day {manifest_day['day']} source links drifted from the page")
-            if [item["url"] for item in page_day["algorithms"]["required"]] != [item["url"] for item in curriculum_day["algorithms"]["required"]]:
-                raise AssertionError(f"{week_path.name}: Day {manifest_day['day']} required algorithms drifted from the page")
+    result = subprocess.run(
+        [sys.executable, str(ROOT / "scripts/qa_curriculum.py"), "--no-live"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode != 0:
+        raise AssertionError(
+            "Curriculum QA failed:\n" + (result.stdout or result.stderr)
+        )
 
 
 def run_release_cases(out_dir: Path, renderer: Path) -> None:

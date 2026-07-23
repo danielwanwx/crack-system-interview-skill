@@ -1,7 +1,7 @@
 {
   "name": "crack-system-interview-skill",
-  "version": "0.6.0",
-  "description": "Case-driven system design interview prep: learn, design, speak, mock, and repair across an 18-week coach.",
+  "version": "0.7.0",
+  "description": "Case-driven system design interview prep across a verified 12-week, 30-project coach.",
   "author": {
     "name": "Daniel Wan",
     "url": "https://github.com/danielwanwx"

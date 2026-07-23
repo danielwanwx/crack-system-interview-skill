@@ -3,59 +3,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>第 4 周行动指南 - 消息、状态与实时协作</title>
-  <link rel="stylesheet" href="week1/style.css">
+  <meta name="description" content="每个项目都有完整通读日与 Deep Dive/Senior 修复日；复杂度只改变项目数量，不删除学习环节。">
+  <title>第 4 周 · 社交 feed、媒体管线与全球读取 · 12 周系统设计完整学习路线</title>
+  <link rel="stylesheet" href="assets/curriculum.css">
 </head>
 <body>
-  <header class="topbar"><nav class="shell nav"><a class="brand" href="week4-action-guide.html"><span class="mark"></span> 第4周 / 消息、状态与实时协作</a><div class="navlinks"><a href="week4/day-1.html">第1天</a><a href="week4/day-2.html">第2天</a><a href="week4/day-3.html">第3天</a><a href="week4/day-4.html">第4天</a><a href="week4/day-5.html">第5天</a><a href="week4/day-6.html">第6天</a><a href="week4/day-7.html">第7天</a><a href="week4/lecture.html">讲义</a><a href="week4/staff-qa.html">Staff Q&A</a><a href="week4/live-mock.html">Live Mock</a><a href="week4/scorecard.html">评分表</a></div></nav></header>
-  <main class="shell">
-    <section class="hero"><div><div class="eyebrow">第 4 周 · 2026-08-10 至 2026-08-16</div><h1>消息、状态与实时协作</h1><div class="pill-row"><a class="pill" href="week4/lecture.html">深度讲义</a><a class="pill" href="week4/staff-qa.html">Staff Q&A</a><a class="pill" href="week4/live-mock.html">Live Mock</a><a class="pill" href="week4/scorecard.html">评分表</a></div></div><aside class="hero-panel"><div class="metric"><b>7</b><span>天训练任务</span></div><div class="metric"><b>21</b><span>算法题位</span></div><div class="metric"><b>Sliding Window</b><span>本周算法 tag/block</span></div><div class="metric"><b>75+</b><span>周末 mock 通过线</span></div></aside></section>
-    <section class="section"><div class="section-head"><h2>本周必做</h2></div><div class="two-col"><div><div class="kicker">掌握</div><ul class="compact-list"><li><span class="box"></span><span>主项目 WhatsApp：requirements、API/schema、HLD、capacity、两个 deep dives。</span></li><li><span class="box"></span><span>迁移项目：Online Chess 只做可辩护的范围、核心状态、HLD 与一个 deep dive。</span></li><li><span class="box"></span><span>每天完成原文阅读、白板产出、3 道同一 NeetCode tag 题。</span></li></ul></div><div><div class="kicker">暂不展开</div><ul class="compact-list"><li><span class="box"></span><span>不属于主线的二级功能只记录，不展开。</span></li><li><span class="box"></span><span>拓展阅读只用于修正设计，不替代当天产出。</span></li></ul></div></div></section>
-    <section class="section"><div class="section-head"><h2>时间线</h2></div><div class="route">
-        <div class="row row-day-index" id="day-1">
-          <div class="kicker">2026-08-10 周一</div>
-          <h3><a href="week4/day-1.html">第 1 天：WhatsApp：范围与 NFR</a></h3>
-          <p>写 WhatsApp requirements matrix：FR、NFR、out of scope、success metric。</p>
-          <a class="button" href="week4/day-1.html">进入</a>
-        </div>
-        <div class="row row-day-index" id="day-2">
-          <div class="kicker">2026-08-11 周二</div>
-          <h3><a href="week4/day-2.html">第 2 天：WhatsApp：API、状态与数据</a></h3>
-          <p>写 WhatsApp API + schema：主体、key、访问模式、权限与错误语义。</p>
-          <a class="button" href="week4/day-2.html">进入</a>
-        </div>
-        <div class="row row-day-index" id="day-3">
-          <div class="kicker">2026-08-12 周三</div>
-          <h3><a href="week4/day-3.html">第 3 天：WhatsApp：核心路径与容量</a></h3>
-          <p>画 WhatsApp 主路径：请求/事件、状态变化、同步与异步边界，并写 capacity sheet。</p>
-          <a class="button" href="week4/day-3.html">进入</a>
-        </div>
-        <div class="row row-day-index" id="day-4">
-          <div class="kicker">2026-08-13 周四</div>
-          <h3><a href="week4/day-4.html">第 4 天：迁移：Online Chess</a></h3>
-          <p>用 75 分钟拆 Online Chess：范围、核心状态、HLD、一个 game state / realtime moves deep dive。</p>
-          <a class="button" href="week4/day-4.html">进入</a>
-        </div>
-        <div class="row row-day-index" id="day-5">
-          <div class="kicker">2026-08-14 周五</div>
-          <h3><a href="week4/day-5.html">第 5 天：迁移：WhatsApp</a></h3>
-          <p>用 75 分钟拆 WhatsApp：范围、核心状态、HLD、一个 delivery / ordering / presence deep dive。</p>
-          <a class="button" href="week4/day-5.html">进入</a>
-        </div>
-        <div class="row row-day-index" id="day-6">
-          <div class="kicker">2026-08-15 周六</div>
-          <h3><a href="week4/day-6.html">第 6 天：WhatsApp：Failure 与运维</a></h3>
-          <p>写 WhatsApp 与 Online Chess 的 failure matrix：检测、降级、恢复、SLO。</p>
-          <a class="button" href="week4/day-6.html">进入</a>
-        </div>
-        <div class="row row-day-index" id="day-7">
-          <div class="kicker">2026-08-16 周日</div>
-          <h3><a href="week4/day-7.html">第 7 天：WhatsApp Mock + Online Chess 压缩题</a></h3>
-          <p>完成 WhatsApp 45 分钟 mock；再做 Online Chess 20 分钟压缩设计与 repair note。</p>
-          <a class="button" href="week4/day-7.html">进入</a>
-        </div></div></section>
-    <section class="section"><div class="section-head"><h2>通过线</h2><div class="section-copy"><p>45 分钟完成 WhatsApp 主线；20 分钟完成 Online Chess 迁移题。</p><p>系统设计评分不低于 75 / 100。</p><p>当周 NeetCode tag 完成并记录错题。</p></div></div></section>
-    <footer class="footer">Generated by the printable-plan loop. Review report: week-generation-review.md</footer>
+  <header class="site-header"><a class="brand" href="index.html"><span>CS</span> Crack System</a><nav aria-label="主导航"><a href="index.html">首页</a><a href="system-design-project-route.html">12 周路线</a><a href="coverage-matrix.html">30 题矩阵</a><a href="week4-action-guide.html">第 4 周</a><a href="week4/lecture.html">中文讲义</a><a href="week4/staff-qa.html">Staff Q&amp;A</a><a href="week4/live-mock.html">Live Mock</a><a href="week4/scorecard.html">复盘</a></nav></header>
+  <main>
+    <section class="hero compact"><p class="eyebrow">Week 04 Action Guide</p><h1>第 4 周 · 社交 feed、媒体管线与全球读取</h1><p class="lede">每个项目都有完整通读日与 Deep Dive/Senior 修复日；复杂度只改变项目数量，不删除学习环节。</p></section>
+    <section class="metrics"><div><span>项目</span><strong>3</strong></div><div><span>学习日</span><strong>7</strong></div><div><span>算法</span><strong>21</strong></div><div><span>源锚点</span><strong>62</strong></div></section><section class="panel"><div class="section-heading"><div><p class="kicker">Project calendar</p><h2>本周日历与精确时间</h2></div><div class="page-actions"><a class="button" href="week4/lecture.html">中文讲义</a><a class="button secondary" href="week4/staff-qa.html">Staff Q&A</a><a class="button secondary" href="week4/live-mock.html">Mock</a><a class="button secondary" href="week4/scorecard.html">复盘</a></div></div><div class="table-wrap"><table class="calendar"><thead><tr><th>日期</th><th>任务</th><th>固定时段</th><th>产出</th></tr></thead><tbody><tr><td>Day 1<small>2026-08-17</small></td><th><a href="week4/day-1.html">FB News Feed · 完整通读</a></th><td>07:30–08:30<br>12:20–12:50<br>19:30–22:10</td><td>完成一张 FB News Feed 端到端设计图：标出 帖子事实、关注边与预计算 feed 条目、同步提交边界、主要读写路径、分片键与用户可见状态。</td></tr><tr><td>Day 2<small>2026-08-18</small></td><th><a href="week4/day-2.html">FB News Feed · Deep Dive 与 Senior 修复</a></th><td>07:30–08:30<br>12:20–12:50<br>19:30–22:10</td><td>提交 FB News Feed 深挖包：不变量表、两张故障时序、热点容量推导、指标与一次 35 分钟 Senior mock 记录。</td></tr><tr><td>Day 3<small>2026-08-19</small></td><th><a href="week4/day-3.html">Instagram · 完整通读</a></th><td>07:30–08:30<br>12:20–12:50<br>19:30–22:10</td><td>完成一张 Instagram 端到端设计图：标出 媒体上传会话、帖子元数据与关注 feed、同步提交边界、主要读写路径、分片键与用户可见状态。</td></tr><tr><td>Day 4<small>2026-08-20</small></td><th><a href="week4/day-4.html">Instagram · Deep Dive 与 Senior 修复</a></th><td>07:30–08:30<br>12:20–12:50<br>19:30–22:10</td><td>提交 Instagram 深挖包：不变量表、两张故障时序、热点容量推导、指标与一次 35 分钟 Senior mock 记录。</td></tr><tr><td>Day 5<small>2026-08-21</small></td><th><a href="week4/day-5.html">YouTube · 完整通读</a></th><td>07:30–08:30<br>12:20–12:50<br>19:30–22:10</td><td>完成一张 YouTube 端到端设计图：标出 视频上传、处理版本、清单与发布状态、同步提交边界、主要读写路径、分片键与用户可见状态。</td></tr><tr><td>Day 6<small>2026-08-22</small></td><th><a href="week4/day-6.html">YouTube · Deep Dive 与 Senior 修复</a></th><td>07:30–08:30<br>12:20–12:50<br>19:30–22:10</td><td>提交 YouTube 深挖包：不变量表、两张故障时序、热点容量推导、指标与一次 35 分钟 Senior mock 记录。</td></tr><tr><td>Day 7<small>2026-08-23</small></td><th><a href="week4/day-7.html">社交与媒体三题动态 Mock 与修复</a></th><td>07:30–08:30<br>12:20–12:50<br>19:30–22:10</td><td>一份三题轮转白板记录，加一张容量与派生数据表；包含名人热点、4GB 视频、转码版本、Feed 游标和 CDN 回源的数量级。</td></tr></tbody></table></div></section><section><div class="section-heading"><div><p class="kicker">不是主项目/迁移项目</p><h2>社交 feed、媒体管线与全球读取</h2></div></div><div class="card-grid"><article class="project-card"><p class="kicker">完整项目闭环</p><h3>FB News Feed</h3><p><strong>Read：</strong>完成一张 FB News Feed 端到端设计图：标出 帖子事实、关注边与预计算 feed 条目、同步提交边界、主要读写路径、分片键与用户可见状态。</p><p><strong>Deep：</strong>提交 FB News Feed 深挖包：不变量表、两张故障时序、热点容量推导、指标与一次 35 分钟 Senior mock 记录。</p><ul class="source-list"><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed#understanding-the-problem" target="_blank" rel="noreferrer">FB News Feed · Understanding the Problem</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed#high-level-design" target="_blank" rel="noreferrer">FB News Feed · High-Level Design</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed#potential-deep-dives" target="_blank" rel="noreferrer">FB News Feed · Potential Deep Dives</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed#1-how-do-we-handle-users-who-are-following-a-large-number-of-users" target="_blank" rel="noreferrer">FB News Feed · 1) How do we handle users who are following a large number of users?</a></li></ul></article><article class="project-card"><p class="kicker">完整项目闭环</p><h3>Instagram</h3><p><strong>Read：</strong>完成一张 Instagram 端到端设计图：标出 媒体上传会话、帖子元数据与关注 feed、同步提交边界、主要读写路径、分片键与用户可见状态。</p><p><strong>Deep：</strong>提交 Instagram 深挖包：不变量表、两张故障时序、热点容量推导、指标与一次 35 分钟 Senior mock 记录。</p><ul class="source-list"><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/instagram#understanding-the-problem" target="_blank" rel="noreferrer">Instagram · Understanding the Problem</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/instagram#high-level-design" target="_blank" rel="noreferrer">Instagram · High-Level Design</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/instagram#potential-deep-dives" target="_blank" rel="noreferrer">Instagram · Potential Deep Dives</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/instagram#1-the-system-should-deliver-feed-content-with-low-latency--500ms-" target="_blank" rel="noreferrer">Instagram · 1) The system should deliver feed content with low latency (&lt; 500ms )</a></li></ul></article><article class="project-card"><p class="kicker">完整项目闭环</p><h3>YouTube</h3><p><strong>Read：</strong>完成一张 YouTube 端到端设计图：标出 视频上传、处理版本、清单与发布状态、同步提交边界、主要读写路径、分片键与用户可见状态。</p><p><strong>Deep：</strong>提交 YouTube 深挖包：不变量表、两张故障时序、热点容量推导、指标与一次 35 分钟 Senior mock 记录。</p><ul class="source-list"><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/youtube#understand-the-problem" target="_blank" rel="noreferrer">YouTube · Understand the Problem</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/youtube#high-level-design" target="_blank" rel="noreferrer">YouTube · High-Level Design</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/youtube#potential-deep-dives" target="_blank" rel="noreferrer">YouTube · Potential Deep Dives</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/youtube#1-how-can-we-handle-processing-a-video-to-support-adaptive-bitrate-streaming" target="_blank" rel="noreferrer">YouTube · 1) How can we handle processing a video to support adaptive bitrate streaming?</a></li></ul></article></div></section><section class="panel audio"><div class="section-heading"><div><p class="kicker">2 分钟中文讲译预听</p><h2>第 4 周导览：把元数据和大字节流拆开</h2></div><span class="badge">不自动生成</span></div><p class="script" id="audio-script">这一周覆盖 FB News Feed、Instagram 和 YouTube。三题都拥有巨大的读流量，却不能用一句“加 CDN”结束。News Feed 的核心是关注图与帖子如何形成每个人的有限 feed；Instagram 还加入大媒体上传、异步处理和首帧体验；YouTube 则把可恢复上传、多码率转码、不可变分片与播放清单连成完整管线。通读时先画事实和派生视图：帖子与关注边是事实，预计算 feed 可重建；原始媒体和发布版本是事实，缩略图、转码版本、缓存是派生。深挖时重点比较 fanout-on-write、fanout-on-read 和混合策略，解释名人账户为什么改变写放大；再把上传会话、校验和、处理状态、清单原子发布和 CDN 回源逐步讲清。热门内容带来的是单键热读，处理积压带来的是后台时延，二者不能用同一指标判断。mock 会在帖子已提交但扇出 worker 崩溃、视频只完成部分转码、旧清单仍在边缘缓存时追问。你要给出重放、版本切换、请求合并、降级与回滚路径。完成本周后，应能从访问模式推导索引和缓存，从状态机推导媒体工作流，并用首帧、缓冲比、feed 可见延迟和不可发现率证明设计真的服务用户。使用时先暂停音频，凭记忆画出事实状态、提交点和故障分支，再继续核对。每天结束前必须留下可复查的图、容量计算和一条 repair 记录；如果答案只能说出组件名，就回到原文对应标题，把请求时序与用户可见结果补全。周末的综合 mock 不追求背诵固定架构，而要在约束变化后仍能守住不变量、说明取舍，并用指标决定降级、扩展和回滚。</p><div class="audio-actions"><button class="button" type="button" data-copy="#audio-script">复制讲译脚本</button><a class="button secondary" href="https://elevenlabs.io/docs/eleven-creative/playground/text-to-speech#text-input" target="_blank" rel="noreferrer">Text to Speech · Text input</a></div><dl class="config"><div><dt>默认 Voice</dt><dd>Siqi Liu - Calm, Warm and Gentle</dd></div><div><dt>默认 Model</dt><dd>Eleven v3</dd></div><div><dt>Credits</dt><dd>页面不调用 API，不批量生成；仅在用户主动选择时进入可选入口。</dd></div></dl></section>
   </main>
+  <footer>由可验证源清单生成 · 外链标题与锚点在构建前逐一在线核验 · 12 周系统设计完整学习路线</footer>
+  <script src="assets/curriculum.js"></script>
 </body>
 </html>

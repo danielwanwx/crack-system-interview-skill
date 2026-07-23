@@ -1,588 +1,985 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "2.0",
   "week": 4,
-  "title": "Week 4 transitional curriculum",
-  "source_status": "transitional-generated-from-html",
+  "theme": "社交 feed、媒体管线与全球读取",
+  "start_date": "2026-08-17",
+  "end_date": "2026-08-23",
+  "algorithm_block": "stack",
+  "projects": [
+    {
+      "slug": "fb-news-feed",
+      "title": "FB News Feed",
+      "complete_read_day": 1,
+      "deep_dive_day": 2
+    },
+    {
+      "slug": "instagram",
+      "title": "Instagram",
+      "complete_read_day": 3,
+      "deep_dive_day": 4
+    },
+    {
+      "slug": "youtube",
+      "title": "YouTube",
+      "complete_read_day": 5,
+      "deep_dive_day": 6
+    }
+  ],
+  "audio_preview": {
+    "title": "第 4 周导览：把元数据和大字节流拆开",
+    "script": "这一周覆盖 FB News Feed、Instagram 和 YouTube。三题都拥有巨大的读流量，却不能用一句“加 CDN”结束。News Feed 的核心是关注图与帖子如何形成每个人的有限 feed；Instagram 还加入大媒体上传、异步处理和首帧体验；YouTube 则把可恢复上传、多码率转码、不可变分片与播放清单连成完整管线。通读时先画事实和派生视图：帖子与关注边是事实，预计算 feed 可重建；原始媒体和发布版本是事实，缩略图、转码版本、缓存是派生。深挖时重点比较 fanout-on-write、fanout-on-read 和混合策略，解释名人账户为什么改变写放大；再把上传会话、校验和、处理状态、清单原子发布和 CDN 回源逐步讲清。热门内容带来的是单键热读，处理积压带来的是后台时延，二者不能用同一指标判断。mock 会在帖子已提交但扇出 worker 崩溃、视频只完成部分转码、旧清单仍在边缘缓存时追问。你要给出重放、版本切换、请求合并、降级与回滚路径。完成本周后，应能从访问模式推导索引和缓存，从状态机推导媒体工作流，并用首帧、缓冲比、feed 可见延迟和不可发现率证明设计真的服务用户。使用时先暂停音频，凭记忆画出事实状态、提交点和故障分支，再继续核对。每天结束前必须留下可复查的图、容量计算和一条 repair 记录；如果答案只能说出组件名，就回到原文对应标题，把请求时序与用户可见结果补全。周末的综合 mock 不追求背诵固定架构，而要在约束变化后仍能守住不变量、说明取舍，并用指标决定降级、扩展和回滚。",
+    "provider": "ElevenLabs",
+    "voice": "Siqi Liu - Calm, Warm and Gentle",
+    "model": "Eleven v3",
+    "auto_generate": false
+  },
   "days": [
     {
+      "week": 4,
       "day": 1,
-      "date": "2026-08-10",
-      "title": "WhatsApp：范围与 NFR",
-      "focus": "主项目范围",
+      "date": "2026-08-17",
+      "kind": "project-read",
+      "title": "FB News Feed · 完整通读",
       "page": "week4/day-1.html",
-      "case_id": "",
+      "public_url": "https://danielwanwx.github.io/crack-system-interview-skill/week4/day-1.html",
       "time_blocks": [
         {
-          "time": "07:55–08:15",
-          "task": "回忆\n不看资料复述昨日设计；写出今天要验证的一条假设。"
+          "time": "07:30–08:00",
+          "title": "算法 1",
+          "instruction": "独立作答；写出复杂度和一个反例。"
         },
         {
-          "time": "08:15–09:25",
-          "task": "原文\n依次阅读：WhatsApp → 第二章：数据系统的目标 → API Design。只读页面下方列出的小节。"
+          "time": "08:00–08:30",
+          "title": "算法 2",
+          "instruction": "延续同一 NeetCode tag block，不跨 tag 拼题。"
         },
         {
-          "time": "09:25–10:20",
-          "task": "白板\n写 WhatsApp requirements matrix：FR、NFR、out of scope、success metric。"
+          "time": "12:20–12:50",
+          "title": "算法 3",
+          "instruction": "计时完成；只记录错因与下一次修复动作。"
         },
         {
-          "time": "15:30–16:45",
-          "task": "算法\n完成 3 道 Sliding Window；每题记录 pattern、invariant、复杂度和错因。"
+          "time": "19:30–20:00",
+          "title": "问题框定",
+          "instruction": "先写 FR/NFR、容量假设和不做什么；暂不画扩展组件。"
         },
         {
-          "time": "20:30–21:30",
-          "task": "口述\n脱稿讲当天产出；按修复规则：若先画盒子，回到需求、约束与 NFR。"
+          "time": "20:00–21:20",
+          "title": "连续完整通读",
+          "instruction": "从 Understanding/Understand the Problem 按原文顺序读到 High-Level Design：FB News Feed。"
+        },
+        {
+          "time": "21:20–21:50",
+          "title": "关页重建",
+          "instruction": "不看答案重画 API、数据模型、读写路径和权威状态。"
+        },
+        {
+          "time": "21:50–22:10",
+          "title": "验收与修复",
+          "instruction": "逐条核对验收标准；不通过就执行当天 repair，不用补读掩盖。"
         }
       ],
       "sources": [
         {
-          "title": "WhatsApp",
-          "provider": "Hello Interview",
-          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/whatsapp",
-          "acceptance": "验收：能定义主用户路径、FR/NFR、范围与成功指标。"
+          "source_id": "hi.breakdown.fb-news-feed",
+          "page_title": "FB News Feed",
+          "heading": "Understanding the Problem",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed#understanding-the-problem"
         },
         {
-          "title": "第二章：数据系统的目标",
-          "provider": "DDIA",
-          "url": "https://ddia.vonng.com/ch2/",
-          "acceptance": "验收：能把可靠性、可伸缩性、可维护性写进 NFR。"
+          "source_id": "hi.breakdown.fb-news-feed",
+          "page_title": "FB News Feed",
+          "heading": "Functional Requirements",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed#functional-requirements"
         },
         {
-          "title": "API Design",
-          "provider": "Hello Interview",
-          "url": "https://www.hellointerview.com/learn/system-design/core-concepts/api-design",
-          "acceptance": "验收：能从范围推出接口边界。"
+          "source_id": "hi.breakdown.fb-news-feed",
+          "page_title": "FB News Feed",
+          "heading": "Non-Functional Requirements",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed#non-functional-requirements"
+        },
+        {
+          "source_id": "hi.breakdown.fb-news-feed",
+          "page_title": "FB News Feed",
+          "heading": "The Set Up",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed#the-set-up"
+        },
+        {
+          "source_id": "hi.breakdown.fb-news-feed",
+          "page_title": "FB News Feed",
+          "heading": "Planning the Approach",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed#planning-the-approach"
+        },
+        {
+          "source_id": "hi.breakdown.fb-news-feed",
+          "page_title": "FB News Feed",
+          "heading": "Defining the Core Entities",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed#defining-the-core-entities"
+        },
+        {
+          "source_id": "hi.breakdown.fb-news-feed",
+          "page_title": "FB News Feed",
+          "heading": "API or System Interface",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed#api-or-system-interface"
+        },
+        {
+          "source_id": "hi.breakdown.fb-news-feed",
+          "page_title": "FB News Feed",
+          "heading": "High-Level Design",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed#high-level-design"
         }
       ],
-      "deliverable": "写 WhatsApp requirements matrix：FR、NFR、out of scope、success metric。",
-      "mastery": "范围可在 5 分钟内收敛；每个 NFR 均有量级或业务后果。",
-      "repair": "若先画盒子，回到需求、约束与 NFR。",
+      "internal_resources": [],
+      "artifact": "完成一张 FB News Feed 端到端设计图：标出 帖子事实、关注边与预计算 feed 条目、同步提交边界、主要读写路径、分片键与用户可见状态。",
+      "acceptance": [
+        "按页面顺序从“Understanding the Problem”读到“High-Level Design”，中间标题一个不少。",
+        "设计图能逐步解释 创建帖子后如何选择扇出写或保留为读时合并 与 在五百毫秒内返回逆时间序分页且容忍一分钟陈旧，每条箭头标明协议或数据。",
+        "明确 帖子事实持久化后返回 postId，feed 扇出作为可重放派生事件，并区分事实源、缓存、索引、队列和客户端视图。",
+        "至少给出一个数量级估算，并能指出第一个容量瓶颈。"
+      ],
+      "repair": "若讲解出现组件跳跃，回到 帖子事实、关注边与预计算 feed 条目，重画“请求—条件写—派生事件—用户可见结果”的单条时序，再复述一遍。",
       "algorithms": {
-        "required": [
+        "tag": "Stack",
+        "mode": "new",
+        "problems": [
           {
-            "label": "必做：Best Time to Buy and Sell Stock",
-            "url": "https://leetcode.com/problems/best-time-to-buy-and-sell-stock/"
+            "title": "Valid Parentheses",
+            "slug": "valid-parentheses",
+            "url": "https://leetcode.com/problems/valid-parentheses/"
           },
           {
-            "label": "必做：Longest Substring Without Repeating Characters",
-            "url": "https://leetcode.com/problems/longest-substring-without-repeating-characters/"
+            "title": "Min Stack",
+            "slug": "min-stack",
+            "url": "https://leetcode.com/problems/min-stack/"
           },
           {
-            "label": "必做：Contains Duplicate II",
-            "url": "https://leetcode.com/problems/contains-duplicate-ii/"
-          }
-        ],
-        "optional": [
-          {
-            "label": "选做：Repeated DNA Sequences",
-            "url": "https://leetcode.com/problems/repeated-dna-sequences/"
-          },
-          {
-            "label": "选做：Subarrays with K Different Integers",
-            "url": "https://leetcode.com/problems/subarrays-with-k-different-integers/"
-          },
-          {
-            "label": "选做：Number of Substrings",
-            "url": "https://leetcode.com/problems/number-of-substrings-containing-all-three-characters/"
+            "title": "Evaluate Reverse Polish Notation",
+            "slug": "evaluate-reverse-polish-notation",
+            "url": "https://leetcode.com/problems/evaluate-reverse-polish-notation/"
           }
         ]
-      },
-      "source_status": "transitional-generated-from-html"
+      }
     },
     {
+      "week": 4,
       "day": 2,
-      "date": "2026-08-11",
-      "title": "WhatsApp：API、状态与数据",
-      "focus": "主项目数据与 API",
+      "date": "2026-08-18",
+      "kind": "project-deep",
+      "title": "FB News Feed · Deep Dive 与 Senior 修复",
       "page": "week4/day-2.html",
-      "case_id": "",
+      "public_url": "https://danielwanwx.github.io/crack-system-interview-skill/week4/day-2.html",
       "time_blocks": [
         {
-          "time": "07:55–08:15",
-          "task": "回忆\n不看资料复述昨日设计；写出今天要验证的一条假设。"
+          "time": "07:30–08:00",
+          "title": "算法 1",
+          "instruction": "独立作答；写出复杂度和一个反例。"
         },
         {
-          "time": "08:15–09:25",
-          "task": "原文\n依次阅读：WhatsApp → Data Modeling → 第三章：数据模型与查询语言。只读页面下方列出的小节。"
+          "time": "08:00–08:30",
+          "title": "算法 2",
+          "instruction": "延续同一 NeetCode tag block，不跨 tag 拼题。"
         },
         {
-          "time": "09:25–10:20",
-          "task": "白板\n写 WhatsApp API + schema：主体、key、访问模式、权限与错误语义。"
+          "time": "12:20–12:50",
+          "title": "算法 3",
+          "instruction": "计时完成；只记录错因与下一次修复动作。"
         },
         {
-          "time": "15:30–16:45",
-          "task": "算法\n完成 3 道 Sliding Window；每题记录 pattern、invariant、复杂度和错因。"
+          "time": "19:30–20:20",
+          "title": "Deep Dives",
+          "instruction": "围绕 FB News Feed 逐个回答机制、规模阈值和失败语义。"
         },
         {
-          "time": "20:30–21:30",
-          "task": "口述\n脱稿讲当天产出；按修复规则：若 schema 无法解释查询路径，重写 key 与 index。"
+          "time": "20:20–20:50",
+          "title": "精确补课",
+          "instruction": "只读今天列出的 Core / Technology / Pattern / DDIA 小节。"
+        },
+        {
+          "time": "20:50–21:30",
+          "title": "Senior/Staff 追问",
+          "instruction": "先口述回答，再对照详细答案；为每个追问写证据。"
+        },
+        {
+          "time": "21:30–22:10",
+          "title": "故障注入与修复",
+          "instruction": "把超时、重复、乱序、热点或部分失败注入白板后重答。"
         }
       ],
       "sources": [
         {
-          "title": "WhatsApp",
-          "provider": "Hello Interview",
-          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/whatsapp",
-          "acceptance": "验收：能从需求推出实体、访问模式与权限边界。"
+          "source_id": "hi.breakdown.fb-news-feed",
+          "page_title": "FB News Feed",
+          "heading": "Potential Deep Dives",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed#potential-deep-dives"
         },
         {
-          "title": "Data Modeling",
-          "provider": "Hello Interview",
-          "url": "https://www.hellointerview.com/learn/system-design/core-concepts/data-modeling",
-          "acceptance": "验收：能从访问路径推出 keys、indexes 与 schema。"
+          "source_id": "hi.breakdown.fb-news-feed",
+          "page_title": "FB News Feed",
+          "heading": "1) How do we handle users who are following a large number of users?",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed#1-how-do-we-handle-users-who-are-following-a-large-number-of-users"
         },
         {
-          "title": "第三章：数据模型与查询语言",
-          "provider": "DDIA",
-          "url": "https://ddia.vonng.com/ch3/",
-          "acceptance": "验收：能解释数据模型取舍。"
+          "source_id": "hi.breakdown.fb-news-feed",
+          "page_title": "FB News Feed",
+          "heading": "2) How do we handle users with a large number of followers?",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed#2-how-do-we-handle-users-with-a-large-number-of-followers"
+        },
+        {
+          "source_id": "hi.breakdown.fb-news-feed",
+          "page_title": "FB News Feed",
+          "heading": "3) How can we handle uneven reads of Posts?",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed#3-how-can-we-handle-uneven-reads-of-posts"
+        },
+        {
+          "source_id": "hi.breakdown.fb-news-feed",
+          "page_title": "FB News Feed",
+          "heading": "What is Expected at Each Level?",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed#what-is-expected-at-each-level"
+        },
+        {
+          "source_id": "hi.breakdown.fb-news-feed",
+          "page_title": "FB News Feed",
+          "heading": "Senior",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed#senior"
+        },
+        {
+          "source_id": "hi.pattern.scaling-reads",
+          "page_title": "Scaling Reads",
+          "heading": "Add External Caching Layers",
+          "url": "https://www.hellointerview.com/learn/system-design/patterns/scaling-reads#add-external-caching-layers"
+        },
+        {
+          "source_id": "hi.pattern.scaling-writes",
+          "page_title": "Scaling Writes",
+          "heading": "Handling Bursts with Queues and Load Shedding",
+          "url": "https://www.hellointerview.com/learn/system-design/patterns/scaling-writes#handling-bursts-with-queues-and-load-shedding"
+        },
+        {
+          "source_id": "hi.core.data-modeling",
+          "page_title": "Data Modeling",
+          "heading": "Indexing for Access Patterns",
+          "url": "https://www.hellointerview.com/learn/system-design/core-concepts/data-modeling#indexing-for-access-patterns"
+        },
+        {
+          "source_id": "hi.deep.redis",
+          "page_title": "Redis",
+          "heading": "Hot Key Issues",
+          "url": "https://www.hellointerview.com/learn/system-design/deep-dives/redis#hot-key-issues"
+        },
+        {
+          "source_id": "ddia.ch12",
+          "page_title": "第十二章：流处理",
+          "heading": "维护物化视图",
+          "url": "https://ddia.vonng.com/ch12/#sec_stream_mat_view"
+        },
+        {
+          "source_id": "ddia.ch7",
+          "page_title": "7. 分片",
+          "heading": "偏斜的工作负载与缓解热点",
+          "url": "https://ddia.vonng.com/ch7/#sec_sharding_skew"
+        },
+        {
+          "source_id": "ddia.ch12",
+          "page_title": "第十二章：流处理",
+          "heading": "幂等性",
+          "url": "https://ddia.vonng.com/ch12/#sec_stream_idempotence"
         }
       ],
-      "deliverable": "写 WhatsApp API + schema：主体、key、访问模式、权限与错误语义。",
-      "mastery": "接口、状态与 schema 可从访问路径推出；权限和错误码明确。",
-      "repair": "若 schema 无法解释查询路径，重写 key 与 index。",
+      "internal_resources": [],
+      "artifact": "提交 FB News Feed 深挖包：不变量表、两张故障时序、热点容量推导、指标与一次 35 分钟 Senior mock 记录。",
+      "acceptance": [
+        "逐项覆盖 Potential Deep Dives 中列出的 3 个问题，并能说明方案代价。",
+        "至少演练重复、乱序、依赖超时和局部分区中的两类故障。",
+        "回答包含状态、路径、取舍、失败语义与量化指标，而非组件清单。",
+        "mock 后记录 critical miss、修复动作和同题复测证据。"
+      ],
+      "repair": "若深挖答案停在技术名词，选最薄弱的一题，补“触发条件—不变量—故障注入—指标—回滚”五格，再进行 10 分钟复测。",
       "algorithms": {
-        "required": [
+        "tag": "Stack",
+        "mode": "new",
+        "problems": [
           {
-            "label": "必做：Longest Repeating Character Replacement",
-            "url": "https://leetcode.com/problems/longest-repeating-character-replacement/"
+            "title": "Generate Parentheses",
+            "slug": "generate-parentheses",
+            "url": "https://leetcode.com/problems/generate-parentheses/"
           },
           {
-            "label": "必做：Fruit Into Baskets",
-            "url": "https://leetcode.com/problems/fruit-into-baskets/"
+            "title": "Daily Temperatures",
+            "slug": "daily-temperatures",
+            "url": "https://leetcode.com/problems/daily-temperatures/"
           },
           {
-            "label": "必做：复盘",
-            "url": "https://leetcode.com/problems/longest-substring-without-repeating-characters/"
-          }
-        ],
-        "optional": [
-          {
-            "label": "选做：Repeated DNA Sequences",
-            "url": "https://leetcode.com/problems/repeated-dna-sequences/"
-          },
-          {
-            "label": "选做：Subarrays with K Different Integers",
-            "url": "https://leetcode.com/problems/subarrays-with-k-different-integers/"
-          },
-          {
-            "label": "选做：Number of Substrings",
-            "url": "https://leetcode.com/problems/number-of-substrings-containing-all-three-characters/"
+            "title": "Car Fleet",
+            "slug": "car-fleet",
+            "url": "https://leetcode.com/problems/car-fleet/"
           }
         ]
-      },
-      "source_status": "transitional-generated-from-html"
+      }
     },
     {
+      "week": 4,
       "day": 3,
-      "date": "2026-08-12",
-      "title": "WhatsApp：核心路径与容量",
-      "focus": "主项目核心路径",
+      "date": "2026-08-19",
+      "kind": "project-read",
+      "title": "Instagram · 完整通读",
       "page": "week4/day-3.html",
-      "case_id": "",
+      "public_url": "https://danielwanwx.github.io/crack-system-interview-skill/week4/day-3.html",
       "time_blocks": [
         {
-          "time": "07:55–08:15",
-          "task": "回忆\n不看资料复述昨日设计；写出今天要验证的一条假设。"
+          "time": "07:30–08:00",
+          "title": "算法 1",
+          "instruction": "独立作答；写出复杂度和一个反例。"
         },
         {
-          "time": "08:15–09:25",
-          "task": "原文\n依次阅读：WhatsApp → Real-time Updates → 第四章：存储与检索。只读页面下方列出的小节。"
+          "time": "08:00–08:30",
+          "title": "算法 2",
+          "instruction": "延续同一 NeetCode tag block，不跨 tag 拼题。"
         },
         {
-          "time": "09:25–10:20",
-          "task": "白板\n画 WhatsApp 主路径：请求/事件、状态变化、同步与异步边界，并写 capacity sheet。"
+          "time": "12:20–12:50",
+          "title": "算法 3",
+          "instruction": "计时完成；只记录错因与下一次修复动作。"
         },
         {
-          "time": "15:30–16:45",
-          "task": "算法\n完成 3 道 Sliding Window；每题记录 pattern、invariant、复杂度和错因。"
+          "time": "19:30–20:00",
+          "title": "问题框定",
+          "instruction": "先写 FR/NFR、容量假设和不做什么；暂不画扩展组件。"
         },
         {
-          "time": "20:30–21:30",
-          "task": "口述\n脱稿讲当天产出；按修复规则：若同步链路过长，重新划分 durable state 与 queue boundary。"
+          "time": "20:00–21:20",
+          "title": "连续完整通读",
+          "instruction": "从 Understanding/Understand the Problem 按原文顺序读到 High-Level Design：Instagram。"
+        },
+        {
+          "time": "21:20–21:50",
+          "title": "关页重建",
+          "instruction": "不看答案重画 API、数据模型、读写路径和权威状态。"
+        },
+        {
+          "time": "21:50–22:10",
+          "title": "验收与修复",
+          "instruction": "逐条核对验收标准；不通过就执行当天 repair，不用补读掩盖。"
         }
       ],
       "sources": [
         {
-          "title": "WhatsApp",
-          "provider": "Hello Interview",
-          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/whatsapp",
-          "acceptance": "验收：能画出核心请求或事件路径。"
+          "source_id": "hi.breakdown.instagram",
+          "page_title": "Instagram",
+          "heading": "Understanding the Problem",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/instagram#understanding-the-problem"
         },
         {
-          "title": "Real-time Updates",
-          "provider": "Hello Interview",
-          "url": "https://www.hellointerview.com/learn/system-design/patterns/realtime-updates",
-          "acceptance": "验收：能把模式落到具体组件与状态。"
+          "source_id": "hi.breakdown.instagram",
+          "page_title": "Instagram",
+          "heading": "Functional Requirements",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/instagram#functional-requirements"
         },
         {
-          "title": "第四章：存储与检索",
-          "provider": "DDIA",
-          "url": "https://ddia.vonng.com/ch4/",
-          "acceptance": "验收：能说明存储与索引影响。"
+          "source_id": "hi.breakdown.instagram",
+          "page_title": "Instagram",
+          "heading": "Non-Functional Requirements",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/instagram#non-functional-requirements"
+        },
+        {
+          "source_id": "hi.breakdown.instagram",
+          "page_title": "Instagram",
+          "heading": "The Set Up",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/instagram#the-set-up"
+        },
+        {
+          "source_id": "hi.breakdown.instagram",
+          "page_title": "Instagram",
+          "heading": "Defining the Core Entities",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/instagram#defining-the-core-entities"
+        },
+        {
+          "source_id": "hi.breakdown.instagram",
+          "page_title": "Instagram",
+          "heading": "API or System Interface",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/instagram#api-or-system-interface"
+        },
+        {
+          "source_id": "hi.breakdown.instagram",
+          "page_title": "Instagram",
+          "heading": "High-Level Design",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/instagram#high-level-design"
         }
       ],
-      "deliverable": "画 WhatsApp 主路径：请求/事件、状态变化、同步与异步边界，并写 capacity sheet。",
-      "mastery": "能分清 hot path、durable state、async work 与 retry boundary。",
-      "repair": "若同步链路过长，重新划分 durable state 与 queue boundary。",
+      "internal_resources": [],
+      "artifact": "完成一张 Instagram 端到端设计图：标出 媒体上传会话、帖子元数据与关注 feed、同步提交边界、主要读写路径、分片键与用户可见状态。",
+      "acceptance": [
+        "按页面顺序从“Understanding the Problem”读到“High-Level Design”，中间标题一个不少。",
+        "设计图能逐步解释 大照片/视频如何直传、处理并最终发布成帖子 与 五百毫秒内返回 feed 元数据并让媒体近乎即时开始渲染，每条箭头标明协议或数据。",
+        "明确 帖子元数据以 READY 媒体版本条件写成功后返回 postId，并区分事实源、缓存、索引、队列和客户端视图。",
+        "至少给出一个数量级估算，并能指出第一个容量瓶颈。"
+      ],
+      "repair": "若讲解出现组件跳跃，回到 媒体上传会话、帖子元数据与关注 feed，重画“请求—条件写—派生事件—用户可见结果”的单条时序，再复述一遍。",
       "algorithms": {
-        "required": [
+        "tag": "Stack",
+        "mode": "new",
+        "problems": [
           {
-            "label": "必做：Permutation in String",
-            "url": "https://leetcode.com/problems/permutation-in-string/"
+            "title": "Largest Rectangle in Histogram",
+            "slug": "largest-rectangle-in-histogram",
+            "url": "https://leetcode.com/problems/largest-rectangle-in-histogram/"
           },
           {
-            "label": "必做：Find All Anagrams in a String",
-            "url": "https://leetcode.com/problems/find-all-anagrams-in-a-string/"
+            "title": "Asteroid Collision",
+            "slug": "asteroid-collision",
+            "url": "https://leetcode.com/problems/asteroid-collision/"
           },
           {
-            "label": "必做：复盘",
-            "url": "https://leetcode.com/problems/longest-repeating-character-replacement/"
-          }
-        ],
-        "optional": [
-          {
-            "label": "选做：Repeated DNA Sequences",
-            "url": "https://leetcode.com/problems/repeated-dna-sequences/"
-          },
-          {
-            "label": "选做：Subarrays with K Different Integers",
-            "url": "https://leetcode.com/problems/subarrays-with-k-different-integers/"
-          },
-          {
-            "label": "选做：Number of Substrings",
-            "url": "https://leetcode.com/problems/number-of-substrings-containing-all-three-characters/"
+            "title": "Decode String",
+            "slug": "decode-string",
+            "url": "https://leetcode.com/problems/decode-string/"
           }
         ]
-      },
-      "source_status": "transitional-generated-from-html"
+      }
     },
     {
+      "week": 4,
       "day": 4,
-      "date": "2026-08-13",
-      "title": "迁移：Online Chess",
-      "focus": "迁移题拆解",
+      "date": "2026-08-20",
+      "kind": "project-deep",
+      "title": "Instagram · Deep Dive 与 Senior 修复",
       "page": "week4/day-4.html",
-      "case_id": "",
+      "public_url": "https://danielwanwx.github.io/crack-system-interview-skill/week4/day-4.html",
       "time_blocks": [
         {
-          "time": "07:55–08:15",
-          "task": "回忆\n不看资料复述昨日设计；写出今天要验证的一条假设。"
+          "time": "07:30–08:00",
+          "title": "算法 1",
+          "instruction": "独立作答；写出复杂度和一个反例。"
         },
         {
-          "time": "08:15–09:25",
-          "task": "原文\n依次阅读：Online Chess → Real-time Updates → ZooKeeper。只读页面下方列出的小节。"
+          "time": "08:00–08:30",
+          "title": "算法 2",
+          "instruction": "延续同一 NeetCode tag block，不跨 tag 拼题。"
         },
         {
-          "time": "09:25–10:20",
-          "task": "白板\n用 75 分钟拆 Online Chess：范围、核心状态、HLD、一个 game state / realtime moves deep dive。"
+          "time": "12:20–12:50",
+          "title": "算法 3",
+          "instruction": "计时完成；只记录错因与下一次修复动作。"
         },
         {
-          "time": "15:30–16:45",
-          "task": "算法\n完成 3 道 Sliding Window；每题记录 pattern、invariant、复杂度和错因。"
+          "time": "19:30–20:20",
+          "title": "Deep Dives",
+          "instruction": "围绕 Instagram 逐个回答机制、规模阈值和失败语义。"
         },
         {
-          "time": "20:30–21:30",
-          "task": "口述\n脱稿讲当天产出；按修复规则：若把迁移题照抄主项目，先写出它不同的状态、SLO 和 failure mode。"
+          "time": "20:20–20:50",
+          "title": "精确补课",
+          "instruction": "只读今天列出的 Core / Technology / Pattern / DDIA 小节。"
+        },
+        {
+          "time": "20:50–21:30",
+          "title": "Senior/Staff 追问",
+          "instruction": "先口述回答，再对照详细答案；为每个追问写证据。"
+        },
+        {
+          "time": "21:30–22:10",
+          "title": "故障注入与修复",
+          "instruction": "把超时、重复、乱序、热点或部分失败注入白板后重答。"
         }
       ],
       "sources": [
         {
-          "title": "Online Chess",
-          "provider": "Hello Interview",
-          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/online-chess",
-          "acceptance": "验收：能用 Online Chess 验证 game state / realtime moves 的迁移能力。"
+          "source_id": "hi.breakdown.instagram",
+          "page_title": "Instagram",
+          "heading": "Potential Deep Dives",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/instagram#potential-deep-dives"
         },
         {
-          "title": "Real-time Updates",
-          "provider": "Hello Interview",
-          "url": "https://www.hellointerview.com/learn/system-design/patterns/realtime-updates",
-          "acceptance": "验收：能把共用模式落到新的状态和请求路径。"
+          "source_id": "hi.breakdown.instagram",
+          "page_title": "Instagram",
+          "heading": "1) The system should deliver feed content with low latency (< 500ms )",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/instagram#1-the-system-should-deliver-feed-content-with-low-latency--500ms-"
         },
         {
-          "title": "ZooKeeper",
-          "provider": "Hello Interview",
-          "url": "https://www.hellointerview.com/learn/system-design/deep-dives/zookeeper",
-          "acceptance": "验收：能完成该题最关键的 tradeoff。"
+          "source_id": "hi.breakdown.instagram",
+          "page_title": "Instagram",
+          "heading": "2) The system should render photos and videos instantly, supporting photos up to 8mb and videos up to 4GB",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/instagram#2-the-system-should-render-photos-and-videos-instantly-supporting-photos-up-to-8mb-and-videos-up-to-4gb"
+        },
+        {
+          "source_id": "hi.breakdown.instagram",
+          "page_title": "Instagram",
+          "heading": "3) The system should be scalable to support 500M DAU",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/instagram#3-the-system-should-be-scalable-to-support-500m-dau"
+        },
+        {
+          "source_id": "hi.breakdown.instagram",
+          "page_title": "Instagram",
+          "heading": "What is Expected at Each Level?",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/instagram#what-is-expected-at-each-level"
+        },
+        {
+          "source_id": "hi.breakdown.instagram",
+          "page_title": "Instagram",
+          "heading": "Senior",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/instagram#senior"
+        },
+        {
+          "source_id": "hi.pattern.long-running-tasks",
+          "page_title": "Managing Long Running Tasks",
+          "heading": "Workers",
+          "url": "https://www.hellointerview.com/learn/system-design/patterns/long-running-tasks#workers"
+        },
+        {
+          "source_id": "hi.pattern.scaling-reads",
+          "page_title": "Scaling Reads",
+          "heading": "CDN and Edge Caching",
+          "url": "https://www.hellointerview.com/learn/system-design/patterns/scaling-reads#cdn-and-edge-caching"
+        },
+        {
+          "source_id": "hi.core.data-modeling",
+          "page_title": "Data Modeling",
+          "heading": "Entities, Keys & Relationships",
+          "url": "https://www.hellointerview.com/learn/system-design/core-concepts/data-modeling#entities-keys--relationships"
+        },
+        {
+          "source_id": "hi.deep.dynamodb",
+          "page_title": "DynamoDB",
+          "heading": "Partition Key and Sort Key",
+          "url": "https://www.hellointerview.com/learn/system-design/deep-dives/dynamodb#partition-key-and-sort-key"
+        },
+        {
+          "source_id": "ddia.ch12",
+          "page_title": "第十二章：流处理",
+          "heading": "失败后重建状态",
+          "url": "https://ddia.vonng.com/ch12/#sec_stream_state_fault_tolerance"
+        },
+        {
+          "source_id": "ddia.ch12",
+          "page_title": "第十二章：流处理",
+          "heading": "幂等性",
+          "url": "https://ddia.vonng.com/ch12/#sec_stream_idempotence"
+        },
+        {
+          "source_id": "ddia.ch7",
+          "page_title": "7. 分片",
+          "heading": "键值数据的分片",
+          "url": "https://ddia.vonng.com/ch7/#sec_sharding_key_value"
         }
       ],
-      "deliverable": "用 75 分钟拆 Online Chess：范围、核心状态、HLD、一个 game state / realtime moves deep dive。",
-      "mastery": "能解释 Online Chess 与主项目相同模式下不同的正确性要求。",
-      "repair": "若把迁移题照抄主项目，先写出它不同的状态、SLO 和 failure mode。",
+      "internal_resources": [],
+      "artifact": "提交 Instagram 深挖包：不变量表、两张故障时序、热点容量推导、指标与一次 35 分钟 Senior mock 记录。",
+      "acceptance": [
+        "逐项覆盖 Potential Deep Dives 中列出的 3 个问题，并能说明方案代价。",
+        "至少演练重复、乱序、依赖超时和局部分区中的两类故障。",
+        "回答包含状态、路径、取舍、失败语义与量化指标，而非组件清单。",
+        "mock 后记录 critical miss、修复动作和同题复测证据。"
+      ],
+      "repair": "若深挖答案停在技术名词，选最薄弱的一题，补“触发条件—不变量—故障注入—指标—回滚”五格，再进行 10 分钟复测。",
       "algorithms": {
-        "required": [
+        "tag": "Stack",
+        "mode": "new",
+        "problems": [
           {
-            "label": "必做：Minimum Window Substring",
-            "url": "https://leetcode.com/problems/minimum-window-substring/"
+            "title": "Simplify Path",
+            "slug": "simplify-path",
+            "url": "https://leetcode.com/problems/simplify-path/"
           },
           {
-            "label": "必做：Minimum Size Subarray Sum",
-            "url": "https://leetcode.com/problems/minimum-size-subarray-sum/"
+            "title": "Remove K Digits",
+            "slug": "remove-k-digits",
+            "url": "https://leetcode.com/problems/remove-k-digits/"
           },
           {
-            "label": "必做：复盘",
-            "url": "https://leetcode.com/problems/permutation-in-string/"
-          }
-        ],
-        "optional": [
-          {
-            "label": "选做：Repeated DNA Sequences",
-            "url": "https://leetcode.com/problems/repeated-dna-sequences/"
-          },
-          {
-            "label": "选做：Subarrays with K Different Integers",
-            "url": "https://leetcode.com/problems/subarrays-with-k-different-integers/"
-          },
-          {
-            "label": "选做：Number of Substrings",
-            "url": "https://leetcode.com/problems/number-of-substrings-containing-all-three-characters/"
+            "title": "Online Stock Span",
+            "slug": "online-stock-span",
+            "url": "https://leetcode.com/problems/online-stock-span/"
           }
         ]
-      },
-      "source_status": "transitional-generated-from-html"
+      }
     },
     {
+      "week": 4,
       "day": 5,
-      "date": "2026-08-14",
-      "title": "迁移：WhatsApp",
-      "focus": "迁移题 / 主项目深挖",
+      "date": "2026-08-21",
+      "kind": "project-read",
+      "title": "YouTube · 完整通读",
       "page": "week4/day-5.html",
-      "case_id": "",
+      "public_url": "https://danielwanwx.github.io/crack-system-interview-skill/week4/day-5.html",
       "time_blocks": [
         {
-          "time": "07:55–08:15",
-          "task": "回忆\n不看资料复述昨日设计；写出今天要验证的一条假设。"
+          "time": "07:30–08:00",
+          "title": "算法 1",
+          "instruction": "独立作答；写出复杂度和一个反例。"
         },
         {
-          "time": "08:15–09:25",
-          "task": "原文\n依次阅读：WhatsApp → Real-time Updates → Real-time Updates。只读页面下方列出的小节。"
+          "time": "08:00–08:30",
+          "title": "算法 2",
+          "instruction": "延续同一 NeetCode tag block，不跨 tag 拼题。"
         },
         {
-          "time": "09:25–10:20",
-          "task": "白板\n用 75 分钟拆 WhatsApp：范围、核心状态、HLD、一个 delivery / ordering / presence deep dive。"
+          "time": "12:20–12:50",
+          "title": "算法 3",
+          "instruction": "计时完成；只记录错因与下一次修复动作。"
         },
         {
-          "time": "15:30–16:45",
-          "task": "算法\n完成 3 道 Sliding Window；每题记录 pattern、invariant、复杂度和错因。"
+          "time": "19:30–20:00",
+          "title": "问题框定",
+          "instruction": "先写 FR/NFR、容量假设和不做什么；暂不画扩展组件。"
         },
         {
-          "time": "20:30–21:30",
-          "task": "口述\n脱稿讲当天产出；按修复规则：若只背概念，补具体状态、算法或 failure sequence。"
+          "time": "20:00–21:20",
+          "title": "连续完整通读",
+          "instruction": "从 Understanding/Understand the Problem 按原文顺序读到 High-Level Design：YouTube。"
+        },
+        {
+          "time": "21:20–21:50",
+          "title": "关页重建",
+          "instruction": "不看答案重画 API、数据模型、读写路径和权威状态。"
+        },
+        {
+          "time": "21:50–22:10",
+          "title": "验收与修复",
+          "instruction": "逐条核对验收标准；不通过就执行当天 repair，不用补读掩盖。"
         }
       ],
       "sources": [
         {
-          "title": "WhatsApp",
-          "provider": "Hello Interview",
-          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/whatsapp",
-          "acceptance": "验收：能用 WhatsApp 验证 delivery / ordering / presence 的设计判断。"
+          "source_id": "hi.breakdown.youtube",
+          "page_title": "YouTube",
+          "heading": "Understand the Problem",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/youtube#understand-the-problem"
         },
         {
-          "title": "Real-time Updates",
-          "provider": "Hello Interview",
-          "url": "https://www.hellointerview.com/learn/system-design/patterns/realtime-updates",
-          "acceptance": "验收：能从模式解释组件和边界。"
+          "source_id": "hi.breakdown.youtube",
+          "page_title": "YouTube",
+          "heading": "Functional Requirements",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/youtube#functional-requirements"
         },
         {
-          "title": "Real-time Updates",
-          "provider": "Hello Interview",
-          "url": "https://www.hellointerview.com/learn/system-design/deep-dives/realtime-updates",
-          "acceptance": "验收：能讲清机制、取舍与 failure path。"
+          "source_id": "hi.breakdown.youtube",
+          "page_title": "YouTube",
+          "heading": "Non-Functional Requirements",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/youtube#non-functional-requirements"
+        },
+        {
+          "source_id": "hi.breakdown.youtube",
+          "page_title": "YouTube",
+          "heading": "The Set Up",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/youtube#the-set-up"
+        },
+        {
+          "source_id": "hi.breakdown.youtube",
+          "page_title": "YouTube",
+          "heading": "Planning the Approach",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/youtube#planning-the-approach"
+        },
+        {
+          "source_id": "hi.breakdown.youtube",
+          "page_title": "YouTube",
+          "heading": "Defining the Core Entities",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/youtube#defining-the-core-entities"
+        },
+        {
+          "source_id": "hi.breakdown.youtube",
+          "page_title": "YouTube",
+          "heading": "The API",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/youtube#the-api"
+        },
+        {
+          "source_id": "hi.breakdown.youtube",
+          "page_title": "YouTube",
+          "heading": "High-Level Design",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/youtube#high-level-design"
         }
       ],
-      "deliverable": "用 75 分钟拆 WhatsApp：范围、核心状态、HLD、一个 delivery / ordering / presence deep dive。",
-      "mastery": "能把 WhatsApp 讲到组件行为、触发条件与失败模式。",
-      "repair": "若只背概念，补具体状态、算法或 failure sequence。",
+      "internal_resources": [],
+      "artifact": "完成一张 YouTube 端到端设计图：标出 视频上传、处理版本、清单与发布状态、同步提交边界、主要读写路径、分片键与用户可见状态。",
+      "acceptance": [
+        "按页面顺序从“Understand the Problem”读到“High-Level Design”，中间标题一个不少。",
+        "设计图能逐步解释 可恢复上传如何完成校验并触发多码率转码 与 按网络条件快速取得 manifest 与视频分片并连续播放，每条箭头标明协议或数据。",
+        "明确 所有必需 rendition 校验通过后原子发布 manifestVersion，并区分事实源、缓存、索引、队列和客户端视图。",
+        "至少给出一个数量级估算，并能指出第一个容量瓶颈。"
+      ],
+      "repair": "若讲解出现组件跳跃，回到 视频上传、处理版本、清单与发布状态，重画“请求—条件写—派生事件—用户可见结果”的单条时序，再复述一遍。",
       "algorithms": {
-        "required": [
+        "tag": "Stack",
+        "mode": "review",
+        "problems": [
           {
-            "label": "必做：Sliding Window Maximum",
-            "url": "https://leetcode.com/problems/sliding-window-maximum/"
+            "title": "Valid Parentheses",
+            "slug": "valid-parentheses",
+            "url": "https://leetcode.com/problems/valid-parentheses/"
           },
           {
-            "label": "必做：Max Consecutive Ones III",
-            "url": "https://leetcode.com/problems/max-consecutive-ones-iii/"
+            "title": "Generate Parentheses",
+            "slug": "generate-parentheses",
+            "url": "https://leetcode.com/problems/generate-parentheses/"
           },
           {
-            "label": "必做：复盘",
-            "url": "https://leetcode.com/problems/minimum-window-substring/"
-          }
-        ],
-        "optional": [
-          {
-            "label": "选做：Repeated DNA Sequences",
-            "url": "https://leetcode.com/problems/repeated-dna-sequences/"
-          },
-          {
-            "label": "选做：Subarrays with K Different Integers",
-            "url": "https://leetcode.com/problems/subarrays-with-k-different-integers/"
-          },
-          {
-            "label": "选做：Number of Substrings",
-            "url": "https://leetcode.com/problems/number-of-substrings-containing-all-three-characters/"
+            "title": "Largest Rectangle in Histogram",
+            "slug": "largest-rectangle-in-histogram",
+            "url": "https://leetcode.com/problems/largest-rectangle-in-histogram/"
           }
         ]
-      },
-      "source_status": "transitional-generated-from-html"
+      }
     },
     {
+      "week": 4,
       "day": 6,
-      "date": "2026-08-15",
-      "title": "WhatsApp：Failure 与运维",
-      "focus": "故障桥接",
+      "date": "2026-08-22",
+      "kind": "project-deep",
+      "title": "YouTube · Deep Dive 与 Senior 修复",
       "page": "week4/day-6.html",
-      "case_id": "",
+      "public_url": "https://danielwanwx.github.io/crack-system-interview-skill/week4/day-6.html",
       "time_blocks": [
         {
-          "time": "08:30–10:30",
-          "task": "原文与深挖\n阅读：WhatsApp → 第九章：分布式系统的麻烦 → CAP Theorem；补齐所有 failure path。"
+          "time": "07:30–08:00",
+          "title": "算法 1",
+          "instruction": "独立作答；写出复杂度和一个反例。"
         },
         {
-          "time": "10:45–12:00",
-          "task": "白板\n写 WhatsApp 与 Online Chess 的 failure matrix：检测、降级、恢复、SLO。"
+          "time": "08:00–08:30",
+          "title": "算法 2",
+          "instruction": "延续同一 NeetCode tag block，不跨 tag 拼题。"
         },
         {
-          "time": "14:30–15:45",
-          "task": "算法\n完成 3 道 Sliding Window 限时题；重做本周最慢题。"
+          "time": "12:20–12:50",
+          "title": "算法 3",
+          "instruction": "计时完成；只记录错因与下一次修复动作。"
         },
         {
-          "time": "20:30–21:30",
-          "task": "口述\n用 15 分钟讲主项目、15 分钟讲迁移题、15 分钟讲故障与指标。"
+          "time": "19:30–20:20",
+          "title": "Deep Dives",
+          "instruction": "围绕 YouTube 逐个回答机制、规模阈值和失败语义。"
+        },
+        {
+          "time": "20:20–20:50",
+          "title": "精确补课",
+          "instruction": "只读今天列出的 Core / Technology / Pattern / DDIA 小节。"
+        },
+        {
+          "time": "20:50–21:30",
+          "title": "Senior/Staff 追问",
+          "instruction": "先口述回答，再对照详细答案；为每个追问写证据。"
+        },
+        {
+          "time": "21:30–22:10",
+          "title": "故障注入与修复",
+          "instruction": "把超时、重复、乱序、热点或部分失败注入白板后重答。"
         }
       ],
       "sources": [
         {
-          "title": "WhatsApp",
-          "provider": "Hello Interview",
-          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/whatsapp",
-          "acceptance": "验收：能覆盖主项目的故障、降级与恢复。"
+          "source_id": "hi.breakdown.youtube",
+          "page_title": "YouTube",
+          "heading": "Potential Deep Dives",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/youtube#potential-deep-dives"
         },
         {
-          "title": "第九章：分布式系统的麻烦",
-          "provider": "DDIA",
-          "url": "https://ddia.vonng.com/ch9/",
-          "acceptance": "验收：能说明网络、时钟与 partial failure。"
+          "source_id": "hi.breakdown.youtube",
+          "page_title": "YouTube",
+          "heading": "1) How can we handle processing a video to support adaptive bitrate streaming?",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/youtube#1-how-can-we-handle-processing-a-video-to-support-adaptive-bitrate-streaming"
         },
         {
-          "title": "CAP Theorem",
-          "provider": "Hello Interview",
-          "url": "https://www.hellointerview.com/learn/system-design/deep-dives/cap-theorem",
-          "acceptance": "验收：能明确 consistency / availability 取舍。"
+          "source_id": "hi.breakdown.youtube",
+          "page_title": "YouTube",
+          "heading": "2) How do we support resumable uploads?",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/youtube#2-how-do-we-support-resumable-uploads"
+        },
+        {
+          "source_id": "hi.breakdown.youtube",
+          "page_title": "YouTube",
+          "heading": "3) How do we scale to a large number of videos uploaded / watched a day?",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/youtube#3-how-do-we-scale-to-a-large-number-of-videos-uploaded--watched-a-day"
+        },
+        {
+          "source_id": "hi.breakdown.youtube",
+          "page_title": "YouTube",
+          "heading": "Some additional deep dives you might consider",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/youtube#some-additional-deep-dives-you-might-consider"
+        },
+        {
+          "source_id": "hi.breakdown.youtube",
+          "page_title": "YouTube",
+          "heading": "What is Expected at Each Level?",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/youtube#what-is-expected-at-each-level"
+        },
+        {
+          "source_id": "hi.breakdown.youtube",
+          "page_title": "YouTube",
+          "heading": "Senior",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/youtube#senior"
+        },
+        {
+          "source_id": "hi.pattern.long-running-tasks",
+          "page_title": "Managing Long Running Tasks",
+          "heading": "Workers",
+          "url": "https://www.hellointerview.com/learn/system-design/patterns/long-running-tasks#workers"
+        },
+        {
+          "source_id": "hi.pattern.scaling-reads",
+          "page_title": "Scaling Reads",
+          "heading": "CDN and Edge Caching",
+          "url": "https://www.hellointerview.com/learn/system-design/patterns/scaling-reads#cdn-and-edge-caching"
+        },
+        {
+          "source_id": "hi.pattern.scaling-writes",
+          "page_title": "Scaling Writes",
+          "heading": "Handling Bursts with Queues and Load Shedding",
+          "url": "https://www.hellointerview.com/learn/system-design/patterns/scaling-writes#handling-bursts-with-queues-and-load-shedding"
+        },
+        {
+          "source_id": "hi.core.data-modeling",
+          "page_title": "Data Modeling",
+          "heading": "Entities, Keys & Relationships",
+          "url": "https://www.hellointerview.com/learn/system-design/core-concepts/data-modeling#entities-keys--relationships"
+        },
+        {
+          "source_id": "hi.deep.kafka",
+          "page_title": "Kafka",
+          "heading": "Handling Retries and Errors",
+          "url": "https://www.hellointerview.com/learn/system-design/deep-dives/kafka#handling-retries-and-errors"
+        },
+        {
+          "source_id": "ddia.ch11",
+          "page_title": "第十一章：批处理",
+          "heading": "工作流调度",
+          "url": "https://ddia.vonng.com/ch11/#sec_batch_workflows"
+        },
+        {
+          "source_id": "ddia.ch12",
+          "page_title": "第十二章：流处理",
+          "heading": "幂等性",
+          "url": "https://ddia.vonng.com/ch12/#sec_stream_idempotence"
+        },
+        {
+          "source_id": "ddia.ch13",
+          "page_title": "第十三章：流式系统的哲学",
+          "heading": "组合使用派生数据的工具",
+          "url": "https://ddia.vonng.com/ch13/#id442"
         }
       ],
-      "deliverable": "写 WhatsApp 与 Online Chess 的 failure matrix：检测、降级、恢复、SLO。",
-      "mastery": "每个故障有监控、明确的降级选择与恢复条件。",
-      "repair": "若只有 happy path，补 timeout、retry、partial failure 与指标。",
+      "internal_resources": [],
+      "artifact": "提交 YouTube 深挖包：不变量表、两张故障时序、热点容量推导、指标与一次 35 分钟 Senior mock 记录。",
+      "acceptance": [
+        "逐项覆盖 Potential Deep Dives 中列出的 3 个问题，并能说明方案代价。",
+        "至少演练重复、乱序、依赖超时和局部分区中的两类故障。",
+        "回答包含状态、路径、取舍、失败语义与量化指标，而非组件清单。",
+        "mock 后记录 critical miss、修复动作和同题复测证据。"
+      ],
+      "repair": "若深挖答案停在技术名词，选最薄弱的一题，补“触发条件—不变量—故障注入—指标—回滚”五格，再进行 10 分钟复测。",
       "algorithms": {
-        "required": [
+        "tag": "Stack",
+        "mode": "timed",
+        "problems": [
           {
-            "label": "必做：限时",
-            "url": "https://leetcode.com/problems/find-all-anagrams-in-a-string/"
+            "title": "Min Stack",
+            "slug": "min-stack",
+            "url": "https://leetcode.com/problems/min-stack/"
           },
           {
-            "label": "必做：限时",
-            "url": "https://leetcode.com/problems/fruit-into-baskets/"
+            "title": "Daily Temperatures",
+            "slug": "daily-temperatures",
+            "url": "https://leetcode.com/problems/daily-temperatures/"
           },
           {
-            "label": "必做：复盘",
-            "url": "https://leetcode.com/problems/sliding-window-maximum/"
-          }
-        ],
-        "optional": [
-          {
-            "label": "选做：Repeated DNA Sequences",
-            "url": "https://leetcode.com/problems/repeated-dna-sequences/"
-          },
-          {
-            "label": "选做：Subarrays with K Different Integers",
-            "url": "https://leetcode.com/problems/subarrays-with-k-different-integers/"
-          },
-          {
-            "label": "选做：Number of Substrings",
-            "url": "https://leetcode.com/problems/number-of-substrings-containing-all-three-characters/"
+            "title": "Asteroid Collision",
+            "slug": "asteroid-collision",
+            "url": "https://leetcode.com/problems/asteroid-collision/"
           }
         ]
-      },
-      "source_status": "transitional-generated-from-html"
+      }
     },
     {
+      "week": 4,
       "day": 7,
-      "date": "2026-08-16",
-      "title": "WhatsApp Mock + Online Chess 压缩题",
-      "focus": "Mock 与修复",
+      "date": "2026-08-23",
+      "kind": "mock",
+      "title": "社交与媒体三题动态 Mock 与修复",
       "page": "week4/day-7.html",
-      "case_id": "",
+      "public_url": "https://danielwanwx.github.io/crack-system-interview-skill/week4/day-7.html",
       "time_blocks": [
         {
-          "time": "09:00–09:45",
-          "task": "Mock\n按面试时间盒作答；不看讲义。"
+          "time": "07:30–08:00",
+          "title": "算法 1",
+          "instruction": "独立作答；写出复杂度和一个反例。"
         },
         {
-          "time": "10:00–11:15",
-          "task": "评分与修复\n完成 WhatsApp 45 分钟 mock；再做 Online Chess 20 分钟压缩设计与 repair note。"
+          "time": "08:00–08:30",
+          "title": "算法 2",
+          "instruction": "延续同一 NeetCode tag block，不跨 tag 拼题。"
         },
         {
-          "time": "14:00–15:15",
-          "task": "算法\n完成 3 道 Sliding Window 限时复盘题。"
+          "time": "12:20–12:50",
+          "title": "算法 3",
+          "instruction": "计时完成；只记录错因与下一次修复动作。"
         },
         {
-          "time": "20:30–21:00",
-          "task": "周复盘\n更新错题、设计决策和下周第 1 天的预读清单。"
+          "time": "19:30–20:15",
+          "title": "Feed 或媒体主 Mock",
+          "instruction": "随机抽一题完成端到端设计，量化 DAU、关注边、媒体大小、带宽或转码吞吐，并明确同步与异步边界。"
+        },
+        {
+          "time": "20:15–20:45",
+          "title": "扇出与管道切题",
+          "instruction": "另两题各 15 分钟，集中回答名人扇出、4GB 媒体即时呈现与自适应码率转码。"
+        },
+        {
+          "time": "20:45–21:25",
+          "title": "派生资产故障注入",
+          "instruction": "模拟 Feed 缓存过期、转码队列堆积、CDN 回源放大，写出保护源站和恢复派生视图的顺序。"
+        },
+        {
+          "time": "21:25–22:10",
+          "title": "阈值化方案修复",
+          "instruction": "把所有“规模大时”替换成具体切换阈值与指标，再用名人直播发布 4GB 视频场景复答。"
         }
       ],
       "sources": [
         {
-          "title": "WhatsApp",
-          "provider": "Hello Interview",
-          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/whatsapp",
-          "acceptance": "验收：能在 mock 中完成主线并接住追问。"
+          "source_id": "hi.breakdown.fb-news-feed",
+          "page_title": "FB News Feed",
+          "heading": "2) How do we handle users with a large number of followers?",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed#2-how-do-we-handle-users-with-a-large-number-of-followers"
         },
         {
-          "title": "Online Chess",
-          "provider": "Hello Interview",
-          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/online-chess",
-          "acceptance": "验收：能在压缩题中迁移本周的核心判断。"
+          "source_id": "hi.breakdown.instagram",
+          "page_title": "Instagram",
+          "heading": "2) The system should render photos and videos instantly, supporting photos up to 8mb and videos up to 4GB",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/instagram#2-the-system-should-render-photos-and-videos-instantly-supporting-photos-up-to-8mb-and-videos-up-to-4gb"
         },
         {
-          "title": "第十三章：数据系统的未来",
-          "provider": "DDIA",
-          "url": "https://ddia.vonng.com/ch13/",
-          "acceptance": "验收：能说明演化、backfill 或端到端正确性。"
+          "source_id": "hi.breakdown.youtube",
+          "page_title": "YouTube",
+          "heading": "1) How can we handle processing a video to support adaptive bitrate streaming?",
+          "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/youtube#1-how-can-we-handle-processing-a-video-to-support-adaptive-bitrate-streaming"
         }
       ],
-      "deliverable": "完成 WhatsApp 45 分钟 mock；再做 Online Chess 20 分钟压缩设计与 repair note。",
-      "mastery": "主项目 75/100 以上；迁移题能在 20 分钟完成可辩护主线。",
-      "repair": "最低分维度做 15 分钟 repair 后复测。",
+      "internal_resources": [],
+      "artifact": "一份三题轮转白板记录，加一张容量与派生数据表；包含名人热点、4GB 视频、转码版本、Feed 游标和 CDN 回源的数量级。",
+      "acceptance": [
+        "能用关注图和粉丝规模说明 fanout-on-write、fanout-on-read 或混合方案的切换阈值，而非只给固定选择。",
+        "能完整描述原始媒体上传、异步转码、manifest/缩略图生成、CDN 分发与失败重试的状态转换。",
+        "在热点帖子、视频处理积压和 CDN miss storm 三种故障下分别给出限流、隔离、降级与恢复验收指标。"
+      ],
+      "repair": "如果 Feed 与视频管道混成一个队列，先按用户请求路径和离线派生路径拆开，再为每条路径补容量单位、背压入口和可丢/不可丢数据，最后重答热点名人追问。",
       "algorithms": {
-        "required": [
+        "tag": "Stack",
+        "mode": "timed",
+        "problems": [
           {
-            "label": "必做：限时",
-            "url": "https://leetcode.com/problems/longest-substring-without-repeating-characters/"
+            "title": "Evaluate Reverse Polish Notation",
+            "slug": "evaluate-reverse-polish-notation",
+            "url": "https://leetcode.com/problems/evaluate-reverse-polish-notation/"
           },
           {
-            "label": "必做：限时",
-            "url": "https://leetcode.com/problems/minimum-window-substring/"
+            "title": "Car Fleet",
+            "slug": "car-fleet",
+            "url": "https://leetcode.com/problems/car-fleet/"
           },
           {
-            "label": "必做：限时",
-            "url": "https://leetcode.com/problems/sliding-window-maximum/"
-          }
-        ],
-        "optional": [
-          {
-            "label": "选做：Repeated DNA Sequences",
-            "url": "https://leetcode.com/problems/repeated-dna-sequences/"
-          },
-          {
-            "label": "选做：Subarrays with K Different Integers",
-            "url": "https://leetcode.com/problems/subarrays-with-k-different-integers/"
-          },
-          {
-            "label": "选做：Number of Substrings",
-            "url": "https://leetcode.com/problems/number-of-substrings-containing-all-three-characters/"
+            "title": "Decode String",
+            "slug": "decode-string",
+            "url": "https://leetcode.com/problems/decode-string/"
           }
         ]
-      },
-      "source_status": "transitional-generated-from-html"
+      }
     }
   ]
 }

@@ -3,126 +3,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>第 1 周讲义 - URL Shortener / Bitly</title>
-  <link rel="icon" href="data:,">
-  <link rel="stylesheet" href="../week1/style.css">
+  <meta name="description" content="不是摘要：每节都解释为什么、何时失效、如何在白板和追问里证明。">
+  <title>第 1 周中文深度讲义 · 12 周系统设计完整学习路线</title>
+  <link rel="stylesheet" href="../assets/curriculum.css">
 </head>
 <body>
-
-  <header class="topbar">
-    <nav class="shell nav">
-      <a class="brand" href="../project-driven-picture.html"><span class="mark"></span> 项目化系统设计</a>
-      <div class="navlinks"><a href="../project-driven-picture.html">全局图</a><a href="../week1-action-guide.html">第 1 周</a><a href="lecture.html">讲义</a><a href="staff-qa.html">Staff Q&A</a><a href="live-mock.html">Live Mock</a><a href="scorecard.html">评分表</a></div>
-    </nav>
-  </header>
-  <main class="shell">
-
-    <section class="day-hero">
-      <div class="eyebrow">第 1 周讲义 · URL Shortener / Bitly</div>
-      <h1>把短链接系统讲到可辩护</h1>
-      <div class="day-meta"><span>核心讲义 60m</span><span>白板复述 30m</span><span>追问修复 30m</span></div>
-    </section>
-
-    <section class="section">
-      <div class="callout">维护 short_code → long_url 映射；create path 保证唯一性和持久化，redirect path 保证 p99、可用性和过期语义。</div>
-    </section>
-
-    <section class="section">
-      <div class="section-head"><h2>需求边界</h2></div>
-      <table class="matrix">
-        <tr><th>类别</th><th>本周答案</th><th>设计影响</th></tr>
-        <tr><td>Functional Requirements</td><td>创建短链接；通过短码跳转；可选 expiration；可选 custom alias。</td><td>需要 write path、read path、unique constraint、过期判断。</td></tr>
-        <tr><td>Non-Functional Requirements</td><td>redirect p99 低延迟；高可用；读多写少；数据持久；合理防滥用。</td><td>cache/read replica、DB source of truth、rate limit、监控。</td></tr>
-        <tr><td>Out of scope</td><td>完整 analytics、campaign dashboard、custom domain、多地域双活、机器学习风控。</td><td>可以提 optional queue，但不要让主线失焦。</td></tr>
-      </table>
-    </section>
-
-    <section class="section">
-      <div class="section-head"><h2>API 契约</h2></div>
-      <table class="matrix">
-        <tr><th>Endpoint</th><th>语义</th><th>关键点</th></tr>
-        <tr><td>POST /urls</td><td>创建短链接，body 包含 long_url、optional custom_alias、optional expires_at。</td><td>返回 short_code、short_url、expires_at；身份来自 auth context；custom_alias 冲突返回 409。</td></tr>
-        <tr><td>GET /{short_code}</td><td>跳转到 long_url。</td><td>成功返回 302 Location；过期返回 410；不存在返回 404。</td></tr>
-        <tr><td>GET /urls/{id}</td><td>可选管理接口。</td><td>不是 redirect hot path，权限和 pagination 可以简化。</td></tr>
-      </table>
-      <div class="callout orange">301 vs 302：301 更容易被浏览器和中间层长期缓存，后续变更目标 URL 或过期处理会变困难。面试默认用 302 更稳，除非业务明确需要永久跳转。</div>
-    </section>
-
-    <section class="section">
-      <div class="section-head"><h2>数据模型</h2></div>
-      <pre class="codeblock">CREATE TABLE url_mappings (
-  id BIGSERIAL PRIMARY KEY,
-  short_code VARCHAR(16) NOT NULL UNIQUE,
-  long_url TEXT NOT NULL,
-  owner_user_id BIGINT NULL,
-  created_at TIMESTAMP NOT NULL,
-  expires_at TIMESTAMP NULL,
-  is_disabled BOOLEAN NOT NULL DEFAULT FALSE
-);
-
-CREATE INDEX idx_url_mappings_owner_created
-  ON url_mappings(owner_user_id, created_at DESC);
-
-CREATE INDEX idx_url_mappings_expires_at
-  ON url_mappings(expires_at);</pre>
-      <div class="section-split">
-        <div><h3>为什么不是一开始就 NoSQL</h3><p>Bitly 的核心关系很简单，唯一约束和索引纪律比换数据库更重要。关系型数据库足够表达第一版，并方便讲事务、唯一性和 source of truth。</p></div>
-        <div><h3>什么时候考虑分片</h3><p>当单库写入、索引大小、读 replica、运维窗口或多地域要求真的成为瓶颈，再讨论按 short_code hash 或 tenant/region 分片。</p></div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="section-head"><h2>容量判断</h2></div>
-      <table class="matrix">
-        <tr><th>问题</th><th>面试级估算</th><th>结论</th></tr>
-        <tr><td>1B URLs 存储</td><td>如果每条映射粗估 500B，约 500GB，不含索引和冗余。</td><td>这本身不足以证明必须分片。</td></tr>
-        <tr><td>100M DAU redirect</td><td>如果每人每天 10 次 redirect，约 1B/day，平均约 12K QPS，峰值可按 5-10 倍估。</td><td>读路径需要 cache/read replica，p99 是重点。</td></tr>
-        <tr><td>创建短链</td><td>通常远小于 redirect。</td><td>可以接受更高写延迟，重点是唯一性和持久化。</td></tr>
-      </table>
-    </section>
-
-    <section class="section">
-      <div class="section-head"><h2>高层设计</h2><p class="section-copy">create path / redirect path</p></div>
-      <table class="matrix">
-        <tr><th>路径</th><th>步骤</th><th>风险</th></tr>
-        <tr><td>Create path</td><td>Client -> API Gateway -> URL Service -> Code Generator -> DB -> optional event queue。</td><td>short_code collision、counter service outage、custom alias 冲突、恶意 URL。</td></tr>
-        <tr><td>Redirect path</td><td>Client -> DNS/LB/CDN -> Redirect Service -> Cache -> DB fallback -> 302。</td><td>cache miss storm、hot key、DB failover、过期链接缓存不一致。</td></tr>
-      </table>
-      <div class="callout green">核心表达：cache 是加速层，不是真实来源。DB 决定 long_url、expiration、disabled 状态；cache TTL 必须尊重 expires_at 和禁用逻辑。</div>
-    </section>
-
-    <section class="section">
-      <div class="section-head"><h2>短码生成</h2></div>
-      <div class="grid-3">
-        <article class="tile"><div class="kicker">Hash long_url</div><h3>简单但有冲突</h3><p>同一 long_url 可稳定生成，但 collision、可枚举、custom alias 和安全语义要处理。</p></article>
-        <article class="tile"><div class="kicker">Counter + base62</div><h3>可控且高效</h3><p>递增 ID 转 base62，唯一性清楚。需要避免可猜测，可加 salt/shuffle 或分段发号。</p></article>
-        <article class="tile"><div class="kicker">Random code</div><h3>实现简单</h3><p>生成后查唯一索引，冲突重试。高规模下要讨论码长、冲突概率和重试成本。</p></article>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="section-head"><h2>面试推进</h2></div>
-      <div class="decision-chain">
-        <article><span>01 · 0-5 min</span><h3>范围</h3><p>create、redirect、alias、expiration。</p><b>追问：NFR 与暂缓项。</b></article>
-        <article><span>02 · 5-12 min</span><h3>契约</h3><p>POST /urls；GET /{short_code}；302 / 404 / 410。</p><b>追问：alias、重试。</b></article>
-        <article><span>03 · 12-22 min</span><h3>路径</h3><p>create durable write；redirect cache → DB → 302。</p><b>追问：expiry、hot key。</b></article>
-        <article><span>04 · 22-35 min</span><h3>深挖</h3><p>短码唯一性；快速跳转。</p><b>追问：counter、collision、outage。</b></article>
-        <article><span>05 · 35-45 min</span><h3>扩展</h3><p>分片、多地域、analytics、abuse。</p><b>追问：触发条件与新风险。</b></article>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="section-head"><h2>Applied AI 叠加</h2></div>
-      <table class="matrix">
-        <tr><th>如果加 AI 功能</th><th>正确位置</th><th>不能做什么</th></tr>
-        <tr><td>自动生成 link title / campaign summary</td><td>创建后异步任务，结果写 metadata。</td><td>不能阻塞 POST /urls 的核心创建成功。</td></tr>
-        <tr><td>恶意 URL 识别</td><td>异步扫描 + blocklist + 人工复核；高风险可先软拦截。</td><td>不能把 LLM 判断当唯一安全来源。</td></tr>
-        <tr><td>AI analytics insight</td><td>离线聚合后生成洞察。</td><td>不能进入 redirect hot path。</td></tr>
-      </table>
-      <div class="pill-row"><a class="pill" href="https://developers.openai.com/tracks/building-agents">OpenAI · Building agents</a><a class="pill" href="https://developers.openai.com/api/docs/guides/tools">OpenAI · Using tools</a><a class="pill" href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic · Building effective agents</a><a class="pill" href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">Anthropic · Demystifying evals for AI agents</a></div>
-    </section>
-
-    <footer class="footer">Week 1 lecture · 读完后用 15 分钟不看稿复述一遍，再进入 Staff Q&A。</footer>
+  <header class="site-header"><a class="brand" href="../index.html"><span>CS</span> Crack System</a><nav aria-label="主导航"><a href="../index.html">首页</a><a href="../system-design-project-route.html">12 周路线</a><a href="../coverage-matrix.html">30 题矩阵</a><a href="../week1-action-guide.html">第 1 周</a><a href="../week1/lecture.html">中文讲义</a><a href="../week1/staff-qa.html">Staff Q&amp;A</a><a href="../week1/live-mock.html">Live Mock</a><a href="../week1/scorecard.html">复盘</a></nav></header>
+  <main>
+    <section class="hero compact"><p class="eyebrow">Week 01 · Lecture</p><h1>第 1 周中文深度讲义</h1><p class="lede">不是摘要：每节都解释为什么、何时失效、如何在白板和追问里证明。</p></section>
+    <section class="panel lecture-project" id="bitly"><p class="kicker">Bitly</p><h2>Bitly：从需求语义到故障修复</h2><article class="lecture-section"><span class="section-index">01</span><div><h3>先定义重定向语义，再谈架构</h3><p>Bitly 的用户故事只有创建短链和按短码跳转，但 API 语义会直接决定缓存与一致性。创建接口应接收 long_url、可选自定义 alias 和过期时间，并使用 idempotency key 防止客户端超时重试时生成多个短链。跳转接口通常返回 302，使浏览器仍回到 Bitly，便于更新目标和记录访问；若产品选择永久不可变的链接才考虑 301。不存在、已过期与被禁用最好分别落到 404、410 或受控错误页，否则缓存无法表达真实状态，运维也无法区分数据缺失和策略封禁。</p><div class="takeaway"><strong>能迁移的判断：</strong>状态码、幂等键和过期语义都是数据模型与缓存策略的一部分。</div></div></article><article class="lecture-section"><span class="section-index">02</span><div><h3>从访问路径反推最小数据模型</h3><p>redirect path 的核心查询是按 short_code 精确读出 long_url、status、expires_at，因此 short_code 必须是主键或唯一索引；owner_id + created_at 只在产品要求用户查看自己的链接时才需要二级索引。数据库是 expiry、disabled 与目标 URL 的 source of truth，cache 只存可丢失的投影。使用 Postgres 能用唯一约束和事务快速得到清晰基线；DynamoDB 也能以 short_code 做 partition key，但应先说明条件写、热点 key、二级索引和多地域一致性成本，不能因为题目说“大规模”就直接换库。还要为自定义 alias 的抢占、过期记录的再利用和 owner 查询写出明确约束，否则同一张表在边界请求下仍会产生歧义。</p><div class="takeaway"><strong>能迁移的判断：</strong>先列查询，再选 key、index 和数据库；技术名词不能替代访问模式。</div></div></article><article class="lecture-section"><span class="section-index">03</span><div><h3>短码唯一性是一条写协议</h3><p>随机 Base62 码的优点是分散且不容易枚举，但必须依赖数据库唯一约束检测碰撞，并在有限次数内重试；随着码空间利用率增长，碰撞成本会上升。单一全局计数器可保证唯一，却会成为可用性和吞吐瓶颈，也暴露业务规模。更成熟的方案是让 allocator 预分配号段，每个实例在本地单调消费，再做可逆混淆；号段租约、实例崩溃后未用 ID 和重复领取必须有明确状态。面试中不需要一开始实现最复杂方案，而要展示从简单随机重试到号段分配的演化条件。</p><div class="takeaway"><strong>能迁移的判断：</strong>唯一性由数据库约束或分配协议保证，不由“随机概率很低”保证。</div></div></article><article class="lecture-section"><span class="section-index">04</span><div><h3>读路径优化必须保留修复路径</h3><p>redirect 是极端读多写少，适合 cache-aside：先查 Redis，miss 再读权威 DB，并写入带 TTL 的 cache。热门 key 过期会造成 stampede，可用 singleflight、提前刷新和 jitter 分散过期；不存在的 short code 可短 TTL negative cache，防止恶意扫描打穿数据库。更新目标或禁用链接时要先改权威状态，再删除或版本化 cache；即使失效消息丢失，TTL 仍应让系统最终收敛。CDN 可以吸收全球热点，但其缓存 key、302 响应、撤销窗口和 abuse 风险必须比普通静态内容更谨慎。设计时要逐层写出最大陈旧窗口、回源并发上限与失效失败指标，才能证明这条读路径可控。</p><div class="takeaway"><strong>能迁移的判断：</strong>缓存优化延迟，TTL 与权威回源保证可恢复性；二者职责不同。</div></div></article><article class="lecture-section"><span class="section-index">05</span><div><h3>容量数字用来拒绝过早分片</h3><p>假设 1B 条 URL mapping，每条连同索引约数百字节，数据量仍可能落在单个成熟数据库集群可处理的范围。真正可能先触顶的是 redirect 峰值 QPS、热点分布和跨地域延迟，而不是总行数本身。应分别估算 create QPS、redirect average/peak QPS、cache hit ratio、回源 QPS、存储与带宽，再决定读副本、缓存或分片。分片触发器应可观测，例如主库写吞吐、索引尺寸、checkpoint 或复制延迟持续越界，而不是口头说“用户多就 sharding”。估算还要保留峰均比与增长假设，说明哪个数字变化时会推翻当前单库结论。</p><div class="takeaway"><strong>能迁移的判断：</strong>规模题的正确动作是给出负载模型和触发器，不是背诵分布式组件。</div></div></article><article class="lecture-section"><span class="section-index">06</span><div><h3>Senior 答案要主动讲故障和运营</h3><p>Senior 候选人不能停在 happy path。cache 全失效时要限速回源并保护数据库；allocator 不可用时可以暂时只读而不是生成重复码；数据库 failover 时创建接口可重试，但 redirect 是否允许短暂读取旧 cache 要由链接撤销和 availability 优先级决定。还要主动指出 abuse：短码空间可被枚举、恶意 URL 可能借平台传播、热点链接可能成为 DDoS 放大点。可观测指标至少包括 redirect p99、cache hit、DB fallback、allocator collision/retry、410/404 比例和热点 key 分布，这些信号决定下一轮扩展。每个降级还应写清退出条件和数据回补方式，避免临时策略在故障结束后变成永久不一致。</p><div class="takeaway"><strong>能迁移的判断：</strong>Senior 深度来自主动识别风险、选择降级并给出恢复证据。</div></div></article><aside class="source-gap"><strong>项目配套精读</strong><p>以下是本项目整组讲义的精确源包，不把同一组链接重复伪装成逐段引文。</p><ul class="source-list"><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly#high-level-design" target="_blank" rel="noreferrer">Bitly · High-Level Design</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly#potential-deep-dives" target="_blank" rel="noreferrer">Bitly · Potential Deep Dives</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly#1-how-can-we-ensure-short-urls-are-unique" target="_blank" rel="noreferrer">Bitly · 1) How can we ensure short urls are unique?</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly#2-how-can-we-ensure-that-redirects-are-fast" target="_blank" rel="noreferrer">Bitly · 2) How can we ensure that redirects are fast?</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly#3-how-can-we-scale-to-support-1b-shortened-urls-and-100m-dau" target="_blank" rel="noreferrer">Bitly · 3) How can we scale to support 1B shortened urls and 100M DAU?</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly#what-is-expected-at-each-level" target="_blank" rel="noreferrer">Bitly · What is Expected at Each Level?</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly#senior" target="_blank" rel="noreferrer">Bitly · Senior</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/core-concepts/api-design#http-methods" target="_blank" rel="noreferrer">API Design · HTTP Methods</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/core-concepts/data-modeling#indexing-for-access-patterns" target="_blank" rel="noreferrer">Data Modeling · Indexing for Access Patterns</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/core-concepts/caching#cache-aside-lazy-loading" target="_blank" rel="noreferrer">Caching · Cache-Aside (Lazy Loading)</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/core-concepts/caching#cache-stampede-thundering-herd" target="_blank" rel="noreferrer">Caching · Cache Stampede (Thundering Herd)</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/core-concepts/db-indexing#b-tree-indexes" target="_blank" rel="noreferrer">Database Indexing · B-Tree Indexes</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/core-concepts/networking-essentials#example-a-simple-web-request" target="_blank" rel="noreferrer">Networking Essentials · Example: A Simple Web Request</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/core-concepts/networking-essentials#content-delivery-networks-cdns" target="_blank" rel="noreferrer">Networking Essentials · Content Delivery Networks (CDNs)</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/deep-dives/dynamodb#partition-key-and-sort-key" target="_blank" rel="noreferrer">DynamoDB · Partition Key and Sort Key</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/deep-dives/postgres#transactions" target="_blank" rel="noreferrer">PostgreSQL · Transactions</a></li><li><a class="source-link" href="https://ddia.vonng.com/ch2/#sec_introduction_reliability" target="_blank" rel="noreferrer">2. 定义非功能性需求 · 可靠性与容错</a></li><li><a class="source-link" href="https://ddia.vonng.com/ch2/#sec_introduction_scalability" target="_blank" rel="noreferrer">2. 定义非功能性需求 · 可伸缩性</a></li><li><a class="source-link" href="https://ddia.vonng.com/ch3/#sec_datamodels_history" target="_blank" rel="noreferrer">3. 数据模型与查询语言 · 关系模型与文档模型</a></li><li><a class="source-link" href="https://ddia.vonng.com/ch4/#sec_storage_oltp" target="_blank" rel="noreferrer">4. 存储与检索 · OLTP 系统的存储与索引</a></li></ul></aside></section><section class="panel lecture-project" id="dropbox"><p class="kicker">Dropbox</p><h2>Dropbox：从需求语义到故障修复</h2><article class="lecture-section"><span class="section-index">01</span><div><h3>把 Blob 与 Metadata 分开建模</h3><p>Dropbox 的大字节内容适合不可变对象存储，而文件名、namespace、owner、ACL、当前 version、content hash 和同步 sequence 属于 metadata store。二者优化目标不同：对象存储提供高耐久和大吞吐，metadata 需要小记录事务、索引和权限判断。应用服务负责控制面：鉴权、创建 upload session、签发短期 URL、提交版本和发布 change event；客户端直接和对象存储交换字节。这样 50GB 文件不会占满应用服务器带宽，同时也能把“对象存在”与“文件对用户可见”明确分开。白板上必须用不同边界标出控制面和数据面，避免把上传成功误说成版本已经提交。</p><div class="takeaway"><strong>能迁移的判断：</strong>对象存储拥有字节，metadata store 拥有文件语义；只有后者能宣布版本可见。</div></div></article><article class="lecture-section"><span class="section-index">02</span><div><h3>上传是两阶段可恢复协议</h3><p>客户端先创建 upload session，服务端记录 file_id、base_version、part size、预期 hash 与 idempotency key。每个 part 独立上传、校验并可重试，完成后客户端发 commit；服务端验证对象完整性和权限，再用条件更新把 current_version 原子前进并追加 change log。对象上传成功但 commit 超时，不应重新上传全部字节，而应查询 session 并用同一幂等键继续。最终未被 metadata 引用的 orphan blob 由延迟 GC 清理，不需要跨数据库与对象存储的分布式事务。服务还要区分 part 重传、完整对象校验失败和 metadata 条件写冲突，让客户端知道该续传、重算还是创建冲突版本。</p><div class="takeaway"><strong>能迁移的判断：</strong>先保存不可变字节，再原子提交引用；重试和 GC 取代跨存储事务。</div></div></article><article class="lecture-section"><span class="section-index">03</span><div><h3>同步正确性来自 Change Log 与 Cursor</h3><p>每个 namespace 维护单调 change sequence，设备保存已经成功应用的 cursor。新版本提交后写入 change log，push/WebSocket 只负责唤醒在线设备；设备随后从 cursor 拉取增量，在本地事务成功后才推进 cursor。通知丢失、合并或乱序只会增加 freshness，因为周期 pull 与 replay 仍能补齐。服务端按 event_id/version 幂等，客户端检测 sequence gap 并请求缺口。把同步建立在可重放日志上，才能解释离线数天、连接切换和进程崩溃后的最终收敛。日志保留期之外则返回带基准 sequence 的完整 snapshot，完成后再恢复增量读取，不能假装旧 cursor 永远有效。</p><div class="takeaway"><strong>能迁移的判断：</strong>通知是加速器，cursor pull 是证明不丢变更的 repair path。</div></div></article><article class="lecture-section"><span class="section-index">04</span><div><h3>并发修改必须有用户可见语义</h3><p>每次提交携带 base_version。若服务端 current_version 已经前进，说明两台设备从同一旧版本分叉。对一般二进制文件，安全做法是保留两个版本、生成 conflict copy 或要求用户选择；静默 last-write-wins 会不可察觉地丢数据。对可合并文本可另建 merge 语义，但这已经接近 Google Docs 的 operation ordering 题。rename、delete 与 restore 也应成为带版本的 metadata event，删除用 tombstone 保留足够时间，使离线设备重连时不会把已删文件再次上传为当前状态。冲突策略必须成为用户可见契约，并通过 parent version 保留审计和回滚路径。</p><div class="takeaway"><strong>能迁移的判断：</strong>冲突不是异常日志，而是必须设计的产品状态和恢复流程。</div></div></article><article class="lecture-section"><span class="section-index">05</span><div><h3>下载性能不能绕过权限</h3><p>下载请求先在 metadata 路径验证 ACL、版本和可见性，再签发短时效 presigned URL，让客户端直接从对象存储或 CDN 拉取。热门公共文件适合 CDN，但私有共享文件的 cache key、签名过期和权限撤销必须限制暴露窗口。撤销权限后应立即更新权威 ACL，并使新签名失败；已发出的短期 token 和 CDN 副本只能在承诺窗口内收敛。已经下载到离线设备的字节无法远程魔法删除，应把这一现实边界明确告诉面试官。</p><div class="takeaway"><strong>能迁移的判断：</strong>CDN 降低延迟，短期签名和权威 ACL 限制它带来的撤销风险。</div></div></article><article class="lecture-section"><span class="section-index">06</span><div><h3>Senior 答案要覆盖局部失败与运营信号</h3><p>metadata 主库不可用时，应停止产生新 current_version，避免同一文件出现多个权威头；已经 commit 的文件可在 ACL 允许下从缓存或对象存储降级只读。对象存储慢时保留 upload session 并退避重试，不能让客户端无限并发。通知服务故障不影响正确性，但会拉高 sync freshness。需要观测 upload-to-commit completion、part retry、orphan blob、cursor lag、conflict rate、ACL deny、签名 URL 失败和 CDN stale window；这些指标直接回答用户的文件是否真的保存、同步和受保护。Senior 回答还要把告警阈值连到具体 runbook：先保护 metadata，再暂停回收，最后按 cursor 与引用表完成对账。</p><div class="takeaway"><strong>能迁移的判断：</strong>每个依赖都要定义检测、降级、恢复和用户可见状态。</div></div></article><aside class="source-gap"><strong>项目配套精读</strong><p>以下是本项目整组讲义的精确源包，不把同一组链接重复伪装成逐段引文。</p><ul class="source-list"><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/dropbox#high-level-design" target="_blank" rel="noreferrer">Dropbox · High-Level Design</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/dropbox#potential-deep-dives" target="_blank" rel="noreferrer">Dropbox · Potential Deep Dives</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/dropbox#1-how-can-you-support-large-files" target="_blank" rel="noreferrer">Dropbox · 1) How can you support large files?</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/dropbox#2-how-can-we-make-uploads-downloads-and-syncing-as-fast-as-possible" target="_blank" rel="noreferrer">Dropbox · 2) How can we make uploads, downloads, and syncing as fast as possible?</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/dropbox#3-how-can-you-ensure-file-security" target="_blank" rel="noreferrer">Dropbox · 3) How can you ensure file security?</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/dropbox#what-is-expected-at-each-level" target="_blank" rel="noreferrer">Dropbox · What is Expected at Each Level?</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/dropbox#senior" target="_blank" rel="noreferrer">Dropbox · Senior</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/patterns/large-blobs#resumable-uploads-for-large-files" target="_blank" rel="noreferrer">Handling Large Blobs · Resumable Uploads for Large Files</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/patterns/large-blobs#state-synchronization-challenges" target="_blank" rel="noreferrer">Handling Large Blobs · State Synchronization Challenges</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/patterns/large-blobs#how-do-you-ensure-downloads-are-fast" target="_blank" rel="noreferrer">Handling Large Blobs · &quot;How do you ensure downloads are fast?&quot;</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/patterns/realtime-updates#websockets-the-full-duplex-champion" target="_blank" rel="noreferrer">Real-time Updates · Websockets: The Full-Duplex Champion</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/patterns/realtime-updates#how-do-you-handle-connection-failures-and-reconnection" target="_blank" rel="noreferrer">Real-time Updates · &quot;How do you handle connection failures and reconnection?&quot;</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/core-concepts/networking-essentials#timeouts-and-retries-with-backoff" target="_blank" rel="noreferrer">Networking Essentials · Timeouts and Retries with Backoff</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/core-concepts/caching#cdn-content-delivery-network" target="_blank" rel="noreferrer">Caching · CDN (Content Delivery Network)</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/deep-dives/dynamodb#secondary-indexes" target="_blank" rel="noreferrer">DynamoDB · Secondary Indexes</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/deep-dives/postgres#data-consistency" target="_blank" rel="noreferrer">PostgreSQL · Data Consistency</a></li><li><a class="source-link" href="https://www.hellointerview.com/learn/system-design/core-concepts/cap-theorem#different-levels-of-consistency" target="_blank" rel="noreferrer">CAP Theorem · Different Levels of Consistency</a></li><li><a class="source-link" href="https://ddia.vonng.com/ch2/#sec_introduction_reliability" target="_blank" rel="noreferrer">2. 定义非功能性需求 · 可靠性与容错</a></li><li><a class="source-link" href="https://ddia.vonng.com/ch4/#sec_storage_oltp" target="_blank" rel="noreferrer">4. 存储与检索 · OLTP 系统的存储与索引</a></li><li><a class="source-link" href="https://ddia.vonng.com/ch6/#sec_replication_lag" target="_blank" rel="noreferrer">6. 复制 · 复制延迟的问题</a></li><li><a class="source-link" href="https://ddia.vonng.com/ch9/#sec_distributed_partial_failure" target="_blank" rel="noreferrer">9. 分布式系统的麻烦 · 故障与部分失效</a></li></ul></aside></section>
   </main>
+  <footer>由可验证源清单生成 · 外链标题与锚点在构建前逐一在线核验 · 12 周系统设计完整学习路线</footer>
+  <script src="../assets/curriculum.js"></script>
 </body>
 </html>

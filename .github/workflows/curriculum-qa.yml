@@ -1,0 +1,34 @@
+name: Curriculum source and coverage QA
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: "17 15 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verified-curriculum:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Source verifier negative tests
+        run: python -m unittest discover -s tests -v
+      - name: Live-verify and rebuild all curriculum pages
+        run: python scripts/build_curriculum.py --workers 8
+      - name: Verify installable plugin copies
+        run: |
+          python scripts/sync_plugin_content.py
+          python scripts/qa_curriculum.py --no-live
+          if [ -n "$(git status --porcelain=v1)" ]; then
+            git status --short
+            exit 1
+          fi

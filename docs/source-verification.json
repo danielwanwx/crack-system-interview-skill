@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "mode": "live",
+  "verified_snapshot_generated_at": "2026-07-23T07:26:42.837389+00:00",
+  "algorithm_blocks_sha256": "de1e3c86129f82e1488bc975bee99960592d306fbe0f53d8a809546204da38d0",
+  "breakdown_count": 30,
+  "leetcode_problem_count": 141,
+  "source_count": 74,
+  "source_manifest_sha256": "676a5147adc8fedfd60a98bd8489552126a4386d6885b4a17ff1431241db8a60"
+}

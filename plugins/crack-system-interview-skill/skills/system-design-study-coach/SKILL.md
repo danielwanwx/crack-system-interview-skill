@@ -1,11 +1,11 @@
 ---
 name: system-design-study-coach
-description: Daily coach for the 18-week system design interview plan bundled in this repo. Use when the user asks for today's system design reading plan, a Week/Day assignment, study supervision, check-in/check-out, repair tasks, mock interview preparation, or wants Codex to combine the printable plan with $card or $senior-sde-interview-script.
+description: Daily coach for the verified 12-week, 30-project system design interview plan bundled in this repo. Use when the user asks for today's system design reading plan, a Week/Day assignment, study supervision, check-in/check-out, repair tasks, mock interview preparation, or wants Codex to combine the printable plan with $card or $senior-sde-interview-script.
 ---
 
 # System Design Study Coach
 
-Use this skill to supervise the bundled 18-week system design and algorithms plan. The daily assignment is read from the structured curriculum manifest; the printable page is the learner-facing view of the same assignment.
+Use this skill to supervise the bundled 12-week system design and algorithms plan. All 30 current Hello Interview problem breakdowns receive a complete read day and a separate Deep Dive/Senior repair day. The daily assignment is read from the structured curriculum manifest; the printable page is the learner-facing view of the same assignment.
 
 ## Quick Workflow
 
@@ -31,8 +31,7 @@ python3 plugins/crack-system-interview-skill/skills/system-design-study-coach/sc
    - 今日产出物
    - 必须掌握
    - 修复规则
-   - 算法三题
-   - 选做题
+   - 算法三题（同一 NeetCode tag block 连续推进）
    - 打卡问题
 
 ## Supervision Loop
@@ -55,9 +54,14 @@ Ask for one compact status:
 
 Then adapt the assignment:
 
-- Full day: keep all source links, one artifact, 3 required algorithms.
-- 60-90 minutes: one source link, one artifact, 1-2 algorithms.
-- 30 minutes: one source link, one verbal artifact, no optional problems.
+- Full day: keep all exact source anchors, one artifact, and all 3 algorithms.
+- 60-90 minutes: preserve the complete source packet and all 3 algorithms, but
+  split the work into an explicit continuation block. Do not mark the day
+  complete until the full read/deep boundary, artifact, and three problems pass.
+- 30 minutes: treat the session as a check-in, not a completed day. Keep all
+  source anchors visible, spend ten minutes outlining each of the 3 algorithms,
+  and schedule the complete project task plus full algorithm attempts as the
+  next repair block.
 
 ## Check-Out
 
@@ -83,7 +87,15 @@ Use `$card` when the user wants a visual explanation of a daily source, concept,
 
 Use `$senior-sde-interview-script` when the user wants a polished, interview-ready spoken answer or mock answer for the day's system design topic.
 
-The canonical course data lives under `cases/` and `curriculum/`; printable pages live under `docs/`. The GitHub Pages root is expected to be:
+Do not replace a complete-read or Deep-Dive day with a summary. Do not invent
+source aliases or page-level fallback links. Audio preview requests use the
+bundled two-minute Chinese script and default to `Siqi Liu - Calm, Warm and
+Gentle` with `Eleven v3`; never generate audio or consume credits unless the
+user explicitly chooses the optional generation step.
+
+The canonical course data lives under `cases/`, `curriculum/`, and
+`sources/source-manifest.json`; printable pages live under `docs/`. The GitHub
+Pages root is expected to be:
 
 ```text
 https://danielwanwx.github.io/crack-system-interview-skill/
