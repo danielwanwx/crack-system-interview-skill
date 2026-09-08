@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第 9 周行动指南 - 索引、排序与地理搜索</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="week9/style.css">
+</head>
+<body>
+  <header class="topbar"><nav class="shell nav">
+    <a class="brand" href="week9-action-guide.html"><span class="mark"></span> WEEK 09 · INDEXING, RANKING & GEO SEARCH</a>
+    <div class="navlinks"><a href="week9-action-guide.html">第 9 周</a><a href="#local-materials">深度讲义</a><a href="#local-materials">Staff Q&amp;A</a><a href="#local-materials">Live Mock</a><a href="#local-materials">验收</a></div>
+  </nav></header>
+  <main class="shell">
+    <section class="hero">
+      <div>
+        <div class="eyebrow">WEEK 09 · 2026.09.21-09.27 · WRITER GATE</div>
+        <h1>第 9 周行动指南 - 索引、排序与地理搜索</h1>
+        <p class="deck">FB Post Search full coverage, then transfer the same retrieval/ranking muscles to News Aggregator and Yelp.</p>
+        <div class="pill-row"><a class="pill" href="#local-materials">中文深度讲义</a><a class="pill" href="#local-materials">Staff Q&amp;A</a><a class="pill" href="#local-materials">GPT Live Mock</a><a class="pill" href="#local-materials">证据验收</a></div>
+      </div>
+      <aside class="hero-panel"><div class="metric"><b>1</b><span>FULL project</span></div><div class="metric"><b>2</b><span>transfer projects</span></div><div class="metric"><b>82</b><span>live headings</span></div><div class="metric"><b>21</b><span>Graphs slots</span></div></aside>
+    </section>
+
+    <section class="section"><div class="section-head"><h2>能力主线</h2><p class="section-copy">本周只训练索引构建、候选召回、排序、新鲜度、地理搜索和质量信号，并且强制区分 recall latency、rank latency 和 presentation latency。</p></div>
+      <div class="latency-split"><article class="tile"><div class="kicker">RECALL</div><h3>Candidate retrieval</h3><p>倒排索引、时间索引、geo cell 和粗过滤负责找到候选，不负责最终业务顺序。</p></article><article class="tile"><div class="kicker">RANK</div><h3>Feature scoring</h3><p>recency、like_count、source trust、distance、rating、review quality 和 abuse signals 进入排序。</p></article><article class="tile"><div class="kicker">PRESENTATION</div><h3>Result assembly</h3><p>snippet、highlight、media card、map pin、pagination cursor 和缓存命中属于展示延迟。</p></article></div>
+    </section>
+    <section class="section"><div class="section-head"><h2>项目角色</h2><p class="section-copy">日页面使用每个 live heading 的原始标题和 direct anchor；production record 写完整 disposition。</p></div><div class="grid-3"><article class="tile"><div class="kicker">FULL · 41 live headings</div><h3>FB Post Search</h3><p>Full coverage with reading anchors and recall artifacts.</p><p><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-post-search">打开项目首页</a></p></article><article class="tile"><div class="kicker">TRANSFER · 20 live headings</div><h3>News Aggregator / Google News</h3><p>Transfer coverage: blind attempt, delta, invalid assumptions, new bottleneck and follow-up.</p><p><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/google-news">打开项目首页</a></p></article><article class="tile"><div class="kicker">TRANSFER · 21 live headings</div><h3>Yelp</h3><p>Transfer coverage: blind attempt, delta, invalid assumptions, new bottleneck and follow-up.</p><p><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/yelp">打开项目首页</a></p></article></div></section>
+    <section class="section"><div class="section-head"><h2>DDIA 决策地图</h2><p class="section-copy">只使用 Ch4 和 Ch13 的精确 decision anchors。</p></div><table class="matrix"><tr><th>日</th><th>项目</th><th>改变的决定</th><th>链接</th></tr><tr><td>Day 1</td><td>FB Post Search</td><td>keyword search is an inverted index, not SQL LIKE</td><td><a href="https://ddia.vonng.com/ch4/#sec_storage_full_text">https://ddia.vonng.com/ch4/#sec_storage_full_text</a></td></tr>
+<tr><td>Day 1</td><td>FB Post Search</td><td>recency and like sort need index/ranker fields, not presentation sorting</td><td><a href="https://ddia.vonng.com/ch4/#sec_storage_index_multicolumn">https://ddia.vonng.com/ch4/#sec_storage_index_multicolumn</a></td></tr>
+<tr><td>Day 2</td><td>FB Post Search</td><td>large write volume chooses update pipeline and refresh interval consciously</td><td><a href="https://ddia.vonng.com/ch4/#sec_storage_btree_lsm_comparison">https://ddia.vonng.com/ch4/#sec_storage_btree_lsm_comparison</a></td></tr>
+<tr><td>Day 2</td><td>FB Post Search</td><td>rebuild/search index as derived state, then swap safely</td><td><a href="https://ddia.vonng.com/ch13/#id340">https://ddia.vonng.com/ch13/#id340</a></td></tr>
+<tr><td>Day 3</td><td>News Aggregator</td><td>feed rows and index documents are derived from crawled source articles</td><td><a href="https://ddia.vonng.com/ch13/#id446">https://ddia.vonng.com/ch13/#id446</a></td></tr>
+<tr><td>Day 3</td><td>News Aggregator</td><td>homepage/category feed caches are materialized views with staleness budgets</td><td><a href="https://ddia.vonng.com/ch13/#id451">https://ddia.vonng.com/ch13/#id451</a></td></tr>
+<tr><td>Day 4</td><td>News Aggregator</td><td>freshness SLO requires observing index lag and stale derived state</td><td><a href="https://ddia.vonng.com/ch13/#sec_future_observing">https://ddia.vonng.com/ch13/#sec_future_observing</a></td></tr>
+<tr><td>Day 4</td><td>News Aggregator</td><td>schema/ranking evolution needs reprocessing rather than hand edits</td><td><a href="https://ddia.vonng.com/ch13/#sec_future_reprocessing">https://ddia.vonng.com/ch13/#sec_future_reprocessing</a></td></tr>
+<tr><td>Day 5</td><td>Yelp</td><td>geo search uses multidimensional indexes or grid cells, not naked lat/lng scans</td><td><a href="https://ddia.vonng.com/ch4/#sec_storage_multidimensional">https://ddia.vonng.com/ch4/#sec_storage_multidimensional</a></td></tr>
+<tr><td>Day 5</td><td>Yelp</td><td>category + price + open_now + distance are composite filter/rank constraints</td><td><a href="https://ddia.vonng.com/ch4/#sec_storage_index_multicolumn">https://ddia.vonng.com/ch4/#sec_storage_index_multicolumn</a></td></tr>
+<tr><td>Day 6</td><td>Yelp</td><td>text plus geo search combines full text retrieval with precise second-pass filters</td><td><a href="https://ddia.vonng.com/ch4/#sec_storage_full_text">https://ddia.vonng.com/ch4/#sec_storage_full_text</a></td></tr>
+<tr><td>Day 6</td><td>Yelp</td><td>review/rating aggregate and search index are derived state that needs verification</td><td><a href="https://ddia.vonng.com/ch13/#sec_future_verification">https://ddia.vonng.com/ch13/#sec_future_verification</a></td></tr></table></section>
+    <section class="section"><div class="section-head"><h2>固定时间合同</h2></div><table class="matrix"><tr><th>时间</th><th>Week 9 不变量</th><th>证据</th></tr><tr><td>08:50-10:55</td><td>系统设计主块，先闭卷/盲做，再用 canonical anchors 修正。</td><td>每天 4 个 bounded segment。</td></tr><tr><td>14:30-16:15</td><td>NeetCode Graphs，连续单一 tag，每天 exactly 3 slots。</td><td>21 个 data-neetcode-slot。</td></tr><tr><td>20:30-21:15</td><td>recall / Q&amp;A / transfer follow-up / mock。</td><td>day 页面和 scorecard 记录。</td></tr></table></section>
+    <section class="section"><div class="section-head"><h2>7 天执行</h2></div><div class="route"><div class="row asset-row"><div class="kicker">MON · 09-21</div><h3><a href="week9/day-1.html">FB Post Search FULL: 35-minute attempt, requirements, HLD and index write/read path</a></h3><p>Schedule is exactly 08:50-10:55, 14:30-16:15 and 20:30-21:15; Graphs has three contiguous slots.</p><a class="button" href="week9/day-1.html">进入</a></div>
+<div class="row asset-row"><div class="kicker">TUE · 09-22</div><h3><a href="week9/day-2.html">FB Post Search FULL: deep dives, multi-keyword, writes, storage and privacy follow-up</a></h3><p>Schedule is exactly 08:50-10:55, 14:30-16:15 and 20:30-21:15; Graphs has three contiguous slots.</p><a class="button" href="week9/day-2.html">进入</a></div>
+<div class="row asset-row"><div class="kicker">WED · 09-23</div><h3><a href="week9/day-3.html">News Aggregator TRANSFER: blind attempt and HLD delta</a></h3><p>Schedule is exactly 08:50-10:55, 14:30-16:15 and 20:30-21:15; Graphs has three contiguous slots.</p><a class="button" href="week9/day-3.html">进入</a></div>
+<div class="row asset-row"><div class="kicker">THU · 09-24</div><h3><a href="week9/day-4.html">News Aggregator TRANSFER: pagination, freshness, latency and spikes</a></h3><p>Schedule is exactly 08:50-10:55, 14:30-16:15 and 20:30-21:15; Graphs has three contiguous slots.</p><a class="button" href="week9/day-4.html">进入</a></div>
+<div class="row asset-row"><div class="kicker">FRI · 09-25</div><h3><a href="week9/day-5.html">Yelp TRANSFER: blind attempt, geo candidate retrieval and search HLD</a></h3><p>Schedule is exactly 08:50-10:55, 14:30-16:15 and 20:30-21:15; Graphs has three contiguous slots.</p><a class="button" href="week9/day-5.html">进入</a></div>
+<div class="row asset-row"><div class="kicker">SAT · 09-26</div><h3><a href="week9/day-6.html">Yelp TRANSFER: rating aggregate, abuse, geo pagination and live mock</a></h3><p>Schedule is exactly 08:50-10:55, 14:30-16:15 and 20:30-21:15; Graphs has three contiguous slots.</p><a class="button" href="week9/day-6.html">进入</a></div>
+<div class="row asset-row"><div class="kicker">SUN · 09-27</div><h3><a href="week9/day-7.html">Repair, synthesis, scorecard and READY_FOR_REVIEW</a></h3><p>Schedule is exactly 08:50-10:55, 14:30-16:15 and 20:30-21:15; Graphs has three contiguous slots.</p><a class="button" href="week9/day-7.html">进入</a></div></div></section>
+    <section class="section"><div class="section-head"><h2>Applied-AI Radar</h2></div><div class="callout"><p><b>Rejected.</b> No first-party/original AI source changed a concrete Week 9 decision about index construction, candidate retrieval, ranking, freshness, geo search, latency budgets, pagination, abuse signals, reindexing, metrics or recovery. No radar slot scheduled.</p></div></section>
+
+    <footer class="footer">Week 9 only. Writer stops at READY_FOR_REVIEW after production record; no self-approval and no Week 10 work.</footer>
+  <section id="local-materials" style="margin:40px auto;max-width:1080px;padding:18px 22px;border:1px solid #d9dce1;background:#f7f8fa;color:#30343b;font:14px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif"><strong>Local study materials</strong><br>Detailed lecture notes, audio, recall scripts, PDFs, Staff Q&amp;A, and mock packs are archived locally and are intentionally not published on this site.</section></main>
+</body>
+</html>

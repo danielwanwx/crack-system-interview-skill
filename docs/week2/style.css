@@ -1,0 +1,20 @@
+@import url("../week1/style.css");
+
+/* Week 2 owns its responsive fixes; later weeks keep their existing rendering. */
+@media (max-width: 860px) {
+  .matrix,
+  .rubric {
+    table-layout: fixed;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .matrix th,
+  .matrix td,
+  .rubric th,
+  .rubric td {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+}

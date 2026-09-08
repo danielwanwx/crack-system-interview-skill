@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Week 2 Day 4 - Dropbox：续传、提交、同步与冲突</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <nav class="shell nav">
+      <a class="brand" href="../system-design-12-week-master-plan.html"><span class="mark"></span> WEEK 02 · READ SYSTEMS</a>
+      <div class="navlinks">
+        <a href="../system-design-12-week-master-plan.html">12 周路线</a>
+        <a href="../week2-action-guide.html">第 2 周</a>
+        <a href="#local-materials">深度讲义</a>
+        <a href="#local-materials">Staff Q&amp;A</a>
+        <a href="#local-materials">Live Mock</a>
+        <a href="#local-materials">验收</a>
+      </div>
+    </nav>
+  </header>
+  <main class="shell">
+
+    <section class="day-hero">
+      <div class="eyebrow">THU · 08.06 · WEEK 02 · DAY 4</div>
+      <h1>Dropbox：续传、提交、同步与冲突</h1>
+      <p class="deck">完整覆盖 Dropbox 三个 live deep dives 和 Staff+ expectation。重点是 multipart upload 的可信完成、delta sync、版本冲突、安全边界与故障回收。</p>
+      <div class="day-meta"><span>08:30 wake</span><span>08:50—10:55 system design</span><span>14:30—16:15 + 20:30—21:15</span></div>
+      <div class="pill-row"><a href="day-3.html">上一天</a><a href="day-5.html">下一天</a><a class="pill" href="#local-materials">讲义</a><a class="pill" href="#local-materials">证据表</a></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>学习源包</h2><p class="section-copy">按顺序打开。Hello Interview 与 DDIA 链接都直达今天需要的 live subsection，不做整章地毯式阅读。</p></div>
+      <div class="ops-grid"><section>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/dropbox#potential-deep-dives">Dropbox · Potential Deep Dives</a><span>EXACT SECTION</span></div>
+          <div class="proof">deep dive；完成后在白板或口述中留下对应证据。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/dropbox#1-how-can-you-support-large-files">Dropbox · 1) How can you support large files?</a><span>EXACT SECTION</span></div>
+          <div class="proof">deep dive；完成后在白板或口述中留下对应证据。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/dropbox#2-how-can-we-make-uploads-downloads-and-syncing-as-fast-as-possible">Dropbox · 2) How can we make uploads, downloads, and syncing as fast as possible?</a><span>EXACT SECTION</span></div>
+          <div class="proof">deep dive；完成后在白板或口述中留下对应证据。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/dropbox#3-how-can-you-ensure-file-security">Dropbox · 3) How can you ensure file security?</a><span>EXACT SECTION</span></div>
+          <div class="proof">deep dive；完成后在白板或口述中留下对应证据。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/dropbox#what-is-expected-at-each-level">Dropbox · What is Expected at Each Level?</a><span>EXACT SECTION</span></div>
+          <div class="proof">level expectation；完成后在白板或口述中留下对应证据。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/dropbox#mid-level">Dropbox · Mid-level</a><span>EXACT SECTION</span></div>
+          <div class="proof">level expectation；完成后在白板或口述中留下对应证据。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/dropbox#senior">Dropbox · Senior</a><span>EXACT SECTION</span></div>
+          <div class="proof">level expectation；完成后在白板或口述中留下对应证据。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/dropbox#staff">Dropbox · Staff+</a><span>EXACT SECTION</span></div>
+          <div class="proof">level expectation；完成后在白板或口述中留下对应证据。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://ddia.vonng.com/ch6/#sec_replication_offline_clients">DDIA Ch6 · 同步引擎与本地优先软件</a><span>EXACT SECTION</span></div>
+          <div class="proof">写清 local → remote、remote → local、断网重连与 cursor replay。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://ddia.vonng.com/ch6/#sec_replication_lww">DDIA Ch6 · 最后写入胜利（丢弃并发写入）</a><span>EXACT SECTION</span></div>
+          <div class="proof">拒绝客户端时钟 silent LWW；定义 baseVersion 与 conflict copy。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/mpuoverview.html">AWS S3 · Multipart upload overview</a><span>EXACT SECTION</span></div>
+          <div class="proof">该官方材料改变 upload contract：uploadId、part number/ETag、Complete/Abort 与 incomplete upload 清理。</div>
+        </div></section><section>
+        <h2>今日验收</h2>
+        <ul class="compact-list"><li><span class="box"></span><span>客户端上报 part 成功只用于进度；最终完成必须由服务端向 blob store 验证。</span></li><li><span class="box"></span><span>Complete 响应丢失时用同一 upload/file identity 查询状态或幂等完成，不能盲目新建第二对象。</span></li><li><span class="box"></span><span>冲突解决以 server version 识别并发，保留用户数据；mtime 只能帮助展示，不能证明因果顺序。</span></li></ul>
+        <div class="callout"><strong>必须产出：</strong>multipart state machine + upload commit/GC 表 + sync/conflict 时序 + signed URL security checklist。</div>
+      </section></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>08:50—10:55</h2><p class="section-copy">系统设计块保持完整。最后十分钟永远用于无稿 close，防止学习退化为被动阅读。</p></div>
+      <table class="matrix"><tr><th>时间</th><th>今日时间表</th></tr><tr><td><strong>08:50—09:00</strong></td><td>写四个不变量：可续传、服务端验证、单次可见提交、冲突不静默丢数据。</td></tr><tr><td><strong>09:00—09:35</strong></td><td>读 large files deep dive；画 initiate → upload parts → verify/ListParts → complete → metadata commit。</td></tr><tr><td><strong>09:35—10:00</strong></td><td>读 performance deep dive；比较 fixed chunks 与 content-defined chunking 的 delta sync 成本。</td></tr><tr><td><strong>10:00—10:20</strong></td><td>读 security deep dive；限定 signed URL 的 operation、object key、expiry、size/checksum 与 ACL check。</td></tr><tr><td><strong>10:20—10:35</strong></td><td>读 DDIA sync/LWW；画两个设备从同一 baseVersion 并发写的用户可见结果。</td></tr><tr><td><strong>10:35—10:45</strong></td><td>读 Mid/Senior/Staff+；写一个主动 steering 的 Staff follow-up。</td></tr><tr><td><strong>10:45—10:55</strong></td><td>闭卷追踪 upload 在 99% 断线、Complete 响应丢失、metadata DB 超时时如何恢复。</td></tr></table>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>算法模块</h2><p class="section-copy">NeetCode Tag：Two Pointers。三个 slot 全在同一连续 tag；每题记录 Pattern / Invariant / Bug / Complexity。</p></div>
+      <div class="algo-pack">
+        <div class="tag-row"><span>14:30—16:15</span><span>NeetCode Tag · Two Pointers</span><span>3 required slots</span></div>
+        <table class="matrix"><tr><th>#</th><th>题目</th><th>当日目标</th><th>时间</th></tr><tr data-neetcode-slot="true"><td>1</td><td><a href="https://neetcode.io/problems/trapping-rain-water">Trapping Rain Water</a></td><td>复刷 · 对照双指针与 prefix/suffix 两种解法的空间代价。</td><td>14:30—15:05</td></tr><tr data-neetcode-slot="true"><td>2</td><td><a href="https://neetcode.io/problems/three-integer-sum">3Sum</a></td><td>限时 · 25 分钟，专查重复值与提前终止。</td><td>15:05—15:40</td></tr><tr data-neetcode-slot="true"><td>3</td><td><a href="https://neetcode.io/problems/is-palindrome">Valid Palindrome</a></td><td>限时 · 10 分钟，解释每次 pointer movement。</td><td>15:40—16:15</td></tr></table>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>20:30—21:15</h2><p class="section-copy">口述块只接受录音、实际回答或 repair 证据，不用“看完了”作为完成。</p></div>
+      <div class="callout green">20:30—21:15 · Official engineering 40 分钟：只读 AWS Multipart Upload Overview；最后 5 分钟写它改变的三个具体决策。OpenAI/Anthropic agent 材料与本题无关，明确拒绝。</div>
+    </section>
+    <footer class="footer"><a href="../week2-action-guide.html">返回第 2 周总览</a> · Day 4 只在 evidence gate 通过后结束。</footer>
+  <section id="local-materials" style="margin:40px auto;max-width:1080px;padding:18px 22px;border:1px solid #d9dce1;background:#f7f8fa;color:#30343b;font:14px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif"><strong>Local study materials</strong><br>Detailed lecture notes, audio, recall scripts, PDFs, Staff Q&amp;A, and mock packs are archived locally and are intentionally not published on this site.</section></main>
+</body>
+</html>

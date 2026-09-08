@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第 3 周 Day 4 - FB Live Comments：server coordination、mega streams、disconnect recovery</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css" data-week='3'>
+</head>
+<body>
+
+  <header class="topbar">
+    <nav class="shell nav">
+      <a class="brand" href="../system-design-12-week-master-plan.html"><span class="mark"></span> WEEK 03 · FEED & REALTIME</a>
+      <div class="navlinks">
+        <a href="../week3-action-guide.html">第 3 周</a>
+        <a href="#local-materials">深度讲义</a>
+        <a href="#local-materials">Staff Q&amp;A</a>
+        <a href="#local-materials">Live Mock</a>
+        <a href="#local-materials">验收</a>
+      </div>
+    </nav>
+  </header>
+  <main class="shell">
+
+    <section class="hero">
+      <div>
+        <div class="eyebrow">WEEK 03 · 2026-08-13 · THU</div>
+        <h1>FB Live Comments：server coordination、mega streams、disconnect recovery</h1>
+        <p class="deck">完整覆盖 Live Comments deep dives：实时广播、百万并发、mega stream、断线补漏和降级。</p>
+        <div class="pill-row">
+          <a class="pill" href="../week3-action-guide.html">周指南</a>
+          <a class="pill" href="#local-materials">讲义</a>
+          <a class="pill" href="#local-materials">Q&amp;A</a>
+          <a class="pill" href="#local-materials">验收</a>
+        </div>
+      </div>
+      <aside class="hero-panel">
+        <div class="metric"><b>08:30</b><span>wake</span></div>
+        <div class="metric"><b>125m</b><span>system design</span></div>
+        <div class="metric"><b>3</b><span>Stack problems</span></div>
+        <div class="metric"><b>45m</b><span>oral block</span></div>
+      </aside>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>今日固定时间表</h2><p class="section-copy">08:30 wake 只保留起床；学习从 08:50 开始。三块窗口不互相挤占。</p></div>
+      <table class="rubric">
+        <tr><th>08:30 wake</th><td>起床、早餐、准备白板；不安排预读或算法。</td></tr>
+        <tr><th>08:50—09:15</th><td><b>08:50—10:55 system design</b><br>Bad/Good/Great 拆解 — polling/WebSocket/SSE，pub-sub all/partition/co-location/dispatcher，sampling/CDN snapshot。</td></tr><tr><th>09:15—09:50</th><td><b>08:50—10:55 system design</b><br>精确原文 — 读 Live Comments 全部 potential deep dives、Part 1/2 与 level expectation。</td></tr><tr><th>09:50—10:25</th><td><b>08:50—10:55 system design</b><br>故障时序 — 画断线、重连到不同 server、Last-Event-ID replay、consumer lag、broker partition hot spot。</td></tr><tr><th>10:25—10:55</th><td><b>08:50—10:55 system design</b><br>降级与指标 — 定义 end-to-end comment latency、reconnect gap、viewer connection fanout、sample rate、snapshot age。</td></tr>
+        <tr><th>14:30—16:15</th><td><b>NeetCode Tag · Stack</b><br>三道题在下方独立算法表执行，避免系统设计表格挤压算法细节。</td></tr>
+        <tr><th>20:30—21:15</th><td>20:30—21:15 Staff 追问：dispatcher 为什么不是单点？SSE buffer 溢出时用户看见什么？</td></tr>
+      </table>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>算法模块</h2><p class="section-copy">连续单一 NeetCode Stack tag；每天 3 题，14:30—16:15 完成。</p></div>
+      <table class="matrix"><tr><th>#</th><th>Problem</th><th>Invariant focus</th><th>执行</th></tr><tr data-neetcode-slot="true"><td>10</td><td><a href="https://neetcode.io/problems/evaluate-reverse-polish-notation">Evaluate Reverse Polish Notation</a></td><td>限时复盘：整除截断和负数。</td><td>35 分钟限时 + 5 分钟 invariant/bug risk</td></tr>
+<tr data-neetcode-slot="true"><td>11</td><td><a href="https://neetcode.io/problems/generate-parentheses">Generate Parentheses</a></td><td>限时复盘：生成顺序与剪枝。</td><td>35 分钟限时 + 5 分钟 invariant/bug risk</td></tr>
+<tr data-neetcode-slot="true"><td>12</td><td><a href="https://neetcode.io/problems/daily-temperatures">Daily Temperatures</a></td><td>限时复盘：相等温度不弹。</td><td>35 分钟限时 + 5 分钟 invariant/bug risk</td></tr></table>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>闭卷起手</h2><p class="section-copy">先暴露自己的当前模型，再用 live headings 修正。</p></div>
+      <div class="callout"><p>15 分钟闭卷回答：一个直播间 50K、5M、50M viewer 时，连接、广播、历史补漏分别怎么退化。</p></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>Hello Interview 精确目录</h2><p class="section-copy">day 页面必须链接到具体 section anchors；周级 overview 不放小节链接。</p></div>
+      <table class="matrix reading-table"><tr><th>项目</th><th>精确 section anchor</th><th>Disposition</th><th>今天怎么用</th></tr><tr><td>FB Live Comments</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-live-comments#potential-deep-dives">Potential Deep Dives</a></td><td>deep dive</td><td>move to realtime scaling</td></tr>
+<tr><td>FB Live Comments</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-live-comments#1-how-can-we-ensure-comments-are-broadcasted-to-viewers-in-real-time">1) How can we ensure comments are broadcasted to viewers in real-time?</a></td><td>deep dive</td><td>polling vs WebSocket vs SSE</td></tr>
+<tr><td>FB Live Comments</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-live-comments#2-how-will-the-system-scale-to-support-millions-of-concurrent-viewers">2) How will the system scale to support millions of concurrent viewers?</a></td><td>deep dive</td><td>server coordination and mega-stream strategy</td></tr>
+<tr><td>FB Live Comments</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-live-comments#part-1-server-coordination">Part 1: Server Coordination</a></td><td>deep dive</td><td>pub/sub, co-location, dispatcher</td></tr>
+<tr><td>FB Live Comments</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-live-comments#part-2-mega-streams">Part 2: Mega Streams</a></td><td>deep dive</td><td>sampling and CDN snapshot fallback</td></tr>
+<tr><td>FB Live Comments</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-live-comments#3-how-do-we-handle-client-disconnections-and-ensure-viewers-don-t-miss-comments">3) How do we handle client disconnections and ensure viewers don&#x27;t miss comments?</a></td><td>deep dive</td><td>Last-Event-ID, replay and catch-up</td></tr>
+<tr><td>FB Live Comments</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-live-comments#what-is-expected-at-each-level">What is Expected at Each Level?</a></td><td>level expectation</td><td>calibrate depth</td></tr>
+<tr><td>FB Live Comments</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-live-comments#mid-level">Mid-level</a></td><td>level expectation</td><td>basic realtime pipe</td></tr>
+<tr><td>FB Live Comments</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-live-comments#senior">Senior</a></td><td>level expectation</td><td>scale and disconnection</td></tr>
+<tr><td>FB Live Comments</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-live-comments#staff">Staff+</a></td><td>level expectation</td><td>mega stream overload, product degradation, observability</td></tr></table>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>DDIA 精确决策卡</h2><p class="section-copy">只读能改变今天设计决定的小节。</p></div>
+      <table class="matrix"><tr><th>项目问题</th><th>精确 DDIA subsection</th><th>改变的系统决定</th></tr><tr><td>评论生产速度超过某些消费者时系统应该做什么？</td><td><a href="https://ddia.vonng.com/ch12/#id459">Ch12 · 当消费者跟不上生产者时</a></td><td>普通直播允许丢低价值实时动画但不丢可回放 comment log；mega stream 可切采样/CDN snapshot。</td></tr>
+<tr><td>断线后是否能重播旧评论？</td><td><a href="https://ddia.vonng.com/ch12/#sec_stream_replay">Ch12 · 重播旧消息</a></td><td>reconnect/catch-up 可以重放 since cursor；服务端要控制 retention、limit 与过期后的 snapshot/fallback。</td></tr>
+<tr><td>直播评论如何把状态变化主动推给客户端？</td><td><a href="https://ddia.vonng.com/ch13/#id348">Ch13 · 将状态变更推送给客户端</a></td><td>SSE 是服务器推送的状态变化流；客户端仍以 cursor/log 作为恢复边界。</td></tr></table>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>今日产出与修复规则</h2></div>
+      <table class="rubric">
+        <tr><th>课程角色</th><td>CORE · all deep dives + Bad/Good/Great</td></tr>
+        <tr><th>必须交付</th><td>Live Comments deep-dive matrix：real-time broadcast、server coordination、mega streams、disconnect recovery，各含 failure/recovery/metrics。</td></tr>
+        <tr><th>修复规则</th><td>如果 mega stream 仍坚持“所有评论推给所有人”，补产品降级：sampling、ranked comments、CDN/poll snapshot。</td></tr>
+      </table>
+    </section>
+    <footer class="footer">Day 4 只推进 Week 3；不打开 Week 4。完成后把证据写入 <a href="#local-materials">scorecard</a>。</footer>
+  <section id="local-materials" style="margin:40px auto;max-width:1080px;padding:18px 22px;border:1px solid #d9dce1;background:#f7f8fa;color:#30343b;font:14px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif"><strong>Local study materials</strong><br>Detailed lecture notes, audio, recall scripts, PDFs, Staff Q&amp;A, and mock packs are archived locally and are intentionally not published on this site.</section></main>
+</body>
+</html>

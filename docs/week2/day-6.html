@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Week 2 Day 6 - 完整 Mock：基础设施主线 + 应用压力轮</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <nav class="shell nav">
+      <a class="brand" href="../system-design-12-week-master-plan.html"><span class="mark"></span> WEEK 02 · READ SYSTEMS</a>
+      <div class="navlinks">
+        <a href="../system-design-12-week-master-plan.html">12 周路线</a>
+        <a href="../week2-action-guide.html">第 2 周</a>
+        <a href="#local-materials">深度讲义</a>
+        <a href="#local-materials">Staff Q&amp;A</a>
+        <a href="#local-materials">Live Mock</a>
+        <a href="#local-materials">验收</a>
+      </div>
+    </nav>
+  </header>
+  <main class="shell">
+
+    <section class="day-hero">
+      <div class="eyebrow">SAT · 08.08 · WEEK 02 · DAY 6</div>
+      <h1>完整 Mock：基础设施主线 + 应用压力轮</h1>
+      <p class="deck">45 分钟 Distributed Cache 是主面；随后 25 分钟 Dropbox 压力轮只验证 blob/metadata、resumable upload、sync 与 conflict 的迁移深度。</p>
+      <div class="day-meta"><span>08:30 wake</span><span>08:50—10:55 system design</span><span>14:30—16:15 + 20:30—21:15</span></div>
+      <div class="pill-row"><a href="day-5.html">上一天</a><a href="day-7.html">下一天</a><a class="pill" href="#local-materials">讲义</a><a class="pill" href="#local-materials">证据表</a></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>学习源包</h2><p class="section-copy">按顺序打开。Hello Interview 与 DDIA 链接都直达今天需要的 live subsection，不做整章地毯式阅读。</p></div>
+      <div class="ops-grid"><section>
+        <div class="source-block">
+          <div class="source-title"><a href="#local-materials">Week 2 · GPT Live Mock</a><span>EXACT SECTION</span></div>
+          <div class="proof">按 prompt 动态追问，不按题库顺序泄露答案。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="#local-materials">Week 2 · Staff Q&amp;A</a><span>EXACT SECTION</span></div>
+          <div class="proof">Mock 后才展开参考答案，修复最低证据维度。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/distributed-cache#tying-it-all-together">Distributed Cache · Tying it all together</a><span>EXACT SECTION</span></div>
+          <div class="proof">核对完整主线是否从 contract 走到 operations。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/dropbox#potential-deep-dives">Dropbox · Potential Deep Dives</a><span>EXACT SECTION</span></div>
+          <div class="proof">压力轮必须覆盖 large file、performance/sync 与 security。</div>
+        </div></section><section>
+        <h2>今日验收</h2>
+        <ul class="compact-list"><li><span class="box"></span><span>45 分钟主面必须到达 replication/partitioning、hot key 和 operations。</span></li><li><span class="box"></span><span>Dropbox 压力轮不超过 25 分钟，且必须说出 upload commit invariant 与 conflict user semantics。</span></li><li><span class="box"></span><span>评分只引用候选人实际说过或画出的证据；不能用“感觉不错”替代。</span></li></ul>
+        <div class="callout"><strong>必须产出：</strong>两段录音 + 最终白板 + 带 timestamp 的 evidence log + 一个已经重答通过的 repair。</div>
+      </section></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>08:50—10:55</h2><p class="section-copy">系统设计块保持完整。最后十分钟永远用于无稿 close，防止学习退化为被动阅读。</p></div>
+      <table class="matrix"><tr><th>时间</th><th>今日时间表</th></tr><tr><td><strong>08:50—09:35</strong></td><td>45 分钟 Distributed Cache mock：范围、API、单机、集群、两项 deep dive、failure/metrics。</td></tr><tr><td><strong>09:35—09:50</strong></td><td>只记录实际证据：遗漏、错误假设、被追问后才补出的机制。</td></tr><tr><td><strong>09:50—10:15</strong></td><td>25 分钟 Dropbox 压力轮：upload commit、resume、cursor sync、conflict；不重讲整套 HLD。</td></tr><tr><td><strong>10:15—10:40</strong></td><td>按 scorecard 修最低维度；重画一个 failure window 并重答五分钟。</td></tr><tr><td><strong>10:40—10:55</strong></td><td>无稿总结：一根基础设施主线、一个应用迁移案例、三个不可混淆的状态所有者。</td></tr></table>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>算法模块</h2><p class="section-copy">NeetCode Tag：Two Pointers。三个 slot 全在同一连续 tag；每题记录 Pattern / Invariant / Bug / Complexity。</p></div>
+      <div class="algo-pack">
+        <div class="tag-row"><span>14:30—16:15</span><span>NeetCode Tag · Two Pointers</span><span>3 required slots</span></div>
+        <table class="matrix"><tr><th>#</th><th>题目</th><th>当日目标</th><th>时间</th></tr><tr data-neetcode-slot="true"><td>1</td><td><a href="https://neetcode.io/problems/three-integer-sum">3Sum</a></td><td>Mock · 25 分钟，含复杂度与去重证明。</td><td>14:30—15:05</td></tr><tr data-neetcode-slot="true"><td>2</td><td><a href="https://neetcode.io/problems/max-water-container">Container With Most Water</a></td><td>Mock · 18 分钟，含反例解释。</td><td>15:05—15:40</td></tr><tr data-neetcode-slot="true"><td>3</td><td><a href="https://neetcode.io/problems/trapping-rain-water">Trapping Rain Water</a></td><td>Mock · 25 分钟，含边界测试。</td><td>15:40—16:15</td></tr></table>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>20:30—21:15</h2><p class="section-copy">口述块只接受录音、实际回答或 repair 证据，不用“看完了”作为完成。</p></div>
+      <div class="callout green">20:30—21:15 · 只做 mock debrief。把最低分维度改写成 decision → mechanism → trade-off → failure → metric 五句答案。</div>
+    </section>
+    <footer class="footer"><a href="../week2-action-guide.html">返回第 2 周总览</a> · Day 6 只在 evidence gate 通过后结束。</footer>
+  <section id="local-materials" style="margin:40px auto;max-width:1080px;padding:18px 22px;border:1px solid #d9dce1;background:#f7f8fa;color:#30343b;font:14px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif"><strong>Local study materials</strong><br>Detailed lecture notes, audio, recall scripts, PDFs, Staff Q&amp;A, and mock packs are archived locally and are intentionally not published on this site.</section></main>
+</body>
+</html>

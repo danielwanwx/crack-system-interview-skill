@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第 3 周 Day 6 - 双核心 Mock：News Feed 45 分钟 + Live Comments 45 分钟</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css" data-week='3'>
+</head>
+<body>
+
+  <header class="topbar">
+    <nav class="shell nav">
+      <a class="brand" href="../system-design-12-week-master-plan.html"><span class="mark"></span> WEEK 03 · FEED & REALTIME</a>
+      <div class="navlinks">
+        <a href="../week3-action-guide.html">第 3 周</a>
+        <a href="#local-materials">深度讲义</a>
+        <a href="#local-materials">Staff Q&amp;A</a>
+        <a href="#local-materials">Live Mock</a>
+        <a href="#local-materials">验收</a>
+      </div>
+    </nav>
+  </header>
+  <main class="shell">
+
+    <section class="hero">
+      <div>
+        <div class="eyebrow">WEEK 03 · 2026-08-15 · SAT</div>
+        <h1>双核心 Mock：News Feed 45 分钟 + Live Comments 45 分钟</h1>
+        <p class="deck">两道 CORE 都进入完整面试时间盒；至少一次能在 45 分钟内闭环到 failure/recovery/metrics。</p>
+        <div class="pill-row">
+          <a class="pill" href="../week3-action-guide.html">周指南</a>
+          <a class="pill" href="#local-materials">讲义</a>
+          <a class="pill" href="#local-materials">Q&amp;A</a>
+          <a class="pill" href="#local-materials">验收</a>
+        </div>
+      </div>
+      <aside class="hero-panel">
+        <div class="metric"><b>08:30</b><span>wake</span></div>
+        <div class="metric"><b>125m</b><span>system design</span></div>
+        <div class="metric"><b>3</b><span>Stack problems</span></div>
+        <div class="metric"><b>45m</b><span>oral block</span></div>
+      </aside>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>今日固定时间表</h2><p class="section-copy">08:30 wake 只保留起床；学习从 08:50 开始。三块窗口不互相挤占。</p></div>
+      <table class="rubric">
+        <tr><th>08:30 wake</th><td>起床、早餐、准备白板；不安排预读或算法。</td></tr>
+        <tr><th>08:50—09:35</th><td><b>08:50—10:55 system design</b><br>FB News Feed 45 分钟完整 mock — 按 live-mock Round A 执行；必须覆盖 hybrid fan-out 和 hot post cache。</td></tr><tr><th>09:35—09:50</th><td><b>08:50—10:55 system design</b><br>News Feed debrief — 只写一个最高风险 failure window 和一个修复句。</td></tr><tr><th>09:50—10:35</th><td><b>08:50—10:55 system design</b><br>FB Live Comments 45 分钟完整 mock — 按 live-mock Round B 执行；必须覆盖 SSE、server coordination、reconnect catch-up。</td></tr><tr><th>10:35—10:55</th><td><b>08:50—10:55 system design</b><br>Live Comments debrief — 只修最弱一问：mega stream、consumer lag 或 Last-Event-ID。</td></tr>
+        <tr><th>14:30—16:15</th><td><b>NeetCode Tag · Stack</b><br>三道题在下方独立算法表执行，避免系统设计表格挤压算法细节。</td></tr>
+        <tr><th>20:30—21:15</th><td>20:30—21:15 GPT Live Mock 二次追问：News Feed celebrity skew + Live Comments disconnect recovery。</td></tr>
+      </table>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>算法模块</h2><p class="section-copy">连续单一 NeetCode Stack tag；每天 3 题，14:30—16:15 完成。</p></div>
+      <table class="matrix"><tr><th>#</th><th>Problem</th><th>Invariant focus</th><th>执行</th></tr><tr data-neetcode-slot="true"><td>16</td><td><a href="https://neetcode.io/problems/generate-parentheses">Generate Parentheses</a></td><td>mock 前热身：递归状态口述。</td><td>35 分钟限时 + 5 分钟 invariant/bug risk</td></tr>
+<tr data-neetcode-slot="true"><td>17</td><td><a href="https://neetcode.io/problems/daily-temperatures">Daily Temperatures</a></td><td>mock 前热身：单调栈模板。</td><td>35 分钟限时 + 5 分钟 invariant/bug risk</td></tr>
+<tr data-neetcode-slot="true"><td>18</td><td><a href="https://neetcode.io/problems/minimum-stack">Min Stack</a></td><td>周验收：API 边界和空间复杂度。</td><td>35 分钟限时 + 5 分钟 invariant/bug risk</td></tr></table>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>闭卷起手</h2><p class="section-copy">先暴露自己的当前模型，再用 live headings 修正。</p></div>
+      <div class="callout"><p>开场前只看题目名，不看讲义。每轮结束先自评，再翻 scorecard 修一条最弱链路。</p></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>Hello Interview 精确目录</h2><p class="section-copy">day 页面必须链接到具体 section anchors；周级 overview 不放小节链接。</p></div>
+      <p>今天不新增 Hello Interview 小节；只使用前 5 天已核验目录做 mock/repair。</p>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>DDIA 精确决策卡</h2><p class="section-copy">只读能改变今天设计决定的小节。</p></div>
+      <p>今天不新增 DDIA subsection；只复用本周已映射的决策卡。</p>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>今日产出与修复规则</h2></div>
+      <table class="rubric">
+        <tr><th>课程角色</th><td>MOCK · two complete core rounds</td></tr>
+        <tr><th>必须交付</th><td>两份 45 分钟 mock 录音 timestamp + 两条 repair sentence + scorecard 初评。</td></tr>
+        <tr><th>修复规则</th><td>如果某题少于 75/100，晚上只复测最低分维度，不增加新内容。</td></tr>
+      </table>
+    </section>
+    <footer class="footer">Day 6 只推进 Week 3；不打开 Week 4。完成后把证据写入 <a href="#local-materials">scorecard</a>。</footer>
+  <section id="local-materials" style="margin:40px auto;max-width:1080px;padding:18px 22px;border:1px solid #d9dce1;background:#f7f8fa;color:#30343b;font:14px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif"><strong>Local study materials</strong><br>Detailed lecture notes, audio, recall scripts, PDFs, Staff Q&amp;A, and mock packs are archived locally and are intentionally not published on this site.</section></main>
+</body>
+</html>

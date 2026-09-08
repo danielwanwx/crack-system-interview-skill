@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Week 11 Day 1</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body id="top">
+  <nav class="nav"><a class="brand" href="../week11-action-guide.html">Week 11 · Oct 5-11</a><div class="navlinks"><a href="../week11-action-guide.html">Week 11</a><a class="active" href="day-1.html">Day 1</a><a href="day-2.html">Day 2</a><a href="day-3.html">Day 3</a><a href="day-4.html">Day 4</a><a href="day-5.html">Day 5</a><a href="day-6.html">Day 6</a><a href="day-7.html">Day 7</a><a href="#local-materials">Lecture</a><a href="#local-materials">Staff Q&amp;A</a><a href="#local-materials">Mock</a><a href="#local-materials">Scorecard</a></div></nav>
+  <main>
+
+<section class="hero day-hero">
+  <p class="eyebrow">Day 1 · Mon 2026-10-05 · LeetCode FULL</p>
+  <h1>LeetCode baseline: API, entities, submissions, runners, and leaderboard reads</h1>
+  <p class="lede">Week 11 trains two designs with one operating spine: admission, isolation, durable work, queue/backpressure, streaming/reconnect, derived state, evals, and recovery.</p>
+  <div class="hero-metrics">
+    <div class="metric"><strong>3</strong><span>contiguous 1-D DP slots</span></div>
+    <div class="metric"><strong>25-35m</strong><span>attempt + follow-up window</span></div>
+    <div class="metric"><strong>Staff</strong><span>invariant, failure, recovery, metrics</span></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head"><h2>Exact Daily Schedule</h2><p>No drift: the same six blocks run every day.</p></div>
+  <table class="schedule-table"><thead><tr><th>Time</th><th>Block</th><th>Contract</th></tr></thead><tbody><tr><td>08:50-09:00</td><td>Target</td><td>Write one Staff-level invariant and one failure window before reading.</td></tr><tr><td>09:00-10:05</td><td>Project design</td><td>25-35m LeetCode blank-page attempt, then Hello Interview LeetCode baseline anchors.</td></tr><tr><td>10:05-10:45</td><td>DDIA / source grounding</td><td>Map the design to exact DDIA anchors and only direct applied-AI sources.</td></tr><tr><td>10:45-10:55</td><td>Spoken close</td><td>Record the architecture in English, then say the Chinese invariant aloud.</td></tr><tr><td>14:30-16:15</td><td>1-D DP contiguous block</td><td>Three NeetCode slots below; each slot is 25-35 minutes plus follow-up.</td></tr><tr><td>20:30-21:15</td><td>Recall / artifact</td><td>Run English Senior+/Staff recall and patch the scorecard evidence.</td></tr></tbody></table>
+</section>
+
+<section class="section">
+  <div class="section-head"><h2>Canonical Hello Interview Anchors</h2><p>Direct day-page anchors only. Source titles were verified live before build.</p></div>
+  <table class="reading-table"><thead><tr><th>Canonical anchor</th><th>Disposition</th><th>Design decision</th></tr></thead><tbody><tr><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/leetcode#understanding-the-problem">Understanding the Problem</a></td><td>FULL required reading</td><td>Read the problem as a product contract before naming services.</td></tr><tr><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/leetcode#functional-requirements">Functional Requirements</a></td><td>FULL required reading</td><td>Separate browse, solve, submit, and leaderboard behavior.</td></tr><tr><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/leetcode#non-functional-requirements">Non-Functional Requirements</a></td><td>FULL required reading</td><td>Turn instant feedback and contest spikes into explicit SLOs.</td></tr><tr><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/leetcode#the-set-up">The Set Up</a></td><td>FULL required reading</td><td>State assumptions before drawing the architecture.</td></tr><tr><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/leetcode#planning-the-approach">Planning the Approach</a></td><td>FULL required reading</td><td>Move from entities to APIs to high-level services.</td></tr><tr><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/leetcode#defining-the-core-entities">Defining the Core Entities</a></td><td>FULL required reading</td><td>Problem, Submission, Attempt, TestCase, Contest, and Leaderboard are distinct records.</td></tr><tr><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/leetcode#api-or-system-interface">API or System Interface</a></td><td>FULL required reading</td><td>Submission creation is not synchronous code execution.</td></tr><tr><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/leetcode#high-level-design">High-Level Design</a></td><td>FULL required reading</td><td>Use a runner queue and durable attempt state.</td></tr><tr><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/leetcode#1-users-should-be-able-to-view-a-list-of-coding-problems">Users should be able to view a list of coding problems</a></td><td>FULL required reading</td><td>Problem listing is a read path with filters and cacheable metadata.</td></tr><tr><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/leetcode#2-users-should-be-able-to-view-a-given-problem-and-code-a-solution">Users should be able to view a given problem and code a solution</a></td><td>FULL required reading</td><td>Problem detail and editor state are different latency classes.</td></tr><tr><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/leetcode#3-users-should-be-able-to-submit-their-solution-and-get-instant-feedback">Users should be able to submit their solution and get instant feedback</a></td><td>FULL required reading</td><td>Submission writes enqueue execution and poll or stream results.</td></tr><tr><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/leetcode#4-users-should-be-able-to-view-a-live-leaderboard-for-competitions">Users should be able to view a live leaderboard for competitions</a></td><td>FULL required reading</td><td>Leaderboard is a derived view from accepted contest submissions.</td></tr></tbody></table>
+</section>
+
+<section class="section">
+  <div class="section-head"><h2>Exact DDIA Mapping</h2><p>Only Ch5, Ch9, and Ch13 sections are in scope.</p></div>
+  <table class="reading-table"><thead><tr><th>Chapter</th><th>Exact section</th><th>Interview use</th></tr></thead><tbody><tr><td>Ch5</td><td><a href="https://ddia.vonng.com/ch5/#sec_encoding_dataflow_rpc">流经服务的数据流：REST 与 RPC</a></td><td>Submission creation and runner execution are remote calls with uncertain failure semantics.</td></tr><tr><td>Ch5</td><td><a href="https://ddia.vonng.com/ch5/#sec_encoding_dataflow_msg">事件驱动的架构</a></td><td>A queue decouples API availability from runner capacity.</td></tr></tbody></table>
+</section>
+
+<section class="section">
+  <div class="section-head"><h2>Applied AI Source Gate</h2><p>First-party/original sources appear only when they change a serving, eval, security, or operating decision.</p></div>
+  <p class="note">No applied-AI source is introduced today unless it changes a concrete serving, eval, security, or operating decision.</p>
+</section>
+
+<section class="section">
+  <div class="section-head"><h2>21-Slot 1-D DP Runway</h2><p>Today is slot 1-3 of 21, contiguous across the week.</p></div>
+  <table class="algorithm-table"><thead><tr><th>Block</th><th>NeetCode problem</th><th>Mode</th><th>Invariant</th><th>25-35m follow-up</th><th>Complexity</th></tr></thead><tbody><tr data-neetcode-slot="true" data-minutes="35"><td data-label="Block"><span class="mock-clock">14:30-15:05</span></td><td data-label="Problem"><a href="https://neetcode.io/problems/climbing-stairs/question">Climbing Stairs</a></td><td data-label="Mode">Warm-up recurrence</td><td data-label="Invariant">dp[i] depends only on i-1 and i-2; compress to two scalars.</td><td data-label="Follow-up">Ask for O(1) space and base cases for n=1.</td><td data-label="Complexity">O(n) / O(1)</td></tr><tr data-neetcode-slot="true" data-minutes="35"><td data-label="Block"><span class="mock-clock">15:05-15:40</span></td><td data-label="Problem"><a href="https://neetcode.io/problems/min-cost-climbing-stairs/question">Min Cost Climbing Stairs</a></td><td data-label="Mode">Cost recurrence</td><td data-label="Invariant">State is cheapest cost to stand on each index; answer is min(last two).</td><td data-label="Follow-up">Ask why the top has no cost.</td><td data-label="Complexity">O(n) / O(1)</td></tr><tr data-neetcode-slot="true" data-minutes="35"><td data-label="Block"><span class="mock-clock">15:40-16:15</span></td><td data-label="Problem"><a href="https://neetcode.io/problems/house-robber/question">House Robber</a></td><td data-label="Mode">Take/skip recurrence</td><td data-label="Invariant">At each house, carry best with and without current adjacent conflict.</td><td data-label="Follow-up">Ask for proof that local choice is not greedy.</td><td data-label="Complexity">O(n) / O(1)</td></tr></tbody></table>
+</section>
+
+<section class="section">
+  <div class="section-head"><h2>Artifacts And Recall</h2><p>Use these in the evening block and scorecard.</p></div>
+  <div class="asset-row"><a class="button" href="#local-materials">LeetCode Chinese explainer</a><a class="button" href="#local-materials">LeetCode Chinese audio</a><a class="button" href="#local-materials">LeetCode English recall outline</a></div>
+  <div class="english-recall">
+    <strong>Required spoken close:</strong> explain one invariant, one failure window, one recovery path, and one metric in English. Then restate the same design decision in Chinese without adding new components.
+  </div>
+</section>
+
+  <section id="local-materials" style="margin:40px auto;max-width:1080px;padding:18px 22px;border:1px solid #d9dce1;background:#f7f8fa;color:#30343b;font:14px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif"><strong>Local study materials</strong><br>Detailed lecture notes, audio, recall scripts, PDFs, Staff Q&amp;A, and mock packs are archived locally and are intentionally not published on this site.</section></main>
+</body>
+</html>

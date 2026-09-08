@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Week 8 Day 6 · Two 45-minute Adaptive Mocks</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body id="top">
+
+
+<header class="topbar">
+  <nav class="nav shell" aria-label="Week 8 navigation">
+    <a class="brand" href="../week8-action-guide.html"><span class="mark"></span><span>Week 8 · Day 6</span></a>
+    <div class="navlinks"><a href="../week8-action-guide.html">Overview</a><a href="day-1.html">Day 1</a><a href="day-2.html">Day 2</a><a href="day-3.html">Day 3</a><a href="day-4.html">Day 4</a><a href="day-5.html">Day 5</a><a href="day-6.html">Day 6</a><a href="day-7.html">Day 7</a><a href="#local-materials">Lecture</a><a href="#local-materials">Mock</a><a href="#local-materials">Scorecard</a></div>
+  </nav>
+</header>
+
+<main>
+  <section class="day-hero shell">
+    <div class="eyebrow">Week 8 · Sat Sep 19, 2026 · Sep 14-20, 2026</div>
+    <h1>Day 6: Two 45-minute Adaptive Mocks</h1>
+    <p class="deck">Independent adaptive mocks for Web Crawler and Job Scheduler, plus a transfer pressure drill for Price Tracking.</p>
+    <div class="day-meta"><span>Can you produce Staff mechanisms under clock pressure without reading?</span><span>Frontier · leases · retries · dedupe · recovery</span><span>3 Heap/Priority Queue slots</span></div>
+  </section>
+
+  <section class="section shell" id="schedule">
+    <div class="section-head"><h2>Exact Time Blocks</h2><p class="section-copy">Follow the Week 4 delivery pattern: blank-page first, source reading second, DDIA decision third, spoken close, contiguous algorithm practice, evening recall.</p></div>
+
+<table class="matrix reading-table" id="time-blocks">
+  <tr><th>Time</th><th>Block</th><th>Required output</th></tr>
+  <tr><td data-label="Time">08:30</td><td data-label="Block">Wake + setup</td><td data-label="Required output">Open this page, start the board, write the day question: Can you produce Staff mechanisms under clock pressure without reading?</td></tr>
+  <tr><td data-label="Time">08:50—09:00</td><td data-label="Block">Board set</td><td data-label="Required output">List entities, queues, leases, retry states, dedupe keys, metrics before reading.</td></tr>
+  <tr><td data-label="Time">09:00—10:05</td><td data-label="Block">Blank-page attempt + Hello reading</td><td data-label="Required output">Run Web Crawler 45 minutes, then Job Scheduler 45 minutes. The moderator only injects failures that follow your own design choices. Capture the first missing invariant, not a long transcript.</td></tr>
+  <tr><td data-label="Time">10:05—10:45</td><td data-label="Block">Deep dive + DDIA decision</td><td data-label="Required output">After both mocks, repair exactly two dives: one crawler dive and one scheduler dive. Each repair must include invariant, failure, recovery, and metric.</td></tr>
+  <tr><td data-label="Time">10:45—10:55</td><td data-label="Block">Spoken close</td><td data-label="Required output">Record the new default answer for politeness and for exactly-once illusion in the scorecard.</td></tr>
+  <tr><td data-label="Time">14:30—16:15</td><td data-label="Block">NeetCode Heap/Priority Queue</td><td data-label="Required output">Complete contiguous slots W8-H16—W8-H18; capture invariant and bug risk for each.</td></tr>
+  <tr><td data-label="Time">20:30—21:15</td><td data-label="Block">Recall / Q&A / mock</td><td data-label="Required output">Use <a href="#local-materials">Staff Q&A</a>, <a href="#local-materials">lecture assets</a>, or <a href="#local-materials">mock script</a> for the day's system.</td></tr>
+</table>
+
+  </section>
+
+  <section class="section shell" id="canonical-headings">
+    <div class="section-head"><h2>Canonical Heading Anchors</h2><p class="section-copy">Read only the listed Hello Interview headings for today's assignment. Every link is a direct day-page anchor.</p></div>
+    <div class="ops-grid"><section>
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/web-crawler#what-is-expected-at-each-level">What is Expected at Each Level?</a><span>Day 6</span></div>
+  <ul class="source-sections">
+    <li>Mock rubric calibration</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/web-crawler#mid-level">Mid-level</a><span>Day 6</span></div>
+  <ul class="source-sections">
+    <li>Rubric contrast</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/web-crawler#senior">Senior</a><span>Day 6</span></div>
+  <ul class="source-sections">
+    <li>Senior+ bar</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/web-crawler#staff">Staff+</a><span>Day 6</span></div>
+  <ul class="source-sections">
+    <li>Staff bar</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/job-scheduler#what-is-expected-at-each-level">What is Expected at Each Level?</a><span>Day 6</span></div>
+  <ul class="source-sections">
+    <li>Mock rubric calibration</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/job-scheduler#mid-level">Mid-level</a><span>Day 6</span></div>
+  <ul class="source-sections">
+    <li>Rubric contrast</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/job-scheduler#senior">Senior</a><span>Day 6</span></div>
+  <ul class="source-sections">
+    <li>Senior+ bar</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/job-scheduler#staff">Staff+</a><span>Day 6</span></div>
+  <ul class="source-sections">
+    <li>Staff bar</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/camelcamelcamel#what-is-expected-at-each-level">What is Expected at Each Level?</a><span>Day 6</span></div>
+  <ul class="source-sections">
+    <li>Transfer rubric calibration</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/camelcamelcamel#mid-level">Mid-level</a><span>Day 6</span></div>
+  <ul class="source-sections">
+    <li>Rubric contrast</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/camelcamelcamel#senior">Senior</a><span>Day 6</span></div>
+  <ul class="source-sections">
+    <li>Senior+ bar</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/camelcamelcamel#staff">Staff+</a><span>Day 6</span></div>
+  <ul class="source-sections">
+    <li>Staff transfer bar</li>
+  </ul>
+</div>
+</section><section><h2>Decision Notes</h2><ul class="compact-list">
+      <li><span class="box"></span><span>CORE means you must answer requirement, HLD, deep dive, failure, recovery, metric, and Staff-level tradeoff.</span></li>
+      <li><span class="box"></span><span>TRANSFER means blind attempt first, then delta against source, invalid assumption, new bottleneck, and follow-up pressure question.</span></li>
+      <li><span class="box"></span><span>Do not add open-ended AI radar unless it changes a concrete Week 8 design decision; this week it does not.</span></li>
+    </ul></section></div>
+  </section>
+
+  <section class="section shell" id="ddia">
+    <div class="section-head"><h2>DDIA Decision Map</h2><p class="section-copy">Use exact sections only from Ch5, Ch9, and Ch12.</p></div>
+
+<table class="matrix reading-table">
+  <tr><th>Chapter</th><th>Exact DDIA decision section</th><th>Concrete Week 8 use</th></tr>
+  <tr><td data-label="Chapter">Ch9</td><td data-label="Exact section"><a href="https://ddia.vonng.com/ch9/#sec_fault_injection">故障注入</a></td><td data-label="Decision use">Mock injects worker pause, queue redelivery, and stale lease completion.</td></tr>
+<tr><td data-label="Chapter">Ch12</td><td data-label="Exact section"><a href="https://ddia.vonng.com/ch12/#sec_stream_fault_tolerance">容错</a></td><td data-label="Decision use">Score whether replay and rebuild stories are explicit.</td></tr>
+<tr><td data-label="Chapter">Ch12</td><td data-label="Exact section"><a href="https://ddia.vonng.com/ch12/#sec_stream_idempotence">幂等性</a></td><td data-label="Decision use">Score whether each retry path has an idempotency key or conditional write.</td></tr>
+</table>
+
+  </section>
+
+  <section class="section shell" id="algorithm">
+    <div class="section-head"><h2>Heap/Priority Queue Slots</h2><p class="section-copy">Three contiguous slots today. Keep one invariant and one failure mode per problem.</p></div>
+
+<table class="matrix algorithm-table" id="heap-slots-16-18">
+  <tr><th>Slot</th><th>Problem</th><th>Pattern</th><th>Invariant / bug risk</th><th>Time · Space</th></tr>
+
+<tr data-neetcode-slot="true" id="w8-h16">
+  <td data-label="Slot">W8-H16</td>
+  <td data-label="Problem"><a href="https://neetcode.io/problems/network-delay-time/question">Network Delay Time</a></td>
+  <td data-label="Pattern">Dijkstra</td>
+  <td data-label="Invariant">The heap priority is best-known arrival time, not edge weight.</td>
+  <td data-label="Complexity">O(E log V) · O(V+E)</td>
+</tr>
+
+<tr data-neetcode-slot="true" id="w8-h17">
+  <td data-label="Slot">W8-H17</td>
+  <td data-label="Problem"><a href="https://neetcode.io/problems/swim-in-rising-water/question">Swim in Rising Water</a></td>
+  <td data-label="Pattern">best-first search</td>
+  <td data-label="Invariant">Path cost is the maximum cell height seen so far.</td>
+  <td data-label="Complexity">O(n^2 log n) · O(n^2)</td>
+</tr>
+
+<tr data-neetcode-slot="true" id="w8-h18">
+  <td data-label="Slot">W8-H18</td>
+  <td data-label="Problem"><a href="https://neetcode.io/problems/path-with-minimum-effort/question">Path With Minimum Effort</a></td>
+  <td data-label="Pattern">Dijkstra on max edge</td>
+  <td data-label="Invariant">Relax by max(current effort, next edge effort).</td>
+  <td data-label="Complexity">O(mn log mn) · O(mn)</td>
+</tr>
+
+</table>
+
+  </section>
+
+  <section class="section shell" id="evidence">
+    <div class="section-head"><h2>Evidence To Save</h2><p class="section-copy">One compact artifact is enough if it proves mechanism depth.</p></div>
+    <div class="grid-3">
+      <article class="tile"><div class="kicker">Invariant</div><h3>State safety</h3><p>Name the state that survives restart and the write that makes retry safe.</p></article>
+      <article class="tile"><div class="kicker">Failure</div><h3>Concrete break</h3><p>Use a worker crash, zombie lease, redelivery, poison message, stale robots decision, or duplicate price event.</p></article>
+      <article class="tile"><div class="kicker">Metric</div><h3>Operational proof</h3><p>Attach lag, retry rate, duplicate suppression, stale lease reject count, host politeness violation, or alert freshness.</p></article>
+    </div>
+  </section>
+<section id="local-materials" style="margin:40px auto;max-width:1080px;padding:18px 22px;border:1px solid #d9dce1;background:#f7f8fa;color:#30343b;font:14px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif"><strong>Local study materials</strong><br>Detailed lecture notes, audio, recall scripts, PDFs, Staff Q&amp;A, and mock packs are archived locally and are intentionally not published on this site.</section></main>
+
+<footer class="footer shell">Week 8 only · Reliable execution · Heap/Priority Queue · READY_FOR_REVIEW gate</footer>
+</body>
+</html>

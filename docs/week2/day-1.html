@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Week 2 Day 1 - Distributed Cache：先定义事实，再画读路径</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <nav class="shell nav">
+      <a class="brand" href="../system-design-12-week-master-plan.html"><span class="mark"></span> WEEK 02 · READ SYSTEMS</a>
+      <div class="navlinks">
+        <a href="../system-design-12-week-master-plan.html">12 周路线</a>
+        <a href="../week2-action-guide.html">第 2 周</a>
+        <a href="#local-materials">深度讲义</a>
+        <a href="#local-materials">Staff Q&amp;A</a>
+        <a href="#local-materials">Live Mock</a>
+        <a href="#local-materials">验收</a>
+      </div>
+    </nav>
+  </header>
+  <main class="shell">
+
+    <section class="day-hero">
+      <div class="eyebrow">MON · 08.03 · WEEK 02 · DAY 1</div>
+      <h1>Distributed Cache：先定义事实，再画读路径</h1>
+      <p class="deck">闭卷起手后完整读到 HLD。今天建立 cache entry、TTL、LRU、source of truth 与单节点正确性，不提前跳到集群名词。</p>
+      <div class="day-meta"><span>08:30 wake</span><span>08:50—10:55 system design</span><span>14:30—16:15 + 20:30—21:15</span></div>
+      <div class="pill-row"><a href="../week2-action-guide.html">周概览</a><a href="day-2.html">下一天</a><a class="pill" href="#local-materials">讲义</a><a class="pill" href="#local-materials">证据表</a></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>学习源包</h2><p class="section-copy">按顺序打开。Hello Interview 与 DDIA 链接都直达今天需要的 live subsection，不做整章地毯式阅读。</p></div>
+      <div class="ops-grid"><section>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/distributed-cache#understanding-the-problem">Distributed Cache · Understanding the Problem</a><span>EXACT SECTION</span></div>
+          <div class="proof">required reading；完成后在白板或口述中留下对应证据。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/distributed-cache#functional-requirements">Distributed Cache · Functional Requirements</a><span>EXACT SECTION</span></div>
+          <div class="proof">required reading；完成后在白板或口述中留下对应证据。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/distributed-cache#non-functional-requirements">Distributed Cache · Non-Functional Requirements</a><span>EXACT SECTION</span></div>
+          <div class="proof">required reading；完成后在白板或口述中留下对应证据。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/distributed-cache#the-set-up">Distributed Cache · The Set Up</a><span>EXACT SECTION</span></div>
+          <div class="proof">required reading；完成后在白板或口述中留下对应证据。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/distributed-cache#planning-the-approach">Distributed Cache · Planning the Approach</a><span>EXACT SECTION</span></div>
+          <div class="proof">required reading；完成后在白板或口述中留下对应证据。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/distributed-cache#defining-the-core-entities">Distributed Cache · Defining the Core Entities</a><span>EXACT SECTION</span></div>
+          <div class="proof">required reading；完成后在白板或口述中留下对应证据。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/distributed-cache#the-api">Distributed Cache · The API</a><span>EXACT SECTION</span></div>
+          <div class="proof">required reading；完成后在白板或口述中留下对应证据。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/distributed-cache#high-level-design">Distributed Cache · High-Level Design</a><span>EXACT SECTION</span></div>
+          <div class="proof">required reading；完成后在白板或口述中留下对应证据。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/distributed-cache#1-users-should-be-able-to-set-get-and-delete-key-value-pairs">Distributed Cache · 1) Users should be able to set, get, and delete key-value pairs</a><span>EXACT SECTION</span></div>
+          <div class="proof">required reading；完成后在白板或口述中留下对应证据。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/distributed-cache#2-users-should-be-able-to-configure-the-expiration-time-for-key-value-pairs">Distributed Cache · 2) Users should be able to configure the expiration time for key-value pairs</a><span>EXACT SECTION</span></div>
+          <div class="proof">required reading；完成后在白板或口述中留下对应证据。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/distributed-cache#3-data-should-be-evicted-according-to-lru-policy">Distributed Cache · 3) Data should be evicted according to LRU policy</a><span>EXACT SECTION</span></div>
+          <div class="proof">required reading；完成后在白板或口述中留下对应证据。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://ddia.vonng.com/ch1/#sec_introduction_derived">DDIA Ch1 · 记录系统与派生数据</a><span>EXACT SECTION</span></div>
+          <div class="proof">把缓存定性为派生数据；写出权威状态、重建来源和陈旧窗口。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://ddia.vonng.com/ch4/#sec_storage_inmemory">DDIA Ch4 · 全内存存储</a><span>EXACT SECTION</span></div>
+          <div class="proof">把 &lt;10ms、1TB、value 大小、复制因子和内存预算放进同一容量判断。</div>
+        </div></section><section>
+        <h2>今日验收</h2>
+        <ul class="compact-list"><li><span class="box"></span><span>get 在返回前检查 expiry；过期 entry 绝不能因 janitor 尚未运行而继续可见。</span></li><li><span class="box"></span><span>LRU 的 hash map + doubly linked list 能让 lookup、touch、evict 都保持 O(1)。</span></li><li><span class="box"></span><span>能明确回答：缓存里的值丢光后，从哪里恢复；若答不出，尚未定义 system of record。</span></li></ul>
+        <div class="callout"><strong>必须产出：</strong>单节点状态图 + get/set/delete/expire/evict 时序 + 一张 SoR/derived 决策卡。</div>
+      </section></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>08:50—10:55</h2><p class="section-copy">系统设计块保持完整。最后十分钟永远用于无稿 close，防止学习退化为被动阅读。</p></div>
+      <table class="matrix"><tr><th>时间</th><th>今日时间表</th></tr><tr><td><strong>08:50—09:00</strong></td><td>写一句题目契约：1TB、100k RPS、get/set &lt;10ms、eventual consistency、durability 不在默认范围。</td></tr><tr><td><strong>09:00—09:25</strong></td><td>闭卷画单节点 cache：hash table + TTL + LRU；先写三个不变量。</td></tr><tr><td><strong>09:25—10:05</strong></td><td>按精确目录读 Understanding → HLD 三个功能段；只修正自己白板上的错误。</td></tr><tr><td><strong>10:05—10:45</strong></td><td>读两段 DDIA，写 system of record / derived data 决策卡和容量算式。</td></tr><tr><td><strong>10:45—10:55</strong></td><td>无稿口述两分钟：为什么 cache 不是数据库的另一个名字。</td></tr></table>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>算法模块</h2><p class="section-copy">NeetCode Tag：Two Pointers。三个 slot 全在同一连续 tag；每题记录 Pattern / Invariant / Bug / Complexity。</p></div>
+      <div class="algo-pack">
+        <div class="tag-row"><span>14:30—16:15</span><span>NeetCode Tag · Two Pointers</span><span>3 required slots</span></div>
+        <table class="matrix"><tr><th>#</th><th>题目</th><th>当日目标</th><th>时间</th></tr><tr data-neetcode-slot="true"><td>1</td><td><a href="https://neetcode.io/problems/is-palindrome">Valid Palindrome</a></td><td>新题 · 双端收缩前先定义跳过字符与大小写归一化不变量。</td><td>14:30—15:05</td></tr><tr data-neetcode-slot="true"><td>2</td><td><a href="https://neetcode.io/problems/two-integer-sum-ii">Two Sum II</a></td><td>新题 · 有序数组单调性决定移动哪一端。</td><td>15:05—15:40</td></tr><tr data-neetcode-slot="true"><td>3</td><td><a href="https://neetcode.io/problems/three-integer-sum">3Sum</a></td><td>新题 · 排序、固定一端、去重边界。</td><td>15:40—16:15</td></tr></table>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>20:30—21:15</h2><p class="section-copy">口述块只接受录音、实际回答或 repair 证据，不用“看完了”作为完成。</p></div>
+      <div class="callout green">20:30—21:15 · 英文 8 分钟 recall：requirements → API → single-node HLD；回听后只重答最模糊的一个不变量。</div>
+    </section>
+    <footer class="footer"><a href="../week2-action-guide.html">返回第 2 周总览</a> · Day 1 只在 evidence gate 通过后结束。</footer>
+  <section id="local-materials" style="margin:40px auto;max-width:1080px;padding:18px 22px;border:1px solid #d9dce1;background:#f7f8fa;color:#30343b;font:14px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif"><strong>Local study materials</strong><br>Detailed lecture notes, audio, recall scripts, PDFs, Staff Q&amp;A, and mock packs are archived locally and are intentionally not published on this site.</section></main>
+</body>
+</html>

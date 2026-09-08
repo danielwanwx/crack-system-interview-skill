@@ -1,0 +1,58 @@
+@import url("../week2/style.css");
+
+/* Week 3 keeps the accepted Week 2 tech-minimal system and only adds guards
+   needed for denser realtime/failure tables on narrow screens. */
+.evidence-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 7px 10px;
+  color: var(--muted);
+  background: rgba(255,255,255,.62);
+  font-size: 13px;
+}
+
+.reading-table td:first-child,
+.reading-table th:first-child {
+  width: 28%;
+}
+
+.mock-clock {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+@media (max-width: 860px) {
+  .nav {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .brand {
+    max-width: 100%;
+  }
+
+  .navlinks {
+    width: 100%;
+    max-width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    white-space: normal;
+  }
+
+  .navlinks a {
+    white-space: normal;
+  }
+
+  .reading-table td:first-child,
+  .reading-table th:first-child {
+    width: auto;
+  }
+
+  .asset-row .button {
+    width: 100%;
+    justify-content: center;
+  }
+}

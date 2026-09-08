@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第 4 周 Day 6 - 双核心独立 Mock：WhatsApp 45 分钟 + Google Docs 45 分钟</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="topbar"><nav class="shell nav">
+    <a class="brand" href="../week4-action-guide.html"><span class="mark"></span> WEEK 04 · MESSAGING & COLLABORATION</a>
+    <div class="navlinks"><a href="../week4-action-guide.html">第 4 周</a><a href="#local-materials">深度讲义</a><a href="#local-materials">Staff Q&amp;A</a><a href="#local-materials">Live Mock</a><a href="#local-materials">验收</a></div>
+  </nav></header>
+  <main class="shell">
+
+    <section class="hero">
+      <div>
+        <div class="eyebrow">WEEK 04 · 2026-08-22 · SAT</div>
+        <h1>双核心独立 Mock：WhatsApp 45 分钟 + Google Docs 45 分钟</h1>
+        <p class="deck">分别完成 WhatsApp 与 Google Docs 的 45 分钟 mock；每场都含两个 deep dives、选择驱动追问和证据评分。</p>
+        <div class="pill-row"><a class="pill" href="../week4-action-guide.html">周指南</a><a class="pill" href="#local-materials">讲义</a><a class="pill" href="#local-materials">Q&amp;A</a><a class="pill" href="#local-materials">验收</a></div>
+      </div>
+      <aside class="hero-panel"><div class="metric"><b>08:30</b><span>wake</span></div><div class="metric"><b>125m</b><span>system design</span></div><div class="metric"><b>3</b><span>Sliding Window</span></div><div class="metric"><b>45m</b><span>recall/mock</span></div></aside>
+    </section>
+    <section class="section">
+      <div class="section-head"><h2>今日固定时间表</h2><p class="section-copy">08:30 wake 只保留起床；学习从 08:50 开始。三块窗口不互相挤占。</p></div>
+      <table class="rubric">
+        <tr><th>08:30 wake</th><td>起床、早餐、准备白板；不安排预读或算法。</td></tr>
+        <tr><th>08:50—09:35</th><td><b>08:50—10:55 system design</b><br>WhatsApp 45 分钟 mock — 完整 scope/HLD + deep dive 1 connection scale/partition + deep dive 2 offline delivery/ordering。</td></tr><tr><th>09:35—09:45</th><td><b>08:50—10:55 system design</b><br>WhatsApp evidence — 记录逐项分数、原话/图号、hard fail 与最弱回答。</td></tr><tr><th>09:45—10:30</th><td><b>08:50—10:55 system design</b><br>Google Docs 45 分钟 mock — 完整 scope/HLD + deep dive 1 concurrent edits + deep dive 2 WebSocket room scale/recovery。</td></tr><tr><th>10:30—10:55</th><td><b>08:50—10:55 system design</b><br>Docs evidence + repair plan — 记录分数，选全日最低维度，写 repair sentence 与新故障注入题。</td></tr>
+        <tr><th>14:30—16:15</th><td><b>NeetCode Tag · Sliding Window</b><br>三道题在下方独立算法表执行。</td></tr>
+        <tr><th>20:30—21:15</th><td>20:30—21:15 最弱回答 re-attempt：8 分钟新故障题 + 评分替换 + 证据归档；剩余时间复核两场 hard fail。</td></tr>
+      </table>
+    </section>
+    <section class="section"><div class="section-head"><h2>算法模块</h2><p class="section-copy">连续单一 NeetCode Sliding Window tag；每天 3 个 NEW slot，每题 30 分钟作答 + 5 分钟证据，正好 105 分钟。每天 timed review = 0，满足不超过 1。</p></div><table class="matrix algorithm-table"><tr><th>#</th><th>Problem / mode</th><th>Pattern</th><th>Invariant</th><th>Bug risk</th><th>Time</th><th>Space</th></tr><tr data-neetcode-slot="true" data-mode="NEW" data-minutes="35"><td data-label="Slot">16</td><td data-label="Problem / mode"><a href="https://neetcode.io/problems/fruit-into-baskets/question">Fruit Into Baskets</a><br><span class="evidence-chip">NEW · 30m solve + 5m evidence</span></td><td data-label="Pattern">至多两类窗口</td><td data-label="Invariant">窗口内 fruit type 不超过 2。</td><td data-label="Bug risk">计数归零未删；答案在收缩前更新。</td><td data-label="Time">O(n)</td><td data-label="Space">O(1) active types</td></tr>
+<tr data-neetcode-slot="true" data-mode="NEW" data-minutes="35"><td data-label="Slot">17</td><td data-label="Problem / mode"><a href="https://neetcode.io/problems/maximum-number-of-vowels-in-a-substring-of-given-length/question">Maximum Number of Vowels in a Substring of Given Length</a><br><span class="evidence-chip">NEW · 30m solve + 5m evidence</span></td><td data-label="Pattern">固定长度计数窗口</td><td data-label="Invariant">vowelCount 等于当前 k 长窗口元音数。</td><td data-label="Bug risk">首窗和后续窗重复/漏算。</td><td data-label="Time">O(n)</td><td data-label="Space">O(1)</td></tr>
+<tr data-neetcode-slot="true" data-mode="NEW" data-minutes="35"><td data-label="Slot">18</td><td data-label="Problem / mode"><a href="https://neetcode.io/problems/minimum-number-of-flips-to-make-the-binary-string-alternating/question">Minimum Number of Flips to Make the Binary String Alternating</a><br><span class="evidence-chip">NEW · 30m solve + 5m evidence</span></td><td data-label="Pattern">环形窗口 + 双模板</td><td data-label="Invariant">长度 n 窗口同时维护对 0101/1010 的 mismatch。</td><td data-label="Bug risk">奇数 n 旋转；窗口超过 n 后未移出。</td><td data-label="Time">O(n)</td><td data-label="Space">O(n) doubled view</td></tr></table></section>
+    <section class="section"><div class="section-head"><h2>闭卷起手</h2></div><div class="callout"><p>开场只看题目名；每个设计必须说 source of truth、soft state、failure window、metric。</p></div></section>
+    <section class="section"><div class="section-head"><h2>Hello Interview 精确目录</h2><p class="section-copy">day 页面使用 canonical data-toc-id/H4 anchors；周级 overview 不放小节链接。</p></div><p>今天不新增 Hello Interview 小节；只复用前 5 天已核验目录做 mock/repair。</p></section>
+    <section class="section"><div class="section-head"><h2>DDIA 精确决策卡</h2><p class="section-copy">只读能改变今天设计决定的小节。</p></div><table class="matrix"><tr><th>项目问题</th><th>精确 DDIA subsection</th><th>改变的系统决定</th></tr><tr><td>两个核心 mock 里，什么时候需要共识/强顺序，什么时候不需要？</td><td><a href="https://ddia.vonng.com/ch10/#sec_consistency_total_order">Ch10 · 共识的实践</a></td><td>聊天按 conversation owner 建局部顺序；协同文档按 document op log 建顺序；棋局 move sequencer 是更强的权威顺序。</td></tr></table></section>
+    <section class="section"><div class="section-head"><h2>本日项目 artifacts</h2><p class="section-copy">脚本、音频、PDF 与 mock evidence 直接从对应日打开。</p></div><div class="pill-row"><a class="pill" href="#local-materials">两场独立 adaptive mock</a> <a class="pill" href="#local-materials">证据评分与 re-attempt rubric</a></div></section>
+    <section class="section"><div class="section-head"><h2>今日产出、修复与英语 recall</h2></div><table class="rubric"><tr><th>课程角色</th><td>MOCK · two separate 45-minute core interviews</td></tr><tr><th>必须交付</th><td>两份独立 45 分钟录音/notes、两张证据评分表、最低分回答 repair sentence 与 re-attempt 题。</td></tr><tr><th>修复规则</th><td>任一场少于 45 分钟、少于两个 deep dives 或出现 hard fail，必须按同项目新故障题重试，不进入 Week 5。</td></tr><tr><th>English recall</th><td><div class="english-recall">English recall: “Messaging and collaborative editing both need ordered logs, but they make different promises about conflicts.”</div></td></tr></table></section>
+    <footer class="footer">Day 6 只推进 Week 4；不打开 Week 5。完成后把证据写入 <a href="#local-materials">scorecard</a>。</footer>
+  <section id="local-materials" style="margin:40px auto;max-width:1080px;padding:18px 22px;border:1px solid #d9dce1;background:#f7f8fa;color:#30343b;font:14px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif"><strong>Local study materials</strong><br>Detailed lecture notes, audio, recall scripts, PDFs, Staff Q&amp;A, and mock packs are archived locally and are intentionally not published on this site.</section></main>
+</body>
+</html>

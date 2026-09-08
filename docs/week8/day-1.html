@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Week 8 Day 1 · Web Crawler CORE HLD</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body id="top">
+
+
+<header class="topbar">
+  <nav class="nav shell" aria-label="Week 8 navigation">
+    <a class="brand" href="../week8-action-guide.html"><span class="mark"></span><span>Week 8 · Day 1</span></a>
+    <div class="navlinks"><a href="../week8-action-guide.html">Overview</a><a href="day-1.html">Day 1</a><a href="day-2.html">Day 2</a><a href="day-3.html">Day 3</a><a href="day-4.html">Day 4</a><a href="day-5.html">Day 5</a><a href="day-6.html">Day 6</a><a href="day-7.html">Day 7</a><a href="#local-materials">Lecture</a><a href="#local-materials">Mock</a><a href="#local-materials">Scorecard</a></div>
+  </nav>
+</header>
+
+<main>
+  <section class="day-hero shell">
+    <div class="eyebrow">Week 8 · Mon Sep 14, 2026 · Sep 14-20, 2026</div>
+    <h1>Day 1: Web Crawler CORE HLD</h1>
+    <p class="deck">A frontier-owned crawler design with explicit visited state, raw/object storage, parse/index stages, and durable restart points.</p>
+    <div class="day-meta"><span>Where does crawl progress live after every crash?</span><span>Frontier · leases · retries · dedupe · recovery</span><span>3 Heap/Priority Queue slots</span></div>
+  </section>
+
+  <section class="section shell" id="schedule">
+    <div class="section-head"><h2>Exact Time Blocks</h2><p class="section-copy">Follow the Week 4 delivery pattern: blank-page first, source reading second, DDIA decision third, spoken close, contiguous algorithm practice, evening recall.</p></div>
+
+<table class="matrix reading-table" id="time-blocks">
+  <tr><th>Time</th><th>Block</th><th>Required output</th></tr>
+  <tr><td data-label="Time">08:30</td><td data-label="Block">Wake + setup</td><td data-label="Required output">Open this page, start the board, write the day question: Where does crawl progress live after every crash?</td></tr>
+  <tr><td data-label="Time">08:50—09:00</td><td data-label="Block">Board set</td><td data-label="Required output">List entities, queues, leases, retry states, dedupe keys, metrics before reading.</td></tr>
+  <tr><td data-label="Time">09:00—10:05</td><td data-label="Block">Blank-page attempt + Hello reading</td><td data-label="Required output">Draw the crawler before reading: URL submission, normalization, frontier partition, fetcher, robots/politeness guard, raw page store, parser, URL extractor, dedupe, index sink. Then read the Hello setup through HLD and mark exactly where each piece lives.</td></tr>
+  <tr><td data-label="Time">10:05—10:45</td><td data-label="Block">Deep dive + DDIA decision</td><td data-label="Required output">The ownership move is the frontier: workers borrow URL leases; canonical URL and content hash dedupe decide whether a URL can progress; the raw page pointer is the stable handoff between fetch and parse. If the queue is the source of truth, replay must be bounded by a durable visited/frontier table.</td></tr>
+  <tr><td data-label="Time">10:45—10:55</td><td data-label="Block">Spoken close</td><td data-label="Required output">Speak the contract: at-least-once fetch is acceptable only when URL/content dedupe and idempotent index writes make retries harmless.</td></tr>
+  <tr><td data-label="Time">14:30—16:15</td><td data-label="Block">NeetCode Heap/Priority Queue</td><td data-label="Required output">Complete contiguous slots W8-H01—W8-H03; capture invariant and bug risk for each.</td></tr>
+  <tr><td data-label="Time">20:30—21:15</td><td data-label="Block">Recall / Q&A / mock</td><td data-label="Required output">Use <a href="#local-materials">Staff Q&A</a>, <a href="#local-materials">lecture assets</a>, or <a href="#local-materials">mock script</a> for the day's system.</td></tr>
+</table>
+
+  </section>
+
+  <section class="section shell" id="canonical-headings">
+    <div class="section-head"><h2>Canonical Heading Anchors</h2><p class="section-copy">Read only the listed Hello Interview headings for today's assignment. Every link is a direct day-page anchor.</p></div>
+    <div class="ops-grid"><section>
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/web-crawler#understanding-the-problem">Understanding the Problem</a><span>Day 1</span></div>
+  <ul class="source-sections">
+    <li>CORE scope and requirements gate</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/web-crawler#functional-requirements">Functional Requirements</a><span>Day 1</span></div>
+  <ul class="source-sections">
+    <li>CORE functional contract</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/web-crawler#non-functional-requirements">Non-Functional Requirements</a><span>Day 1</span></div>
+  <ul class="source-sections">
+    <li>CORE scale, availability, politeness constraints</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/web-crawler#the-set-up">The Set Up</a><span>Day 1</span></div>
+  <ul class="source-sections">
+    <li>CORE setup and interviewer framing</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/web-crawler#planning-the-approach">Planning the Approach</a><span>Day 1</span></div>
+  <ul class="source-sections">
+    <li>CORE planning spine</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/web-crawler#api-or-system-interface">API or System Interface</a><span>Day 1</span></div>
+  <ul class="source-sections">
+    <li>CORE crawl submission and status surface</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/web-crawler#data-flow">Data Flow</a><span>Day 1</span></div>
+  <ul class="source-sections">
+    <li>CORE fetch/extract/index/event flow</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/web-crawler#high-level-design">High-Level Design</a><span>Day 1</span></div>
+  <ul class="source-sections">
+    <li>CORE architecture</li>
+  </ul>
+</div>
+</section><section><h2>Decision Notes</h2><ul class="compact-list">
+      <li><span class="box"></span><span>CORE means you must answer requirement, HLD, deep dive, failure, recovery, metric, and Staff-level tradeoff.</span></li>
+      <li><span class="box"></span><span>TRANSFER means blind attempt first, then delta against source, invalid assumption, new bottleneck, and follow-up pressure question.</span></li>
+      <li><span class="box"></span><span>Do not add open-ended AI radar unless it changes a concrete Week 8 design decision; this week it does not.</span></li>
+    </ul></section></div>
+  </section>
+
+  <section class="section shell" id="ddia">
+    <div class="section-head"><h2>DDIA Decision Map</h2><p class="section-copy">Use exact sections only from Ch5, Ch9, and Ch12.</p></div>
+
+<table class="matrix reading-table">
+  <tr><th>Chapter</th><th>Exact DDIA decision section</th><th>Concrete Week 8 use</th></tr>
+  <tr><td data-label="Chapter">Ch5</td><td data-label="Exact section"><a href="https://ddia.vonng.com/ch5/#sec_encoding_dataflow_workflows">持久化执行与工作流</a></td><td data-label="Decision use">Every fetch, parse, and index stage records status, input pointer, output pointer, attempt, and next action.</td></tr>
+<tr><td data-label="Chapter">Ch5</td><td data-label="Exact section"><a href="https://ddia.vonng.com/ch5/#durable-execution">持久化执行</a></td><td data-label="Decision use">Do not trust in-memory worker progress; write progress before acknowledging frontier work.</td></tr>
+<tr><td data-label="Chapter">Ch5</td><td data-label="Exact section"><a href="https://ddia.vonng.com/ch5/#sec_encoding_dataflow_msg">事件驱动的架构</a></td><td data-label="Decision use">Use topic boundaries for fetched page, extracted URL, and indexable document events.</td></tr>
+</table>
+
+  </section>
+
+  <section class="section shell" id="algorithm">
+    <div class="section-head"><h2>Heap/Priority Queue Slots</h2><p class="section-copy">Three contiguous slots today. Keep one invariant and one failure mode per problem.</p></div>
+
+<table class="matrix algorithm-table" id="heap-slots-1-3">
+  <tr><th>Slot</th><th>Problem</th><th>Pattern</th><th>Invariant / bug risk</th><th>Time · Space</th></tr>
+
+<tr data-neetcode-slot="true" id="w8-h01">
+  <td data-label="Slot">W8-H01</td>
+  <td data-label="Problem"><a href="https://neetcode.io/problems/kth-largest-integer-in-a-stream/question">Kth Largest Element in a Stream</a></td>
+  <td data-label="Pattern">min-heap of size k</td>
+  <td data-label="Invariant">Heap owns the retained frontier; never sort the stream on every insert.</td>
+  <td data-label="Complexity">O(log k) · O(k)</td>
+</tr>
+
+<tr data-neetcode-slot="true" id="w8-h02">
+  <td data-label="Slot">W8-H02</td>
+  <td data-label="Problem"><a href="https://neetcode.io/problems/last-stone-weight/question">Last Stone Weight</a></td>
+  <td data-label="Pattern">max-heap simulation</td>
+  <td data-label="Invariant">The next state is defined only by the two largest stones.</td>
+  <td data-label="Complexity">O(n log n) · O(n)</td>
+</tr>
+
+<tr data-neetcode-slot="true" id="w8-h03">
+  <td data-label="Slot">W8-H03</td>
+  <td data-label="Problem"><a href="https://neetcode.io/problems/kth-largest-element-in-an-array/question">Kth Largest Element in an Array</a></td>
+  <td data-label="Pattern">bounded min-heap</td>
+  <td data-label="Invariant">Keep only candidates that can still affect the answer.</td>
+  <td data-label="Complexity">O(n log k) · O(k)</td>
+</tr>
+
+</table>
+
+  </section>
+
+  <section class="section shell" id="evidence">
+    <div class="section-head"><h2>Evidence To Save</h2><p class="section-copy">One compact artifact is enough if it proves mechanism depth.</p></div>
+    <div class="grid-3">
+      <article class="tile"><div class="kicker">Invariant</div><h3>State safety</h3><p>Name the state that survives restart and the write that makes retry safe.</p></article>
+      <article class="tile"><div class="kicker">Failure</div><h3>Concrete break</h3><p>Use a worker crash, zombie lease, redelivery, poison message, stale robots decision, or duplicate price event.</p></article>
+      <article class="tile"><div class="kicker">Metric</div><h3>Operational proof</h3><p>Attach lag, retry rate, duplicate suppression, stale lease reject count, host politeness violation, or alert freshness.</p></article>
+    </div>
+  </section>
+<section id="local-materials" style="margin:40px auto;max-width:1080px;padding:18px 22px;border:1px solid #d9dce1;background:#f7f8fa;color:#30343b;font:14px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif"><strong>Local study materials</strong><br>Detailed lecture notes, audio, recall scripts, PDFs, Staff Q&amp;A, and mock packs are archived locally and are intentionally not published on this site.</section></main>
+
+<footer class="footer shell">Week 8 only · Reliable execution · Heap/Priority Queue · READY_FOR_REVIEW gate</footer>
+</body>
+</html>

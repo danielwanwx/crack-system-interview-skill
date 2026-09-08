@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Week 2 Day 5 - 横向迁移：读扩展、缓存与大对象的边界</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <nav class="shell nav">
+      <a class="brand" href="../system-design-12-week-master-plan.html"><span class="mark"></span> WEEK 02 · READ SYSTEMS</a>
+      <div class="navlinks">
+        <a href="../system-design-12-week-master-plan.html">12 周路线</a>
+        <a href="../week2-action-guide.html">第 2 周</a>
+        <a href="#local-materials">深度讲义</a>
+        <a href="#local-materials">Staff Q&amp;A</a>
+        <a href="#local-materials">Live Mock</a>
+        <a href="#local-materials">验收</a>
+      </div>
+    </nav>
+  </header>
+  <main class="shell">
+
+    <section class="day-hero">
+      <div class="eyebrow">FRI · 08.07 · WEEK 02 · DAY 5</div>
+      <h1>横向迁移：读扩展、缓存与大对象的边界</h1>
+      <p class="deck">今天不再增加项目。把 Distributed Cache 的基础设施机制迁移到 Dropbox：metadata cache、CDN、source of truth、读副本、分片与 large-object path。</p>
+      <div class="day-meta"><span>08:30 wake</span><span>08:50—10:55 system design</span><span>14:30—16:15 + 20:30—21:15</span></div>
+      <div class="pill-row"><a href="day-4.html">上一天</a><a href="day-6.html">下一天</a><a class="pill" href="#local-materials">讲义</a><a class="pill" href="#local-materials">证据表</a></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>学习源包</h2><p class="section-copy">按顺序打开。Hello Interview 与 DDIA 链接都直达今天需要的 live subsection，不做整章地毯式阅读。</p></div>
+      <div class="ops-grid"><section>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/patterns/scaling-reads#application-level-caching">Hello Interview · Scaling Reads / Application-Level Caching</a><span>EXACT SECTION</span></div>
+          <div class="proof">为 metadata lookup 选择 cache-aside，并写出 invalidation 与 stampede 修复。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/caching#cache-aside-lazy-loading">Hello Interview · Caching / Cache-Aside</a><span>EXACT SECTION</span></div>
+          <div class="proof">画 hit、miss、DB fallback、populate 与 concurrent miss。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/caching#cache-consistency">Hello Interview · Caching / Cache Consistency</a><span>EXACT SECTION</span></div>
+          <div class="proof">解释 ACL/revocation 为什么不能只等长 TTL。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/core-concepts/caching#cache-stampede-thundering-herd">Hello Interview · Caching / Cache Stampede</a><span>EXACT SECTION</span></div>
+          <div class="proof">选择 single-flight、jittered TTL 或 soft TTL，并绑定触发指标。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/patterns/large-blobs#resumable-uploads-for-large-files">Hello Interview · Handling Large Blobs / Resumable Uploads</a><span>EXACT SECTION</span></div>
+          <div class="proof">把 data path 与 application control path 分离。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/patterns/large-blobs#state-synchronization-challenges">Hello Interview · Handling Large Blobs / State Synchronization</a><span>EXACT SECTION</span></div>
+          <div class="proof">列出 blob store 与 metadata DB 跨系统状态不一致的每个方向。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://ddia.vonng.com/ch1/#sec_introduction_derived">DDIA Ch1 · 记录系统与派生数据</a><span>EXACT SECTION</span></div>
+          <div class="proof">给 metadata DB、blob、change log、cache、CDN 一一标注 source/derived。</div>
+        </div></section><section>
+        <h2>今日验收</h2>
+        <ul class="compact-list"><li><span class="box"></span><span>ACL 或 revocation 的陈旧窗口必须短于产品安全承诺；immutable blob CDN 可使用更长 TTL。</span></li><li><span class="box"></span><span>replication 不能替代 partitioning，partitioning 也不能自动提供高可用。</span></li><li><span class="box"></span><span>每个 cache miss 都能回到明确来源；每个 source outage 都有边界清晰的降级。</span></li></ul>
+        <div class="callout"><strong>必须产出：</strong>跨项目机制矩阵：状态所有者、派生副本、读路径、写路径、失效、故障窗口、恢复与指标。</div>
+      </section></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>08:50—10:55</h2><p class="section-copy">系统设计块保持完整。最后十分钟永远用于无稿 close，防止学习退化为被动阅读。</p></div>
+      <table class="matrix"><tr><th>时间</th><th>今日时间表</th></tr><tr><td><strong>08:50—09:00</strong></td><td>写迁移问题：同样叫 cache，metadata cache 与 CDN 分别加速什么、陈旧时伤害什么。</td></tr><tr><td><strong>09:00—09:25</strong></td><td>画 Dropbox read path：metadata/ACL → signed URL → CDN → blob origin。</td></tr><tr><td><strong>09:25—09:50</strong></td><td>为 metadata cache 设计 key、value、TTL、negative cache、invalidation 与 stampede 保护。</td></tr><tr><td><strong>09:50—10:15</strong></td><td>为 blob/CDN 设计 immutable object version key、cache-control、revocation 与 origin fallback。</td></tr><tr><td><strong>10:15—10:35</strong></td><td>比较 replication 与 partitioning：哪一个提高可用性，哪一个扩容量；分别画 failure。</td></tr><tr><td><strong>10:35—10:45</strong></td><td>完成 Difference Matrix：cache entry、blob version、metadata row 的 ownership 与恢复方式。</td></tr><tr><td><strong>10:45—10:55</strong></td><td>三分钟口述：不要用缓存掩盖 metadata/ACL 正确性。</td></tr></table>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>算法模块</h2><p class="section-copy">NeetCode Tag：Two Pointers。三个 slot 全在同一连续 tag；每题记录 Pattern / Invariant / Bug / Complexity。</p></div>
+      <div class="algo-pack">
+        <div class="tag-row"><span>14:30—16:15</span><span>NeetCode Tag · Two Pointers</span><span>3 required slots</span></div>
+        <table class="matrix"><tr><th>#</th><th>题目</th><th>当日目标</th><th>时间</th></tr><tr data-neetcode-slot="true"><td>1</td><td><a href="https://neetcode.io/problems/two-integer-sum-ii">Two Sum II</a></td><td>限时 · 15 分钟并给循环不变量。</td><td>14:30—15:05</td></tr><tr data-neetcode-slot="true"><td>2</td><td><a href="https://neetcode.io/problems/max-water-container">Container With Most Water</a></td><td>限时 · 20 分钟并证明移动规则。</td><td>15:05—15:40</td></tr><tr data-neetcode-slot="true"><td>3</td><td><a href="https://neetcode.io/problems/trapping-rain-water">Trapping Rain Water</a></td><td>复刷 · 只看一次失败样例后闭卷重写。</td><td>15:40—16:15</td></tr></table>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>20:30—21:15</h2><p class="section-copy">口述块只接受录音、实际回答或 repair 证据，不用“看完了”作为完成。</p></div>
+      <div class="callout green">20:30—21:15 · Cross-project oral：先讲 8 分钟 Distributed Cache，再用 7 分钟回答 Dropbox 里哪些层是 cache、哪些绝不能只是 cache；重答最弱五分钟。</div>
+    </section>
+    <footer class="footer"><a href="../week2-action-guide.html">返回第 2 周总览</a> · Day 5 只在 evidence gate 通过后结束。</footer>
+  <section id="local-materials" style="margin:40px auto;max-width:1080px;padding:18px 22px;border:1px solid #d9dce1;background:#f7f8fa;color:#30343b;font:14px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif"><strong>Local study materials</strong><br>Detailed lecture notes, audio, recall scripts, PDFs, Staff Q&amp;A, and mock packs are archived locally and are intentionally not published on this site.</section></main>
+</body>
+</html>

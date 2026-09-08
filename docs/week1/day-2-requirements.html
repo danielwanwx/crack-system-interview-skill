@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TUE · 07.28 - Bitly：把 Deep Dives 全部打穿</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="../week1/style.css">
+</head>
+<body>
+
+  <header class="topbar">
+    <nav class="shell nav">
+      <a class="brand" href="../system-design-12-week-master-plan.html"><span class="mark"></span> CRACK SYSTEM INTERVIEW</a>
+      <div class="navlinks">
+        <a href="../system-design-12-week-master-plan.html">12 周路线</a>
+        <a href="../week1-action-guide.html">第 1 周</a>
+        <a href="#local-materials">深度讲义</a>
+        <a href="#local-materials">Staff Q&amp;A</a>
+        <a href="#local-materials">Live Mock</a>
+        <a href="#local-materials">验收</a>
+      </div>
+    </nav>
+  </header>
+  <main class="shell">
+
+    <section class="day-hero">
+      <div class="eyebrow">TUE · 07.28 · WEEK 01</div>
+      <h1>Bitly：把 Deep Dives 全部打穿</h1>
+      <p class="deck">短码生成、低延迟跳转、1B URLs / 100M DAU、数据库故障、counter 故障与 Senior level expectation。</p>
+      <div class="day-meta"><span>08:50—10:55 系统设计</span><span>14:30—16:15 三题</span><span>20:30—21:15 口述</span></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>原文定位</h2><p class="section-copy">按顺序打开。链接直接指向当天需要阅读的小节。</p></div>
+      <ol class="reading-list"><li><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly#potential-deep-dives">Bitly / Potential Deep Dives</a></li><li><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly#2-how-can-we-ensure-that-redirects-are-fast">Bitly / 2) How can we ensure that redirects are fast?</a></li><li><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly#3-how-can-we-scale-to-support-1b-shortened-urls-and-100m-dau">Bitly / 3) How can we scale to support 1B shortened urls and 100M DAU?</a></li><li><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly#what-is-expected-at-each-level">Bitly / What is Expected at Each Level?</a></li><li><a href="https://www.hellointerview.com/learn/system-design/core-concepts/caching">Caching</a></li><li><a href="https://www.hellointerview.com/learn/system-design/core-concepts/numbers-to-know">Numbers to Know</a></li><li><a href="https://ddia.vonng.com/ch6/#sec_replication_failover">DDIA Ch6 / 处理节点故障</a></li><li><a href="https://ddia.vonng.com/ch6/#sec_replication_lag">DDIA Ch6 / 复制延迟的问题</a></li></ol>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>上午执行</h2></div>
+      <table class="matrix"><tr><th>时间</th><th>动作</th></tr><tr><td><strong>08:50—09:15</strong></td><td>闭卷写三种短码方案：hash、counter + base62、random code。</td></tr><tr><td><strong>09:15—10:05</strong></td><td>完整读 Bitly Deep Dives；标注 Bad / Good / Great 的升级理由。</td></tr><tr><td><strong>10:05—10:25</strong></td><td>读 DDIA Ch6 的节点故障与复制滞后，映射刚创建短链在 failover 后读不到的窗口。</td></tr><tr><td><strong>10:25—10:45</strong></td><td>算存储、平均/峰值 redirect QPS、cache hit 对 DB QPS 的影响。</td></tr><tr><td><strong>10:45—10:55</strong></td><td>口述 counter outage、cache stampede、DB failover 的恢复路径。</td></tr></table>
+      <div class="callout"><strong>必须产出：</strong>一页 Bitly Decision Sheet：短码生成、读路径、容量判断、三类故障及指标。</div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>掌握标准</h2></div>
+      <ul class="compact-list"><li><span class="box"></span><span>不会看到 1B URLs 就自动分片；先用容量、QPS、索引和运维边界证明。</span></li><li><span class="box"></span><span>能说出 counter + base62 的唯一性优势、可枚举风险和 counter 高可用方案。</span></li><li><span class="box"></span><span>能给 cache stampede、DB failover、expired link 各自的触发、恢复和指标。</span></li></ul>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>算法 · Arrays &amp; Hashing</h2><p class="section-copy">Tag 不切换。三题结束后只记录四个字段。</p></div>
+      <table class="matrix"><tr><th>#</th><th>题目</th><th>留下的记录</th></tr><tr><td>1</td><td><a href="https://leetcode.com/problems/group-anagrams/">Group Anagrams</a></td><td>Pattern / Invariant / Bug / Complexity</td></tr><tr><td>2</td><td><a href="https://leetcode.com/problems/top-k-frequent-elements/">Top K Frequent Elements</a></td><td>Pattern / Invariant / Bug / Complexity</td></tr><tr><td>3</td><td><a href="https://leetcode.com/problems/two-sum/">Two Sum · 限时复刷</a></td><td>Pattern / Invariant / Bug / Complexity</td></tr></table>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>晚上</h2></div>
+      <div class="callout green">打开英文 Recall PDF，先闭卷讲 8 分钟，再只修正遗漏，不逐句背稿。</div>
+    </section>
+    <footer class="footer"><a href="../week1-action-guide.html">返回第 1 周总览</a></footer>
+  <section id="local-materials" style="margin:40px auto;max-width:1080px;padding:18px 22px;border:1px solid #d9dce1;background:#f7f8fa;color:#30343b;font:14px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif"><strong>Local study materials</strong><br>Detailed lecture notes, audio, recall scripts, PDFs, Staff Q&amp;A, and mock packs are archived locally and are intentionally not published on this site.</section></main>
+</body>
+</html>

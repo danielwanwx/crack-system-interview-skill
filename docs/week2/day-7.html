@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Week 2 Day 7 - 证据验收、弱项修复与周级综合</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <nav class="shell nav">
+      <a class="brand" href="../system-design-12-week-master-plan.html"><span class="mark"></span> WEEK 02 · READ SYSTEMS</a>
+      <div class="navlinks">
+        <a href="../system-design-12-week-master-plan.html">12 周路线</a>
+        <a href="../week2-action-guide.html">第 2 周</a>
+        <a href="#local-materials">深度讲义</a>
+        <a href="#local-materials">Staff Q&amp;A</a>
+        <a href="#local-materials">Live Mock</a>
+        <a href="#local-materials">验收</a>
+      </div>
+    </nav>
+  </header>
+  <main class="shell">
+
+    <section class="day-hero">
+      <div class="eyebrow">SUN · 08.09 · WEEK 02 · DAY 7</div>
+      <h1>证据验收、弱项修复与周级综合</h1>
+      <p class="deck">闭卷复现主线，修复唯一 carry-over，完成证据评分与完整 heading disposition 核对。到此停止，不预读下一周。</p>
+      <div class="day-meta"><span>08:30 wake</span><span>08:50—10:55 system design</span><span>14:30—16:15 + 20:30—21:15</span></div>
+      <div class="pill-row"><a href="day-6.html">上一天</a><a href="#local-materials">验收</a><a class="pill" href="#local-materials">讲义</a><a class="pill" href="#local-materials">证据表</a></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>学习源包</h2><p class="section-copy">按顺序打开。Hello Interview 与 DDIA 链接都直达今天需要的 live subsection，不做整章地毯式阅读。</p></div>
+      <div class="ops-grid"><section>
+        <div class="source-block">
+          <div class="source-title"><a href="#local-materials">Week 2 · Evidence Scorecard</a><span>EXACT SECTION</span></div>
+          <div class="proof">每项只接受白板、录音 timestamp、decision note 或复测记录。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="#local-materials">Week 2 · Deep Lecture</a><span>EXACT SECTION</span></div>
+          <div class="proof">只回看昨天证据不足的段落，不被动重读全部内容。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/distributed-cache#staff">Distributed Cache · Staff</a><span>EXACT SECTION</span></div>
+          <div class="proof">用主动识别风险、量化 trigger 和 operational recovery 校准 Staff 表达。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/dropbox#staff">Dropbox · Staff+</a><span>EXACT SECTION</span></div>
+          <div class="proof">确认应用迁移能够主动推进 large file、sync、security 的关键取舍。</div>
+        </div></section><section>
+        <h2>今日验收</h2>
+        <ul class="compact-list"><li><span class="box"></span><span>Distributed Cache 能在 8 分钟无稿讲到两项 deep dive、failure 与 metrics。</span></li><li><span class="box"></span><span>Dropbox 能在 5 分钟讲清 upload commit、resume、sync 与 conflict，且不抢占基础设施主线。</span></li><li><span class="box"></span><span>所有 live Hello Interview headings 有明确 disposition；所有 DDIA 阅读都由具体项目问题触发。</span></li></ul>
+        <div class="callout"><strong>必须产出：</strong>Week 2 one-page synthesis + scorecard evidence + 一条最多可携带的修复项。</div>
+      </section></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>08:50—10:55</h2><p class="section-copy">系统设计块保持完整。最后十分钟永远用于无稿 close，防止学习退化为被动阅读。</p></div>
+      <table class="matrix"><tr><th>时间</th><th>今日时间表</th></tr><tr><td><strong>08:50—09:20</strong></td><td>闭卷重画 Distributed Cache：单节点、routing、replication、partitioning、hot key、failure。</td></tr><tr><td><strong>09:20—09:45</strong></td><td>重答昨天最低证据维度；与原录音 timestamp 对照并标记改进。</td></tr><tr><td><strong>09:45—10:10</strong></td><td>闭卷画 Dropbox application path：blob/metadata、upload commit、cursor sync、conflict copy。</td></tr><tr><td><strong>10:10—10:30</strong></td><td>核对两份完整 live heading inventory：每个 heading 都有 reading/deep dive/level disposition 与直接链接。</td></tr><tr><td><strong>10:30—10:45</strong></td><td>完成 scorecard，只保留一个仍未通过的 carry-over；写 trigger 与下次复测题。</td></tr><tr><td><strong>10:45—10:55</strong></td><td>最终口述：三分钟基础设施结论 + 两分钟 Dropbox 迁移结论。</td></tr></table>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>算法模块</h2><p class="section-copy">NeetCode Tag：Two Pointers。三个 slot 全在同一连续 tag；每题记录 Pattern / Invariant / Bug / Complexity。</p></div>
+      <div class="algo-pack">
+        <div class="tag-row"><span>14:30—16:15</span><span>NeetCode Tag · Two Pointers</span><span>3 required slots</span></div>
+        <table class="matrix"><tr><th>#</th><th>题目</th><th>当日目标</th><th>时间</th></tr><tr data-neetcode-slot="true"><td>1</td><td><a href="https://neetcode.io/problems/is-palindrome">Valid Palindrome</a></td><td>Final · 10 分钟，零边界错误。</td><td>14:30—15:05</td></tr><tr data-neetcode-slot="true"><td>2</td><td><a href="https://neetcode.io/problems/two-integer-sum-ii">Two Sum II</a></td><td>Final · 15 分钟，口述单调性证明。</td><td>15:05—15:40</td></tr><tr data-neetcode-slot="true"><td>3</td><td><a href="https://neetcode.io/problems/three-integer-sum">3Sum</a></td><td>Final · 25 分钟，口述排序、双指针、去重与复杂度。</td><td>15:40—16:15</td></tr></table>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>20:30—21:15</h2><p class="section-copy">口述块只接受录音、实际回答或 repair 证据，不用“看完了”作为完成。</p></div>
+      <div class="callout green">20:30—21:15 · 最终英文 oral + repair。保存录音与评分证据；Week 2 在 writer gate 停止，不开始任何后续周内容。</div>
+    </section>
+    <footer class="footer"><a href="../week2-action-guide.html">返回第 2 周总览</a> · Day 7 只在 evidence gate 通过后结束。</footer>
+  <section id="local-materials" style="margin:40px auto;max-width:1080px;padding:18px 22px;border:1px solid #d9dce1;background:#f7f8fa;color:#30343b;font:14px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif"><strong>Local study materials</strong><br>Detailed lecture notes, audio, recall scripts, PDFs, Staff Q&amp;A, and mock packs are archived locally and are intentionally not published on this site.</section></main>
+</body>
+</html>

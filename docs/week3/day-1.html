@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第 3 周 Day 1 - FB News Feed：先盲做需求/API/HLD，再读 live 目录</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css" data-week='3'>
+</head>
+<body>
+
+  <header class="topbar">
+    <nav class="shell nav">
+      <a class="brand" href="../system-design-12-week-master-plan.html"><span class="mark"></span> WEEK 03 · FEED & REALTIME</a>
+      <div class="navlinks">
+        <a href="../week3-action-guide.html">第 3 周</a>
+        <a href="#local-materials">深度讲义</a>
+        <a href="#local-materials">Staff Q&amp;A</a>
+        <a href="#local-materials">Live Mock</a>
+        <a href="#local-materials">验收</a>
+      </div>
+    </nav>
+  </header>
+  <main class="shell">
+
+    <section class="hero">
+      <div>
+        <div class="eyebrow">WEEK 03 · 2026-08-10 · MON</div>
+        <h1>FB News Feed：先盲做需求/API/HLD，再读 live 目录</h1>
+        <p class="deck">把 feed 讲成“事实状态 + 派生 timeline”的问题，而不是一上来堆 cache、queue、ranking。</p>
+        <div class="pill-row">
+          <a class="pill" href="../week3-action-guide.html">周指南</a>
+          <a class="pill" href="#local-materials">讲义</a>
+          <a class="pill" href="#local-materials">Q&amp;A</a>
+          <a class="pill" href="#local-materials">验收</a>
+        </div>
+      </div>
+      <aside class="hero-panel">
+        <div class="metric"><b>08:30</b><span>wake</span></div>
+        <div class="metric"><b>125m</b><span>system design</span></div>
+        <div class="metric"><b>3</b><span>Stack problems</span></div>
+        <div class="metric"><b>45m</b><span>oral block</span></div>
+      </aside>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>今日固定时间表</h2><p class="section-copy">08:30 wake 只保留起床；学习从 08:50 开始。三块窗口不互相挤占。</p></div>
+      <table class="rubric">
+        <tr><th>08:30 wake</th><td>起床、早餐、准备白板；不安排预读或算法。</td></tr>
+        <tr><th>08:50—09:10</th><td><b>08:50—10:55 system design</b><br>闭卷收敛 — 只写 FR/NFR/out-of-scope 和三条 API，拒绝先画组件。</td></tr><tr><th>09:10—09:45</th><td><b>08:50—10:55 system design</b><br>精确原文 — 读 News Feed requirements/entity/API/HLD 到四个 HLD 子路径。</td></tr><tr><th>09:45—10:25</th><td><b>08:50—10:55 system design</b><br>白板主路径 — 画 create post → durable post → fan-out event → feed read；补 cursor pagination。</td></tr><tr><th>10:25—10:55</th><td><b>08:50—10:55 system design</b><br>DDIA 决策卡 — 把 read-your-writes 与 monotonic reads 绑定到作者刷新和分页 session。</td></tr>
+        <tr><th>14:30—16:15</th><td><b>NeetCode Tag · Stack</b><br>三道题在下方独立算法表执行，避免系统设计表格挤压算法细节。</td></tr>
+        <tr><th>20:30—21:15</th><td>20:30—21:15 口述 News Feed 0—15 分钟：需求、API、数据模型、HLD；录音后写一个 staleness repair sentence。</td></tr>
+      </table>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>算法模块</h2><p class="section-copy">连续单一 NeetCode Stack tag；每天 3 题，14:30—16:15 完成。</p></div>
+      <table class="matrix"><tr><th>#</th><th>Problem</th><th>Invariant focus</th><th>执行</th></tr><tr data-neetcode-slot="true"><td>1</td><td><a href="https://neetcode.io/problems/validate-parentheses">Valid Parentheses</a></td><td>栈语义：每一步维护 unmatched opener 集合。</td><td>35 分钟限时 + 5 分钟 invariant/bug risk</td></tr>
+<tr data-neetcode-slot="true"><td>2</td><td><a href="https://neetcode.io/problems/minimum-stack">Min Stack</a></td><td>双栈/压缩最小值：查询不扫描历史。</td><td>35 分钟限时 + 5 分钟 invariant/bug risk</td></tr>
+<tr data-neetcode-slot="true"><td>3</td><td><a href="https://neetcode.io/problems/evaluate-reverse-polish-notation">Evaluate Reverse Polish Notation</a></td><td>表达式归约：操作数顺序是 bug 高发点。</td><td>35 分钟限时 + 5 分钟 invariant/bug risk</td></tr></table>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>闭卷起手</h2><p class="section-copy">先暴露自己的当前模型，再用 live headings 修正。</p></div>
+      <div class="callout"><p>20 分钟闭卷画：createPost、follow、getFeed(cursor)；写出 Post store、Follow graph、Feed table 各自谁拥有事实。</p></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>Hello Interview 精确目录</h2><p class="section-copy">day 页面必须链接到具体 section anchors；周级 overview 不放小节链接。</p></div>
+      <table class="matrix reading-table"><tr><th>项目</th><th>精确 section anchor</th><th>Disposition</th><th>今天怎么用</th></tr><tr><td>FB News Feed</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed#understanding-the-problem">Understanding the Problem</a></td><td>required reading</td><td>clarify product surface and feed semantics</td></tr>
+<tr><td>FB News Feed</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed#functional-requirements">Functional Requirements</a></td><td>required reading</td><td>post, follow/friend, view feed, page feed</td></tr>
+<tr><td>FB News Feed</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed#non-functional-requirements">Non-Functional Requirements</a></td><td>required reading</td><td>availability, bounded staleness, latency and large social graph</td></tr>
+<tr><td>FB News Feed</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed#the-set-up">The Set Up</a></td><td>required reading</td><td>candidate framing before entities</td></tr>
+<tr><td>FB News Feed</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed#planning-the-approach">Planning the Approach</a></td><td>required reading</td><td>requirements → entities → API → HLD sequencing</td></tr>
+<tr><td>FB News Feed</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed#defining-the-core-entities">Defining the Core Entities</a></td><td>required reading</td><td>User, Post, Follow, FeedItem</td></tr>
+<tr><td>FB News Feed</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed#api-or-system-interface">API or System Interface</a></td><td>required reading</td><td>create post, follow/unfollow, get feed cursor</td></tr>
+<tr><td>FB News Feed</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed#high-level-design">High-Level Design</a></td><td>required reading</td><td>read path and write path before deep dives</td></tr>
+<tr><td>FB News Feed</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed#1-users-should-be-able-to-create-posts">1. Users should be able to create posts.</a></td><td>required reading</td><td>write source-of-record post and emit fan-out event</td></tr>
+<tr><td>FB News Feed</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed#2-users-should-be-able-to-friend-follow-people">2. Users should be able to friend/follow people.</a></td><td>required reading</td><td>follow graph mutation and query access</td></tr>
+<tr><td>FB News Feed</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed#3-users-should-be-able-to-view-a-feed-of-posts-from-people-they-follow">3. Users should be able to view a feed of posts from people they follow.</a></td><td>required reading</td><td>feed read API and derived timeline</td></tr>
+<tr><td>FB News Feed</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed#4-users-should-be-able-to-page-through-their-feed">4. Users should be able to page through their feed.</a></td><td>required reading</td><td>cursor semantics and stable ordering</td></tr></table>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>DDIA 精确决策卡</h2><p class="section-copy">只读能改变今天设计决定的小节。</p></div>
+      <table class="matrix"><tr><th>项目问题</th><th>精确 DDIA subsection</th><th>改变的系统决定</th></tr><tr><td>News Feed 写入成功后，作者自己刷新 feed 为什么不能丢自己的新帖？</td><td><a href="https://ddia.vonng.com/ch6/#sec_replication_ryw">Ch6 · 读己之写</a></td><td>作者视角可走 read-your-writes path：新帖由 Post store 确认后直接合并进作者 feed，不能只等异步 fan-out。</td></tr>
+<tr><td>分页时读副本落后会造成什么体验问题？</td><td><a href="https://ddia.vonng.com/ch6/#sec_replication_monotonic_reads">Ch6 · 单调读</a></td><td>同一 feed session 绑定 cursor/version，避免第 2 页看见比第 1 页更旧的世界。</td></tr></table>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>今日产出与修复规则</h2></div>
+      <table class="rubric">
+        <tr><th>课程角色</th><td>CORE · requirements/API/data model/HLD</td></tr>
+        <tr><th>必须交付</th><td>一页 News Feed HLD：Post/Follow 权威状态、FeedItem 派生状态、cursor 语义、作者读己之写路径。</td></tr>
+        <tr><th>修复规则</th><td>如果 feed table 被描述成 source of truth，重画从 Post+Follow 重建 feed 的 replay path。</td></tr>
+      </table>
+    </section>
+    <footer class="footer">Day 1 只推进 Week 3；不打开 Week 4。完成后把证据写入 <a href="#local-materials">scorecard</a>。</footer>
+  <section id="local-materials" style="margin:40px auto;max-width:1080px;padding:18px 22px;border:1px solid #d9dce1;background:#f7f8fa;color:#30343b;font:14px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif"><strong>Local study materials</strong><br>Detailed lecture notes, audio, recall scripts, PDFs, Staff Q&amp;A, and mock packs are archived locally and are intentionally not published on this site.</section></main>
+</body>
+</html>

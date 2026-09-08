@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Week 2 Day 3 - Dropbox：把 blob path 与 metadata path 分开</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <nav class="shell nav">
+      <a class="brand" href="../system-design-12-week-master-plan.html"><span class="mark"></span> WEEK 02 · READ SYSTEMS</a>
+      <div class="navlinks">
+        <a href="../system-design-12-week-master-plan.html">12 周路线</a>
+        <a href="../week2-action-guide.html">第 2 周</a>
+        <a href="#local-materials">深度讲义</a>
+        <a href="#local-materials">Staff Q&amp;A</a>
+        <a href="#local-materials">Live Mock</a>
+        <a href="#local-materials">验收</a>
+      </div>
+    </nav>
+  </header>
+  <main class="shell">
+
+    <section class="day-hero">
+      <div class="eyebrow">WED · 08.05 · WEEK 02 · DAY 3</div>
+      <h1>Dropbox：把 blob path 与 metadata path 分开</h1>
+      <p class="deck">Dropbox 是 full-coverage application case。完整读到 HLD，用它验证缓存、派生视图、blob/metadata 分离、download CDN 与 sync cursor，不把它升级为第二根架构主柱。</p>
+      <div class="day-meta"><span>08:30 wake</span><span>08:50—10:55 system design</span><span>14:30—16:15 + 20:30—21:15</span></div>
+      <div class="pill-row"><a href="day-2.html">上一天</a><a href="day-4.html">下一天</a><a class="pill" href="#local-materials">讲义</a><a class="pill" href="#local-materials">证据表</a></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>学习源包</h2><p class="section-copy">按顺序打开。Hello Interview 与 DDIA 链接都直达今天需要的 live subsection，不做整章地毯式阅读。</p></div>
+      <div class="ops-grid"><section>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/dropbox#understanding-the-problem">Dropbox · Understanding the Problem</a><span>EXACT SECTION</span></div>
+          <div class="proof">required reading；完成后在白板或口述中留下对应证据。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/dropbox#functional-requirements">Dropbox · Functional Requirements</a><span>EXACT SECTION</span></div>
+          <div class="proof">required reading；完成后在白板或口述中留下对应证据。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/dropbox#non-functional-requirements">Dropbox · Non-Functional Requirements</a><span>EXACT SECTION</span></div>
+          <div class="proof">required reading；完成后在白板或口述中留下对应证据。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/dropbox#the-set-up">Dropbox · The Set Up</a><span>EXACT SECTION</span></div>
+          <div class="proof">required reading；完成后在白板或口述中留下对应证据。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/dropbox#planning-the-approach">Dropbox · Planning the Approach</a><span>EXACT SECTION</span></div>
+          <div class="proof">required reading；完成后在白板或口述中留下对应证据。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/dropbox#defining-the-core-entities">Dropbox · Defining the Core Entities</a><span>EXACT SECTION</span></div>
+          <div class="proof">required reading；完成后在白板或口述中留下对应证据。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/dropbox#api-or-system-interface">Dropbox · API or System Interface</a><span>EXACT SECTION</span></div>
+          <div class="proof">required reading；完成后在白板或口述中留下对应证据。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/dropbox#high-level-design">Dropbox · High-Level Design</a><span>EXACT SECTION</span></div>
+          <div class="proof">required reading；完成后在白板或口述中留下对应证据。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/dropbox#1-users-should-be-able-to-upload-a-file-from-any-device">Dropbox · 1) Users should be able to upload a file from any device</a><span>EXACT SECTION</span></div>
+          <div class="proof">required reading；完成后在白板或口述中留下对应证据。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/dropbox#2-users-should-be-able-to-download-a-file-from-any-device">Dropbox · 2) Users should be able to download a file from any device</a><span>EXACT SECTION</span></div>
+          <div class="proof">required reading；完成后在白板或口述中留下对应证据。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/dropbox#3-users-should-be-able-to-share-a-file-with-other-users">Dropbox · 3) Users should be able to share a file with other users</a><span>EXACT SECTION</span></div>
+          <div class="proof">required reading；完成后在白板或口述中留下对应证据。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/dropbox#4-users-can-automatically-sync-files-across-devices">Dropbox · 4) Users can automatically sync files across devices</a><span>EXACT SECTION</span></div>
+          <div class="proof">required reading；完成后在白板或口述中留下对应证据。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/dropbox#tying-it-all-together">Dropbox · Tying it all together</a><span>EXACT SECTION</span></div>
+          <div class="proof">required reading；完成后在白板或口述中留下对应证据。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://ddia.vonng.com/ch4/#sec_storage_index_multicolumn">DDIA Ch4 · 多列索引与二级索引</a><span>EXACT SECTION</span></div>
+          <div class="proof">为 owner files 与 shared files 画两条可查询路径，禁止扫描 sharelist。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/patterns/scaling-reads#read-replicas">Hello Interview · Scaling Reads / Read Replicas</a><span>EXACT SECTION</span></div>
+          <div class="proof">解释 metadata read replica 能做什么，以及 replica lag 对刚分享文件的影响。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/patterns/scaling-reads#cdn-and-edge-caching">Hello Interview · Scaling Reads / CDN and Edge Caching</a><span>EXACT SECTION</span></div>
+          <div class="proof">把 CDN 定义为 blob 的派生读路径，不让它拥有 ACL 或文件版本事实。</div>
+        </div></section><section>
+        <h2>今日验收</h2>
+        <ul class="compact-list"><li><span class="box"></span><span>blob bytes 不穿过 application server；服务端只签发有限权限、有限时间、限定 object key 的 URL。</span></li><li><span class="box"></span><span>metadata.status=uploaded 之前，文件不能进入可见目录；orphan blob 与 orphan metadata 都有回收路径。</span></li><li><span class="box"></span><span>notification 只负责低延迟唤醒；丢通知后 cursor pull 仍能修复。</span></li></ul>
+        <div class="callout"><strong>必须产出：</strong>Dropbox 控制面/数据面图 + metadata schema + upload/download/share/sync 四条时序。</div>
+      </section></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>08:50—10:55</h2><p class="section-copy">系统设计块保持完整。最后十分钟永远用于无稿 close，防止学习退化为被动阅读。</p></div>
+      <table class="matrix"><tr><th>时间</th><th>今日时间表</th></tr><tr><td><strong>08:50—09:00</strong></td><td>写一句迁移目标：用缓存基础设施思维审查文件系统的两条数据路径。</td></tr><tr><td><strong>09:00—09:25</strong></td><td>闭卷画 control plane / data plane：metadata、ACL、blob、change log、CDN 各归谁。</td></tr><tr><td><strong>09:25—09:50</strong></td><td>读问题、实体、API；把朴素 POST /files 改写为可演进接口。</td></tr><tr><td><strong>09:50—10:20</strong></td><td>读 upload/download 的 Bad → Good → Great；画 direct-to-blob signed path。</td></tr><tr><td><strong>10:20—10:35</strong></td><td>读 share 与 sync；建立 SharedFiles 反向关系、change cursor 和 notification 的边界。</td></tr><tr><td><strong>10:35—10:45</strong></td><td>读 tying together；闭卷重画一遍，只保留权威状态和关键箭头。</td></tr><tr><td><strong>10:45—10:55</strong></td><td>口述 upload commit invariant：用户何时才能看到 uploaded。</td></tr></table>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>算法模块</h2><p class="section-copy">NeetCode Tag：Two Pointers。三个 slot 全在同一连续 tag；每题记录 Pattern / Invariant / Bug / Complexity。</p></div>
+      <div class="algo-pack">
+        <div class="tag-row"><span>14:30—16:15</span><span>NeetCode Tag · Two Pointers</span><span>3 required slots</span></div>
+        <table class="matrix"><tr><th>#</th><th>题目</th><th>当日目标</th><th>时间</th></tr><tr data-neetcode-slot="true"><td>1</td><td><a href="https://neetcode.io/problems/three-integer-sum">3Sum</a></td><td>复刷 · 去重逻辑写在正确层级。</td><td>14:30—15:05</td></tr><tr data-neetcode-slot="true"><td>2</td><td><a href="https://neetcode.io/problems/two-integer-sum-ii">Two Sum II</a></td><td>复刷 · 解释单调性而非背模板。</td><td>15:05—15:40</td></tr><tr data-neetcode-slot="true"><td>3</td><td><a href="https://neetcode.io/problems/max-water-container">Container With Most Water</a></td><td>复刷 · 20 分钟内写完并证明移动规则。</td><td>15:40—16:15</td></tr></table>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>20:30—21:15</h2><p class="section-copy">口述块只接受录音、实际回答或 repair 证据，不用“看完了”作为完成。</p></div>
+      <div class="callout green">20:30—21:15 · 英文 10 分钟 Dropbox recall：blob/metadata split → direct upload → change cursor；最后明确它是应用迁移题，不是本周第二架构主线。</div>
+    </section>
+    <footer class="footer"><a href="../week2-action-guide.html">返回第 2 周总览</a> · Day 3 只在 evidence gate 通过后结束。</footer>
+  <section id="local-materials" style="margin:40px auto;max-width:1080px;padding:18px 22px;border:1px solid #d9dce1;background:#f7f8fa;color:#30343b;font:14px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif"><strong>Local study materials</strong><br>Detailed lecture notes, audio, recall scripts, PDFs, Staff Q&amp;A, and mock packs are archived locally and are intentionally not published on this site.</section></main>
+</body>
+</html>

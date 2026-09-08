@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第 4 周 Day 2 - WhatsApp：多设备、连接失败、Redis 丢投递、乱序与 last seen</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="topbar"><nav class="shell nav">
+    <a class="brand" href="../week4-action-guide.html"><span class="mark"></span> WEEK 04 · MESSAGING & COLLABORATION</a>
+    <div class="navlinks"><a href="../week4-action-guide.html">第 4 周</a><a href="#local-materials">深度讲义</a><a href="#local-materials">Staff Q&amp;A</a><a href="#local-materials">Live Mock</a><a href="#local-materials">验收</a></div>
+  </nav></header>
+  <main class="shell">
+
+    <section class="hero">
+      <div>
+        <div class="eyebrow">WEEK 04 · 2026-08-18 · TUE</div>
+        <h1>WhatsApp：多设备、连接失败、Redis 丢投递、乱序与 last seen</h1>
+        <p class="deck">完整覆盖 WhatsApp deep dives：billions connections、partition by chat/user、multi-client、WebSocket failure、Redis delivery failure、out-of-order、last seen。</p>
+        <div class="pill-row"><a class="pill" href="../week4-action-guide.html">周指南</a><a class="pill" href="#local-materials">讲义</a><a class="pill" href="#local-materials">Q&amp;A</a><a class="pill" href="#local-materials">验收</a></div>
+      </div>
+      <aside class="hero-panel"><div class="metric"><b>08:30</b><span>wake</span></div><div class="metric"><b>125m</b><span>system design</span></div><div class="metric"><b>3</b><span>Sliding Window</span></div><div class="metric"><b>45m</b><span>recall/mock</span></div></aside>
+    </section>
+    <section class="section">
+      <div class="section-head"><h2>今日固定时间表</h2><p class="section-copy">08:30 wake 只保留起床；学习从 08:50 开始。三块窗口不互相挤占。</p></div>
+      <table class="rubric">
+        <tr><th>08:30 wake</th><td>起床、早餐、准备白板；不安排预读或算法。</td></tr>
+        <tr><th>08:50—09:15</th><td><b>08:50—10:55 system design</b><br>Bad/Good/Great 拆解 — Bad: socket 转发即真相；Good: durable log + pub/sub；Great: per-device cursor + fencing + idempotent replay。</td></tr><tr><th>09:15—09:50</th><td><b>08:50—10:55 system design</b><br>精确原文 — 读 WhatsApp potential deep dives、H4 partition subheading、levels 和 references。</td></tr><tr><th>09:50—10:25</th><td><b>08:50—10:55 system design</b><br>故障时序 — 连接断开、Redis 丢消息、重复 ACK、乱序到达、last seen 时钟偏差。</td></tr><tr><th>10:25—10:55</th><td><b>08:50—10:55 system design</b><br>恢复和指标 — 补 reconnect gap、delivery lag、duplicate rate、zombie owner rejection、presence freshness。</td></tr>
+        <tr><th>14:30—16:15</th><td><b>NeetCode Tag · Sliding Window</b><br>三道题在下方独立算法表执行。</td></tr>
+        <tr><th>20:30—21:15</th><td>20:30—21:15 Staff 追问：multi-device、connection owner pause、out-of-order messages、last seen freshness。</td></tr>
+      </table>
+    </section>
+    <section class="section"><div class="section-head"><h2>算法模块</h2><p class="section-copy">连续单一 NeetCode Sliding Window tag；每天 3 个 NEW slot，每题 30 分钟作答 + 5 分钟证据，正好 105 分钟。每天 timed review = 0，满足不超过 1。</p></div><table class="matrix algorithm-table"><tr><th>#</th><th>Problem / mode</th><th>Pattern</th><th>Invariant</th><th>Bug risk</th><th>Time</th><th>Space</th></tr><tr data-neetcode-slot="true" data-mode="NEW" data-minutes="35"><td data-label="Slot">4</td><td data-label="Problem / mode"><a href="https://neetcode.io/problems/minimum-difference-between-highest-and-lowest-of-k-scores/question">Minimum Difference Between Highest and Lowest of K Scores</a><br><span class="evidence-chip">NEW · 30m solve + 5m evidence</span></td><td data-label="Pattern">排序后固定长度窗口</td><td data-label="Invariant">排序后最优 k 元组必为连续窗口。</td><td data-label="Bug risk">窗口端点相差 k-1；k=1。</td><td data-label="Time">O(n log n)</td><td data-label="Space">O(n) sort-dependent</td></tr>
+<tr data-neetcode-slot="true" data-mode="NEW" data-minutes="35"><td data-label="Slot">5</td><td data-label="Problem / mode"><a href="https://neetcode.io/problems/number-of-sub-arrays-of-size-k-and-average-greater-than-or-equal-to-threshold/question">Subarrays of Size K and Average &gt;= Threshold</a><br><span class="evidence-chip">NEW · 30m solve + 5m evidence</span></td><td data-label="Pattern">固定长度 rolling sum</td><td data-label="Invariant">每次判定前窗口恰有 k 项。</td><td data-label="Bug risk">浮点平均误差；改比 sum &gt;= k*threshold。</td><td data-label="Time">O(n)</td><td data-label="Space">O(1)</td></tr>
+<tr data-neetcode-slot="true" data-mode="NEW" data-minutes="35"><td data-label="Slot">6</td><td data-label="Problem / mode"><a href="https://neetcode.io/problems/grumpy-bookstore-owner/question">Grumpy Bookstore Owner</a><br><span class="evidence-chip">NEW · 30m solve + 5m evidence</span></td><td data-label="Pattern">固定增益窗口</td><td data-label="Invariant">baseline satisfaction 与窗口额外收益不重算。</td><td data-label="Bug risk">把本来满意客户重复计入增益。</td><td data-label="Time">O(n)</td><td data-label="Space">O(1)</td></tr></table></section>
+    <section class="section"><div class="section-head"><h2>闭卷起手</h2></div><div class="callout"><p>15 分钟闭卷回答：WebSocket gateway、Redis/pubsub、durable message store 谁拥有事实？</p></div></section>
+    <section class="section"><div class="section-head"><h2>Hello Interview 精确目录</h2><p class="section-copy">day 页面使用 canonical data-toc-id/H4 anchors；周级 overview 不放小节链接。</p></div><table class="matrix reading-table"><tr><th>项目</th><th>精确 canonical section</th><th>Disposition</th><th>今天怎么用</th></tr><tr><td>WhatsApp</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/whatsapp#potential-deep-dives">Potential Deep Dives</a></td><td>deep dive</td><td>move from HLD to scale/failure</td></tr>
+<tr><td>WhatsApp</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/whatsapp#1-how-can-we-handle-billions-of-simultaneous-users">1) How can we handle billions of simultaneous users?</a></td><td>deep dive</td><td>connection ownership and partitioning</td></tr>
+<tr><td>WhatsApp</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/whatsapp#should-we-partition-by-chat-or-by-user">Should we partition by chat or by user?</a></td><td>deep dive</td><td>H4 partitioning decision under connection scale</td></tr>
+<tr><td>WhatsApp</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/whatsapp#2-what-do-we-do-to-handle-multiple-clients-for-a-given-user">2) What do we do to handle multiple clients for a given user?</a></td><td>deep dive</td><td>per-device state and receipts</td></tr>
+<tr><td>WhatsApp</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/whatsapp#3-what-happens-if-the-websocket-connection-fails">3) What happens if the WebSocket connection fails?</a></td><td>deep dive</td><td>disconnect, reconnect, gap pull</td></tr>
+<tr><td>WhatsApp</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/whatsapp#4-what-happens-if-redis-fails-to-deliver-a-message">4) What happens if Redis fails to deliver a message?</a></td><td>deep dive</td><td>pub/sub is delivery hint, durable log is truth</td></tr>
+<tr><td>WhatsApp</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/whatsapp#5-how-do-we-handle-out-of-order-messages">5) How do we handle out-of-order messages?</a></td><td>deep dive</td><td>conversation sequence and client buffering</td></tr>
+<tr><td>WhatsApp</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/whatsapp#6-how-can-we-handle-a-last-seen-functionality">6) How can we handle a &quot;last seen&quot; functionality?</a></td><td>deep dive</td><td>soft presence and clock caveats</td></tr>
+<tr><td>WhatsApp</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/whatsapp#what-is-expected-at-each-level">What is Expected at Each Level?</a></td><td>level expectation</td><td>calibrate interview depth</td></tr>
+<tr><td>WhatsApp</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/whatsapp#mid-level">Mid-level</a></td><td>level expectation</td><td>happy path</td></tr>
+<tr><td>WhatsApp</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/whatsapp#senior">Senior</a></td><td>level expectation</td><td>scale, ordering, failure</td></tr>
+<tr><td>WhatsApp</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/whatsapp#staff">Staff+</a></td><td>level expectation</td><td>operational semantics and edge cases</td></tr>
+<tr><td>WhatsApp</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/whatsapp#references">References</a></td><td>reference metadata</td><td>recorded but not scheduled as passive reading</td></tr></table></section>
+    <section class="section"><div class="section-head"><h2>DDIA 精确决策卡</h2><p class="section-copy">只读能改变今天设计决定的小节。</p></div><table class="matrix"><tr><th>项目问题</th><th>精确 DDIA subsection</th><th>改变的系统决定</th></tr><tr><td>last seen/presence 为什么不能作为强事实？</td><td><a href="https://ddia.vonng.com/ch9/#sec_distributed_clocks">Ch9 · 不可靠的时钟</a></td><td>presence 是软状态，使用 TTL 和服务端观测时间；不把客户端时钟当作真实在线/离线裁决。</td></tr>
+<tr><td>connection owner 暂停后又回来，如何防止僵尸连接继续写状态？</td><td><a href="https://ddia.vonng.com/ch9/#sec_distributed_fencing_tokens">Ch9 · 隔离僵尸进程和延迟请求</a></td><td>connection/session owner 带 fencing token；旧 owner 的延迟写入被拒绝。</td></tr></table></section>
+    <section class="section"><div class="section-head"><h2>本日项目 artifacts</h2><p class="section-copy">脚本、音频、PDF 与 mock evidence 直接从对应日打开。</p></div><div class="pill-row"><a class="pill" href="#local-materials">WhatsApp 中文完整讲稿</a> <a class="pill" href="#local-materials">WhatsApp 中文完整音频</a> <a class="pill" href="#local-materials">WhatsApp Senior+/Staff English recall</a> <a class="pill" href="#local-materials">WhatsApp printable recall PDF</a></div></section>
+    <section class="section"><div class="section-head"><h2>今日产出、修复与英语 recall</h2></div><table class="rubric"><tr><th>课程角色</th><td>CORE · all deep dives + Bad/Good/Great</td></tr><tr><th>必须交付</th><td>WhatsApp deep-dive matrix：connection scale/multi-device/disconnect/Redis/out-of-order/last-seen，各含 Bad-Good-Great、failure/recovery/metrics。</td></tr><tr><th>修复规则</th><td>如果答案只说“加 Kafka/Redis”，补 message sequence、device cursor、fencing token 和用户可见语义。</td></tr><tr><th>English recall</th><td><div class="english-recall">English recall: “The socket is a delivery channel; the durable message log is the source of truth.”</div></td></tr></table></section>
+    <footer class="footer">Day 2 只推进 Week 4；不打开 Week 5。完成后把证据写入 <a href="#local-materials">scorecard</a>。</footer>
+  <section id="local-materials" style="margin:40px auto;max-width:1080px;padding:18px 22px;border:1px solid #d9dce1;background:#f7f8fa;color:#30343b;font:14px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif"><strong>Local study materials</strong><br>Detailed lecture notes, audio, recall scripts, PDFs, Staff Q&amp;A, and mock packs are archived locally and are intentionally not published on this site.</section></main>
+</body>
+</html>

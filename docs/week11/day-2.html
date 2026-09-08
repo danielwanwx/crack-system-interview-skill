@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Week 11 Day 2</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body id="top">
+  <nav class="nav"><a class="brand" href="../week11-action-guide.html">Week 11 · Oct 5-11</a><div class="navlinks"><a href="../week11-action-guide.html">Week 11</a><a href="day-1.html">Day 1</a><a class="active" href="day-2.html">Day 2</a><a href="day-3.html">Day 3</a><a href="day-4.html">Day 4</a><a href="day-5.html">Day 5</a><a href="day-6.html">Day 6</a><a href="day-7.html">Day 7</a><a href="#local-materials">Lecture</a><a href="#local-materials">Staff Q&amp;A</a><a href="#local-materials">Mock</a><a href="#local-materials">Scorecard</a></div></nav>
+  <main>
+
+<section class="hero day-hero">
+  <p class="eyebrow">Day 2 · Tue 2026-10-06 · LeetCode FULL</p>
+  <h1>LeetCode Staff depth: sandbox isolation, budgets, queues, tests, and contest scale</h1>
+  <p class="lede">Week 11 trains two designs with one operating spine: admission, isolation, durable work, queue/backpressure, streaming/reconnect, derived state, evals, and recovery.</p>
+  <div class="hero-metrics">
+    <div class="metric"><strong>3</strong><span>contiguous 1-D DP slots</span></div>
+    <div class="metric"><strong>25-35m</strong><span>attempt + follow-up window</span></div>
+    <div class="metric"><strong>Staff</strong><span>invariant, failure, recovery, metrics</span></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head"><h2>Exact Daily Schedule</h2><p>No drift: the same six blocks run every day.</p></div>
+  <table class="schedule-table"><thead><tr><th>Time</th><th>Block</th><th>Contract</th></tr></thead><tbody><tr><td>08:50-09:00</td><td>Target</td><td>Write one Staff-level invariant and one failure window before reading.</td></tr><tr><td>09:00-10:05</td><td>Project design</td><td>25-35m LeetCode follow-up attempt, then isolation and contest deep dives.</td></tr><tr><td>10:05-10:45</td><td>DDIA / source grounding</td><td>Map the design to exact DDIA anchors and only direct applied-AI sources.</td></tr><tr><td>10:45-10:55</td><td>Spoken close</td><td>Record the architecture in English, then say the Chinese invariant aloud.</td></tr><tr><td>14:30-16:15</td><td>1-D DP contiguous block</td><td>Three NeetCode slots below; each slot is 25-35 minutes plus follow-up.</td></tr><tr><td>20:30-21:15</td><td>Recall / artifact</td><td>Run English Senior+/Staff recall and patch the scorecard evidence.</td></tr></tbody></table>
+</section>
+
+<section class="section">
+  <div class="section-head"><h2>Canonical Hello Interview Anchors</h2><p>Direct day-page anchors only. Source titles were verified live before build.</p></div>
+  <table class="reading-table"><thead><tr><th>Canonical anchor</th><th>Disposition</th><th>Design decision</th></tr></thead><tbody><tr><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/leetcode#potential-deep-dives">Potential Deep Dives</a></td><td>FULL deep dive</td><td>Lead follow-ups from risk, not from component inventory.</td></tr><tr><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/leetcode#1-how-will-the-system-support-isolation-and-security-when-running-user-code">How will the system support isolation and security when running user code?</a></td><td>FULL deep dive</td><td>Sandbox, cgroup, seccomp, filesystem, network, and deadline budgets are the design center.</td></tr><tr><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/leetcode#2-how-would-you-make-fetching-the-leaderboard-more-efficient">How would you make fetching the leaderboard more efficient?</a></td><td>FULL deep dive</td><td>Maintain a scored, versioned top-K projection; recompute on dispute.</td></tr><tr><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/leetcode#3-how-would-the-system-scale-to-support-competitions-with-100-000-users">How would the system scale to support competitions with 100,000 users?</a></td><td>FULL deep dive</td><td>Shard contest queues and protect runner pools with admission control.</td></tr><tr><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/leetcode#4-how-would-the-system-handle-running-test-cases">How would the system handle running test cases?</a></td><td>FULL deep dive</td><td>Treat each test batch as an attempt with deterministic inputs and bounded outputs.</td></tr><tr><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/leetcode#final-design">Final Design</a></td><td>FULL synthesis</td><td>Close with a dataflow that preserves state after retries and crashes.</td></tr><tr><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/leetcode#what-is-expected-at-each-level">What is Expected at Each Level</a></td><td>FULL bar</td><td>Convert level expectations into answer depth.</td></tr><tr><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/leetcode#mid-level">Mid-Level</a></td><td>FULL bar</td><td>Mid-level must produce a coherent baseline.</td></tr><tr><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/leetcode#senior">Senior</a></td><td>FULL bar</td><td>Senior owns isolation, queues, and scale trade-offs.</td></tr><tr><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/leetcode#staff">Staff</a></td><td>FULL bar</td><td>Staff anticipates adversarial code, uncertain execution, and operational recovery.</td></tr></tbody></table>
+</section>
+
+<section class="section">
+  <div class="section-head"><h2>Exact DDIA Mapping</h2><p>Only Ch5, Ch9, and Ch13 sections are in scope.</p></div>
+  <table class="reading-table"><thead><tr><th>Chapter</th><th>Exact section</th><th>Interview use</th></tr></thead><tbody><tr><td>Ch9</td><td><a href="https://ddia.vonng.com/ch9/#sec_distributed_partial_failure">故障与部分失效</a></td><td>A running attempt may have succeeded, failed, or become unknowable until state is committed.</td></tr><tr><td>Ch9</td><td><a href="https://ddia.vonng.com/ch9/#sec_distributed_queueing">超时和无界延迟</a></td><td>Backpressure, deadlines, and admission are product behavior, not hidden implementation details.</td></tr><tr><td>Ch9</td><td><a href="https://ddia.vonng.com/ch9/#sec_distributed_fencing_tokens">隔离僵尸进程和延迟请求</a></td><td>Runner result writes carry lease or fencing tokens to reject old workers.</td></tr></tbody></table>
+</section>
+
+<section class="section">
+  <div class="section-head"><h2>Applied AI Source Gate</h2><p>First-party/original sources appear only when they change a serving, eval, security, or operating decision.</p></div>
+  <p class="note">No applied-AI source is introduced today unless it changes a concrete serving, eval, security, or operating decision.</p>
+</section>
+
+<section class="section">
+  <div class="section-head"><h2>21-Slot 1-D DP Runway</h2><p>Today is slot 4-6 of 21, contiguous across the week.</p></div>
+  <table class="algorithm-table"><thead><tr><th>Block</th><th>NeetCode problem</th><th>Mode</th><th>Invariant</th><th>25-35m follow-up</th><th>Complexity</th></tr></thead><tbody><tr data-neetcode-slot="true" data-minutes="35"><td data-label="Block"><span class="mock-clock">14:30-15:05</span></td><td data-label="Problem"><a href="https://neetcode.io/problems/house-robber-ii/question">House Robber II</a></td><td data-label="Mode">Circular split</td><td data-label="Invariant">Solve two linear ranges because first and last cannot both be chosen.</td><td data-label="Follow-up">Ask for n=1 and n=2 edge cases.</td><td data-label="Complexity">O(n) / O(1)</td></tr><tr data-neetcode-slot="true" data-minutes="35"><td data-label="Block"><span class="mock-clock">15:05-15:40</span></td><td data-label="Problem"><a href="https://neetcode.io/problems/longest-palindromic-substring/question">Longest Palindromic Substring</a></td><td data-label="Mode">Center expansion</td><td data-label="Invariant">Each answer expands around one or two centers; keep best interval.</td><td data-label="Follow-up">Ask when DP table is preferable.</td><td data-label="Complexity">O(n^2) / O(1)</td></tr><tr data-neetcode-slot="true" data-minutes="35"><td data-label="Block"><span class="mock-clock">15:40-16:15</span></td><td data-label="Problem"><a href="https://neetcode.io/problems/palindromic-substrings/question">Palindromic Substrings</a></td><td data-label="Mode">Count centers</td><td data-label="Invariant">Every center expansion contributes one substring per successful radius.</td><td data-label="Follow-up">Ask how to avoid duplicate counting.</td><td data-label="Complexity">O(n^2) / O(1)</td></tr></tbody></table>
+</section>
+
+<section class="section">
+  <div class="section-head"><h2>Artifacts And Recall</h2><p>Use these in the evening block and scorecard.</p></div>
+  <div class="asset-row"><a class="button" href="#local-materials">LeetCode Chinese explainer</a><a class="button" href="#local-materials">LeetCode Chinese audio</a><a class="button" href="#local-materials">LeetCode English recall outline</a></div>
+  <div class="english-recall">
+    <strong>Required spoken close:</strong> explain one invariant, one failure window, one recovery path, and one metric in English. Then restate the same design decision in Chinese without adding new components.
+  </div>
+</section>
+
+  <section id="local-materials" style="margin:40px auto;max-width:1080px;padding:18px 22px;border:1px solid #d9dce1;background:#f7f8fa;color:#30343b;font:14px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif"><strong>Local study materials</strong><br>Detailed lecture notes, audio, recall scripts, PDFs, Staff Q&amp;A, and mock packs are archived locally and are intentionally not published on this site.</section></main>
+</body>
+</html>

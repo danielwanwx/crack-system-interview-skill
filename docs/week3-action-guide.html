@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第 3 周行动指南 - Feed 与实时互动</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="week3/style.css">
+</head>
+<body>
+
+  <header class="topbar">
+    <nav class="shell nav">
+      <a class="brand" href="system-design-12-week-master-plan.html"><span class="mark"></span> WEEK 03 · FEED & REALTIME</a>
+      <div class="navlinks">
+        <a href="system-design-12-week-master-plan.html">12 周路线</a>
+        <a href="week3-action-guide.html">第 3 周</a>
+        <a href="#local-materials">深度讲义</a>
+        <a href="#local-materials">Staff Q&amp;A</a>
+        <a href="#local-materials">Live Mock</a>
+        <a href="#local-materials">验收</a>
+      </div>
+    </nav>
+  </header>
+  <main class="shell">
+
+    <section class="hero">
+      <div>
+        <div class="eyebrow">WEEK 03 · 2026.08.10—08.16 · WRITER GATE</div>
+        <h1>Feed 与实时互动</h1>
+        <p class="deck">本周只有三条线：FB News Feed 学派生 feed 与 fan-out；FB Live Comments 学 durable log + realtime delivery；Instagram 先盲做再迁移，专门暴露 media path 带来的新瓶颈。</p>
+        <div class="pill-row">
+          <a class="pill" href="#local-materials">中文深度讲义</a>
+          <a class="pill" href="#local-materials">Staff Q&amp;A</a>
+          <a class="pill" href="#local-materials">GPT Live Mock</a>
+          <a class="pill" href="#local-materials">证据验收</a>
+        </div>
+      </div>
+      <aside class="hero-panel">
+        <div class="metric"><b>2</b><span>CORE projects</span></div>
+        <div class="metric"><b>1</b><span>transfer project</span></div>
+        <div class="metric"><b>59</b><span>Hello headings</span></div>
+        <div class="metric"><b>21</b><span>Stack slots</span></div>
+      </aside>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>能力主线</h2><p class="section-copy">读扩展在 Week 2 已经接受；Week 3 只推进 feed 和 realtime：写入事实、派生状态、投递通道、断点恢复。</p></div>
+      <div class="grid-3">
+        <article class="tile"><div class="kicker">01 · FEED</div><h3>System of record vs derived timeline</h3><p>Post/Follow 是事实；Feed table 是可重建派生状态。面试要说清 replay、lag、dedupe 和 stale user semantics。</p></article>
+        <article class="tile"><div class="kicker">02 · FAN-OUT</div><h3>push/pull/hybrid 不是口号</h3><p>大量 followees 伤 read，大量 followers 伤 write，celebrity 需要 read-time merge；hot post cache 要和 mutable aggregates 分开。</p></article>
+        <article class="tile"><div class="kicker">03 · REALTIME</div><h3>Durable log + delivery channel</h3><p>评论事实在 log/store；SSE/WebSocket 只是投递。Last-Event-ID、offset、replay 和 backpressure 定义恢复窗口。</p></article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>项目角色</h2><p class="section-copy">周级目录只放项目首页链接，不放任何小节 fragment；具体 section anchors 在 day 页面和 production record 中核对。</p></div>
+      <div class="grid-3"><article class="tile"><div class="kicker">CORE · 20 verified headings</div>
+        <h3>FB News Feed</h3><p>核心项目，完整覆盖 requirements/API/data model/HLD/deep dives/Bad-Good-Great/failure/metrics。</p>
+        <p><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed">打开项目首页</a></p></article>
+<article class="tile"><div class="kicker">CORE · 21 verified headings</div>
+        <h3>FB Live Comments</h3><p>核心项目，完整覆盖 requirements/API/data model/HLD/deep dives/Bad-Good-Great/failure/metrics。</p>
+        <p><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-live-comments">打开项目首页</a></p></article>
+<article class="tile"><div class="kicker">TRANSFER · 18 verified headings</div>
+        <h3>Instagram</h3><p>迁移项目，必须先盲做，再用 live heading 校正复用和失效假设。</p>
+        <p><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/instagram">打开项目首页</a></p></article></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>DDIA 决策地图（无地毯式阅读）</h2><p class="section-copy">下面只列问题和 subsection 名称；具体 anchor URL 在 day 页面上打开并由外部 anchor checker 校验。</p></div>
+      <table class="matrix"><tr><th>日</th><th>项目问题</th><th>DDIA subsection</th><th>改变的决定</th></tr><tr><td>Day 1</td><td>News Feed 写入成功后，作者自己刷新 feed 为什么不能丢自己的新帖？</td><td>Ch6 · 读己之写</td><td>作者视角可走 read-your-writes path：新帖由 Post store 确认后直接合并进作者 feed，不能只等异步 fan-out。</td></tr>
+<tr><td>Day 1</td><td>分页时读副本落后会造成什么体验问题？</td><td>Ch6 · 单调读</td><td>同一 feed session 绑定 cursor/version，避免第 2 页看见比第 1 页更旧的世界。</td></tr>
+<tr><td>Day 2</td><td>Feed table 是事实还是派生状态？</td><td>Ch13 · 维护派生状态</td><td>Post 与 Follow graph 是事实；per-user feed rows 是可重建派生状态，因此要有 lag、replay、repair 指标。</td></tr>
+<tr><td>Day 2</td><td>fan-out worker 重试为什么必须幂等？</td><td>Ch12 · 幂等性</td><td>feed insert key 使用 (viewerId, postId)，重复事件只刷新位置/score，不产生重复 feed item。</td></tr>
+<tr><td>Day 2</td><td>如何看见派生 feed 已经落后？</td><td>Ch13 · 观察派生数据状态</td><td>公开 per-shard fan-out lag、oldest unprocessed event、repair backlog，而不是只看 API p99。</td></tr>
+<tr><td>Day 3</td><td>Live Comments 的 comment log 和广播通道是什么关系？</td><td>Ch12 · 基于日志的消息代理</td><td>durable comment append 是可回放事实；SSE/WebSocket 是低延迟投递，不承担永久历史。</td></tr>
+<tr><td>Day 3</td><td>客户端 reconnect 时从哪里补漏？</td><td>Ch12 · 消费者偏移量</td><td>客户端保存 lastCommentId/Last-Event-ID，服务端从 durable log/cache 读取 since cursor 后继续直播。</td></tr>
+<tr><td>Day 4</td><td>评论生产速度超过某些消费者时系统应该做什么？</td><td>Ch12 · 当消费者跟不上生产者时</td><td>普通直播允许丢低价值实时动画但不丢可回放 comment log；mega stream 可切采样/CDN snapshot。</td></tr>
+<tr><td>Day 4</td><td>断线后是否能重播旧评论？</td><td>Ch12 · 重播旧消息</td><td>reconnect/catch-up 可以重放 since cursor；服务端要控制 retention、limit 与过期后的 snapshot/fallback。</td></tr>
+<tr><td>Day 4</td><td>直播评论如何把状态变化主动推给客户端？</td><td>Ch13 · 将状态变更推送给客户端</td><td>SSE 是服务器推送的状态变化流；客户端仍以 cursor/log 作为恢复边界。</td></tr>
+<tr><td>Day 5</td><td>Instagram feed 迁移时，media metadata cache 是什么派生视图？</td><td>Ch13 · 物化视图和缓存</td><td>feed row 只携带 post/media pointers；thumbnail/transcode/CDN metadata 是派生读模型，必须能从 media pipeline 重建。</td></tr>
+<tr><td>Day 7</td><td>周末验收如何量化复制滞后，而不是口头说 eventual consistency？</td><td>Ch6 · 监控陈旧性</td><td>scorecard 必须记录 feed freshness、fan-out lag、comment reconnect gap、derived-view repair backlog。</td></tr></table>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>固定时间合同</h2><p class="section-copy">沿用 Week 2 已验收作息：08:30 wake、08:50—10:55 system design、14:30—16:15 三道 Stack、20:30—21:15 口述/mock。</p></div>
+      <table class="matrix">
+        <tr><th>时间</th><th>Week 3 不变量</th><th>验收证据</th></tr>
+        <tr><td>08:30</td><td>wake，不塞课程。</td><td>所有 day 页面显式保留。</td></tr>
+        <tr><td>08:50—10:55</td><td>系统设计主块，先闭卷再精读。</td><td>每天 4 个 bounded segment。</td></tr>
+        <tr><td>14:30—16:15</td><td>NeetCode Stack，连续单一 tag，每天 3 题。</td><td>21 个 data-neetcode-slot。</td></tr>
+        <tr><td>20:30—21:15</td><td>recall / Q&amp;A / mock repair。</td><td>scorecard 记录 timestamp。</td></tr>
+      </table>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>7 天执行</h2><p class="section-copy">Week 3 到 reviewer gate 为止；不推进 Week 4。</p></div>
+      <div class="route"><div class="row asset-row">
+          <div class="kicker">MON · 08-10</div>
+          <h3><a href="week3/day-1.html">FB News Feed：先盲做需求/API/HLD，再读 live 目录</a></h3>
+          <p>把 feed 讲成“事实状态 + 派生 timeline”的问题，而不是一上来堆 cache、queue、ranking。</p>
+          <a class="button" href="week3/day-1.html">进入</a>
+        </div>
+<div class="row asset-row">
+          <div class="kicker">TUE · 08-11</div>
+          <h3><a href="week3/day-2.html">FB News Feed：fan-out、celebrity skew、hot posts 与派生状态</a></h3>
+          <p>完整覆盖 News Feed deep dives：大量 followees、大量 followers、热门 post cache；产出可面试的 hybrid fan-out。</p>
+          <a class="button" href="week3/day-2.html">进入</a>
+        </div>
+<div class="row asset-row">
+          <div class="kicker">WED · 08-12</div>
+          <h3><a href="week3/day-3.html">FB Live Comments：实时评论 HLD、SSE 与可恢复历史</a></h3>
+          <p>把 live comments 拆成 durable comment log + realtime delivery；不要把 WebSocket 当作数据库。</p>
+          <a class="button" href="week3/day-3.html">进入</a>
+        </div>
+<div class="row asset-row">
+          <div class="kicker">THU · 08-13</div>
+          <h3><a href="week3/day-4.html">FB Live Comments：server coordination、mega streams、disconnect recovery</a></h3>
+          <p>完整覆盖 Live Comments deep dives：实时广播、百万并发、mega stream、断线补漏和降级。</p>
+          <a class="button" href="week3/day-4.html">进入</a>
+        </div>
+<div class="row asset-row">
+          <div class="kicker">FRI · 08-14</div>
+          <h3><a href="week3/day-5.html">Instagram：先盲做，再迁移 News Feed/Comments 的可复用与失效假设</a></h3>
+          <p>把 Instagram 当迁移题：先独立设计，再读 live 目录，只保留真正迁移成功的机制。</p>
+          <a class="button" href="week3/day-5.html">进入</a>
+        </div>
+<div class="row asset-row">
+          <div class="kicker">SAT · 08-15</div>
+          <h3><a href="week3/day-6.html">双核心 Mock：News Feed 45 分钟 + Live Comments 45 分钟</a></h3>
+          <p>两道 CORE 都进入完整面试时间盒；至少一次能在 45 分钟内闭环到 failure/recovery/metrics。</p>
+          <a class="button" href="week3/day-6.html">进入</a>
+        </div>
+<div class="row asset-row">
+          <div class="kicker">SUN · 08-16</div>
+          <h3><a href="week3/day-7.html">Week 3 证据验收、弱项修复、停在 reviewer gate</a></h3>
+          <p>只收敛 Week 3：检查 heading disposition、DDIA anchors、mock、scorecard、移动视觉，不预读 Week 4。</p>
+          <a class="button" href="week3/day-7.html">进入</a>
+        </div></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>Applied AI radar 决策</h2><p class="section-copy">本周只接受能改变 fan-out、streaming、derived state 或 realtime delivery 工程判断的一手材料。</p></div>
+      <div class="grid-2">
+        <article class="tile tight"><div class="kicker">REJECTED · NO SCHEDULED AI READING</div><h3>不把 Agent/RAG/context engineering 硬塞进 feed 训练</h3><p>OpenAI Harness Engineering、Anthropic effective agents/context engineering 属于 agent 工程，不改变本周 hybrid fan-out、SSE/replay、derived feed repair 的核心设计决定；记录为 rejected，不进入日程。</p></article>
+        <article class="tile tight"><div class="kicker">ACCEPTED SOURCES</div><h3>Hello Interview + DDIA2 exact anchors</h3><p>本周证据来自三个 live Hello Interview project inventories 和 DDIA2 的复制滞后、日志消息代理、观察派生状态小节。</p></article>
+      </div>
+    </section>
+    <footer class="footer">本页只定义 Week 3。writer 完成后写 production record 并停在 READY_FOR_REVIEW；不自批，不开启 Week 4。</footer>
+  <section id="local-materials" style="margin:40px auto;max-width:1080px;padding:18px 22px;border:1px solid #d9dce1;background:#f7f8fa;color:#30343b;font:14px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif"><strong>Local study materials</strong><br>Detailed lecture notes, audio, recall scripts, PDFs, Staff Q&amp;A, and mock packs are archived locally and are intentionally not published on this site.</section></main>
+</body>
+</html>

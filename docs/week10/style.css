@@ -1,0 +1,91 @@
+@import url("../week4/style.css");
+
+.week10-chip {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 6px 10px;
+  color: var(--muted);
+  background: rgba(255,255,255,.72);
+  font-size: 13px;
+}
+
+.state-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.state-card {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px;
+  background: rgba(255,255,255,.72);
+}
+
+.state-card b {
+  display: block;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+.source-sections a,
+.qa-source a {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 900px) {
+  .state-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .matrix td,
+  .matrix th,
+  .rubric td,
+  .rubric th {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .algorithm-table,
+  .algorithm-table tbody {
+    display: block;
+    width: 100%;
+  }
+
+  .algorithm-table tr:first-child {
+    display: none;
+  }
+
+  .algorithm-table tr[data-neetcode-slot="true"] {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px 18px;
+    padding: 18px 0;
+    border-top: 2px solid var(--line-strong);
+  }
+
+  .algorithm-table td {
+    display: block;
+    width: auto;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .algorithm-table td:nth-child(2) {
+    grid-column: 1 / -1;
+  }
+
+  .algorithm-table td::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 4px;
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+}

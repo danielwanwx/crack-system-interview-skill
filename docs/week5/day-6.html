@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第 5 周 Day 6 - Adaptive mock：Ticketmaster 45 分钟 + Auction/Robinhood pressure rounds</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar"><nav class="shell nav">
+    <a class="brand" href="../week5-action-guide.html"><span class="mark"></span> WEEK 05 · CONTENTION & FINANCIAL STATE</a>
+    <div class="navlinks"><a href="../week5-action-guide.html">第 5 周</a><a href="#local-materials">讲义</a><a href="#local-materials">Staff Q&amp;A</a><a href="#local-materials">Live Mock</a><a href="#local-materials">验收</a></div>
+  </nav></header>
+  <main class="shell">
+
+    <section class="hero">
+      <div><div class="eyebrow">WEEK 05 · 2026-08-29 · SAT</div><h1>Adaptive mock：Ticketmaster 45 分钟 + Auction/Robinhood pressure rounds</h1><p class="deck">核心 mock 不背答案；面试官根据候选人的 owner、partition key、lock strategy、payment semantics 自适应追问。</p>
+      <div class="pill-row"><a class="pill" href="../week5-action-guide.html">周指南</a><a class="pill" href="#local-materials">讲义</a><a class="pill" href="#local-materials">Q&amp;A</a><a class="pill" href="#local-materials">验收</a></div></div>
+      <aside class="hero-panel"><div class="metric"><b>08:50</b><span>system start</span></div><div class="metric"><b>125m</b><span>design block</span></div><div class="metric"><b>3</b><span>Binary Search</span></div><div class="metric"><b>45m</b><span>oral block</span></div></aside>
+    </section>
+    <section class="section"><div class="section-head"><h2>今日固定时间表</h2><p class="section-copy">三块窗口固定：08:50-10:55 系统设计，14:30-16:15 算法，20:30-21:15 口述。</p></div><table class="rubric">
+      <tr><th>08:50-09:35</th><td><b>08:50-10:55 system design</b><br>Ticketmaster 45m mock - 完整题：scope -&gt; HLD -&gt; Deep Dive 1 reservation/oversell -&gt; Deep Dive 2 hot event/retry/reconciliation。</td></tr>
+<tr><th>09:35-10:05</th><td><b>08:50-10:55 system design</b><br>Online Auction 30m pressure - 从 bid order、durability、winner close rule 和 duplicate retry 追问。</td></tr>
+<tr><th>10:05-10:35</th><td><b>08:50-10:55 system design</b><br>Robinhood 30m pressure - 从 market update order、order consistency、cleanup 和 idempotency 追问。</td></tr>
+<tr><th>10:35-10:55</th><td><b>08:50-10:55 system design</b><br>DDIA 对照 - 用 uniqueness/total order/serializability 标出三题共同点和不可复用处。</td></tr>
+      <tr><th>14:30-16:15</th><td><b>NeetCode Tag · Binary Search</b><br>三道题，每题 30m solve + 5m evidence，不能改 tag。</td></tr>
+      <tr><th>20:30-21:15</th><td>20:30-21:15 录音回听，选择最低分维度，写 repair sentence。</td></tr>
+    </table></section>
+    <section class="section"><div class="section-head"><h2>算法模块</h2><p class="section-copy">连续 NeetCode Binary Search；每天 exactly 3 slots。</p></div><table class="matrix algorithm-table"><tr><th>#</th><th>Problem / mode</th><th>Pattern</th><th>Invariant</th><th>Bug risk</th><th>Time</th><th>Space</th></tr><tr data-neetcode-slot="true" data-mode="NEW" data-minutes="35"><td data-label="Slot">1</td><td data-label="Problem / mode"><a href="https://neetcode.io/problems/search-a-2d-matrix/question">Search a 2D Matrix</a><br><span class="evidence-chip">NEW · 30m solve + 5m evidence</span></td><td data-label="Pattern">flattened binary search</td><td data-label="Invariant">2D coordinates map to one sorted virtual array.</td><td data-label="Bug risk">Row/col conversion off-by-one.</td><td data-label="Time">O(log(mn))</td><td data-label="Space">O(1)</td></tr>
+<tr data-neetcode-slot="true" data-mode="NEW" data-minutes="35"><td data-label="Slot">2</td><td data-label="Problem / mode"><a href="https://neetcode.io/problems/koko-eating-bananas/question">Koko Eating Bananas</a><br><span class="evidence-chip">NEW · 30m solve + 5m evidence</span></td><td data-label="Pattern">min feasible rate</td><td data-label="Invariant">If speed k works by h hours, any higher speed works.</td><td data-label="Bug risk">Ceil division bug; lower bound starts at 0.</td><td data-label="Time">O(n log maxPile)</td><td data-label="Space">O(1)</td></tr>
+<tr data-neetcode-slot="true" data-mode="NEW" data-minutes="35"><td data-label="Slot">3</td><td data-label="Problem / mode"><a href="https://neetcode.io/problems/capacity-to-ship-packages-within-d-days/question">Capacity to Ship Packages Within D Days</a><br><span class="evidence-chip">NEW · 30m solve + 5m evidence</span></td><td data-label="Pattern">min feasible capacity</td><td data-label="Invariant">If capacity C ships within D days, any larger C works.</td><td data-label="Bug risk">Lower bound below max package; incrementing day count at wrong time.</td><td data-label="Time">O(n log sum)</td><td data-label="Space">O(1)</td></tr></table></section>
+    <section class="section"><div class="section-head"><h2>Hello Interview 精确目录</h2><p class="section-copy">保留 live canonical heading title；day page 使用 direct section anchors。</p></div><div class="callout"><p>今日不新增 Hello Interview section anchors；使用前五天的 evidence 做 mock 和 synthesis。</p></div></section>
+    <section class="section"><div class="section-head"><h2>DDIA 精确决策卡</h2><p class="section-copy">只使用 Ch8 和 Ch10 中直接解决今天设计决定的小节。</p></div><table class="matrix"><tr><th>项目</th><th>项目问题</th><th>精确 DDIA subsection</th><th>改变的系统决定</th></tr><tr><td>Cross-domain</td><td>How do all three systems define the winning transaction?</td><td><a href="https://ddia.vonng.com/ch10/#sec_consistency_uniqueness">Ch10 - 唯一性约束</a></td><td>Unique winner is a system invariant: one seat owner, one accepted highest bid at close, one brokerage order state per client intent.</td></tr></table></section>
+    <section class="section"><div class="section-head"><h2>三域 trace 任务</h2></div><div class="trace-grid">
+      <div class="trace-step"><b>Winning transaction</b><span>标出唯一线性化点：seat hold/sold、accepted bid at close、brokerage order/execution state。</span></div>
+      <div class="trace-step"><b>Duplicate/retry failure</b><span>给出 stable idempotency key、重复返回语义、旧 owner/stale version 被拒绝的证据。</span></div>
+      <div class="trace-step"><b>Projection boundary</b><span>说明哪些读可以陈旧：seat map、highest bid display、market price UI；哪些写不能陈旧。</span></div>
+    </div></section>
+    <section class="section"><div class="section-head"><h2>本日 artifacts</h2><p class="section-copy">项目脚本、音频、PDF 和 mock evidence 从当天直接打开。</p></div><div class="pill-row"><a class="pill" href="#local-materials">Adaptive Live Mock</a> <a class="pill" href="#local-materials">Mock evidence scorecard</a></div></section>
+    <section class="section"><div class="section-head"><h2>今日产出、修复与英语 recall</h2></div><table class="rubric">
+      <tr><th>课程角色</th><td>CORE mock + FULL follow-ups</td></tr>
+      <tr><th>必须交付</th><td>Ticketmaster mock evidence + Auction/Robinhood pressure notes；每题一条 winning transaction 和一条 duplicate failure trace。</td></tr>
+      <tr><th>修复规则</th><td>如果 mock 少于两个 deep dives，重新跑 Ticketmaster，不进入 Day 7。</td></tr>
+      <tr><th>English recall</th><td><div class="english-recall">English recall: The same retry pattern is safe only when the idempotency key maps to one durable intent.</div></td></tr>
+    </table></section>
+    <footer class="footer">Day 6 只推进 Week 5；完成后把证据写入 <a href="#local-materials">scorecard</a>。</footer>
+
+  <section id="local-materials" style="margin:40px auto;max-width:1080px;padding:18px 22px;border:1px solid #d9dce1;background:#f7f8fa;color:#30343b;font:14px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif"><strong>Local study materials</strong><br>Detailed lecture notes, audio, recall scripts, PDFs, Staff Q&amp;A, and mock packs are archived locally and are intentionally not published on this site.</section></main>
+</body>
+</html>

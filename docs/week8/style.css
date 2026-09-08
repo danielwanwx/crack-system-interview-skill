@@ -1,0 +1,55 @@
+@import url("../week4/style.css");
+
+/* Week 8 intentionally keeps the validated Week 4 visual system and only adds
+   guards for long reliability vocabulary and dense scorecard rows. */
+.source-title,
+.matrix td,
+.matrix th,
+.tile,
+.qa-card,
+.mock-node,
+.prompt-block {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.matrix a,
+.source-title a,
+.source-sections li {
+  overflow-wrap: anywhere;
+}
+
+.asset-row audio {
+  max-width: 100%;
+}
+
+@media (max-width: 860px) {
+  .hero {
+    grid-template-columns: 1fr;
+  }
+
+  .hero h1,
+  .day-hero h1 {
+    font-size: 38px;
+    line-height: 1.04;
+  }
+
+  .matrix,
+  .reading-table {
+    table-layout: fixed;
+    width: 100%;
+  }
+
+  .reading-table,
+  .reading-table tbody,
+  .reading-table tr,
+  .reading-table td {
+    max-width: 100%;
+  }
+
+  .source-title {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第 2 周行动指南 - Distributed Cache + Dropbox</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="week2/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <nav class="shell nav">
+      <a class="brand" href="system-design-12-week-master-plan.html"><span class="mark"></span> WEEK 02 · READ SYSTEMS</a>
+      <div class="navlinks">
+        <a href="system-design-12-week-master-plan.html">12 周路线</a>
+        <a href="week2-action-guide.html">第 2 周</a>
+        <a href="#local-materials">深度讲义</a>
+        <a href="#local-materials">Staff Q&amp;A</a>
+        <a href="#local-materials">Live Mock</a>
+        <a href="#local-materials">验收</a>
+      </div>
+    </nav>
+  </header>
+  <main class="shell">
+
+    <section class="hero">
+      <div>
+        <div class="eyebrow">WEEK 02 · 2026.08.03—08.09 · WRITER GATE</div>
+        <h1>读扩展、派生数据与文件路径</h1>
+        <p class="deck">Distributed Cache 是唯一基础设施锚点。Dropbox 是完整覆盖的应用案例，用来验证 blob / metadata 分离、resumable upload、sync 与 conflict；它不是一根并列架构主柱。</p>
+        <div class="pill-row">
+          <a class="pill" href="#local-materials">中文深度讲义</a>
+          <a class="pill" href="#local-materials">Staff Q&amp;A</a>
+          <a class="pill" href="#local-materials">GPT Live Mock</a>
+          <a class="pill" href="#local-materials">证据验收</a>
+        </div>
+      </div>
+      <aside class="hero-panel">
+        <div class="metric"><b>1</b><span>Infrastructure anchor</span></div>
+        <div class="metric"><b>1</b><span>Full-coverage app case</span></div>
+        <div class="metric"><b>44</b><span>Live headings disposed</span></div>
+        <div class="metric"><b>21</b><span>Two Pointers slots</span></div>
+      </aside>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>能力主线</h2><p class="section-copy">顺序固定：先定义权威状态，再设计读路径；先建立单节点不变量，再讨论复制和分片；最后用 Dropbox 检查机制能否迁移到大对象与多设备状态。</p></div>
+      <div class="grid-3">
+        <article class="tile"><div class="kicker">01 · OWNERSHIP</div><h3>System of record vs derived data</h3><p>DB、blob、change log 拥有事实；cache、read replica、CDN 提供派生读路径。每份副本都要回答重建、陈旧和失效。</p></article>
+        <article class="tile"><div class="kicker">02 · SCALE</div><h3>Replication 与 partitioning 分工</h3><p>复制提高故障容忍与读容量；分片扩大总容量与吞吐。consistent hashing 降低 remap，但不消灭热点。</p></article>
+        <article class="tile"><div class="kicker">03 · FILE PATH</div><h3>Control plane 与 data plane</h3><p>应用服务签发有限权限并提交 metadata；blob bytes 直达对象存储/CDN。multipart、sync cursor 与 conflict 都有明确恢复。</p></article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>项目角色</h2><p class="section-copy">两题都完整覆盖，但深度权重不同。Distributed Cache 承担架构教学和 45 分钟主 mock；Dropbox 承担应用迁移与 25 分钟压力轮。</p></div>
+      <table class="matrix">
+        <tr><th>项目</th><th>课程角色</th><th>必须覆盖</th><th>退出证据</th></tr>
+        <tr><td><strong>Distributed Cache</strong></td><td>Core mastery · infrastructure anchor</td><td>set/get/delete、TTL、LRU、HA、replication、partitioning、consistent hashing、hot read/write、performance、levels。</td><td>45 分钟完整答题；两个 failure window；三项 operational metrics。</td></tr>
+        <tr><td><strong>Dropbox</strong></td><td>Full coverage · application case</td><td>blob/metadata、upload/download/share/sync、multipart resume、delta sync、security、conflict、levels。</td><td>25—35 分钟设计尝试；upload commit invariant；notification loss 与 concurrent edit 时序。</td></tr>
+      </table>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>Live heading 合同</h2><p class="section-copy">库存来自 2026-07-23 live 页面。这里只显示计数；Day 1—4 逐 heading 提供精确 fragment URL，production record 保留完整 disposition 表。</p></div>
+      <div class="grid-2">
+
+        <article class="tile">
+          <div class="kicker">DISTRIBUTED CACHE · LIVE INVENTORY</div>
+          <h3>23 个可定位 heading，零跳过</h3>
+          <p>required reading 11 · deep dive 7 · level expectation 5。完整 disposition 分配在 Day 1—2，<a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/distributed-cache#understanding-the-problem">从第一个精确小节打开</a>。</p>
+        </article>
+
+        <article class="tile">
+          <div class="kicker">DROPBOX · LIVE INVENTORY</div>
+          <h3>21 个可定位 heading，零跳过</h3>
+          <p>required reading 13 · deep dive 4 · level expectation 4。完整 disposition 分配在 Day 3—4，<a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/dropbox#understanding-the-problem">从第一个精确小节打开</a>。</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>DDIA 问题地图</h2><p class="section-copy">没有整章阅读。每一条都从项目暴露的问题出发，直接进入第二版中文站的精确 subsection。</p></div>
+      <table class="matrix">
+        <tr><th>项目问题</th><th>精确小节</th><th>改变的设计</th><th>读完必须回答</th></tr>
+        <tr><td>缓存和数据库冲突时，谁拥有事实？</td><td><a href="https://ddia.vonng.com/ch1/#sec_introduction_derived">Ch1 · 记录系统与派生数据</a></td><td>把业务数据库定义为 system of record，把缓存定义为可删除、可重建的派生数据；失效与重建因此成为显式契约。</td><td>能说出哪份状态可重建、从哪里重建，以及缓存陈旧时用户会看到什么。</td></tr><tr><td>为什么缓存把延迟换成内存、淘汰与丢失风险？</td><td><a href="https://ddia.vonng.com/ch4/#sec_storage_inmemory">Ch4 · 全内存存储</a></td><td>内存不是“更高级的数据库”；它服务极低延迟，同时要求容量边界、淘汰和故障恢复路径。</td><td>能把 &lt;10ms SLO、可用内存、value 大小、复制因子和节点数放进同一个容量判断。</td></tr><tr><td>缓存写入要等多少个副本确认？</td><td><a href="https://ddia.vonng.com/ch6/#sec_replication_sync_async">Ch6 · 同步复制与异步复制</a></td><td>同步确认缩小丢写窗口但扩大尾延迟与不可用面；异步复制满足题目的 eventual consistency，但必须暴露 replica lag。</td><td>能画出 primary ACK 后、replica 收到前 primary 崩溃的丢失窗口。</td></tr><tr><td>1TB 键值如何落到节点，扩缩容时如何减少搬迁？</td><td><a href="https://ddia.vonng.com/ch7/#sec_sharding_hash">Ch7 · 按键的哈希分片</a></td><td>先以哈希分片解释均匀性，再比较固定分片与一致性哈希的成员变更成本。</td><td>能说明 key → shard → node 的路由链，并区分 logical shard 与 physical node。</td></tr><tr><td>为什么 modulo hashing 在节点数变化时危险？</td><td><a href="https://ddia.vonng.com/ch7/#sec_sharding_consistent_hashing">Ch7 · 一致性哈希</a></td><td>采用虚拟节点和版本化 ring，限制成员变更时的 key remap；迁移期间保留双读或 forwarding 窗口。</td><td>能说出 consistent hashing 解决重映射，不解决单个 hot key。</td></tr><tr><td>hash 均匀为什么仍挡不住 hot key？</td><td><a href="https://ddia.vonng.com/ch7/#sec_sharding_skew">Ch7 · 倾斜的工作负载与缓解热点</a></td><td>读热点用副本、本地/请求级合并和 key replication；写热点必须改状态模型、分桶或局部聚合。</td><td>能分别处理 hot read 与 hot write，且不把“加虚拟节点”当答案。</td></tr><tr><td>客户端还是代理知道 key 在哪？</td><td><a href="https://ddia.vonng.com/ch7/#sec_sharding_routing">Ch7 · 请求路由</a></td><td>客户端路由少一跳但 ring 更新复杂；代理路由集中控制但增加一跳和瓶颈。选型必须绑定客户端数量与变更频率。</td><td>能描述 ring version 不一致时的 MOVED/redirect、重试与幂等边界。</td></tr><tr><td>Dropbox 如何按 user 快速列出被分享的文件？</td><td><a href="https://ddia.vonng.com/ch4/#sec_storage_index_multicolumn">Ch4 · 多列索引与二级索引</a></td><td>不要扫描 file.sharelist；建立 userId + fileId 的反向关系或索引，并明确它是权威关系还是派生视图。</td><td>能画出 owner files 与 shared files 两条查询路径及更新原子性。</td></tr><tr><td>多设备离线后如何重新汇合，不依赖通知绝不丢？</td><td><a href="https://ddia.vonng.com/ch6/#sec_replication_offline_clients">Ch6 · 同步引擎与本地优先软件</a></td><td>通知只做唤醒，游标化 change log 才是修复路径；设备必须携带 base version 和 last cursor。</td><td>能追踪断网、通知丢失、重复拉取、重放后的最终状态。</td></tr><tr><td>两个设备并发改同一 base version 时如何处理？</td><td><a href="https://ddia.vonng.com/ch6/#sec_replication_lww">Ch6 · 最后写入胜利（丢弃并发写入）</a></td><td>拒绝依赖客户端时钟的 silent LWW；以 server version 检测冲突并保留 conflict copy 或交给用户合并。</td><td>能给出 baseVersion、currentVersion、conflict copy 的用户可见语义。</td></tr>
+      </table>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>固定时间合同</h2><p class="section-copy">每天 08:30 起床不安排课程。系统设计、算法和口述三块互不挤占；日页内的 minute-by-minute 安排总量与窗口完全一致。</p></div>
+      <table class="matrix">
+        <tr><th>时间</th><th>不变合同</th><th>本周证据</th></tr>
+        <tr><td>08:30</td><td>Wake time</td><td>不塞入预读、音频或算法。</td></tr>
+        <tr><td>08:50—10:55</td><td>System design</td><td>目标句、闭卷尝试、精确阅读、决策卡、无稿 close。</td></tr>
+        <tr><td>14:30—16:15</td><td>Three NeetCode problems</td><td>连续 Two Pointers tag；每题 35 分钟，21 个必做 slot。</td></tr>
+        <tr><td>20:30—21:15</td><td>Oral / Q&amp;A / mock repair</td><td>录音 timestamp + 一条 repair sentence。</td></tr>
+      </table>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>7 天执行</h2><p class="section-copy">Mon/Tue 打穿基础设施；Wed/Thu 完整覆盖应用；Fri 迁移；Sat mock；Sun 证据修复并在 writer gate 停止。</p></div>
+      <div class="route">
+        <div class="row asset-row">
+          <div class="kicker">MON · 08.03</div>
+          <h3><a href="week2/day-1.html">Distributed Cache：先定义事实，再画读路径</a></h3>
+          <p>闭卷起手后完整读到 HLD。今天建立 cache entry、TTL、LRU、source of truth 与单节点正确性，不提前跳到集群名词。</p>
+          <a class="button" href="week2/day-1.html">进入</a>
+        </div>
+        <div class="row asset-row">
+          <div class="kicker">TUE · 08.04</div>
+          <h3><a href="week2/day-2.html">Distributed Cache：复制、分片、热点与故障</a></h3>
+          <p>完整覆盖六个 live deep dives 与 level expectation。今天的主线是 key routing、replication、rebalancing、hot read/write 和 p99。</p>
+          <a class="button" href="week2/day-2.html">进入</a>
+        </div>
+        <div class="row asset-row">
+          <div class="kicker">WED · 08.05</div>
+          <h3><a href="week2/day-3.html">Dropbox：把 blob path 与 metadata path 分开</a></h3>
+          <p>Dropbox 是 full-coverage application case。完整读到 HLD，用它验证缓存、派生视图、blob/metadata 分离、download CDN 与 sync cursor，不把它升级为第二根架构主柱。</p>
+          <a class="button" href="week2/day-3.html">进入</a>
+        </div>
+        <div class="row asset-row">
+          <div class="kicker">THU · 08.06</div>
+          <h3><a href="week2/day-4.html">Dropbox：续传、提交、同步与冲突</a></h3>
+          <p>完整覆盖 Dropbox 三个 live deep dives 和 Staff+ expectation。重点是 multipart upload 的可信完成、delta sync、版本冲突、安全边界与故障回收。</p>
+          <a class="button" href="week2/day-4.html">进入</a>
+        </div>
+        <div class="row asset-row">
+          <div class="kicker">FRI · 08.07</div>
+          <h3><a href="week2/day-5.html">横向迁移：读扩展、缓存与大对象的边界</a></h3>
+          <p>今天不再增加项目。把 Distributed Cache 的基础设施机制迁移到 Dropbox：metadata cache、CDN、source of truth、读副本、分片与 large-object path。</p>
+          <a class="button" href="week2/day-5.html">进入</a>
+        </div>
+        <div class="row asset-row">
+          <div class="kicker">SAT · 08.08</div>
+          <h3><a href="week2/day-6.html">完整 Mock：基础设施主线 + 应用压力轮</a></h3>
+          <p>45 分钟 Distributed Cache 是主面；随后 25 分钟 Dropbox 压力轮只验证 blob/metadata、resumable upload、sync 与 conflict 的迁移深度。</p>
+          <a class="button" href="week2/day-6.html">进入</a>
+        </div>
+        <div class="row asset-row">
+          <div class="kicker">SUN · 08.09</div>
+          <h3><a href="week2/day-7.html">证据验收、弱项修复与周级综合</a></h3>
+          <p>闭卷复现主线，修复唯一 carry-over，完成证据评分与完整 heading disposition 核对。到此停止，不预读下一周。</p>
+          <a class="button" href="week2/day-7.html">进入</a>
+        </div></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>Frontier source 决策</h2><p class="section-copy">只保留会改变具体系统决定的官方材料。</p></div>
+      <div class="grid-2">
+        <article class="tile tight"><div class="kicker">ACCEPTED · AWS S3</div><h3>Multipart Upload Overview</h3><p>它把模糊的“分块上传”收紧为 uploadId、part number/ETag、Complete/Abort 与 incomplete-upload 清理契约，直接改变续传和提交状态机。</p></article>
+        <article class="tile tight"><div class="kicker">REJECTED · UNRELATED AI</div><h3>不强塞 Agent / LLM 材料</h3><p>OpenAI Harness Engineering、Anthropic effective agents 与本周 cache ownership、blob commit、sync conflict 没有直接设计作用，因此拒绝进入日程。</p></article>
+      </div>
+    </section>
+    <footer class="footer">本页只定义 Week 2。完成 production record 后状态进入 READY_FOR_REVIEW；writer 不自批，不继续后续周。</footer>
+  <section id="local-materials" style="margin:40px auto;max-width:1080px;padding:18px 22px;border:1px solid #d9dce1;background:#f7f8fa;color:#30343b;font:14px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif"><strong>Local study materials</strong><br>Detailed lecture notes, audio, recall scripts, PDFs, Staff Q&amp;A, and mock packs are archived locally and are intentionally not published on this site.</section></main>
+</body>
+</html>

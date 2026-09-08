@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>12 周系统设计总路线</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="week1/style.css">
+</head>
+<body>
+
+  <header class="topbar">
+    <nav class="shell nav">
+      <a class="brand" href="system-design-12-week-master-plan.html"><span class="mark"></span> CRACK SYSTEM INTERVIEW</a>
+      <div class="navlinks">
+        <a href="system-design-12-week-master-plan.html">12 周路线</a>
+        <a href="week1-action-guide.html">第 1 周</a>
+        <a href="#local-materials">深度讲义</a>
+        <a href="#local-materials">Staff Q&amp;A</a>
+        <a href="#local-materials">Live Mock</a>
+        <a href="#local-materials">验收</a>
+      </div>
+    </nav>
+  </header>
+  <main class="shell">
+
+    <section class="hero">
+      <div>
+        <div class="eyebrow">2026.07.27—10.18 · SENIOR / STAFF SYSTEM DESIGN</div>
+        <h1>30 个项目。12 周。一个可迁移的系统设计模型。</h1>
+        <p class="deck">Hello Interview 是主线；DDIA、NeetCode、外部学习小组与 Frontier Engineering 只在需要的位置提供支撑。</p>
+      </div>
+      <aside class="hero-panel">
+        <div class="metric"><b>30</b><span>Hello Interview 项目</span></div>
+        <div class="metric"><b>16</b><span>核心精通</span></div>
+        <div class="metric"><b>12</b><span>训练周</span></div>
+        <div class="metric"><b>3</b><span>每日算法</span></div>
+      </aside>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>时间模型</h2><p class="section-copy">上午完成系统设计主线；下午连续刷同一 NeetCode Tag；晚上只做口述、追问或修复。</p></div>
+      <table class="matrix">
+        <tr><th>时间</th><th>动作</th><th>留下的证据</th></tr>
+        <tr><td><strong>08:30</strong></td><td>起床</td><td>不安排学习任务</td></tr>
+        <tr><td><strong>08:50—10:55</strong></td><td>盲做 → Hello Interview 原文 → Deep Dive / DDIA → 2 分钟口述</td><td>修正后的白板、一个可辩护决策</td></tr>
+        <tr><td><strong>14:30—16:15</strong></td><td>同一 Tag 三题；忙碌日为一新两复刷</td><td>Pattern / Invariant / Bug / Complexity</td></tr>
+        <tr><td><strong>20:30—21:15</strong></td><td>英文 Recall、Staff 追问或 Mock</td><td>录音与一句 Repair</td></tr>
+      </table>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>12 周路线</h2><p class="section-copy">每周均包含行动页、每日精确阅读链接、深度讲义、Staff Q&amp;A、Live Mock、英文 Recall 与对应音频资产。</p></div>
+      <div class="route">
+        <div class="row master-row">
+          <div class="kicker">WEEK 01<br>07.27—08.02</div>
+          <h3>缓存与流量控制</h3>
+          <p><strong>Bitly · Distributed Rate Limiter</strong><br>CORE × 2 · Arrays &amp; Hashing<br><span class="ddia-map">DDIA：Ch2 延迟百分位 · Ch6 故障与复制滞后 · Ch7 哈希分片与热点 · Ch9 部分失效与超时</span></p>
+          <a class="button" href="week1-action-guide.html">进入</a>
+        </div>
+        <div class="row master-row">
+          <div class="kicker">WEEK 02<br>08.03—08.09</div>
+          <h3>读扩展、派生数据与文件路径</h3>
+          <p><strong>Distributed Cache · Dropbox</strong><br>CORE × 1 · FULL × 1 · Two Pointers<br><span class="ddia-map">DDIA：Ch1 记录系统与派生数据 · Ch4 存储与索引 · Ch6 复制 · Ch7 分片</span></p>
+          <a class="button" href="week2-action-guide.html">进入</a>
+        </div>
+        <div class="row master-row">
+          <div class="kicker">WEEK 03<br>08.10—08.16</div>
+          <h3>Feed 与实时互动</h3>
+          <p><strong>FB News Feed · FB Live Comments · Instagram</strong><br>CORE × 2 · TRANSFER × 1 · Stack<br><span class="ddia-map">DDIA：Ch6 复制滞后 · Ch12 日志消息代理 · Ch13 派生数据状态</span></p>
+          <a class="button" href="week3-action-guide.html">进入</a>
+        </div>
+        <div class="row master-row">
+          <div class="kicker">WEEK 04<br>08.17—08.23</div>
+          <h3>消息与协同状态</h3>
+          <p><strong>WhatsApp · Google Docs · Online Chess</strong><br>CORE × 2 · TRANSFER × 1 · Sliding Window<br><span class="ddia-map">DDIA：Ch6 多主冲突与 CRDT · Ch9 时钟与进程暂停 · Ch10 顺序与一致性</span></p>
+          <a class="button" href="week4-action-guide.html">进入</a>
+        </div>
+        <div class="row master-row">
+          <div class="kicker">WEEK 05<br>08.24—08.30</div>
+          <h3>高竞争交易</h3>
+          <p><strong>Ticketmaster · Online Auction · Robinhood</strong><br>CORE × 1 · FULL × 2 · Binary Search<br><span class="ddia-map">DDIA：Ch8 隔离、写偏差与可串行化 · Ch10 线性一致性与全序</span></p>
+          <a class="button" href="week5-action-guide.html">进入</a>
+        </div>
+        <div class="row master-row">
+          <div class="kicker">WEEK 06<br>08.31—09.06</div>
+          <h3>正确性与流式聚合</h3>
+          <p><strong>Payment System · Ad Click Aggregator · Metrics Monitoring</strong><br>CORE × 3 · Linked List<br><span class="ddia-map">DDIA：Ch8 事务与分布式事务 · Ch12 事件流与时间推理 · Ch13 数据流</span></p>
+          <a class="button" href="week6-action-guide.html">进入</a>
+        </div>
+        <div class="row master-row">
+          <div class="kicker">WEEK 07<br>09.07—09.13</div>
+          <h3>媒体与活动数据</h3>
+          <p><strong>YouTube · YouTube Top K · Strava</strong><br>CORE × 1 · FULL × 1 · TRANSFER × 1 · Trees<br><span class="ddia-map">DDIA：Ch11 分布式批处理 · Ch12 流处理 · Ch13 批流协同</span></p>
+          <a class="button" href="week7-action-guide.html">进入</a>
+        </div>
+        <div class="row master-row">
+          <div class="kicker">WEEK 08<br>09.14—09.20</div>
+          <h3>可靠执行与变化检测</h3>
+          <p><strong>Web Crawler · Job Scheduler · Price Tracking Service</strong><br>CORE × 2 · TRANSFER × 1 · Heap / Priority Queue<br><span class="ddia-map">DDIA：Ch5 持久化工作流与事件驱动 · Ch9 部分失效 · Ch12 日志消息代理</span></p>
+          <a class="button" href="week8-action-guide.html">进入</a>
+        </div>
+        <div class="row master-row">
+          <div class="kicker">WEEK 09<br>09.21—09.27</div>
+          <h3>搜索、排序与地理检索</h3>
+          <p><strong>FB Post Search · News Aggregator · Yelp</strong><br>FULL × 1 · TRANSFER × 2 · Graphs<br><span class="ddia-map">DDIA：Ch4 全文/多维索引与物化视图 · Ch13 观察派生状态</span></p>
+          <a class="button" href="week9-action-guide.html">进入</a>
+        </div>
+        <div class="row master-row">
+          <div class="kicker">WEEK 10<br>09.28—10.04</div>
+          <h3>地理匹配与履约</h3>
+          <p><strong>Uber · Tinder · Local Delivery Service</strong><br>CORE × 1 · FULL × 2 · Intervals<br><span class="ddia-map">DDIA：Ch7 哈希分片、热点与路由 · Ch9 时钟 · Ch10 线性一致性</span></p>
+          <a class="button" href="week10-action-guide.html">进入</a>
+        </div>
+        <div class="row master-row">
+          <div class="kicker">WEEK 11<br>10.05—10.11</div>
+          <h3>隔离执行与生产 LLM</h3>
+          <p><strong>LeetCode · ChatGPT</strong><br>FULL × 1 · CORE × 1 · 1-D DP<br><span class="ddia-map">DDIA：Ch5 RPC 与持久化工作流 · Ch9 部分失效 · Ch13 数据流与派生状态</span></p>
+          <a class="button" href="week11-action-guide.html">进入</a>
+        </div>
+        <div class="row master-row">
+          <div class="kicker">WEEK 12<br>10.12—10.18</div>
+          <h3>融会贯通与公司校准</h3>
+          <p><strong>30 项机制图 · 2 场未见题 Mock · 最弱项目重做</strong><br>INTEGRATION · Backtracking / 弱项<br><span class="ddia-map">DDIA：Ch13 观察派生数据 · Ch14 反馈回路、责任与隐私</span></p>
+          <a class="button" href="week12-action-guide.html">进入</a>
+        </div></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>覆盖口径</h2></div>
+      <div class="grid-3">
+        <article class="tile"><div class="kicker">CORE · 16</div><h3>完整精通</h3><p>全原文、中文讲义与音频、Senior+ 英文 Recall、45 分钟 Mock、两项 Deep Dive。</p></article>
+        <article class="tile"><div class="kicker">FULL · 8</div><h3>完整覆盖</h3><p>全原文、紧凑讲解、25—35 分钟设计、一次深入追问。</p></article>
+        <article class="tile"><div class="kicker">TRANSFER · 6</div><h3>迁移验证</h3><p>先盲做再读原文，明确复用条件、失效假设、新瓶颈与差异。</p></article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>外部计划接口</h2><p class="section-copy">不等待、不重排。外部计划开始后，只通过周四与周日两个 Companion Slot 接入。</p></div>
+      <table class="matrix">
+        <tr><th>外部主题状态</th><th>本计划动作</th></tr>
+        <tr><td>已经学过</td><td>闭卷 Retrieval Mock，讨论用来暴露遗忘。</td></tr>
+        <tr><td>当周重合</td><td>合并讨论与练习，但仍按个人验收线完成。</td></tr>
+        <tr><td>尚未学到</td><td>只预习 45—60 分钟，不打乱项目顺序。</td></tr>
+        <tr><td>完全不同</td><td>记入 Crosswalk，继续当前主线。</td></tr>
+      </table>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>Frontier Radar</h2><p class="section-copy">每周两次。只读原始工程团队或原作者资料，每篇只写 Claim、Mechanism、Failure、Transfer。</p></div>
+      <div class="pill-row">
+        <a class="pill" href="https://www.ibm.com/think/topics/loop-engineering">IBM · Loop Engineering</a>
+        <a class="pill" href="https://openai.com/index/harness-engineering/">OpenAI · Harness Engineering</a>
+        <a class="pill" href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic · Effective Agents</a>
+        <a class="pill" href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">Anthropic · Context Engineering</a>
+        <a class="pill" href="https://karpathy.ai/">Andrej Karpathy</a>
+        <a class="pill" href="#local-materials">完整 Source Map</a>
+      </div>
+    </section>
+    <footer class="footer">正式 Week 1：2026 年 7 月 27 日。Sprint 0：7 月 23—26 日，用现有 Bitly / Dropbox 资产完成基线。</footer>
+  <section id="local-materials" style="margin:40px auto;max-width:1080px;padding:18px 22px;border:1px solid #d9dce1;background:#f7f8fa;color:#30343b;font:14px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif"><strong>Local study materials</strong><br>Detailed lecture notes, audio, recall scripts, PDFs, Staff Q&amp;A, and mock packs are archived locally and are intentionally not published on this site.</section></main>
+</body>
+</html>

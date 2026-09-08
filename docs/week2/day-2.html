@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Week 2 Day 2 - Distributed Cache：复制、分片、热点与故障</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <nav class="shell nav">
+      <a class="brand" href="../system-design-12-week-master-plan.html"><span class="mark"></span> WEEK 02 · READ SYSTEMS</a>
+      <div class="navlinks">
+        <a href="../system-design-12-week-master-plan.html">12 周路线</a>
+        <a href="../week2-action-guide.html">第 2 周</a>
+        <a href="#local-materials">深度讲义</a>
+        <a href="#local-materials">Staff Q&amp;A</a>
+        <a href="#local-materials">Live Mock</a>
+        <a href="#local-materials">验收</a>
+      </div>
+    </nav>
+  </header>
+  <main class="shell">
+
+    <section class="day-hero">
+      <div class="eyebrow">TUE · 08.04 · WEEK 02 · DAY 2</div>
+      <h1>Distributed Cache：复制、分片、热点与故障</h1>
+      <p class="deck">完整覆盖六个 live deep dives 与 level expectation。今天的主线是 key routing、replication、rebalancing、hot read/write 和 p99。</p>
+      <div class="day-meta"><span>08:30 wake</span><span>08:50—10:55 system design</span><span>14:30—16:15 + 20:30—21:15</span></div>
+      <div class="pill-row"><a href="day-1.html">上一天</a><a href="day-3.html">下一天</a><a class="pill" href="#local-materials">讲义</a><a class="pill" href="#local-materials">证据表</a></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>学习源包</h2><p class="section-copy">按顺序打开。Hello Interview 与 DDIA 链接都直达今天需要的 live subsection，不做整章地毯式阅读。</p></div>
+      <div class="ops-grid"><section>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/distributed-cache#potential-deep-dives">Distributed Cache · Potential Deep Dives</a><span>EXACT SECTION</span></div>
+          <div class="proof">deep dive；完成后在白板或口述中留下对应证据。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/distributed-cache#1-how-do-we-ensure-our-cache-is-highly-available-and-fault-tolerant">Distributed Cache · 1) How do we ensure our cache is highly available and fault tolerant?</a><span>EXACT SECTION</span></div>
+          <div class="proof">deep dive；完成后在白板或口述中留下对应证据。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/distributed-cache#2-how-do-we-ensure-our-cache-is-scalable">Distributed Cache · 2) How do we ensure our cache is scalable?</a><span>EXACT SECTION</span></div>
+          <div class="proof">deep dive；完成后在白板或口述中留下对应证据。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/distributed-cache#3-how-can-we-ensure-an-even-distribution-of-keys-across-our-nodes">Distributed Cache · 3) How can we ensure an even distribution of keys across our nodes?</a><span>EXACT SECTION</span></div>
+          <div class="proof">deep dive；完成后在白板或口述中留下对应证据。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/distributed-cache#4-what-happens-if-you-have-a-hot-key-that-is-being-read-from-a-lot">Distributed Cache · 4) What happens if you have a hot key that is being read from a lot?</a><span>EXACT SECTION</span></div>
+          <div class="proof">deep dive；完成后在白板或口述中留下对应证据。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/distributed-cache#5-what-happens-if-you-have-a-hot-key-that-is-being-written-to-a-lot">Distributed Cache · 5) What happens if you have a hot key that is being written to a lot?</a><span>EXACT SECTION</span></div>
+          <div class="proof">deep dive；完成后在白板或口述中留下对应证据。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/distributed-cache#6-how-do-we-ensure-our-cache-is-performant">Distributed Cache · 6) How do we ensure our cache is performant?</a><span>EXACT SECTION</span></div>
+          <div class="proof">deep dive；完成后在白板或口述中留下对应证据。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/distributed-cache#tying-it-all-together">Distributed Cache · Tying it all together</a><span>EXACT SECTION</span></div>
+          <div class="proof">level expectation；完成后在白板或口述中留下对应证据。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/distributed-cache#what-is-expected-at-each-level">Distributed Cache · What is Expected at Each Level?</a><span>EXACT SECTION</span></div>
+          <div class="proof">level expectation；完成后在白板或口述中留下对应证据。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/distributed-cache#mid-level">Distributed Cache · Mid-level</a><span>EXACT SECTION</span></div>
+          <div class="proof">level expectation；完成后在白板或口述中留下对应证据。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/distributed-cache#senior">Distributed Cache · Senior</a><span>EXACT SECTION</span></div>
+          <div class="proof">level expectation；完成后在白板或口述中留下对应证据。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/distributed-cache#staff">Distributed Cache · Staff</a><span>EXACT SECTION</span></div>
+          <div class="proof">level expectation；完成后在白板或口述中留下对应证据。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://ddia.vonng.com/ch6/#sec_replication_sync_async">DDIA Ch6 · 同步复制与异步复制</a><span>EXACT SECTION</span></div>
+          <div class="proof">画 ACK 后 primary 宕机、replica 尚未收到数据的 failure window。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://ddia.vonng.com/ch7/#sec_sharding_hash">DDIA Ch7 · 按键的哈希分片</a><span>EXACT SECTION</span></div>
+          <div class="proof">画 key → logical shard → physical node。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://ddia.vonng.com/ch7/#sec_sharding_consistent_hashing">DDIA Ch7 · 一致性哈希</a><span>EXACT SECTION</span></div>
+          <div class="proof">比较 modulo、固定分片、一致性哈希在节点变更时的搬迁量。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://ddia.vonng.com/ch7/#sec_sharding_skew">DDIA Ch7 · 倾斜的工作负载与缓解热点</a><span>EXACT SECTION</span></div>
+          <div class="proof">分别给 hot read 与 hot write 一个不依赖口号的修复。</div>
+        </div>
+        <div class="source-block">
+          <div class="source-title"><a href="https://ddia.vonng.com/ch7/#sec_sharding_routing">DDIA Ch7 · 请求路由</a><span>EXACT SECTION</span></div>
+          <div class="proof">在客户端路由与代理路由之间做一个绑定运行条件的选择。</div>
+        </div></section><section>
+        <h2>今日验收</h2>
+        <ul class="compact-list"><li><span class="box"></span><span>consistent hashing 只减少成员变化时的 remap；不能声称它消灭热点。</span></li><li><span class="box"></span><span>异步复制的 ACK 语义、最大丢写窗口和节点恢复步骤必须一致。</span></li><li><span class="box"></span><span>每个性能优化都绑定一个指标，不能用 batching 隐藏 p99 或 freshness 代价。</span></li></ul>
+        <div class="callout"><strong>必须产出：</strong>50 节点集群 HLD + ring/routing 图 + replication failure window + hot-key repair matrix。</div>
+      </section></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>08:50—10:55</h2><p class="section-copy">系统设计块保持完整。最后十分钟永远用于无稿 close，防止学习退化为被动阅读。</p></div>
+      <table class="matrix"><tr><th>时间</th><th>今日时间表</th></tr><tr><td><strong>08:50—09:00</strong></td><td>写今天的判断：扩展性、可用性和低延迟是三条不同的设计轴。</td></tr><tr><td><strong>09:00—09:25</strong></td><td>读 HA/fault tolerance；比较同步、异步、peer-to-peer 复制并画丢失窗口。</td></tr><tr><td><strong>09:25—09:50</strong></td><td>读 scale / even distribution；完成容量节点数、logical shard 和 ring version。</td></tr><tr><td><strong>09:50—10:15</strong></td><td>读 hot read / hot write；为两种热点分别写 detection → mitigation → recovery。</td></tr><tr><td><strong>10:15—10:35</strong></td><td>读 performance；把 batch/pipeline、连接、序列化、p99 与单机 benchmark 串起来。</td></tr><tr><td><strong>10:35—10:45</strong></td><td>读 tying together 与 Mid/Senior/Staff；圈出自己尚未主动提出的 Staff 行为。</td></tr><tr><td><strong>10:45—10:55</strong></td><td>闭卷讲 key 路由、replica 写入和节点故障三条时序。</td></tr></table>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>算法模块</h2><p class="section-copy">NeetCode Tag：Two Pointers。三个 slot 全在同一连续 tag；每题记录 Pattern / Invariant / Bug / Complexity。</p></div>
+      <div class="algo-pack">
+        <div class="tag-row"><span>14:30—16:15</span><span>NeetCode Tag · Two Pointers</span><span>3 required slots</span></div>
+        <table class="matrix"><tr><th>#</th><th>题目</th><th>当日目标</th><th>时间</th></tr><tr data-neetcode-slot="true"><td>1</td><td><a href="https://neetcode.io/problems/max-water-container">Container With Most Water</a></td><td>新题 · 较短边决定上界，移动长边没有收益。</td><td>14:30—15:05</td></tr><tr data-neetcode-slot="true"><td>2</td><td><a href="https://neetcode.io/problems/trapping-rain-water">Trapping Rain Water</a></td><td>新题 · 左右最大值决定结算哪一侧。</td><td>15:05—15:40</td></tr><tr data-neetcode-slot="true"><td>3</td><td><a href="https://neetcode.io/problems/is-palindrome">Valid Palindrome</a></td><td>复刷 · 15 分钟内无边界 bug。</td><td>15:40—16:15</td></tr></table>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>20:30—21:15</h2><p class="section-copy">口述块只接受录音、实际回答或 repair 证据，不用“看完了”作为完成。</p></div>
+      <div class="callout green">20:30—21:15 · 完成 Staff Q&amp;A 01—08。每题先答 90 秒，再展开参考答案；只记录一个需要周日复测的 critical miss。</div>
+    </section>
+    <footer class="footer"><a href="../week2-action-guide.html">返回第 2 周总览</a> · Day 2 只在 evidence gate 通过后结束。</footer>
+  <section id="local-materials" style="margin:40px auto;max-width:1080px;padding:18px 22px;border:1px solid #d9dce1;background:#f7f8fa;color:#30343b;font:14px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif"><strong>Local study materials</strong><br>Detailed lecture notes, audio, recall scripts, PDFs, Staff Q&amp;A, and mock packs are archived locally and are intentionally not published on this site.</section></main>
+</body>
+</html>

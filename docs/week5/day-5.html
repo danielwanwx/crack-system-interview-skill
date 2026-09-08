@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第 5 周 Day 5 - Robinhood：ordered market updates、order gateway 与 financial retry failure</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar"><nav class="shell nav">
+    <a class="brand" href="../week5-action-guide.html"><span class="mark"></span> WEEK 05 · CONTENTION & FINANCIAL STATE</a>
+    <div class="navlinks"><a href="../week5-action-guide.html">第 5 周</a><a href="#local-materials">讲义</a><a href="#local-materials">Staff Q&amp;A</a><a href="#local-materials">Live Mock</a><a href="#local-materials">验收</a></div>
+  </nav></header>
+  <main class="shell">
+
+    <section class="hero">
+      <div><div class="eyebrow">WEEK 05 · 2026-08-28 · FRI</div><h1>Robinhood：ordered market updates、order gateway 与 financial retry failure</h1><p class="deck">Robinhood 的核心不是撮合交易所，而是把外部市场数据和外部 order API 变成可审计、可恢复、低延迟的客户状态。</p>
+      <div class="pill-row"><a class="pill" href="../week5-action-guide.html">周指南</a><a class="pill" href="#local-materials">讲义</a><a class="pill" href="#local-materials">Q&amp;A</a><a class="pill" href="#local-materials">验收</a></div></div>
+      <aside class="hero-panel"><div class="metric"><b>08:50</b><span>system start</span></div><div class="metric"><b>125m</b><span>design block</span></div><div class="metric"><b>3</b><span>Binary Search</span></div><div class="metric"><b>45m</b><span>oral block</span></div></aside>
+    </section>
+    <section class="section"><div class="section-head"><h2>今日固定时间表</h2><p class="section-copy">三块窗口固定：08:50-10:55 系统设计，14:30-16:15 算法，20:30-21:15 口述。</p></div><table class="rubric">
+      <tr><th>08:50-09:25</th><td><b>08:50-10:55 system design</b><br>25-35 分钟 attempt - 闭卷设计 live prices、create/cancel/list orders；先区分 order、execution、portfolio projection。</td></tr>
+<tr><th>09:25-10:05</th><td><b>08:50-10:55 system design</b><br>精确原文 - 读 Robinhood 全部 canonical headings，包括 background、HLD、3 个 deep dives 和 levels。</td></tr>
+<tr><th>10:05-10:35</th><td><b>08:50-10:55 system design</b><br>故障时序 - submit 到 exchange 成功但本地写 externalOrderId 失败；cancel retry；trade feed duplicate/out-of-order。</td></tr>
+<tr><th>10:35-10:55</th><td><b>08:50-10:55 system design</b><br>DDIA 决策卡 - 用 Ch8 distributed transactions/exactly-once 和 Ch10 shared logs 定义恢复边界。</td></tr>
+      <tr><th>14:30-16:15</th><td><b>NeetCode Tag · Binary Search</b><br>三道题，每题 30m solve + 5m evidence，不能改 tag。</td></tr>
+      <tr><th>20:30-21:15</th><td>20:30-21:15 Robinhood English recall outline + one duplicate order/cancel retry trace。</td></tr>
+    </table></section>
+    <section class="section"><div class="section-head"><h2>算法模块</h2><p class="section-copy">连续 NeetCode Binary Search；每天 exactly 3 slots。</p></div><table class="matrix algorithm-table"><tr><th>#</th><th>Problem / mode</th><th>Pattern</th><th>Invariant</th><th>Bug risk</th><th>Time</th><th>Space</th></tr><tr data-neetcode-slot="true" data-mode="NEW" data-minutes="35"><td data-label="Slot">1</td><td data-label="Problem / mode"><a href="https://neetcode.io/problems/single-element-in-a-sorted-array/question">Single Element in a Sorted Array</a><br><span class="evidence-chip">NEW · 30m solve + 5m evidence</span></td><td data-label="Pattern">pair parity</td><td data-label="Invariant">Before the single item, pairs start at even index; after it, parity flips.</td><td data-label="Bug risk">Checking mid^1 outside range or wrong parity branch.</td><td data-label="Time">O(log n)</td><td data-label="Space">O(1)</td></tr>
+<tr data-neetcode-slot="true" data-mode="NEW" data-minutes="35"><td data-label="Slot">2</td><td data-label="Problem / mode"><a href="https://neetcode.io/problems/find-peak-element/question">Find Peak Element</a><br><span class="evidence-chip">NEW · 30m solve + 5m evidence</span></td><td data-label="Pattern">slope binary search</td><td data-label="Invariant">If nums[mid] &lt; nums[mid+1], a peak exists to the right.</td><td data-label="Bug risk">Reading mid+1 when mid is hi.</td><td data-label="Time">O(log n)</td><td data-label="Space">O(1)</td></tr>
+<tr data-neetcode-slot="true" data-mode="NEW" data-minutes="35"><td data-label="Slot">3</td><td data-label="Problem / mode"><a href="https://neetcode.io/problems/successful-pairs-of-spells-and-potions/question">Successful Pairs of Spells and Potions</a><br><span class="evidence-chip">NEW · 30m solve + 5m evidence</span></td><td data-label="Pattern">lower_bound per query</td><td data-label="Invariant">Sorted potions make required threshold index monotonic.</td><td data-label="Bug risk">Multiplication overflow; ceil division error.</td><td data-label="Time">O((m+n) log n)</td><td data-label="Space">O(n)</td></tr></table></section>
+    <section class="section"><div class="section-head"><h2>Hello Interview 精确目录</h2><p class="section-copy">保留 live canonical heading title；day page 使用 direct section anchors。</p></div><table class="matrix reading-table"><tr><th>项目</th><th>精确 canonical section</th><th>Disposition</th><th>今天怎么用</th></tr><tr><td>Robinhood</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/robinhood#understanding-the-problem">Understanding the Problem</a></td><td>required reading</td><td>brokerage system, not an exchange</td></tr>
+<tr><td>Robinhood</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/robinhood#background-financial-markets">Background: Financial Markets</a></td><td>required reading</td><td>symbol, market order, limit order, exchange interface</td></tr>
+<tr><td>Robinhood</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/robinhood#functional-requirements">Functional Requirements</a></td><td>required reading</td><td>live prices and order management</td></tr>
+<tr><td>Robinhood</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/robinhood#non-functional-requirements">Non-Functional Requirements</a></td><td>required reading</td><td>consistent orders, low latency, limited exchange connections</td></tr>
+<tr><td>Robinhood</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/robinhood#the-set-up">The Set Up</a></td><td>required reading</td><td>plan the interview path</td></tr>
+<tr><td>Robinhood</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/robinhood#planning-the-approach">Planning the Approach</a></td><td>required reading</td><td>build by functional requirements then NFR deep dives</td></tr>
+<tr><td>Robinhood</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/robinhood#defining-the-core-entities">Defining the Core Entities</a></td><td>required reading</td><td>User, Symbol, Order</td></tr>
+<tr><td>Robinhood</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/robinhood#the-api">The API</a></td><td>required reading</td><td>symbol price, create order, cancel order, list orders</td></tr>
+<tr><td>Robinhood</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/robinhood#high-level-design">High-Level Design</a></td><td>required reading</td><td>symbol service, order gateway, trade processor</td></tr>
+<tr><td>Robinhood</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/robinhood#1-users-can-see-live-prices-of-stocks">1) Users can see live prices of stocks</a></td><td>required reading</td><td>live market update path</td></tr>
+<tr><td>Robinhood</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/robinhood#2-users-can-manage-orders-for-stocks">2) Users can manage orders for stocks</a></td><td>required reading</td><td>order create/cancel/read lifecycle</td></tr>
+<tr><td>Robinhood</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/robinhood#potential-deep-dives">Potential Deep Dives</a></td><td>deep dive</td><td>price scale, order updates, order consistency</td></tr>
+<tr><td>Robinhood</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/robinhood#1-how-can-the-system-scale-up-live-price-updates">1) How can the system scale up live price updates?</a></td><td>deep dive</td><td>symbol pub/sub, SSE fanout and subscription ownership</td></tr>
+<tr><td>Robinhood</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/robinhood#2-how-does-the-system-track-order-updates">2) How does the system track order updates?</a></td><td>deep dive</td><td>externalOrderId to internal order/user mapping</td></tr>
+<tr><td>Robinhood</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/robinhood#3-how-does-the-system-manage-order-consistency">3) How does the system manage order consistency?</a></td><td>deep dive</td><td>pending/submitted/filled/cancelled, cleanup and reconciliation</td></tr>
+<tr><td>Robinhood</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/robinhood#some-additional-deep-dives-you-might-consider">Some additional deep dives you might consider</a></td><td>deep dive</td><td>excess updates, order update push, historical portfolio data</td></tr>
+<tr><td>Robinhood</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/robinhood#what-is-expected-at-each-level">What is Expected at Each Level?</a></td><td>level expectation</td><td>calibrate hard/full project depth</td></tr>
+<tr><td>Robinhood</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/robinhood#mid-level">Mid-level</a></td><td>level expectation</td><td>functional price and order design</td></tr>
+<tr><td>Robinhood</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/robinhood#senior">Senior</a></td><td>level expectation</td><td>real-time prices and consistent order workflow</td></tr>
+<tr><td>Robinhood</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/robinhood#staff">Staff+</a></td><td>level expectation</td><td>deep trade-offs with external exchange and failure recovery</td></tr></table></section>
+    <section class="section"><div class="section-head"><h2>DDIA 精确决策卡</h2><p class="section-copy">只使用 Ch8 和 Ch10 中直接解决今天设计决定的小节。</p></div><table class="matrix"><tr><th>项目</th><th>项目问题</th><th>精确 DDIA subsection</th><th>改变的系统决定</th></tr><tr><td>Robinhood</td><td>What happens if order submission reaches the exchange but local persistence fails?</td><td><a href="https://ddia.vonng.com/ch8/#sec_transactions_distributed">Ch8 - 分布式事务</a></td><td>We avoid pretending local DB plus exchange API is one ACID database; we persist pending intent first and reconcile via clientOrderId.</td></tr>
+<tr><td>Robinhood</td><td>How are repeated order/cancel messages processed safely?</td><td><a href="https://ddia.vonng.com/ch8/#sec_transactions_exactly_once">Ch8 - 恰好一次消息处理</a></td><td>Idempotency keys and externalOrderId mapping make duplicate dispatch, webhook, and cleanup retries converge to one order state.</td></tr>
+<tr><td>Robinhood</td><td>How should ordered market updates be delivered to many clients?</td><td><a href="https://ddia.vonng.com/ch10/#sec_consistency_shared_logs">Ch10 - 共享日志作为共识</a></td><td>A symbol update stream carries sequence/as-of time; UI applies monotonic updates and can drop stale/out-of-order messages.</td></tr></table></section>
+    <section class="section"><div class="section-head"><h2>三域 trace 任务</h2></div><div class="trace-grid">
+      <div class="trace-step"><b>Winning transaction</b><span>标出唯一线性化点：seat hold/sold、accepted bid at close、brokerage order/execution state。</span></div>
+      <div class="trace-step"><b>Duplicate/retry failure</b><span>给出 stable idempotency key、重复返回语义、旧 owner/stale version 被拒绝的证据。</span></div>
+      <div class="trace-step"><b>Projection boundary</b><span>说明哪些读可以陈旧：seat map、highest bid display、market price UI；哪些写不能陈旧。</span></div>
+    </div></section>
+    <section class="section"><div class="section-head"><h2>本日 artifacts</h2><p class="section-copy">项目脚本、音频、PDF 和 mock evidence 从当天直接打开。</p></div><div class="pill-row"><a class="pill" href="#local-materials">Robinhood 中文 explainer</a> <a class="pill" href="#local-materials">Robinhood 中文音频</a> <a class="pill" href="#local-materials">Robinhood English recall outline</a></div></section>
+    <section class="section"><div class="section-head"><h2>今日产出、修复与英语 recall</h2></div><table class="rubric">
+      <tr><th>课程角色</th><td>FULL · original reading + 35m attempt/follow-up</td></tr>
+      <tr><th>必须交付</th><td>Robinhood 35m attempt + follow-up：price stream sequence、order state machine、externalOrderId map、cleanup/reconciliation。</td></tr>
+      <tr><th>修复规则</th><td>如果下单成功就直接更新持仓，重写 order -&gt; execution -&gt; portfolio projection 的状态链。</td></tr>
+      <tr><th>English recall</th><td><div class="english-recall">English recall: An order is intent, an execution is fact, and portfolio is a derived view.</div></td></tr>
+    </table></section>
+    <footer class="footer">Day 5 只推进 Week 5；完成后把证据写入 <a href="#local-materials">scorecard</a>。</footer>
+
+  <section id="local-materials" style="margin:40px auto;max-width:1080px;padding:18px 22px;border:1px solid #d9dce1;background:#f7f8fa;color:#30343b;font:14px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif"><strong>Local study materials</strong><br>Detailed lecture notes, audio, recall scripts, PDFs, Staff Q&amp;A, and mock packs are archived locally and are intentionally not published on this site.</section></main>
+</body>
+</html>

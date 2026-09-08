@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第 4 周 Day 4 - Google Docs：WebSocket scale、storage compaction、load/update recovery</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="topbar"><nav class="shell nav">
+    <a class="brand" href="../week4-action-guide.html"><span class="mark"></span> WEEK 04 · MESSAGING & COLLABORATION</a>
+    <div class="navlinks"><a href="../week4-action-guide.html">第 4 周</a><a href="#local-materials">深度讲义</a><a href="#local-materials">Staff Q&amp;A</a><a href="#local-materials">Live Mock</a><a href="#local-materials">验收</a></div>
+  </nav></header>
+  <main class="shell">
+
+    <section class="hero">
+      <div>
+        <div class="eyebrow">WEEK 04 · 2026-08-20 · THU</div>
+        <h1>Google Docs：WebSocket scale、storage compaction、load/update recovery</h1>
+        <p class="deck">完整覆盖 Google Docs deep dives：millions WebSockets、storage control、additional deep dives、document load/update H4、level expectations。</p>
+        <div class="pill-row"><a class="pill" href="../week4-action-guide.html">周指南</a><a class="pill" href="#local-materials">讲义</a><a class="pill" href="#local-materials">Q&amp;A</a><a class="pill" href="#local-materials">验收</a></div>
+      </div>
+      <aside class="hero-panel"><div class="metric"><b>08:30</b><span>wake</span></div><div class="metric"><b>125m</b><span>system design</span></div><div class="metric"><b>3</b><span>Sliding Window</span></div><div class="metric"><b>45m</b><span>recall/mock</span></div></aside>
+    </section>
+    <section class="section">
+      <div class="section-head"><h2>今日固定时间表</h2><p class="section-copy">08:30 wake 只保留起床；学习从 08:50 开始。三块窗口不互相挤占。</p></div>
+      <table class="rubric">
+        <tr><th>08:30 wake</th><td>起床、早餐、准备白板；不安排预读或算法。</td></tr>
+        <tr><th>08:50—09:15</th><td><b>08:50—10:55 system design</b><br>Bad/Good/Great 拆解 — Bad: 每次保存全文；Good: op log + snapshot；Great: compacted snapshots + replay + transform/rebase + room fencing。</td></tr><tr><th>09:15—09:50</th><td><b>08:50—10:55 system design</b><br>精确原文 — 读 Google Docs potential deep dives、When Loaded/Updates H4、levels 和 references。</td></tr><tr><th>09:50—10:25</th><td><b>08:50—10:55 system design</b><br>故障时序 — room owner pause、op log replay、snapshot compaction、slow websocket client、presence expiry。</td></tr><tr><th>10:25—10:55</th><td><b>08:50—10:55 system design</b><br>恢复和指标 — 补 op-lag、snapshot age、transform conflict rate、reconnect recovery、storage bytes/doc。</td></tr>
+        <tr><th>14:30—16:15</th><td><b>NeetCode Tag · Sliding Window</b><br>三道题在下方独立算法表执行。</td></tr>
+        <tr><th>20:30—21:15</th><td>20:30—21:15 Staff Q&amp;A：op ordering、compaction、room owner lease、presence as soft state。</td></tr>
+      </table>
+    </section>
+    <section class="section"><div class="section-head"><h2>算法模块</h2><p class="section-copy">连续单一 NeetCode Sliding Window tag；每天 3 个 NEW slot，每题 30 分钟作答 + 5 分钟证据，正好 105 分钟。每天 timed review = 0，满足不超过 1。</p></div><table class="matrix algorithm-table"><tr><th>#</th><th>Problem / mode</th><th>Pattern</th><th>Invariant</th><th>Bug risk</th><th>Time</th><th>Space</th></tr><tr data-neetcode-slot="true" data-mode="NEW" data-minutes="35"><td data-label="Slot">10</td><td data-label="Problem / mode"><a href="https://neetcode.io/problems/find-k-length-substrings-with-no-repeated-characters/question">Find K-Length Substrings With No Repeated Characters</a><br><span class="evidence-chip">NEW · 30m solve + 5m evidence</span></td><td data-label="Pattern">固定长度唯一窗口</td><td data-label="Invariant">窗口长度不超过 k 且字符频次可判唯一。</td><td data-label="Bug risk">重复字符跨左边界；不足 k 也计数。</td><td data-label="Time">O(n)</td><td data-label="Space">O(alphabet)</td></tr>
+<tr data-neetcode-slot="true" data-mode="NEW" data-minutes="35"><td data-label="Slot">11</td><td data-label="Problem / mode"><a href="https://neetcode.io/problems/alternating-groups-ii/question">Alternating Groups II</a><br><span class="evidence-chip">NEW · 30m solve + 5m evidence</span></td><td data-label="Pattern">环形固定长度窗口</td><td data-label="Invariant">连续交替 run 覆盖下标模 n，起点只计 n 个。</td><td data-label="Bug risk">重复计算第二圈起点；k=1。</td><td data-label="Time">O(n + k)</td><td data-label="Space">O(1)</td></tr>
+<tr data-neetcode-slot="true" data-mode="NEW" data-minutes="35"><td data-label="Slot">12</td><td data-label="Problem / mode"><a href="https://neetcode.io/problems/longest-substring-without-repeating-characters/question">Longest Substring Without Repeating Characters</a><br><span class="evidence-chip">NEW · 30m solve + 5m evidence</span></td><td data-label="Pattern">可变唯一窗口</td><td data-label="Invariant">窗口内字符全部唯一。</td><td data-label="Bug risk">lastSeen 小于 left 时错误回退 left。</td><td data-label="Time">O(n)</td><td data-label="Space">O(alphabet)</td></tr></table></section>
+    <section class="section"><div class="section-head"><h2>闭卷起手</h2></div><div class="callout"><p>15 分钟闭卷回答：document room owner 挂了、op 已持久化但广播失败、客户端 baseRevision 落后，分别怎么恢复？</p></div></section>
+    <section class="section"><div class="section-head"><h2>Hello Interview 精确目录</h2><p class="section-copy">day 页面使用 canonical data-toc-id/H4 anchors；周级 overview 不放小节链接。</p></div><table class="matrix reading-table"><tr><th>项目</th><th>精确 canonical section</th><th>Disposition</th><th>今天怎么用</th></tr><tr><td>Google Docs</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/google-docs#potential-deep-dives">Potential Deep Dives</a></td><td>deep dive</td><td>scale and storage</td></tr>
+<tr><td>Google Docs</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/google-docs#1-how-do-we-scale-to-millions-of-websocket-connections">1) How do we scale to millions of websocket connections?</a></td><td>deep dive</td><td>connection fanout and document room ownership</td></tr>
+<tr><td>Google Docs</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/google-docs#2-how-do-we-keep-storage-under-control">2) How do we keep storage under control?</a></td><td>deep dive</td><td>snapshots, compaction, op retention</td></tr>
+<tr><td>Google Docs</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/google-docs#some-additional-deep-dives-you-might-consider">Some additional deep dives you might consider</a></td><td>deep dive</td><td>extra prompts recorded for Staff pressure</td></tr>
+<tr><td>Google Docs</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/google-docs#when-the-document-is-loaded">When the Document is Loaded</a></td><td>deep dive</td><td>H4 load snapshot + missing ops</td></tr>
+<tr><td>Google Docs</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/google-docs#when-updates-happen">When Updates Happen</a></td><td>deep dive</td><td>H4 submit op + transform/broadcast</td></tr>
+<tr><td>Google Docs</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/google-docs#what-is-expected-at-each-level">What is Expected at Each Level?</a></td><td>level expectation</td><td>calibrate interview depth</td></tr>
+<tr><td>Google Docs</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/google-docs#mid-level">Mid-level</a></td><td>level expectation</td><td>basic collaboration flow</td></tr>
+<tr><td>Google Docs</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/google-docs#senior">Senior</a></td><td>level expectation</td><td>OT/CRDT, scale, failure</td></tr>
+<tr><td>Google Docs</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/google-docs#staff">Staff</a></td><td>level expectation</td><td>storage compaction, correctness and recovery</td></tr>
+<tr><td>Google Docs</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/google-docs#references">References</a></td><td>reference metadata</td><td>recorded but not scheduled as passive reading</td></tr></table></section>
+    <section class="section"><div class="section-head"><h2>DDIA 精确决策卡</h2><p class="section-copy">只读能改变今天设计决定的小节。</p></div><table class="matrix"><tr><th>项目问题</th><th>精确 DDIA subsection</th><th>改变的系统决定</th></tr><tr><td>Google Docs 的 OT/CRDT 具体改变哪个系统决定？</td><td><a href="https://ddia.vonng.com/ch6/#sec_replication_crdts">Ch6 · CRDT 与操作变换</a></td><td>operation log 存语义操作和 revision/context，而不是只存最终文本覆盖。</td></tr>
+<tr><td>文档 room 内操作是否需要一个共享顺序？</td><td><a href="https://ddia.vonng.com/ch10/#sec_consistency_shared_logs">Ch10 · 共享日志作为共识</a></td><td>服务端 sequencer/op log 给文档操作建立单调 revision；客户端基于 revision transform/rebase。</td></tr>
+<tr><td>协同服务进程暂停会怎样破坏锁/租约？</td><td><a href="https://ddia.vonng.com/ch9/#sec_distributed_clocks_pauses">Ch9 · 进程暂停</a></td><td>不要用本地进程假设持有无限租约；room ownership 需要心跳、lease expiry 和 fencing。</td></tr></table></section>
+    <section class="section"><div class="section-head"><h2>本日项目 artifacts</h2><p class="section-copy">脚本、音频、PDF 与 mock evidence 直接从对应日打开。</p></div><div class="pill-row"><a class="pill" href="#local-materials">Google Docs 中文完整讲稿</a> <a class="pill" href="#local-materials">Google Docs 中文完整音频</a> <a class="pill" href="#local-materials">Google Docs Senior+/Staff English recall</a> <a class="pill" href="#local-materials">Google Docs printable recall PDF</a></div></section>
+    <section class="section"><div class="section-head"><h2>今日产出、修复与英语 recall</h2></div><table class="rubric"><tr><th>课程角色</th><td>CORE · all deep dives + Bad/Good/Great</td></tr><tr><th>必须交付</th><td>Google Docs deep-dive matrix：connection scale/storage/op replay/load/update/levels，各含 invariants、failure windows、metrics。</td></tr><tr><th>修复规则</th><td>如果 storage 只说“压缩”，补 snapshot interval、op retention、replay upper bound 和 audit trail。</td></tr><tr><th>English recall</th><td><div class="english-recall">English recall: “A document room needs a recoverable operation log and bounded replay, not an infinite WebSocket buffer.”</div></td></tr></table></section>
+    <footer class="footer">Day 4 只推进 Week 4；不打开 Week 5。完成后把证据写入 <a href="#local-materials">scorecard</a>。</footer>
+  <section id="local-materials" style="margin:40px auto;max-width:1080px;padding:18px 22px;border:1px solid #d9dce1;background:#f7f8fa;color:#30343b;font:14px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif"><strong>Local study materials</strong><br>Detailed lecture notes, audio, recall scripts, PDFs, Staff Q&amp;A, and mock packs are archived locally and are intentionally not published on this site.</section></main>
+</body>
+</html>

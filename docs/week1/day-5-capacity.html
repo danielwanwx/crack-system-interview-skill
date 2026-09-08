@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FRI · 07.31 - 横向串联：缓存、计数器与系统边界</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="../week1/style.css">
+</head>
+<body>
+
+  <header class="topbar">
+    <nav class="shell nav">
+      <a class="brand" href="../system-design-12-week-master-plan.html"><span class="mark"></span> CRACK SYSTEM INTERVIEW</a>
+      <div class="navlinks">
+        <a href="../system-design-12-week-master-plan.html">12 周路线</a>
+        <a href="../week1-action-guide.html">第 1 周</a>
+        <a href="#local-materials">深度讲义</a>
+        <a href="#local-materials">Staff Q&amp;A</a>
+        <a href="#local-materials">Live Mock</a>
+        <a href="#local-materials">验收</a>
+      </div>
+    </nav>
+  </header>
+  <main class="shell">
+
+    <section class="day-hero">
+      <div class="eyebrow">FRI · 07.31 · WEEK 01</div>
+      <h1>横向串联：缓存、计数器与系统边界</h1>
+      <p class="deck">今天不新增架构图。把两个项目共享的机制和不能互相复制的假设说清楚。</p>
+      <div class="day-meta"><span>08:50—10:55 系统设计</span><span>14:30—16:15 三题</span><span>20:30—21:15 口述</span></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>原文定位</h2><p class="section-copy">按顺序打开。链接直接指向当天需要阅读的小节。</p></div>
+      <ol class="reading-list"><li><a href="https://www.hellointerview.com/learn/system-design/core-concepts/caching">Caching</a></li><li><a href="https://www.hellointerview.com/learn/system-design/core-concepts/consistent-hashing">Consistent Hashing</a></li><li><a href="https://www.hellointerview.com/learn/system-design/core-concepts/sharding">Sharding</a></li><li><a href="https://www.hellointerview.com/learn/system-design/patterns/scaling-reads">Scaling Reads</a></li><li><a href="https://www.hellointerview.com/learn/system-design/patterns/scaling-writes">Scaling Writes</a></li><li><a href="https://ddia.vonng.com/ch6/#sec_replication_lag">DDIA Ch6 / 复制延迟的问题</a></li><li><a href="https://ddia.vonng.com/ch6/#sec_replication_ryw">DDIA Ch6 / 读己之写</a></li><li><a href="https://ddia.vonng.com/ch7/#sec_sharding_hash">DDIA Ch7 / 按键的哈希分片</a></li><li><a href="https://ddia.vonng.com/ch7/#sec_sharding_skew">DDIA Ch7 / 倾斜的工作负载与缓解热点</a></li><li><a href="https://ddia.vonng.com/ch9/#sec_distributed_partial_failure">DDIA Ch9 / 故障与部分失效</a></li></ol>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>上午执行</h2></div>
+      <table class="matrix"><tr><th>时间</th><th>动作</th></tr><tr><td><strong>08:50—09:20</strong></td><td>闭卷写共同机制：cache、key distribution、hot key、replication、TTL、metrics。</td></tr><tr><td><strong>09:20—10:00</strong></td><td>只读能回答当前疑问的 DDIA 段落：replica lag、leader failover、hot spots。</td></tr><tr><td><strong>10:00—10:30</strong></td><td>写 Difference Matrix：Bitly 可容忍什么，Rate Limiter 不能容忍什么。</td></tr><tr><td><strong>10:30—10:55</strong></td><td>做 10 分钟切题练习：面试官随时从 Bitly 切换到 Rate Limiter。</td></tr></table>
+      <div class="callout"><strong>必须产出：</strong>一张机制矩阵：真实来源、读写路径、正确性边界、分片键、故障策略、关键指标。</div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>掌握标准</h2></div>
+      <ul class="compact-list"><li><span class="box"></span><span>Bitly cache miss 可以回源；Rate Limiter state miss 可能直接改变保护语义。</span></li><li><span class="box"></span><span>Bitly 的唯一性主要在创建路径；Rate Limiter 的争用发生在每次 read-modify-write。</span></li><li><span class="box"></span><span>能明确复制、分片、缓存分别解决的问题，且不互相代替。</span></li></ul>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>算法 · Arrays &amp; Hashing</h2><p class="section-copy">Tag 不切换。三题结束后只记录四个字段。</p></div>
+      <table class="matrix"><tr><th>#</th><th>题目</th><th>留下的记录</th></tr><tr><td>1</td><td><a href="https://neetcode.io/problems/string-encode-and-decode">Encode and Decode Strings</a></td><td>Pattern / Invariant / Bug / Complexity</td></tr><tr><td>2</td><td><a href="https://leetcode.com/problems/majority-element/">Majority Element</a></td><td>Pattern / Invariant / Bug / Complexity</td></tr><tr><td>3</td><td><a href="https://leetcode.com/problems/longest-consecutive-sequence/">Longest Consecutive Sequence · 复刷</a></td><td>Pattern / Invariant / Bug / Complexity</td></tr></table>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>晚上</h2></div>
+      <div class="callout green">用英文各讲 5 分钟，再用 3 分钟比较两个系统。录音只听一遍，修最低质量的一段。</div>
+    </section>
+    <footer class="footer"><a href="../week1-action-guide.html">返回第 1 周总览</a></footer>
+  <section id="local-materials" style="margin:40px auto;max-width:1080px;padding:18px 22px;border:1px solid #d9dce1;background:#f7f8fa;color:#30343b;font:14px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif"><strong>Local study materials</strong><br>Detailed lecture notes, audio, recall scripts, PDFs, Staff Q&amp;A, and mock packs are archived locally and are intentionally not published on this site.</section></main>
+</body>
+</html>

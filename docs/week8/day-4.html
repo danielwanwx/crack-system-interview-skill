@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Week 8 Day 4 · Job Scheduler CORE Deep Dives</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body id="top">
+
+
+<header class="topbar">
+  <nav class="nav shell" aria-label="Week 8 navigation">
+    <a class="brand" href="../week8-action-guide.html"><span class="mark"></span><span>Week 8 · Day 4</span></a>
+    <div class="navlinks"><a href="../week8-action-guide.html">Overview</a><a href="day-1.html">Day 1</a><a href="day-2.html">Day 2</a><a href="day-3.html">Day 3</a><a href="day-4.html">Day 4</a><a href="day-5.html">Day 5</a><a href="day-6.html">Day 6</a><a href="day-7.html">Day 7</a><a href="#local-materials">Lecture</a><a href="#local-materials">Mock</a><a href="#local-materials">Scorecard</a></div>
+  </nav>
+</header>
+
+<main>
+  <section class="day-hero shell">
+    <div class="eyebrow">Week 8 · Thu Sep 17, 2026 · Sep 14-20, 2026</div>
+    <h1>Day 4: Job Scheduler CORE Deep Dives</h1>
+    <p class="deck">A Staff scheduler answer with time buckets, near-term delay queues, leases, zombie fencing, retries, backoff, poison queues, idempotent handlers, and exactly-once illusion.</p>
+    <div class="day-meta"><span>How do 2-second precision, 10k jobs/sec, and at-least-once execution fit together?</span><span>Frontier · leases · retries · dedupe · recovery</span><span>3 Heap/Priority Queue slots</span></div>
+  </section>
+
+  <section class="section shell" id="schedule">
+    <div class="section-head"><h2>Exact Time Blocks</h2><p class="section-copy">Follow the Week 4 delivery pattern: blank-page first, source reading second, DDIA decision third, spoken close, contiguous algorithm practice, evening recall.</p></div>
+
+<table class="matrix reading-table" id="time-blocks">
+  <tr><th>Time</th><th>Block</th><th>Required output</th></tr>
+  <tr><td data-label="Time">08:30</td><td data-label="Block">Wake + setup</td><td data-label="Required output">Open this page, start the board, write the day question: How do 2-second precision, 10k jobs/sec, and at-least-once execution fit together?</td></tr>
+  <tr><td data-label="Time">08:50—09:00</td><td data-label="Block">Board set</td><td data-label="Required output">List entities, queues, leases, retry states, dedupe keys, metrics before reading.</td></tr>
+  <tr><td data-label="Time">09:00—10:05</td><td data-label="Block">Blank-page attempt + Hello reading</td><td data-label="Required output">Rehearse the three Hello deep dives. For each one, write the bottleneck, mechanism, failure window, recovery, and metric: 2s precision, 10k jobs/sec, at-least-once execution.</td></tr>
+  <tr><td data-label="Time">10:05—10:45</td><td data-label="Block">Deep dive + DDIA decision</td><td data-label="Required output">Build the lease story: scanner moves due executions into a near-term queue; worker claims with token and deadline; heartbeat extends; completion uses conditional token match; expired leases reappear; retries use exponential backoff plus max attempts; poison messages stop infinite harm.</td></tr>
+  <tr><td data-label="Time">10:45—10:55</td><td data-label="Block">Spoken close</td><td data-label="Required output">Say the exact-once line cleanly: the scheduler guarantees at-least-once delivery and externally idempotent effects, not magic exactly-once execution.</td></tr>
+  <tr><td data-label="Time">14:30—16:15</td><td data-label="Block">NeetCode Heap/Priority Queue</td><td data-label="Required output">Complete contiguous slots W8-H10—W8-H12; capture invariant and bug risk for each.</td></tr>
+  <tr><td data-label="Time">20:30—21:15</td><td data-label="Block">Recall / Q&A / mock</td><td data-label="Required output">Use <a href="#local-materials">Staff Q&A</a>, <a href="#local-materials">lecture assets</a>, or <a href="#local-materials">mock script</a> for the day's system.</td></tr>
+</table>
+
+  </section>
+
+  <section class="section shell" id="canonical-headings">
+    <div class="section-head"><h2>Canonical Heading Anchors</h2><p class="section-copy">Read only the listed Hello Interview headings for today's assignment. Every link is a direct day-page anchor.</p></div>
+    <div class="ops-grid"><section>
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/job-scheduler#potential-deep-dives">Potential Deep Dives</a><span>Day 4</span></div>
+  <ul class="source-sections">
+    <li>CORE deep-dive index</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/job-scheduler#1-how-can-we-ensure-the-system-executes-jobs-within-2s-of-their-scheduled-time">1) How can we ensure the system executes jobs within 2s of their scheduled time?</a><span>Day 4</span></div>
+  <ul class="source-sections">
+    <li>CORE two-layer scheduling and timing precision</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/job-scheduler#2-how-can-we-ensure-the-system-is-scalable-to-support-up-to-10k-jobs-per-second">2) How can we ensure the system is scalable to support up to 10k jobs per second?</a><span>Day 4</span></div>
+  <ul class="source-sections">
+    <li>CORE throughput partitioning</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/job-scheduler#3-how-can-we-ensure-at-least-once-execution-of-jobs">3) How can we ensure at-least-once execution of jobs?</a><span>Day 4</span></div>
+  <ul class="source-sections">
+    <li>CORE leases, retries, poison messages, idempotence</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/job-scheduler#what-is-expected-at-each-level">What is Expected at Each Level?</a><span>Day 6</span></div>
+  <ul class="source-sections">
+    <li>Mock rubric calibration</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/job-scheduler#mid-level">Mid-level</a><span>Day 6</span></div>
+  <ul class="source-sections">
+    <li>Rubric contrast</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/job-scheduler#senior">Senior</a><span>Day 6</span></div>
+  <ul class="source-sections">
+    <li>Senior+ bar</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/job-scheduler#staff">Staff+</a><span>Day 6</span></div>
+  <ul class="source-sections">
+    <li>Staff bar</li>
+  </ul>
+</div>
+</section><section><h2>Decision Notes</h2><ul class="compact-list">
+      <li><span class="box"></span><span>CORE means you must answer requirement, HLD, deep dive, failure, recovery, metric, and Staff-level tradeoff.</span></li>
+      <li><span class="box"></span><span>TRANSFER means blind attempt first, then delta against source, invalid assumption, new bottleneck, and follow-up pressure question.</span></li>
+      <li><span class="box"></span><span>Do not add open-ended AI radar unless it changes a concrete Week 8 design decision; this week it does not.</span></li>
+    </ul></section></div>
+  </section>
+
+  <section class="section shell" id="ddia">
+    <div class="section-head"><h2>DDIA Decision Map</h2><p class="section-copy">Use exact sections only from Ch5, Ch9, and Ch12.</p></div>
+
+<table class="matrix reading-table">
+  <tr><th>Chapter</th><th>Exact DDIA decision section</th><th>Concrete Week 8 use</th></tr>
+  <tr><td data-label="Chapter">Ch9</td><td data-label="Exact section"><a href="https://ddia.vonng.com/ch9/#sec_distributed_lock_fencing">分布式锁和租约</a></td><td data-label="Decision use">Workers lease an execution; they never own it forever.</td></tr>
+<tr><td data-label="Chapter">Ch9</td><td data-label="Exact section"><a href="https://ddia.vonng.com/ch9/#sec_distributed_clocks_pauses">进程暂停</a></td><td data-label="Decision use">Zombie workers are normal; lease expiry and fencing decide whose completion counts.</td></tr>
+<tr><td data-label="Chapter">Ch12</td><td data-label="Exact section"><a href="https://ddia.vonng.com/ch12/#sec_stream_reordering">确认应答与重新传递</a></td><td data-label="Decision use">Redelivery is expected, so handlers and completion writes must be idempotent.</td></tr>
+<tr><td data-label="Chapter">Ch12</td><td data-label="Exact section"><a href="https://ddia.vonng.com/ch12/#sec_stream_idempotence">幂等性</a></td><td data-label="Decision use">Exactly-once is an illusion built from idempotency keys, conditional writes, and dedupe windows.</td></tr>
+</table>
+
+  </section>
+
+  <section class="section shell" id="algorithm">
+    <div class="section-head"><h2>Heap/Priority Queue Slots</h2><p class="section-copy">Three contiguous slots today. Keep one invariant and one failure mode per problem.</p></div>
+
+<table class="matrix algorithm-table" id="heap-slots-10-12">
+  <tr><th>Slot</th><th>Problem</th><th>Pattern</th><th>Invariant / bug risk</th><th>Time · Space</th></tr>
+
+<tr data-neetcode-slot="true" id="w8-h10">
+  <td data-label="Slot">W8-H10</td>
+  <td data-label="Problem"><a href="https://neetcode.io/problems/reorganize-string/question">Reorganize String</a></td>
+  <td data-label="Pattern">max-heap with cooldown</td>
+  <td data-label="Invariant">A character cannot re-enter the heap until one different char is placed.</td>
+  <td data-label="Complexity">O(n log a) · O(a)</td>
+</tr>
+
+<tr data-neetcode-slot="true" id="w8-h11">
+  <td data-label="Slot">W8-H11</td>
+  <td data-label="Problem"><a href="https://neetcode.io/problems/meeting-schedule-ii/question">Meeting Rooms II</a></td>
+  <td data-label="Pattern">min-heap of end times</td>
+  <td data-label="Invariant">Room pressure is the count of active intervals.</td>
+  <td data-label="Complexity">O(n log n) · O(n)</td>
+</tr>
+
+<tr data-neetcode-slot="true" id="w8-h12">
+  <td data-label="Slot">W8-H12</td>
+  <td data-label="Problem"><a href="https://neetcode.io/problems/single-threaded-cpu/question">Single Threaded CPU</a></td>
+  <td data-label="Pattern">available-work heap</td>
+  <td data-label="Invariant">Push all work whose enqueue time is &lt;= current clock before selecting.</td>
+  <td data-label="Complexity">O(n log n) · O(n)</td>
+</tr>
+
+</table>
+
+  </section>
+
+  <section class="section shell" id="evidence">
+    <div class="section-head"><h2>Evidence To Save</h2><p class="section-copy">One compact artifact is enough if it proves mechanism depth.</p></div>
+    <div class="grid-3">
+      <article class="tile"><div class="kicker">Invariant</div><h3>State safety</h3><p>Name the state that survives restart and the write that makes retry safe.</p></article>
+      <article class="tile"><div class="kicker">Failure</div><h3>Concrete break</h3><p>Use a worker crash, zombie lease, redelivery, poison message, stale robots decision, or duplicate price event.</p></article>
+      <article class="tile"><div class="kicker">Metric</div><h3>Operational proof</h3><p>Attach lag, retry rate, duplicate suppression, stale lease reject count, host politeness violation, or alert freshness.</p></article>
+    </div>
+  </section>
+<section id="local-materials" style="margin:40px auto;max-width:1080px;padding:18px 22px;border:1px solid #d9dce1;background:#f7f8fa;color:#30343b;font:14px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif"><strong>Local study materials</strong><br>Detailed lecture notes, audio, recall scripts, PDFs, Staff Q&amp;A, and mock packs are archived locally and are intentionally not published on this site.</section></main>
+
+<footer class="footer shell">Week 8 only · Reliable execution · Heap/Priority Queue · READY_FOR_REVIEW gate</footer>
+</body>
+</html>

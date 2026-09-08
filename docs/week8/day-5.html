@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Week 8 Day 5 · Price Tracking Service TRANSFER</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body id="top">
+
+
+<header class="topbar">
+  <nav class="nav shell" aria-label="Week 8 navigation">
+    <a class="brand" href="../week8-action-guide.html"><span class="mark"></span><span>Week 8 · Day 5</span></a>
+    <div class="navlinks"><a href="../week8-action-guide.html">Overview</a><a href="day-1.html">Day 1</a><a href="day-2.html">Day 2</a><a href="day-3.html">Day 3</a><a href="day-4.html">Day 4</a><a href="day-5.html">Day 5</a><a href="day-6.html">Day 6</a><a href="day-7.html">Day 7</a><a href="#local-materials">Lecture</a><a href="#local-materials">Mock</a><a href="#local-materials">Scorecard</a></div>
+  </nav>
+</header>
+
+<main>
+  <section class="day-hero shell">
+    <div class="eyebrow">Week 8 · Fri Sep 18, 2026 · Sep 14-20, 2026</div>
+    <h1>Day 5: Price Tracking Service TRANSFER</h1>
+    <p class="deck">A blind-first transfer artifact with deltas, invalid assumptions, new bottleneck, follow-up, and direct links to every Price Tracking heading.</p>
+    <div class="day-meta"><span>Which crawler/scheduler assumptions break when the product is price history and alerts?</span><span>Frontier · leases · retries · dedupe · recovery</span><span>3 Heap/Priority Queue slots</span></div>
+  </section>
+
+  <section class="section shell" id="schedule">
+    <div class="section-head"><h2>Exact Time Blocks</h2><p class="section-copy">Follow the Week 4 delivery pattern: blank-page first, source reading second, DDIA decision third, spoken close, contiguous algorithm practice, evening recall.</p></div>
+
+<table class="matrix reading-table" id="time-blocks">
+  <tr><th>Time</th><th>Block</th><th>Required output</th></tr>
+  <tr><td data-label="Time">08:30</td><td data-label="Block">Wake + setup</td><td data-label="Required output">Open this page, start the board, write the day question: Which crawler/scheduler assumptions break when the product is price history and alerts?</td></tr>
+  <tr><td data-label="Time">08:50—09:00</td><td data-label="Block">Board set</td><td data-label="Required output">List entities, queues, leases, retry states, dedupe keys, metrics before reading.</td></tr>
+  <tr><td data-label="Time">09:00—10:05</td><td data-label="Block">Blank-page attempt + Hello reading</td><td data-label="Required output">Start with a 25-minute blind attempt. Do not read first. Reuse only Week 8 mechanisms that actually transfer: crawl frontier, scheduler leases, retry/backoff, dedupe, and event logs. Then read all Price Tracking headings and mark deltas.</td></tr>
+  <tr><td data-label="Time">10:05—10:45</td><td data-label="Block">Deep dive + DDIA decision</td><td data-label="Required output">The new bottleneck is not crawling pages; it is trustworthy change detection and threshold fanout. Extension reports are untrusted hints. The canonical price sample needs source validation, product identity, timestamp, old/new comparison, and a deduped PriceChanged event.</td></tr>
+  <tr><td data-label="Time">10:45—10:55</td><td data-label="Block">Spoken close</td><td data-label="Required output">Write one follow-up question that exposes shallow transfer: if Amazon blocks direct scraping and extensions are noisy, what source becomes authoritative and how do you protect alert correctness?</td></tr>
+  <tr><td data-label="Time">14:30—16:15</td><td data-label="Block">NeetCode Heap/Priority Queue</td><td data-label="Required output">Complete contiguous slots W8-H13—W8-H15; capture invariant and bug risk for each.</td></tr>
+  <tr><td data-label="Time">20:30—21:15</td><td data-label="Block">Recall / Q&A / mock</td><td data-label="Required output">Use <a href="#local-materials">Staff Q&A</a>, <a href="#local-materials">lecture assets</a>, or <a href="#local-materials">mock script</a> for the day's system.</td></tr>
+</table>
+
+  </section>
+
+  <section class="section shell" id="canonical-headings">
+    <div class="section-head"><h2>Canonical Heading Anchors</h2><p class="section-copy">Read only the listed Hello Interview headings for today's assignment. Every link is a direct day-page anchor.</p></div>
+    <div class="ops-grid"><section>
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/camelcamelcamel#understanding-the-problem">Understanding the Problem</a><span>Day 5</span></div>
+  <ul class="source-sections">
+    <li>TRANSFER blind scope check</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/camelcamelcamel#functional-requirements">Functional Requirements</a><span>Day 5</span></div>
+  <ul class="source-sections">
+    <li>TRANSFER requirements</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/camelcamelcamel#non-functional-requirements">Non-Functional Requirements</a><span>Day 5</span></div>
+  <ul class="source-sections">
+    <li>TRANSFER scale and latency constraints</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/camelcamelcamel#the-set-up">The Set Up</a><span>Day 5</span></div>
+  <ul class="source-sections">
+    <li>TRANSFER setup</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/camelcamelcamel#planning-the-approach">Planning the Approach</a><span>Day 5</span></div>
+  <ul class="source-sections">
+    <li>TRANSFER planning</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/camelcamelcamel#defining-the-core-entities">Defining the Core Entities</a><span>Day 5</span></div>
+  <ul class="source-sections">
+    <li>Product, price sample, subscription, alert</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/camelcamelcamel#the-api">The API</a><span>Day 5</span></div>
+  <ul class="source-sections">
+    <li>TRANSFER API</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/camelcamelcamel#data-flow">Data Flow</a><span>Day 5</span></div>
+  <ul class="source-sections">
+    <li>TRANSFER scrape/sample/notify flow</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/camelcamelcamel#high-level-design">High-Level Design</a><span>Day 5</span></div>
+  <ul class="source-sections">
+    <li>TRANSFER architecture</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/camelcamelcamel#1-users-should-be-able-to-view-price-history-for-amazon-products-via-website-or-chrome-extension">1) Users should be able to view price history for Amazon products (via website or Chrome extension)</a><span>Day 5</span></div>
+  <ul class="source-sections">
+    <li>TRANSFER price history surface</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/camelcamelcamel#2-users-should-be-able-to-subscribe-to-price-drop-notifications-with-thresholds-via-website-or-chrome-extension">2) Users should be able to subscribe to price drop notifications with thresholds (via website or Chrome extension)</a><span>Day 5</span></div>
+  <ul class="source-sections">
+    <li>TRANSFER notification contract</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/camelcamelcamel#potential-deep-dives">Potential Deep Dives</a><span>Day 5</span></div>
+  <ul class="source-sections">
+    <li>TRANSFER deep-dive index</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/camelcamelcamel#1-how-do-we-efficiently-discover-and-track-500-million-amazon-products">1) How do we efficiently discover and track 500 million Amazon products?</a><span>Day 5</span></div>
+  <ul class="source-sections">
+    <li>TRANSFER discovery scale</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/camelcamelcamel#2-how-do-we-handle-potentially-malicious-price-updates-from-chrome-extension-users">2) How do we handle potentially malicious price updates from Chrome extension users?</a><span>Day 5</span></div>
+  <ul class="source-sections">
+    <li>TRANSFER trust boundary</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/camelcamelcamel#3-how-do-we-efficiently-process-price-changes-and-notify-subscribed-users">3) How do we efficiently process price changes and notify subscribed users?</a><span>Day 5</span></div>
+  <ul class="source-sections">
+    <li>TRANSFER change detection and fanout</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/camelcamelcamel#4-how-do-we-serve-fast-price-history-queries-for-chart-generation">4) How do we serve fast price history queries for chart generation?</a><span>Day 5</span></div>
+  <ul class="source-sections">
+    <li>TRANSFER query serving</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/camelcamelcamel#final-design">Final Design</a><span>Day 5</span></div>
+  <ul class="source-sections">
+    <li>TRANSFER final synthesis</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/camelcamelcamel#what-is-expected-at-each-level">What is Expected at Each Level?</a><span>Day 6</span></div>
+  <ul class="source-sections">
+    <li>Transfer rubric calibration</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/camelcamelcamel#mid-level">Mid-level</a><span>Day 6</span></div>
+  <ul class="source-sections">
+    <li>Rubric contrast</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/camelcamelcamel#senior">Senior</a><span>Day 6</span></div>
+  <ul class="source-sections">
+    <li>Senior+ bar</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/camelcamelcamel#staff">Staff+</a><span>Day 6</span></div>
+  <ul class="source-sections">
+    <li>Staff transfer bar</li>
+  </ul>
+</div>
+</section><section><h2>Decision Notes</h2><ul class="compact-list">
+      <li><span class="box"></span><span>CORE means you must answer requirement, HLD, deep dive, failure, recovery, metric, and Staff-level tradeoff.</span></li>
+      <li><span class="box"></span><span>TRANSFER means blind attempt first, then delta against source, invalid assumption, new bottleneck, and follow-up pressure question.</span></li>
+      <li><span class="box"></span><span>Do not add open-ended AI radar unless it changes a concrete Week 8 design decision; this week it does not.</span></li>
+    </ul></section></div>
+  </section>
+
+  <section class="section shell" id="ddia">
+    <div class="section-head"><h2>DDIA Decision Map</h2><p class="section-copy">Use exact sections only from Ch5, Ch9, and Ch12.</p></div>
+
+<table class="matrix reading-table">
+  <tr><th>Chapter</th><th>Exact DDIA decision section</th><th>Concrete Week 8 use</th></tr>
+  <tr><td data-label="Chapter">Ch12</td><td data-label="Exact section"><a href="https://ddia.vonng.com/ch12/#sec_stream_cdc">变更数据捕获</a></td><td data-label="Decision use">Price changes should be detected once and emitted as events, not rediscovered by every notification worker.</td></tr>
+<tr><td data-label="Chapter">Ch12</td><td data-label="Exact section"><a href="https://ddia.vonng.com/ch12/#sec_stream_log_compaction">日志压缩</a></td><td data-label="Decision use">Latest price state and historical samples serve different query contracts.</td></tr>
+<tr><td data-label="Chapter">Ch12</td><td data-label="Exact section"><a href="https://ddia.vonng.com/ch12/#sec_stream_idempotence">幂等性</a></td><td data-label="Decision use">Repeated price samples and notification retries require idempotent change IDs.</td></tr>
+<tr><td data-label="Chapter">Ch12</td><td data-label="Exact section"><a href="https://ddia.vonng.com/ch12/#sec_stream_state_fault_tolerance">失败后重建状态</a></td><td data-label="Decision use">Notification state and materialized price views must be rebuildable from the price event log.</td></tr>
+</table>
+
+  </section>
+
+  <section class="section shell" id="algorithm">
+    <div class="section-head"><h2>Heap/Priority Queue Slots</h2><p class="section-copy">Three contiguous slots today. Keep one invariant and one failure mode per problem.</p></div>
+
+<table class="matrix algorithm-table" id="heap-slots-13-15">
+  <tr><th>Slot</th><th>Problem</th><th>Pattern</th><th>Invariant / bug risk</th><th>Time · Space</th></tr>
+
+<tr data-neetcode-slot="true" id="w8-h13">
+  <td data-label="Slot">W8-H13</td>
+  <td data-label="Problem"><a href="https://neetcode.io/problems/car-pooling/question">Car Pooling</a></td>
+  <td data-label="Pattern">time-ordered deltas</td>
+  <td data-label="Invariant">Capacity is a prefix-sum invariant over stop events.</td>
+  <td data-label="Complexity">O(n log n) · O(n)</td>
+</tr>
+
+<tr data-neetcode-slot="true" id="w8-h14">
+  <td data-label="Slot">W8-H14</td>
+  <td data-label="Problem"><a href="https://neetcode.io/problems/hand-of-straights/question">Hand of Straights</a></td>
+  <td data-label="Pattern">min-heap/count map</td>
+  <td data-label="Invariant">Always close the smallest unfinished card first.</td>
+  <td data-label="Complexity">O(n log n) · O(n)</td>
+</tr>
+
+<tr data-neetcode-slot="true" id="w8-h15">
+  <td data-label="Slot">W8-H15</td>
+  <td data-label="Problem"><a href="https://neetcode.io/problems/find-k-closest-elements/question">Find K Closest Elements</a></td>
+  <td data-label="Pattern">binary window / heap contrast</td>
+  <td data-label="Invariant">Tie-breaking must prefer the smaller value.</td>
+  <td data-label="Complexity">O(log(n-k)+k) · O(1)</td>
+</tr>
+
+</table>
+
+  </section>
+
+  <section class="section shell" id="evidence">
+    <div class="section-head"><h2>Evidence To Save</h2><p class="section-copy">One compact artifact is enough if it proves mechanism depth.</p></div>
+    <div class="grid-3">
+      <article class="tile"><div class="kicker">Invariant</div><h3>State safety</h3><p>Name the state that survives restart and the write that makes retry safe.</p></article>
+      <article class="tile"><div class="kicker">Failure</div><h3>Concrete break</h3><p>Use a worker crash, zombie lease, redelivery, poison message, stale robots decision, or duplicate price event.</p></article>
+      <article class="tile"><div class="kicker">Metric</div><h3>Operational proof</h3><p>Attach lag, retry rate, duplicate suppression, stale lease reject count, host politeness violation, or alert freshness.</p></article>
+    </div>
+  </section>
+<section id="local-materials" style="margin:40px auto;max-width:1080px;padding:18px 22px;border:1px solid #d9dce1;background:#f7f8fa;color:#30343b;font:14px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif"><strong>Local study materials</strong><br>Detailed lecture notes, audio, recall scripts, PDFs, Staff Q&amp;A, and mock packs are archived locally and are intentionally not published on this site.</section></main>
+
+<footer class="footer shell">Week 8 only · Reliable execution · Heap/Priority Queue · READY_FOR_REVIEW gate</footer>
+</body>
+</html>

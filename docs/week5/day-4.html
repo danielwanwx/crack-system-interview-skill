@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第 5 周 Day 4 - Online Auction deep dives：ordering、durability、SSE 与 10M concurrent auctions</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar"><nav class="shell nav">
+    <a class="brand" href="../week5-action-guide.html"><span class="mark"></span> WEEK 05 · CONTENTION & FINANCIAL STATE</a>
+    <div class="navlinks"><a href="../week5-action-guide.html">第 5 周</a><a href="#local-materials">讲义</a><a href="#local-materials">Staff Q&amp;A</a><a href="#local-materials">Live Mock</a><a href="#local-materials">验收</a></div>
+  </nav></header>
+  <main class="shell">
+
+    <section class="hero">
+      <div><div class="eyebrow">WEEK 05 · 2026-08-27 · THU</div><h1>Online Auction deep dives：ordering、durability、SSE 与 10M concurrent auctions</h1><p class="deck">把单个拍卖的公平顺序和全站 10M auctions 的吞吐拆开，通知可以慢，winner computation 不能含糊。</p>
+      <div class="pill-row"><a class="pill" href="../week5-action-guide.html">周指南</a><a class="pill" href="#local-materials">讲义</a><a class="pill" href="#local-materials">Q&amp;A</a><a class="pill" href="#local-materials">验收</a></div></div>
+      <aside class="hero-panel"><div class="metric"><b>08:50</b><span>system start</span></div><div class="metric"><b>125m</b><span>design block</span></div><div class="metric"><b>3</b><span>Binary Search</span></div><div class="metric"><b>45m</b><span>oral block</span></div></aside>
+    </section>
+    <section class="section"><div class="section-head"><h2>今日固定时间表</h2><p class="section-copy">三块窗口固定：08:50-10:55 系统设计，14:30-16:15 算法，20:30-21:15 口述。</p></div><table class="rubric">
+      <tr><th>08:50-09:15</th><td><b>08:50-10:55 system design</b><br>Bad/Good/Great - Bad: query max then write; Good: DB cached max; Great: per-auction log + conditional highest + durable queue。</td></tr>
+<tr><th>09:15-09:50</th><td><b>08:50-10:55 system design</b><br>精确原文 - 读 Online Auction Potential Deep Dives、Some additional deep dives 和 level expectations。</td></tr>
+<tr><th>09:50-10:25</th><td><b>08:50-10:55 system design</b><br>故障时序 - bid accepted ACK 丢、consumer crash、SSE fanout lag、dynamic close 与 late bid race。</td></tr>
+<tr><th>10:25-10:55</th><td><b>08:50-10:55 system design</b><br>恢复和指标 - Kafka lag, accepted-bid duplicate rate, highest projection staleness, close mismatch sample, fanout p99。</td></tr>
+      <tr><th>14:30-16:15</th><td><b>NeetCode Tag · Binary Search</b><br>三道题，每题 30m solve + 5m evidence，不能改 tag。</td></tr>
+      <tr><th>20:30-21:15</th><td>20:30-21:15 Frontier radar deliberate omission + Auction follow-up recording。</td></tr>
+    </table></section>
+    <section class="section"><div class="section-head"><h2>算法模块</h2><p class="section-copy">连续 NeetCode Binary Search；每天 exactly 3 slots。</p></div><table class="matrix algorithm-table"><tr><th>#</th><th>Problem / mode</th><th>Pattern</th><th>Invariant</th><th>Bug risk</th><th>Time</th><th>Space</th></tr><tr data-neetcode-slot="true" data-mode="NEW" data-minutes="35"><td data-label="Slot">1</td><td data-label="Problem / mode"><a href="https://neetcode.io/problems/find-the-index-of-the-large-integer/question">Find the Index of the Large Integer</a><br><span class="evidence-chip">NEW · 30m solve + 5m evidence</span></td><td data-label="Pattern">interactive compare halves</td><td data-label="Invariant">The heavy index remains inside the selected half.</td><td data-label="Bug risk">Uneven split loses the middle element.</td><td data-label="Time">O(log n)</td><td data-label="Space">O(1)</td></tr>
+<tr data-neetcode-slot="true" data-mode="NEW" data-minutes="35"><td data-label="Slot">2</td><td data-label="Problem / mode"><a href="https://neetcode.io/problems/divide-chocolate/question">Divide Chocolate</a><br><span class="evidence-chip">NEW · 30m solve + 5m evidence</span></td><td data-label="Pattern">maximize minimum feasible value</td><td data-label="Invariant">If min sweetness x is feasible, any smaller x is feasible.</td><td data-label="Bug risk">Forgetting you need k+1 pieces; greedy split condition.</td><td data-label="Time">O(n log sum)</td><td data-label="Space">O(1)</td></tr>
+<tr data-neetcode-slot="true" data-mode="NEW" data-minutes="35"><td data-label="Slot">3</td><td data-label="Problem / mode"><a href="https://neetcode.io/problems/maximum-average-subarray-ii/question">Maximum Average Subarray II</a><br><span class="evidence-chip">NEW · 30m solve + 5m evidence</span></td><td data-label="Pattern">binary answer with prefix feasibility</td><td data-label="Invariant">avg x is feasible if adjusted subarray length &gt;= k has nonnegative sum.</td><td data-label="Bug risk">Precision tolerance and min-prefix index off-by-one.</td><td data-label="Time">O(n log R)</td><td data-label="Space">O(n) or O(1)</td></tr></table></section>
+    <section class="section"><div class="section-head"><h2>Hello Interview 精确目录</h2><p class="section-copy">保留 live canonical heading title；day page 使用 direct section anchors。</p></div><table class="matrix reading-table"><tr><th>项目</th><th>精确 canonical section</th><th>Disposition</th><th>今天怎么用</th></tr><tr><td>Online Auction</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/online-auction#potential-deep-dives">Potential Deep Dives</a></td><td>deep dive</td><td>contention, durability, real-time updates and scale</td></tr>
+<tr><td>Online Auction</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/online-auction#1-how-can-we-ensure-strong-consistency-for-bids">1) How can we ensure strong consistency for bids?</a></td><td>deep dive</td><td>avoid stale max-bid acceptance and define winner order</td></tr>
+<tr><td>Online Auction</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/online-auction#2-how-can-we-ensure-that-the-system-is-fault-tolerant-and-durable">2) How can we ensure that the system is fault tolerant and durable?</a></td><td>deep dive</td><td>durable queue and no dropped bids</td></tr>
+<tr><td>Online Auction</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/online-auction#3-how-can-we-ensure-that-the-system-displays-the-current-highest-bid-in-real-time">3) How can we ensure that the system displays the current highest bid in real-time?</a></td><td>deep dive</td><td>SSE/current highest bid propagation</td></tr>
+<tr><td>Online Auction</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/online-auction#4-how-can-we-ensure-that-the-system-scales-to-support-10m-concurrent-auctions">4) How can we ensure that the system scales to support 10M concurrent auctions?</a></td><td>deep dive</td><td>partition by auctionId, shard writes and fanout</td></tr>
+<tr><td>Online Auction</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/online-auction#some-additional-deep-dives-you-might-consider">Some additional deep dives you might consider</a></td><td>deep dive</td><td>dynamic end times, purchasing, live bid history</td></tr>
+<tr><td>Online Auction</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/online-auction#what-is-expected-at-each-level">What is Expected at Each Level?</a></td><td>level expectation</td><td>calibrate full-coverage follow-up depth</td></tr>
+<tr><td>Online Auction</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/online-auction#mid-level">Mid-level</a></td><td>level expectation</td><td>basic HLD and consistency response</td></tr>
+<tr><td>Online Auction</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/online-auction#senior">Senior</a></td><td>level expectation</td><td>lead consistency and real-time bid discussion</td></tr>
+<tr><td>Online Auction</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/online-auction#staff">Staff</a></td><td>level expectation</td><td>proactive closing, fraud, failure and durable fairness</td></tr></table></section>
+    <section class="section"><div class="section-head"><h2>DDIA 精确决策卡</h2><p class="section-copy">只使用 Ch8 和 Ch10 中直接解决今天设计决定的小节。</p></div><table class="matrix"><tr><th>项目</th><th>项目问题</th><th>精确 DDIA subsection</th><th>改变的系统决定</th></tr><tr><td>Online Auction</td><td>How do equal/near-close bids get a deterministic order?</td><td><a href="https://ddia.vonng.com/ch10/#sec_consistency_total_order">Ch10 - 全序广播</a></td><td>Per-auction log order defines tie-break and close eligibility; notification can lag but winner computation uses the ordered fact log.</td></tr>
+<tr><td>Online Auction</td><td>How do we compute final winner without phantom late bids?</td><td><a href="https://ddia.vonng.com/ch8/#sec_transactions_ssi">Ch8 - 可串行化快照隔离（SSI）</a></td><td>Close transaction checks the auction end condition and accepted bid range under serializable-equivalent isolation.</td></tr></table></section>
+    <section class="section"><div class="section-head"><h2>三域 trace 任务</h2></div><div class="trace-grid">
+      <div class="trace-step"><b>Winning transaction</b><span>标出唯一线性化点：seat hold/sold、accepted bid at close、brokerage order/execution state。</span></div>
+      <div class="trace-step"><b>Duplicate/retry failure</b><span>给出 stable idempotency key、重复返回语义、旧 owner/stale version 被拒绝的证据。</span></div>
+      <div class="trace-step"><b>Projection boundary</b><span>说明哪些读可以陈旧：seat map、highest bid display、market price UI；哪些写不能陈旧。</span></div>
+    </div></section>
+    <section class="section"><div class="section-head"><h2>本日 artifacts</h2><p class="section-copy">项目脚本、音频、PDF 和 mock evidence 从当天直接打开。</p></div><div class="pill-row"><a class="pill" href="#local-materials">Online Auction 中文 explainer</a> <a class="pill" href="#local-materials">Online Auction 中文音频</a> <a class="pill" href="#local-materials">Online Auction English recall outline</a></div></section>
+    <section class="section"><div class="section-head"><h2>今日产出、修复与英语 recall</h2></div><table class="rubric">
+      <tr><th>课程角色</th><td>FULL · deep-dive follow-up + frontier omission</td></tr>
+      <tr><th>必须交付</th><td>Online Auction follow-up sheet：strong consistency, durability, real-time highest bid, 10M scale, dynamic close。</td></tr>
+      <tr><th>修复规则</th><td>如果把实时显示和 winner computation 混为一谈，分开 ordered ledger 与 SSE projection。</td></tr>
+      <tr><th>English recall</th><td><div class="english-recall">English recall: Notification lag is tolerable; accepting the wrong winning bid is not.</div></td></tr>
+    </table></section>
+    <footer class="footer">Day 4 只推进 Week 5；完成后把证据写入 <a href="#local-materials">scorecard</a>。</footer>
+
+  <section id="local-materials" style="margin:40px auto;max-width:1080px;padding:18px 22px;border:1px solid #d9dce1;background:#f7f8fa;color:#30343b;font:14px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif"><strong>Local study materials</strong><br>Detailed lecture notes, audio, recall scripts, PDFs, Staff Q&amp;A, and mock packs are archived locally and are intentionally not published on this site.</section></main>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第 5 周 Day 2 - Ticketmaster deep dives：reservation TTL、热门演出、搜索缓存与不超卖</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar"><nav class="shell nav">
+    <a class="brand" href="../week5-action-guide.html"><span class="mark"></span> WEEK 05 · CONTENTION & FINANCIAL STATE</a>
+    <div class="navlinks"><a href="../week5-action-guide.html">第 5 周</a><a href="#local-materials">讲义</a><a href="#local-materials">Staff Q&amp;A</a><a href="#local-materials">Live Mock</a><a href="#local-materials">验收</a></div>
+  </nav></header>
+  <main class="shell">
+
+    <section class="hero">
+      <div><div class="eyebrow">WEEK 05 · 2026-08-25 · TUE</div><h1>Ticketmaster deep dives：reservation TTL、热门演出、搜索缓存与不超卖</h1><p class="deck">把“锁座”讲到过期、支付、重复 webhook、waiting room、stale seat map 和 metrics。</p>
+      <div class="pill-row"><a class="pill" href="../week5-action-guide.html">周指南</a><a class="pill" href="#local-materials">讲义</a><a class="pill" href="#local-materials">Q&amp;A</a><a class="pill" href="#local-materials">验收</a></div></div>
+      <aside class="hero-panel"><div class="metric"><b>08:50</b><span>system start</span></div><div class="metric"><b>125m</b><span>design block</span></div><div class="metric"><b>3</b><span>Binary Search</span></div><div class="metric"><b>45m</b><span>oral block</span></div></aside>
+    </section>
+    <section class="section"><div class="section-head"><h2>今日固定时间表</h2><p class="section-copy">三块窗口固定：08:50-10:55 系统设计，14:30-16:15 算法，20:30-21:15 口述。</p></div><table class="rubric">
+      <tr><th>08:50-09:15</th><td><b>08:50-10:55 system design</b><br>Bad/Good/Great - Bad: 长事务锁座；Good: status+expiry；Great: durable hold+version+TTL+idempotent checkout。</td></tr>
+<tr><th>09:15-09:50</th><td><b>08:50-10:55 system design</b><br>精确原文 - 读 Ticketmaster Potential Deep Dives、5 个 deep-dive anchors 和 level expectations。</td></tr>
+<tr><th>09:50-10:25</th><td><b>08:50-10:55 system design</b><br>故障时序 - TTL 到期同时 payment success、重复 webhook、两个用户抢同 seat、waiting room token replay。</td></tr>
+<tr><th>10:25-10:55</th><td><b>08:50-10:55 system design</b><br>恢复和指标 - oversell invariant、hold expiry lag、duplicate rejection、checkout reconciliation gap、event admission rate。</td></tr>
+      <tr><th>14:30-16:15</th><td><b>NeetCode Tag · Binary Search</b><br>三道题，每题 30m solve + 5m evidence，不能改 tag。</td></tr>
+      <tr><th>20:30-21:15</th><td>20:30-21:15 Staff Q&amp;A：reservation expiry, lock alternatives, stale seat map, payment webhook retry。</td></tr>
+    </table></section>
+    <section class="section"><div class="section-head"><h2>算法模块</h2><p class="section-copy">连续 NeetCode Binary Search；每天 exactly 3 slots。</p></div><table class="matrix algorithm-table"><tr><th>#</th><th>Problem / mode</th><th>Pattern</th><th>Invariant</th><th>Bug risk</th><th>Time</th><th>Space</th></tr><tr data-neetcode-slot="true" data-mode="NEW" data-minutes="35"><td data-label="Slot">1</td><td data-label="Problem / mode"><a href="https://neetcode.io/problems/arranging-coins/question">Arranging Coins</a><br><span class="evidence-chip">NEW · 30m solve + 5m evidence</span></td><td data-label="Pattern">binary search answer</td><td data-label="Invariant">All k with k(k+1)/2 &lt;= n are feasible.</td><td data-label="Bug risk">Integer overflow in triangular sum; off-by-one on last feasible.</td><td data-label="Time">O(log n)</td><td data-label="Space">O(1)</td></tr>
+<tr data-neetcode-slot="true" data-mode="NEW" data-minutes="35"><td data-label="Slot">2</td><td data-label="Problem / mode"><a href="https://neetcode.io/problems/valid-perfect-square/question">Valid Perfect Square</a><br><span class="evidence-chip">NEW · 30m solve + 5m evidence</span></td><td data-label="Pattern">integer square predicate</td><td data-label="Invariant">lo..hi contains every candidate root not yet disproved.</td><td data-label="Bug risk">Using floating sqrt; product overflow.</td><td data-label="Time">O(log n)</td><td data-label="Space">O(1)</td></tr>
+<tr data-neetcode-slot="true" data-mode="NEW" data-minutes="35"><td data-label="Slot">3</td><td data-label="Problem / mode"><a href="https://neetcode.io/problems/sqrtx/question">Sqrt(x)</a><br><span class="evidence-chip">NEW · 30m solve + 5m evidence</span></td><td data-label="Pattern">floor binary search</td><td data-label="Invariant">best is the largest mid where mid*mid &lt;= x.</td><td data-label="Bug risk">Returning first infeasible rather than best feasible.</td><td data-label="Time">O(log x)</td><td data-label="Space">O(1)</td></tr></table></section>
+    <section class="section"><div class="section-head"><h2>Hello Interview 精确目录</h2><p class="section-copy">保留 live canonical heading title；day page 使用 direct section anchors。</p></div><table class="matrix reading-table"><tr><th>项目</th><th>精确 canonical section</th><th>Disposition</th><th>今天怎么用</th></tr><tr><td>Ticketmaster</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/ticketmaster#potential-deep-dives">Potential Deep Dives</a></td><td>deep dive</td><td>move from functional HLD to contention and high demand</td></tr>
+<tr><td>Ticketmaster</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/ticketmaster#1-how-do-we-improve-the-booking-experience-by-reserving-tickets">1) How do we improve the booking experience by reserving tickets?</a></td><td>deep dive</td><td>seat hold, TTL, expiry, checkout and recovery</td></tr>
+<tr><td>Ticketmaster</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/ticketmaster#2-how-is-the-view-api-going-to-scale-to-support-10s-of-millions-of-concurrent-requests-during-popular-events">2) How is the view API going to scale to support 10s of millions of concurrent requests during popular events?</a></td><td>deep dive</td><td>cache static event data while keeping booking authoritative</td></tr>
+<tr><td>Ticketmaster</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/ticketmaster#3-how-will-the-system-ensure-a-good-user-experience-during-high-demand-events-with-millions-simultaneously-booking-tickets">3) How will the system ensure a good user experience during high-demand events with millions simultaneously booking tickets?</a></td><td>deep dive</td><td>seat-map staleness, SSE updates, waiting room, admission control</td></tr>
+<tr><td>Ticketmaster</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/ticketmaster#4-how-can-you-improve-search-to-ensure-we-meet-our-low-latency-requirements">4) How can you improve search to ensure we meet our low latency requirements?</a></td><td>deep dive</td><td>indexed or search-engine-backed event search</td></tr>
+<tr><td>Ticketmaster</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/ticketmaster#5-how-can-you-speed-up-frequently-repeated-search-queries-and-reduce-load-on-our-search-infrastructure">5) How can you speed up frequently repeated search queries and reduce load on our search infrastructure?</a></td><td>deep dive</td><td>query result caching and edge caching</td></tr>
+<tr><td>Ticketmaster</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/ticketmaster#what-is-expected-at-each-level">What is Expected at Each Level?</a></td><td>level expectation</td><td>calibrate Senior+/Staff bar</td></tr>
+<tr><td>Ticketmaster</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/ticketmaster#mid-level">Mid-level</a></td><td>level expectation</td><td>functional breadth and basic no-double-booking</td></tr>
+<tr><td>Ticketmaster</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/ticketmaster#senior">Senior</a></td><td>level expectation</td><td>deep search, reservation, high-demand trade-offs</td></tr>
+<tr><td>Ticketmaster</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/ticketmaster#staff">Staff+</a></td><td>level expectation</td><td>proactive high-contention, failure and business-policy decisions</td></tr></table></section>
+    <section class="section"><div class="section-head"><h2>DDIA 精确决策卡</h2><p class="section-copy">只使用 Ch8 和 Ch10 中直接解决今天设计决定的小节。</p></div><table class="matrix"><tr><th>项目</th><th>项目问题</th><th>精确 DDIA subsection</th><th>改变的系统决定</th></tr><tr><td>Ticketmaster</td><td>What consistency is required so one unique seat cannot be sold twice?</td><td><a href="https://ddia.vonng.com/ch10/#sec_consistency_linearizability">Ch10 - 线性一致性</a></td><td>The seat object must expose one linearization point for held-&gt;sold; search and seat-map reads can remain stale projections.</td></tr>
+<tr><td>Ticketmaster</td><td>Which isolation anomalies would break no-oversell?</td><td><a href="https://ddia.vonng.com/ch8/#sec_transactions_lost_update">Ch8 - 防止丢失更新</a></td><td>Lost update and stale read-modify-write are not acceptable on seat/hold rows; use row lock, OCC, or serializable/conditional update.</td></tr></table></section>
+    <section class="section"><div class="section-head"><h2>三域 trace 任务</h2></div><div class="trace-grid">
+      <div class="trace-step"><b>Winning transaction</b><span>标出唯一线性化点：seat hold/sold、accepted bid at close、brokerage order/execution state。</span></div>
+      <div class="trace-step"><b>Duplicate/retry failure</b><span>给出 stable idempotency key、重复返回语义、旧 owner/stale version 被拒绝的证据。</span></div>
+      <div class="trace-step"><b>Projection boundary</b><span>说明哪些读可以陈旧：seat map、highest bid display、market price UI；哪些写不能陈旧。</span></div>
+    </div></section>
+    <section class="section"><div class="section-head"><h2>本日 artifacts</h2><p class="section-copy">项目脚本、音频、PDF 和 mock evidence 从当天直接打开。</p></div><div class="pill-row"><a class="pill" href="#local-materials">Ticketmaster 中文完整讲稿</a> <a class="pill" href="#local-materials">Ticketmaster 中文完整音频</a> <a class="pill" href="#local-materials">Ticketmaster Senior+/Staff English recall</a> <a class="pill" href="#local-materials">Ticketmaster printable PDF</a></div></section>
+    <section class="section"><div class="section-head"><h2>今日产出、修复与英语 recall</h2></div><table class="rubric">
+      <tr><th>课程角色</th><td>CORE · all deep dives + Bad/Good/Great</td></tr>
+      <tr><th>必须交付</th><td>Ticketmaster deep-dive matrix：reservation, read scale, high-demand UX, search, query caching 各含 invariant/failure/recovery/metrics。</td></tr>
+      <tr><th>修复规则</th><td>如果答案只说 Redis lock，补 durable hold row、version、expiry、payment reconciliation 和 refund compensation。</td></tr>
+      <tr><th>English recall</th><td><div class="english-recall">English recall: The waiting room controls admission; it is not inventory ownership.</div></td></tr>
+    </table></section>
+    <footer class="footer">Day 2 只推进 Week 5；完成后把证据写入 <a href="#local-materials">scorecard</a>。</footer>
+
+  <section id="local-materials" style="margin:40px auto;max-width:1080px;padding:18px 22px;border:1px solid #d9dce1;background:#f7f8fa;color:#30343b;font:14px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif"><strong>Local study materials</strong><br>Detailed lecture notes, audio, recall scripts, PDFs, Staff Q&amp;A, and mock packs are archived locally and are intentionally not published on this site.</section></main>
+</body>
+</html>

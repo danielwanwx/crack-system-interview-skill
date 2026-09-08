@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WED · 07.29 - Rate Limiter：一次读到 High-Level Design</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="../week1/style.css">
+</head>
+<body>
+
+  <header class="topbar">
+    <nav class="shell nav">
+      <a class="brand" href="../system-design-12-week-master-plan.html"><span class="mark"></span> CRACK SYSTEM INTERVIEW</a>
+      <div class="navlinks">
+        <a href="../system-design-12-week-master-plan.html">12 周路线</a>
+        <a href="../week1-action-guide.html">第 1 周</a>
+        <a href="#local-materials">深度讲义</a>
+        <a href="#local-materials">Staff Q&amp;A</a>
+        <a href="#local-materials">Live Mock</a>
+        <a href="#local-materials">验收</a>
+      </div>
+    </nav>
+  </header>
+  <main class="shell">
+
+    <section class="day-hero">
+      <div class="eyebrow">WED · 07.29 · WEEK 01</div>
+      <h1>Rate Limiter：一次读到 High-Level Design</h1>
+      <p class="deck">从需求读到 HLD，完成客户端身份、规则、接口、部署位置、算法选择与 429 契约。</p>
+      <div class="day-meta"><span>08:50—10:55 系统设计</span><span>14:30—16:15 三题</span><span>20:30—21:15 口述</span></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>原文定位</h2><p class="section-copy">按顺序打开。链接直接指向当天需要阅读的小节。</p></div>
+      <ol class="reading-list"><li><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/distributed-rate-limiter#understanding-the-problem">Rate Limiter / Understanding the Problem</a></li><li><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/distributed-rate-limiter#functional-requirements">Rate Limiter / Functional Requirements</a></li><li><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/distributed-rate-limiter#non-functional-requirements">Rate Limiter / Non-Functional Requirements</a></li><li><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/distributed-rate-limiter#the-set-up">Rate Limiter / The Set Up</a></li><li><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/distributed-rate-limiter#defining-the-core-entities">Rate Limiter / Defining the Core Entities</a></li><li><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/distributed-rate-limiter#system-interface">Rate Limiter / System Interface</a></li><li><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/distributed-rate-limiter#high-level-design">Rate Limiter / High-Level Design</a></li></ol>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>上午执行</h2></div>
+      <table class="matrix"><tr><th>时间</th><th>动作</th></tr><tr><td><strong>08:50—09:10</strong></td><td>闭卷设计 100 requests/minute/user；明确 limiter 在哪里执行。</td></tr><tr><td><strong>09:10—10:05</strong></td><td>读到 High-Level Design；补 Rules、Clients、Requests 与 isRequestAllowed 契约。</td></tr><tr><td><strong>10:05—10:35</strong></td><td>比较 in-process、dedicated service、API gateway 三种放置方式。</td></tr><tr><td><strong>10:35—10:55</strong></td><td>选 Token Bucket，讲清 bucket capacity、refill rate、remaining 和 reset time。</td></tr></table>
+      <div class="callout"><strong>必须产出：</strong>一张 Rate Limiter HLD：identity → rule match → atomic bucket check → allow / 429。</div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>掌握标准</h2></div>
+      <ul class="compact-list"><li><span class="box"></span><span>能区分 user ID、IP、API key 的适用面和误伤风险。</span></li><li><span class="box"></span><span>能解释为什么 gateway 是常见答案，同时主动指出业务上下文不足。</span></li><li><span class="box"></span><span>能给出 429、Retry-After、remaining、reset 的客户端恢复契约。</span></li></ul>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>算法 · Arrays &amp; Hashing</h2><p class="section-copy">Tag 不切换。三题结束后只记录四个字段。</p></div>
+      <table class="matrix"><tr><th>#</th><th>题目</th><th>留下的记录</th></tr><tr><td>1</td><td><a href="https://leetcode.com/problems/product-of-array-except-self/">Product of Array Except Self</a></td><td>Pattern / Invariant / Bug / Complexity</td></tr><tr><td>2</td><td><a href="https://leetcode.com/problems/valid-sudoku/">Valid Sudoku</a></td><td>Pattern / Invariant / Bug / Complexity</td></tr><tr><td>3</td><td><a href="https://leetcode.com/problems/group-anagrams/">Group Anagrams · 限时复刷</a></td><td>Pattern / Invariant / Bug / Complexity</td></tr></table>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>晚上</h2></div>
+      <div class="callout green">英文口述 10 分钟：placement → identity → algorithm → interface。不要提前进入 Redis 扩展。</div>
+    </section>
+    <footer class="footer"><a href="../week1-action-guide.html">返回第 1 周总览</a></footer>
+  <section id="local-materials" style="margin:40px auto;max-width:1080px;padding:18px 22px;border:1px solid #d9dce1;background:#f7f8fa;color:#30343b;font:14px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif"><strong>Local study materials</strong><br>Detailed lecture notes, audio, recall scripts, PDFs, Staff Q&amp;A, and mock packs are archived locally and are intentionally not published on this site.</section></main>
+</body>
+</html>

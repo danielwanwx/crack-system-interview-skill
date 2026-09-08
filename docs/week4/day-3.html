@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第 4 周 Day 3 - Google Docs：operation log、concurrent edits 与实时协同 HLD</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="topbar"><nav class="shell nav">
+    <a class="brand" href="../week4-action-guide.html"><span class="mark"></span> WEEK 04 · MESSAGING & COLLABORATION</a>
+    <div class="navlinks"><a href="../week4-action-guide.html">第 4 周</a><a href="#local-materials">深度讲义</a><a href="#local-materials">Staff Q&amp;A</a><a href="#local-materials">Live Mock</a><a href="#local-materials">验收</a></div>
+  </nav></header>
+  <main class="shell">
+
+    <section class="hero">
+      <div>
+        <div class="eyebrow">WEEK 04 · 2026-08-19 · WED</div>
+        <h1>Google Docs：operation log、concurrent edits 与实时协同 HLD</h1>
+        <p class="deck">把 Google Docs 从“同步文本”拆成 operation log、revision/context、transform/rebase、presence/cursor soft state。</p>
+        <div class="pill-row"><a class="pill" href="../week4-action-guide.html">周指南</a><a class="pill" href="#local-materials">讲义</a><a class="pill" href="#local-materials">Q&amp;A</a><a class="pill" href="#local-materials">验收</a></div>
+      </div>
+      <aside class="hero-panel"><div class="metric"><b>08:30</b><span>wake</span></div><div class="metric"><b>125m</b><span>system design</span></div><div class="metric"><b>3</b><span>Sliding Window</span></div><div class="metric"><b>45m</b><span>recall/mock</span></div></aside>
+    </section>
+    <section class="section">
+      <div class="section-head"><h2>今日固定时间表</h2><p class="section-copy">08:30 wake 只保留起床；学习从 08:50 开始。三块窗口不互相挤占。</p></div>
+      <table class="rubric">
+        <tr><th>08:30 wake</th><td>起床、早餐、准备白板；不安排预读或算法。</td></tr>
+        <tr><th>08:50—09:10</th><td><b>08:50—10:55 system design</b><br>闭卷 HLD — 先定义 Document、Operation、Revision、Session、Presence。</td></tr><tr><th>09:10—09:45</th><td><b>08:50—10:55 system design</b><br>精确原文 — 读 Google Docs requirements/API/HLD 与 Collaborative Edits Breakdown。</td></tr><tr><th>09:45—10:25</th><td><b>08:50—10:55 system design</b><br>机制化白板 — snapshot + op log；submit op 带 baseRevision；服务端 sequencer 分配 new revision；客户端 transform/rebase。</td></tr><tr><th>10:25—10:55</th><td><b>08:50—10:55 system design</b><br>DDIA 决策卡 — 多主冲突、本地优先实时协作和 CRDT/OT 的设计影响。</td></tr>
+        <tr><th>14:30—16:15</th><td><b>NeetCode Tag · Sliding Window</b><br>三道题在下方独立算法表执行。</td></tr>
+        <tr><th>20:30—21:15</th><td>20:30—21:15 Google Docs 英语 recall：operation log、base revision、concurrent edits、presence。</td></tr>
+      </table>
+    </section>
+    <section class="section"><div class="section-head"><h2>算法模块</h2><p class="section-copy">连续单一 NeetCode Sliding Window tag；每天 3 个 NEW slot，每题 30 分钟作答 + 5 分钟证据，正好 105 分钟。每天 timed review = 0，满足不超过 1。</p></div><table class="matrix algorithm-table"><tr><th>#</th><th>Problem / mode</th><th>Pattern</th><th>Invariant</th><th>Bug risk</th><th>Time</th><th>Space</th></tr><tr data-neetcode-slot="true" data-mode="NEW" data-minutes="35"><td data-label="Slot">7</td><td data-label="Problem / mode"><a href="https://neetcode.io/problems/max-consecutive-ones-ii/question">Max Consecutive Ones II</a><br><span class="evidence-chip">NEW · 30m solve + 5m evidence</span></td><td data-label="Pattern">至多一个零的可变窗口</td><td data-label="Invariant">窗口内 zeroCount &lt;= 1。</td><td data-label="Bug risk">第三个零后只缩一次而非缩到合法。</td><td data-label="Time">O(n)</td><td data-label="Space">O(1)</td></tr>
+<tr data-neetcode-slot="true" data-mode="NEW" data-minutes="35"><td data-label="Slot">8</td><td data-label="Problem / mode"><a href="https://neetcode.io/problems/longest-substring-with-at-most-two-distinct-characters/question">Longest Substring with At Most Two Distinct Characters</a><br><span class="evidence-chip">NEW · 30m solve + 5m evidence</span></td><td data-label="Pattern">至多 K 类字符窗口</td><td data-label="Invariant">count 中正频次字符数 &lt;= 2。</td><td data-label="Bug risk">频次归零后未删除 key。</td><td data-label="Time">O(n)</td><td data-label="Space">O(1) alphabet</td></tr>
+<tr data-neetcode-slot="true" data-mode="NEW" data-minutes="35"><td data-label="Slot">9</td><td data-label="Problem / mode"><a href="https://neetcode.io/problems/longest-substring-with-at-most-k-distinct-characters/question">Longest Substring with At Most K Distinct Characters</a><br><span class="evidence-chip">NEW · 30m solve + 5m evidence</span></td><td data-label="Pattern">至多 K 类字符窗口</td><td data-label="Invariant">收缩结束后 distinct &lt;= k。</td><td data-label="Bug risk">k=0；删除左字符时漏减 distinct。</td><td data-label="Time">O(n)</td><td data-label="Space">O(k)</td></tr></table></section>
+    <section class="section"><div class="section-head"><h2>闭卷起手</h2></div><div class="callout"><p>20 分钟闭卷画 loadDocument、submitOperation、subscribeOps、updateCursor；写出 LWW 为什么丢用户意图。</p></div></section>
+    <section class="section"><div class="section-head"><h2>Hello Interview 精确目录</h2><p class="section-copy">day 页面使用 canonical data-toc-id/H4 anchors；周级 overview 不放小节链接。</p></div><table class="matrix reading-table"><tr><th>项目</th><th>精确 canonical section</th><th>Disposition</th><th>今天怎么用</th></tr><tr><td>Google Docs</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/google-docs#understanding-the-problem">Understanding the Problem</a></td><td>required reading</td><td>collaborative document surface</td></tr>
+<tr><td>Google Docs</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/google-docs#functional-requirements">Functional Requirements</a></td><td>required reading</td><td>documents, concurrent edits, realtime changes, presence</td></tr>
+<tr><td>Google Docs</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/google-docs#non-functional-requirements">Non-Functional Requirements</a></td><td>required reading</td><td>latency, availability, consistency boundary</td></tr>
+<tr><td>Google Docs</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/google-docs#set-up">Set Up</a></td><td>required reading</td><td>scope and simplifications</td></tr>
+<tr><td>Google Docs</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/google-docs#planning-the-approach">Planning the Approach</a></td><td>required reading</td><td>entities/API/HLD sequence</td></tr>
+<tr><td>Google Docs</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/google-docs#defining-the-core-entities">Defining the Core Entities</a></td><td>required reading</td><td>Document, Operation, Revision, Session, Presence</td></tr>
+<tr><td>Google Docs</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/google-docs#defining-the-api">Defining the API</a></td><td>required reading</td><td>load document, submit op, subscribe, cursor</td></tr>
+<tr><td>Google Docs</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/google-docs#high-level-design">High-Level Design</a></td><td>required reading</td><td>document service + op log + websocket broadcast</td></tr>
+<tr><td>Google Docs</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/google-docs#1-users-should-be-able-to-create-new-documents">1) Users should be able to create new documents.</a></td><td>required reading</td><td>document metadata and initial revision</td></tr>
+<tr><td>Google Docs</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/google-docs#2-multiple-users-should-be-able-to-edit-the-same-document-concurrently">2) Multiple users should be able to edit the same document concurrently.</a></td><td>required reading</td><td>concurrent operation semantics</td></tr>
+<tr><td>Google Docs</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/google-docs#3-users-should-be-able-to-view-each-other-s-changes-in-real-time">3) Users should be able to view each other&#x27;s changes in real-time.</a></td><td>required reading</td><td>operation broadcast and replay</td></tr>
+<tr><td>Google Docs</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/google-docs#4-users-should-be-able-to-see-the-cursor-position-and-presence-of-other-users">4) Users should be able to see the cursor position and presence of other users.</a></td><td>required reading</td><td>soft presence, not durable truth</td></tr>
+<tr><td>Google Docs</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/google-docs#collaborative-edits-breakdown">Collaborative Edits Breakdown</a></td><td>deep dive</td><td>H4 breakdown of edit path</td></tr></table></section>
+    <section class="section"><div class="section-head"><h2>DDIA 精确决策卡</h2><p class="section-copy">只读能改变今天设计决定的小节。</p></div><table class="matrix"><tr><th>项目问题</th><th>精确 DDIA subsection</th><th>改变的系统决定</th></tr><tr><td>Google Docs 多人并发编辑为什么不是简单 last-write-wins？</td><td><a href="https://ddia.vonng.com/ch6/#sec_replication_write_conflicts">Ch6 · 处理写入冲突</a></td><td>文档编辑必须保留用户意图，不能用 LWW 丢弃并发操作；需要 OT/CRDT 或服务端 sequencer。</td></tr>
+<tr><td>协同编辑的浏览器副本为什么像多主复制？</td><td><a href="https://ddia.vonng.com/ch6/#real-time-collaboration-offline-first-and-local-first-apps">Ch6 · 实时协作、离线优先和本地优先应用</a></td><td>本地先应用，异步同步到其他客户端；必须显式处理冲突、回放和撤销。</td></tr></table></section>
+    <section class="section"><div class="section-head"><h2>本日项目 artifacts</h2><p class="section-copy">脚本、音频、PDF 与 mock evidence 直接从对应日打开。</p></div><div class="pill-row"><a class="pill" href="#local-materials">Google Docs 中文完整讲稿</a> <a class="pill" href="#local-materials">Google Docs 中文完整音频</a> <a class="pill" href="#local-materials">Google Docs Senior+/Staff English recall</a> <a class="pill" href="#local-materials">Google Docs printable recall PDF</a></div></section>
+    <section class="section"><div class="section-head"><h2>今日产出、修复与英语 recall</h2></div><table class="rubric"><tr><th>课程角色</th><td>CORE · requirements/API/data model/HLD</td></tr><tr><th>必须交付</th><td>Google Docs HLD：Document snapshot、Operation log、baseRevision、ack/rebase、presence/cursor state。</td></tr><tr><th>修复规则</th><td>如果用 last write wins 覆盖整篇文档，补 OT/CRDT 或服务端 sequencer 如何保留用户意图。</td></tr><tr><th>English recall</th><td><div class="english-recall">English recall: “Collaborative editing stores intent-preserving operations, not just the latest document blob.”</div></td></tr></table></section>
+    <footer class="footer">Day 3 只推进 Week 4；不打开 Week 5。完成后把证据写入 <a href="#local-materials">scorecard</a>。</footer>
+  <section id="local-materials" style="margin:40px auto;max-width:1080px;padding:18px 22px;border:1px solid #d9dce1;background:#f7f8fa;color:#30343b;font:14px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif"><strong>Local study materials</strong><br>Detailed lecture notes, audio, recall scripts, PDFs, Staff Q&amp;A, and mock packs are archived locally and are intentionally not published on this site.</section></main>
+</body>
+</html>

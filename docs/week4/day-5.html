@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第 4 周 Day 5 - Online Chess：先盲做，再迁移 messaging/collaboration 的可复用与失效假设</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="topbar"><nav class="shell nav">
+    <a class="brand" href="../week4-action-guide.html"><span class="mark"></span> WEEK 04 · MESSAGING & COLLABORATION</a>
+    <div class="navlinks"><a href="../week4-action-guide.html">第 4 周</a><a href="#local-materials">深度讲义</a><a href="#local-materials">Staff Q&amp;A</a><a href="#local-materials">Live Mock</a><a href="#local-materials">验收</a></div>
+  </nav></header>
+  <main class="shell">
+
+    <section class="hero">
+      <div>
+        <div class="eyebrow">WEEK 04 · 2026-08-21 · FRI</div>
+        <h1>Online Chess：先盲做，再迁移 messaging/collaboration 的可复用与失效假设</h1>
+        <p class="deck">把 Online Chess 当迁移题：可复用连接、房间、事件日志；不可复用聊天的 eventual ordering，也不可复用文档的保留冲突分支。</p>
+        <div class="pill-row"><a class="pill" href="../week4-action-guide.html">周指南</a><a class="pill" href="#local-materials">讲义</a><a class="pill" href="#local-materials">Q&amp;A</a><a class="pill" href="#local-materials">验收</a></div>
+      </div>
+      <aside class="hero-panel"><div class="metric"><b>08:30</b><span>wake</span></div><div class="metric"><b>125m</b><span>system design</span></div><div class="metric"><b>3</b><span>Sliding Window</span></div><div class="metric"><b>45m</b><span>recall/mock</span></div></aside>
+    </section>
+    <section class="section">
+      <div class="section-head"><h2>今日固定时间表</h2><p class="section-copy">08:30 wake 只保留起床；学习从 08:50 开始。三块窗口不互相挤占。</p></div>
+      <table class="rubric">
+        <tr><th>08:30 wake</th><td>起床、早餐、准备白板；不安排预读或算法。</td></tr>
+        <tr><th>08:50—09:20</th><td><b>08:50—10:55 system design</b><br>盲做 — 不看原文，先画权威 game server、move sequencer、server clock、reconnect snapshot。</td></tr><tr><th>09:20—09:50</th><td><b>08:50—10:55 system design</b><br>精确原文 — 读 Online Chess visible live inventory 全部 anchors，包括 H4 matchmaking failure subheadings。</td></tr><tr><th>09:50—10:25</th><td><b>08:50—10:55 system design</b><br>迁移差异 — changed requirements、invalid reuse assumptions、new bottlenecks、浅层迁移追问。</td></tr><tr><th>10:25—10:55</th><td><b>08:50—10:55 system design</b><br>transfer close — 输出 8 分钟 Online Chess transfer answer：ordering、clock fairness、game server ownership。</td></tr>
+        <tr><th>14:30—16:15</th><td><b>NeetCode Tag · Sliding Window</b><br>三道题在下方独立算法表执行。</td></tr>
+        <tr><th>20:30—21:15</th><td>20:30—21:15 Online Chess 迁移口述：先讲盲做版本，再讲读完 live heading 后改了什么。</td></tr>
+      </table>
+    </section>
+    <section class="section"><div class="section-head"><h2>算法模块</h2><p class="section-copy">连续单一 NeetCode Sliding Window tag；每天 3 个 NEW slot，每题 30 分钟作答 + 5 分钟证据，正好 105 分钟。每天 timed review = 0，满足不超过 1。</p></div><table class="matrix algorithm-table"><tr><th>#</th><th>Problem / mode</th><th>Pattern</th><th>Invariant</th><th>Bug risk</th><th>Time</th><th>Space</th></tr><tr data-neetcode-slot="true" data-mode="NEW" data-minutes="35"><td data-label="Slot">13</td><td data-label="Problem / mode"><a href="https://neetcode.io/problems/longest-repeating-character-replacement/question">Longest Repeating Character Replacement</a><br><span class="evidence-chip">NEW · 30m solve + 5m evidence</span></td><td data-label="Pattern">预算型可变窗口</td><td data-label="Invariant">windowLen - maxFreq &lt;= k 时窗口可统一。</td><td data-label="Bug risk">误以为收缩时必须降低陈旧 maxFreq。</td><td data-label="Time">O(n)</td><td data-label="Space">O(alphabet)</td></tr>
+<tr data-neetcode-slot="true" data-mode="NEW" data-minutes="35"><td data-label="Slot">14</td><td data-label="Problem / mode"><a href="https://neetcode.io/problems/permutation-in-string/question">Permutation in String</a><br><span class="evidence-chip">NEW · 30m solve + 5m evidence</span></td><td data-label="Pattern">固定频次匹配窗口</td><td data-label="Invariant">窗口长度等于 pattern 且频次差为零。</td><td data-label="Bug risk">移出字符顺序错误；空/短字符串。</td><td data-label="Time">O(n + m)</td><td data-label="Space">O(alphabet)</td></tr>
+<tr data-neetcode-slot="true" data-mode="NEW" data-minutes="35"><td data-label="Slot">15</td><td data-label="Problem / mode"><a href="https://neetcode.io/problems/frequency-of-the-most-frequent-element/question">Frequency of the Most Frequent Element</a><br><span class="evidence-chip">NEW · 30m solve + 5m evidence</span></td><td data-label="Pattern">排序 + 成本窗口</td><td data-label="Invariant">target*len - windowSum &lt;= k。</td><td data-label="Bug risk">乘法溢出；收缩后未更新 windowSum。</td><td data-label="Time">O(n log n)</td><td data-label="Space">O(n) sort-dependent</td></tr></table></section>
+    <section class="section"><div class="section-head"><h2>闭卷起手</h2></div><div class="callout"><p>30 分钟盲做：matchmaking、game room、submitMove、clock、leaderboard。写下哪些 WhatsApp/Docs 假设会失效。</p></div></section>
+    <section class="section"><div class="section-head"><h2>Hello Interview 精确目录</h2><p class="section-copy">day 页面使用 canonical data-toc-id/H4 anchors；周级 overview 不放小节链接。</p></div><table class="matrix reading-table"><tr><th>项目</th><th>精确 canonical section</th><th>Disposition</th><th>今天怎么用</th></tr><tr><td>Online Chess</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/online-chess#understanding-the-problem">Understanding the Problem</a></td><td>required reading</td><td>transfer problem, blind first</td></tr>
+<tr><td>Online Chess</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/online-chess#functional-requirements">Functional Requirements</a></td><td>required reading</td><td>matchmaking, realtime game, leaderboard</td></tr>
+<tr><td>Online Chess</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/online-chess#non-functional-requirements">Non-Functional Requirements</a></td><td>required reading</td><td>fair clock, scale, low latency</td></tr>
+<tr><td>Online Chess</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/online-chess#the-set-up">The Set Up</a></td><td>required reading</td><td>scope and simplifications</td></tr>
+<tr><td>Online Chess</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/online-chess#planning-the-approach">Planning the Approach</a></td><td>required reading</td><td>requirements → entities → API → HLD</td></tr>
+<tr><td>Online Chess</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/online-chess#defining-the-core-entities">Defining the Core Entities</a></td><td>required reading</td><td>Player, Game, Move, Clock, MatchmakingPool</td></tr>
+<tr><td>Online Chess</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/online-chess#api-or-system-interface">API or System Interface</a></td><td>required reading</td><td>join queue, submit move, watch game, leaderboard</td></tr>
+<tr><td>Online Chess</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/online-chess#high-level-design">High-Level Design</a></td><td>required reading</td><td>game server as authoritative sequencer</td></tr>
+<tr><td>Online Chess</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/online-chess#1-players-should-be-able-to-find-an-opponent-through-skill-based-matchmaking-and-start-a-game">1) Players should be able to find an opponent through skill-based matchmaking and start a game</a></td><td>required reading</td><td>transfer from connection queues with stronger fairness</td></tr>
+<tr><td>Online Chess</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/online-chess#2-players-should-be-able-to-play-a-game-in-real-time">2) Players should be able to play a game in real time</a></td><td>required reading</td><td>authoritative move ordering</td></tr>
+<tr><td>Online Chess</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/online-chess#3-players-should-be-able-to-view-a-global-leaderboard-and-see-their-own-rank">3) Players should be able to view a global leaderboard and see their own rank</a></td><td>required reading</td><td>derived ranking state</td></tr>
+<tr><td>Online Chess</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/online-chess#potential-deep-dives">Potential Deep Dives</a></td><td>deep dive</td><td>transfer pressure</td></tr>
+<tr><td>Online Chess</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/online-chess#1-how-do-we-match-players-fairly-at-scale">1) How do we match players fairly at scale?</a></td><td>deep dive</td><td>fair queue, rating windows, pool sharding</td></tr>
+<tr><td>Online Chess</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/online-chess#do-we-need-to-shard-the-pool-across-redis-nodes">Do we need to shard the pool across Redis nodes?</a></td><td>deep dive</td><td>H4 matchmaking pool sharding</td></tr>
+<tr><td>Online Chess</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/online-chess#what-happens-if-that-redis-node-goes-down">What happens if that Redis node goes down?</a></td><td>deep dive</td><td>H4 recovery for queue ownership</td></tr>
+<tr><td>Online Chess</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/online-chess#2-how-do-we-scale-the-game-servers-to-500k-concurrent-games">2) How do we scale the game servers to 500K concurrent games?</a></td><td>deep dive</td><td>room placement and state ownership</td></tr>
+<tr><td>Online Chess</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/online-chess#3-how-do-we-keep-the-clock-fair-despite-uneven-latency">3) How do we keep the clock fair despite uneven latency?</a></td><td>deep dive</td><td>server clock and process-pause hazards</td></tr>
+<tr><td>Online Chess</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/online-chess#4-how-do-we-keep-the-leaderboard-correct-and-fast-at-10m-players">4) How do we keep the leaderboard correct and fast at 10M players?</a></td><td>deep dive</td><td>derived ranking with authoritative game results</td></tr>
+<tr><td>Online Chess</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/online-chess#some-additional-deep-dives-you-might-consider">Some additional deep dives you might consider</a></td><td>deep dive</td><td>extra transfer prompts</td></tr>
+<tr><td>Online Chess</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/online-chess#what-is-expected-at-each-level">What is Expected at Each Level?</a></td><td>level expectation</td><td>calibrate transfer depth</td></tr>
+<tr><td>Online Chess</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/online-chess#mid-level">Mid-level</a></td><td>level expectation</td><td>basic game flow</td></tr>
+<tr><td>Online Chess</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/online-chess#senior">Senior</a></td><td>level expectation</td><td>correctness and scale</td></tr>
+<tr><td>Online Chess</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/online-chess#staff">Staff+</a></td><td>level expectation</td><td>fairness, clocks, failover, cheat boundaries</td></tr></table></section>
+    <section class="section"><div class="section-head"><h2>DDIA 精确决策卡</h2><p class="section-copy">只读能改变今天设计决定的小节。</p></div><table class="matrix"><tr><th>项目问题</th><th>精确 DDIA subsection</th><th>改变的系统决定</th></tr><tr><td>Online Chess 为什么不能照搬聊天的 eventual ordering？</td><td><a href="https://ddia.vonng.com/ch10/#sec_consistency_linearizability">Ch10 · 线性一致性</a></td><td>每盘棋的 move 必须像单对象线性化：同一 move number 只能有一个权威结果。</td></tr>
+<tr><td>棋钟公平为什么不能相信客户端倒计时？</td><td><a href="https://ddia.vonng.com/ch9/#sec_distributed_clocks_relying">Ch9 · 对同步时钟的依赖</a></td><td>客户端时钟只用于显示；超时裁决由服务器事件时间和可审计 deadline 决定。</td></tr></table></section>
+    <section class="section"><div class="section-head"><h2>本日项目 artifacts</h2><p class="section-copy">脚本、音频、PDF 与 mock evidence 直接从对应日打开。</p></div><div class="pill-row"><a class="pill" href="#local-materials">Online Chess transfer project script</a> <a class="pill" href="#local-materials">Online Chess transfer audio</a></div></section>
+    <section class="section"><div class="section-head"><h2>今日产出、修复与英语 recall</h2></div><table class="rubric"><tr><th>课程角色</th><td>TRANSFER · blind first then live-source read</td></tr><tr><th>必须交付</th><td>Online Chess transfer memo：changed requirements、invalid reuse assumptions、new bottlenecks、shallow-transfer follow-ups。</td></tr><tr><th>修复规则</th><td>如果把棋局 move 当聊天消息队列，补 server-side legal move validation、single authoritative move number、clock裁决。</td></tr><tr><th>English recall</th><td><div class="english-recall">English recall: “Chess moves require authoritative validation and a single accepted move order per game.”</div></td></tr></table></section>
+    <footer class="footer">Day 5 只推进 Week 4；不打开 Week 5。完成后把证据写入 <a href="#local-materials">scorecard</a>。</footer>
+  <section id="local-materials" style="margin:40px auto;max-width:1080px;padding:18px 22px;border:1px solid #d9dce1;background:#f7f8fa;color:#30343b;font:14px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif"><strong>Local study materials</strong><br>Detailed lecture notes, audio, recall scripts, PDFs, Staff Q&amp;A, and mock packs are archived locally and are intentionally not published on this site.</section></main>
+</body>
+</html>

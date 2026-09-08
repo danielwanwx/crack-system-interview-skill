@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第 4 周 Day 7 - Week 4 证据验收、英语 recall、停在 reviewer gate</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="topbar"><nav class="shell nav">
+    <a class="brand" href="../week4-action-guide.html"><span class="mark"></span> WEEK 04 · MESSAGING & COLLABORATION</a>
+    <div class="navlinks"><a href="../week4-action-guide.html">第 4 周</a><a href="#local-materials">深度讲义</a><a href="#local-materials">Staff Q&amp;A</a><a href="#local-materials">Live Mock</a><a href="#local-materials">验收</a></div>
+  </nav></header>
+  <main class="shell">
+
+    <section class="hero">
+      <div>
+        <div class="eyebrow">WEEK 04 · 2026-08-23 · SUN</div>
+        <h1>Week 4 证据验收、英语 recall、停在 reviewer gate</h1>
+        <p class="deck">只收敛 Week 4：检查 heading disposition、DDIA anchors、mock、scorecard、移动视觉，不预读 Week 5。</p>
+        <div class="pill-row"><a class="pill" href="../week4-action-guide.html">周指南</a><a class="pill" href="#local-materials">讲义</a><a class="pill" href="#local-materials">Q&amp;A</a><a class="pill" href="#local-materials">验收</a></div>
+      </div>
+      <aside class="hero-panel"><div class="metric"><b>08:30</b><span>wake</span></div><div class="metric"><b>125m</b><span>system design</span></div><div class="metric"><b>3</b><span>Sliding Window</span></div><div class="metric"><b>45m</b><span>recall/mock</span></div></aside>
+    </section>
+    <section class="section">
+      <div class="section-head"><h2>今日固定时间表</h2><p class="section-copy">08:30 wake 只保留起床；学习从 08:50 开始。三块窗口不互相挤占。</p></div>
+      <table class="rubric">
+        <tr><th>08:30 wake</th><td>起床、早餐、准备白板；不安排预读或算法。</td></tr>
+        <tr><th>08:50—09:20</th><td><b>08:50—10:55 system design</b><br>闭卷综合 — 三题各 8 分钟：WhatsApp、Google Docs、Online Chess transfer。</td></tr><tr><th>09:20—09:55</th><td><b>08:50—10:55 system design</b><br>证据补齐 — 打开 scorecard，逐条勾掉 Hello heading、DDIA anchors、mock、Q&amp;A source。</td></tr><tr><th>09:55—10:30</th><td><b>08:50—10:55 system design</b><br>弱项修复 — 只修一条 carry-over，不打开 Week 5。</td></tr><tr><th>10:30—10:55</th><td><b>08:50—10:55 system design</b><br>production record — 写入 Week 4 production record，状态 READY_FOR_REVIEW_REPAIR，writer 不自批。</td></tr>
+        <tr><th>14:30—16:15</th><td><b>NeetCode Tag · Sliding Window</b><br>三道题在下方独立算法表执行。</td></tr>
+        <tr><th>20:30—21:15</th><td>20:30—21:15 最终英语 + 中文 recall：随机抽 8 个 Staff Q&amp;A，答完即停止，等待 reviewer。</td></tr>
+      </table>
+    </section>
+    <section class="section"><div class="section-head"><h2>算法模块</h2><p class="section-copy">连续单一 NeetCode Sliding Window tag；每天 3 个 NEW slot，每题 30 分钟作答 + 5 分钟证据，正好 105 分钟。每天 timed review = 0，满足不超过 1。</p></div><table class="matrix algorithm-table"><tr><th>#</th><th>Problem / mode</th><th>Pattern</th><th>Invariant</th><th>Bug risk</th><th>Time</th><th>Space</th></tr><tr data-neetcode-slot="true" data-mode="NEW" data-minutes="35"><td data-label="Slot">19</td><td data-label="Problem / mode"><a href="https://neetcode.io/problems/defuse-the-bomb/question">Defuse the Bomb</a><br><span class="evidence-chip">NEW · 30m solve + 5m evidence</span></td><td data-label="Pattern">环形固定和窗口</td><td data-label="Invariant">每个位置的窗口恰含方向上 |k| 个邻居且不含自己。</td><td data-label="Bug risk">k 正负方向混淆；模下标。</td><td data-label="Time">O(n)</td><td data-label="Space">O(n) output</td></tr>
+<tr data-neetcode-slot="true" data-mode="NEW" data-minutes="35"><td data-label="Slot">20</td><td data-label="Problem / mode"><a href="https://neetcode.io/problems/minimum-size-subarray-sum/question">Minimum Size Subarray Sum</a><br><span class="evidence-chip">NEW · 30m solve + 5m evidence</span></td><td data-label="Pattern">满足阈值后最小化窗口</td><td data-label="Invariant">正数保证右扩 sum 不减、左缩 sum 不增。</td><td data-label="Bug risk">在 while 前更新答案；无解返回值。</td><td data-label="Time">O(n)</td><td data-label="Space">O(1)</td></tr>
+<tr data-neetcode-slot="true" data-mode="NEW" data-minutes="35"><td data-label="Slot">21</td><td data-label="Problem / mode"><a href="https://neetcode.io/problems/find-k-closest-elements/question">Find K Closest Elements</a><br><span class="evidence-chip">NEW · 30m solve + 5m evidence</span></td><td data-label="Pattern">排序数组的答案窗口</td><td data-label="Invariant">答案是长度 k 的连续窗口，比较两侧排除较差端。</td><td data-label="Bug risk">相等时应偏左；二分上界 n-k。</td><td data-label="Time">O(log(n-k) + k)</td><td data-label="Space">O(1) extra</td></tr></table></section>
+    <section class="section"><div class="section-head"><h2>闭卷起手</h2></div><div class="callout"><p>闭卷写三句话：WhatsApp 是 durable message log + soft connection；Docs 是 operation log + transform；Chess 是 authoritative move sequencer。</p></div></section>
+    <section class="section"><div class="section-head"><h2>Hello Interview 精确目录</h2><p class="section-copy">day 页面使用 canonical data-toc-id/H4 anchors；周级 overview 不放小节链接。</p></div><p>今天不新增 Hello Interview 小节；只复用前 5 天已核验目录做 mock/repair。</p></section>
+    <section class="section"><div class="section-head"><h2>DDIA 精确决策卡</h2><p class="section-copy">只读能改变今天设计决定的小节。</p></div><p>今天不新增 DDIA subsection；只复用本周已映射的决策卡。</p></section>
+    <section class="section"><div class="section-head"><h2>本日项目 artifacts</h2><p class="section-copy">脚本、音频、PDF 与 mock evidence 直接从对应日打开。</p></div><div class="pill-row"><a class="pill" href="#local-materials">全部项目 artifacts 与 mock evidence</a> <a class="pill" href="#local-materials">最低分回答 re-attempt gate</a></div></section>
+    <section class="section"><div class="section-head"><h2>今日产出、修复与英语 recall</h2></div><table class="rubric"><tr><th>课程角色</th><td>EVIDENCE · writer gate</td></tr><tr><th>必须交付</th><td>完成 scorecard/production record；所有本地链接、external canonical anchors、desktop/mobile smoke 通过。</td></tr><tr><th>修复规则</th><td>如果证据不足，不进入 Week 5；只补 Week 4 的缺失链接、回答或 mock 片段。</td></tr><tr><th>English recall</th><td><div class="english-recall">English recall: “I can explain ordering, connection ownership, offline recovery, and concurrent editing without looking at notes.”</div></td></tr></table></section>
+    <footer class="footer">Day 7 只推进 Week 4；不打开 Week 5。完成后把证据写入 <a href="#local-materials">scorecard</a>。</footer>
+  <section id="local-materials" style="margin:40px auto;max-width:1080px;padding:18px 22px;border:1px solid #d9dce1;background:#f7f8fa;color:#30343b;font:14px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif"><strong>Local study materials</strong><br>Detailed lecture notes, audio, recall scripts, PDFs, Staff Q&amp;A, and mock packs are archived locally and are intentionally not published on this site.</section></main>
+</body>
+</html>

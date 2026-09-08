@@ -1,0 +1,60 @@
+@import url("../week4/style.css");
+
+.transfer-table td:first-child,
+.transfer-table th:first-child,
+.reading-table td:first-child,
+.reading-table th:first-child {
+  width: 24%;
+}
+
+.source-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 7px 11px;
+  background: rgba(255,255,255,.68);
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.latency-split {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.latency-split .tile {
+  border-left: 4px solid var(--accent, #2563eb);
+}
+
+.artifact-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.artifact-list a {
+  display: block;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: rgba(255,255,255,.68);
+  font-weight: 800;
+}
+
+@media (max-width: 860px) {
+  .latency-split,
+  .artifact-list {
+    grid-template-columns: 1fr;
+  }
+
+  .transfer-table td:first-child,
+  .transfer-table th:first-child,
+  .reading-table td:first-child,
+  .reading-table th:first-child {
+    width: auto;
+  }
+}

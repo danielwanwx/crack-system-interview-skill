@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Week 8 Day 7 · Repair, Synthesis, Scorecard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body id="top">
+
+
+<header class="topbar">
+  <nav class="nav shell" aria-label="Week 8 navigation">
+    <a class="brand" href="../week8-action-guide.html"><span class="mark"></span><span>Week 8 · Day 7</span></a>
+    <div class="navlinks"><a href="../week8-action-guide.html">Overview</a><a href="day-1.html">Day 1</a><a href="day-2.html">Day 2</a><a href="day-3.html">Day 3</a><a href="day-4.html">Day 4</a><a href="day-5.html">Day 5</a><a href="day-6.html">Day 6</a><a href="day-7.html">Day 7</a><a href="#local-materials">Lecture</a><a href="#local-materials">Mock</a><a href="#local-materials">Scorecard</a></div>
+  </nav>
+</header>
+
+<main>
+  <section class="day-hero shell">
+    <div class="eyebrow">Week 8 · Sun Sep 20, 2026 · Sep 14-20, 2026</div>
+    <h1>Day 7: Repair, Synthesis, Scorecard</h1>
+    <p class="deck">A final scorecard with artifact proof, heading coverage, DDIA decisions, Heap evidence, and a READY_FOR_REVIEW production record.</p>
+    <div class="day-meta"><span>Can every Week 8 mechanism be restarted without hidden state?</span><span>Frontier · leases · retries · dedupe · recovery</span><span>3 Heap/Priority Queue slots</span></div>
+  </section>
+
+  <section class="section shell" id="schedule">
+    <div class="section-head"><h2>Exact Time Blocks</h2><p class="section-copy">Follow the Week 4 delivery pattern: blank-page first, source reading second, DDIA decision third, spoken close, contiguous algorithm practice, evening recall.</p></div>
+
+<table class="matrix reading-table" id="time-blocks">
+  <tr><th>Time</th><th>Block</th><th>Required output</th></tr>
+  <tr><td data-label="Time">08:30</td><td data-label="Block">Wake + setup</td><td data-label="Required output">Open this page, start the board, write the day question: Can every Week 8 mechanism be restarted without hidden state?</td></tr>
+  <tr><td data-label="Time">08:50—09:00</td><td data-label="Block">Board set</td><td data-label="Required output">List entities, queues, leases, retry states, dedupe keys, metrics before reading.</td></tr>
+  <tr><td data-label="Time">09:00—10:05</td><td data-label="Block">Blank-page attempt + Hello reading</td><td data-label="Required output">Repair the weakest answer from Saturday and regenerate the final Staff paragraph for that system. Then walk every local artifact link.</td></tr>
+  <tr><td data-label="Time">10:05—10:45</td><td data-label="Block">Deep dive + DDIA decision</td><td data-label="Required output">Synthesize the week into one mechanism ladder: frontier ownership -&gt; leases -&gt; retries/backoff -&gt; dedupe/idempotence -&gt; change detection -&gt; recovery metrics.</td></tr>
+  <tr><td data-label="Time">10:45—10:55</td><td data-label="Block">Spoken close</td><td data-label="Required output">Stop only when the production record says READY_FOR_REVIEW.</td></tr>
+  <tr><td data-label="Time">14:30—16:15</td><td data-label="Block">NeetCode Heap/Priority Queue</td><td data-label="Required output">Complete contiguous slots W8-H19—W8-H21; capture invariant and bug risk for each.</td></tr>
+  <tr><td data-label="Time">20:30—21:15</td><td data-label="Block">Recall / Q&A / mock</td><td data-label="Required output">Use <a href="#local-materials">Staff Q&A</a>, <a href="#local-materials">lecture assets</a>, or <a href="#local-materials">mock script</a> for the day's system.</td></tr>
+</table>
+
+  </section>
+
+  <section class="section shell" id="canonical-headings">
+    <div class="section-head"><h2>Canonical Heading Anchors</h2><p class="section-copy">Read only the listed Hello Interview headings for today's assignment. Every link is a direct day-page anchor.</p></div>
+    <div class="ops-grid"><section>
+<div class="source-block">
+  <div class="source-title"><a href="#local-materials">Week 8 synthesis checklist</a><span>Day 7</span></div>
+  <ul class="source-sections"><li>Use local artifacts and scorecard evidence; no new source scope.</li></ul>
+</div>
+</section><section><h2>Decision Notes</h2><ul class="compact-list">
+      <li><span class="box"></span><span>CORE means you must answer requirement, HLD, deep dive, failure, recovery, metric, and Staff-level tradeoff.</span></li>
+      <li><span class="box"></span><span>TRANSFER means blind attempt first, then delta against source, invalid assumption, new bottleneck, and follow-up pressure question.</span></li>
+      <li><span class="box"></span><span>Do not add open-ended AI radar unless it changes a concrete Week 8 design decision; this week it does not.</span></li>
+    </ul></section></div>
+  </section>
+
+  <section class="section shell" id="ddia">
+    <div class="section-head"><h2>DDIA Decision Map</h2><p class="section-copy">Use exact sections only from Ch5, Ch9, and Ch12.</p></div>
+
+<table class="matrix reading-table">
+  <tr><th>Chapter</th><th>Exact DDIA decision section</th><th>Concrete Week 8 use</th></tr>
+  <tr><td data-label="Chapter">Ch5</td><td data-label="Exact section"><a href="https://ddia.vonng.com/ch5/#sec_encoding_dataflow_workflows">持久化执行与工作流</a></td><td data-label="Decision use">Final audit: every workflow has durable state and a resume rule.</td></tr>
+<tr><td data-label="Chapter">Ch9</td><td data-label="Exact section"><a href="https://ddia.vonng.com/ch9/#sec_distributed_fencing_tokens">隔离僵尸进程和延迟请求</a></td><td data-label="Decision use">Final audit: every lease path rejects stale completions.</td></tr>
+<tr><td data-label="Chapter">Ch12</td><td data-label="Exact section"><a href="https://ddia.vonng.com/ch12/#sec_stream_state_fault_tolerance">失败后重建状态</a></td><td data-label="Decision use">Final audit: every materialized view can be rebuilt from events/logs.</td></tr>
+</table>
+
+  </section>
+
+  <section class="section shell" id="algorithm">
+    <div class="section-head"><h2>Heap/Priority Queue Slots</h2><p class="section-copy">Three contiguous slots today. Keep one invariant and one failure mode per problem.</p></div>
+
+<table class="matrix algorithm-table" id="heap-slots-19-21">
+  <tr><th>Slot</th><th>Problem</th><th>Pattern</th><th>Invariant / bug risk</th><th>Time · Space</th></tr>
+
+<tr data-neetcode-slot="true" id="w8-h19">
+  <td data-label="Slot">W8-H19</td>
+  <td data-label="Problem"><a href="https://neetcode.io/problems/cheapest-flight-path/question">Cheapest Flights Within K Stops</a></td>
+  <td data-label="Pattern">bounded-state heap</td>
+  <td data-label="Invariant">State includes stops used; city alone is not enough.</td>
+  <td data-label="Complexity">O(EK log EK) · O(VK)</td>
+</tr>
+
+<tr data-neetcode-slot="true" id="w8-h20">
+  <td data-label="Slot">W8-H20</td>
+  <td data-label="Problem"><a href="https://neetcode.io/problems/min-cost-to-connect-points/question">Min Cost to Connect Points</a></td>
+  <td data-label="Pattern">Prim heap</td>
+  <td data-label="Invariant">The cut grows by the cheapest edge crossing from chosen to unchosen.</td>
+  <td data-label="Complexity">O(n^2 log n) · O(n^2)</td>
+</tr>
+
+<tr data-neetcode-slot="true" id="w8-h21">
+  <td data-label="Slot">W8-H21</td>
+  <td data-label="Problem"><a href="https://neetcode.io/problems/take-gifts-from-the-richest-pile/question">Take Gifts From the Richest Pile</a></td>
+  <td data-label="Pattern">max-heap update</td>
+  <td data-label="Invariant">Each operation changes exactly one largest pile.</td>
+  <td data-label="Complexity">O(k log n) · O(n)</td>
+</tr>
+
+</table>
+
+  </section>
+
+  <section class="section shell" id="evidence">
+    <div class="section-head"><h2>Evidence To Save</h2><p class="section-copy">One compact artifact is enough if it proves mechanism depth.</p></div>
+    <div class="grid-3">
+      <article class="tile"><div class="kicker">Invariant</div><h3>State safety</h3><p>Name the state that survives restart and the write that makes retry safe.</p></article>
+      <article class="tile"><div class="kicker">Failure</div><h3>Concrete break</h3><p>Use a worker crash, zombie lease, redelivery, poison message, stale robots decision, or duplicate price event.</p></article>
+      <article class="tile"><div class="kicker">Metric</div><h3>Operational proof</h3><p>Attach lag, retry rate, duplicate suppression, stale lease reject count, host politeness violation, or alert freshness.</p></article>
+    </div>
+  </section>
+<section id="local-materials" style="margin:40px auto;max-width:1080px;padding:18px 22px;border:1px solid #d9dce1;background:#f7f8fa;color:#30343b;font:14px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif"><strong>Local study materials</strong><br>Detailed lecture notes, audio, recall scripts, PDFs, Staff Q&amp;A, and mock packs are archived locally and are intentionally not published on this site.</section></main>
+
+<footer class="footer shell">Week 8 only · Reliable execution · Heap/Priority Queue · READY_FOR_REVIEW gate</footer>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第 3 周 Day 2 - FB News Feed：fan-out、celebrity skew、hot posts 与派生状态</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css" data-week='3'>
+</head>
+<body>
+
+  <header class="topbar">
+    <nav class="shell nav">
+      <a class="brand" href="../system-design-12-week-master-plan.html"><span class="mark"></span> WEEK 03 · FEED & REALTIME</a>
+      <div class="navlinks">
+        <a href="../week3-action-guide.html">第 3 周</a>
+        <a href="#local-materials">深度讲义</a>
+        <a href="#local-materials">Staff Q&amp;A</a>
+        <a href="#local-materials">Live Mock</a>
+        <a href="#local-materials">验收</a>
+      </div>
+    </nav>
+  </header>
+  <main class="shell">
+
+    <section class="hero">
+      <div>
+        <div class="eyebrow">WEEK 03 · 2026-08-11 · TUE</div>
+        <h1>FB News Feed：fan-out、celebrity skew、hot posts 与派生状态</h1>
+        <p class="deck">完整覆盖 News Feed deep dives：大量 followees、大量 followers、热门 post cache；产出可面试的 hybrid fan-out。</p>
+        <div class="pill-row">
+          <a class="pill" href="../week3-action-guide.html">周指南</a>
+          <a class="pill" href="#local-materials">讲义</a>
+          <a class="pill" href="#local-materials">Q&amp;A</a>
+          <a class="pill" href="#local-materials">验收</a>
+        </div>
+      </div>
+      <aside class="hero-panel">
+        <div class="metric"><b>08:30</b><span>wake</span></div>
+        <div class="metric"><b>125m</b><span>system design</span></div>
+        <div class="metric"><b>3</b><span>Stack problems</span></div>
+        <div class="metric"><b>45m</b><span>oral block</span></div>
+      </aside>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>今日固定时间表</h2><p class="section-copy">08:30 wake 只保留起床；学习从 08:50 开始。三块窗口不互相挤占。</p></div>
+      <table class="rubric">
+        <tr><th>08:30 wake</th><td>起床、早餐、准备白板；不安排预读或算法。</td></tr>
+        <tr><th>08:50—09:15</th><td><b>08:50—10:55 system design</b><br>Bad/Good/Great 拆解 — 为三类 skew 各写一个 Bad、Good、Great，不用组件名糊弄。</td></tr><tr><th>09:15—09:50</th><td><b>08:50—10:55 system design</b><br>精确原文 — 读 News Feed potential deep dives 与 level expectation。</td></tr><tr><th>09:50—10:25</th><td><b>08:50—10:55 system design</b><br>机制化白板 — 画 async fan-out workers、celebrity pull merge、post cache replication、feed repair。</td></tr><tr><th>10:25—10:55</th><td><b>08:50—10:55 system design</b><br>指标和 failure window — 补 fan-out lag、duplicate item、cache stampede、celebrity merge p99。</td></tr>
+        <tr><th>14:30—16:15</th><td><b>NeetCode Tag · Stack</b><br>三道题在下方独立算法表执行，避免系统设计表格挤压算法细节。</td></tr>
+        <tr><th>20:30—21:15</th><td>20:30—21:15 Staff 追问练习：celebrity 发帖、worker 重试、feed 重建、hot post 缓存雪崩。</td></tr>
+      </table>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>算法模块</h2><p class="section-copy">连续单一 NeetCode Stack tag；每天 3 题，14:30—16:15 完成。</p></div>
+      <table class="matrix"><tr><th>#</th><th>Problem</th><th>Invariant focus</th><th>执行</th></tr><tr data-neetcode-slot="true"><td>4</td><td><a href="https://neetcode.io/problems/generate-parentheses">Generate Parentheses</a></td><td>隐式栈 DFS：open/close 不变量。</td><td>35 分钟限时 + 5 分钟 invariant/bug risk</td></tr>
+<tr data-neetcode-slot="true"><td>5</td><td><a href="https://neetcode.io/problems/daily-temperatures">Daily Temperatures</a></td><td>单调递减栈：等待更暖日期。</td><td>35 分钟限时 + 5 分钟 invariant/bug risk</td></tr>
+<tr data-neetcode-slot="true"><td>6</td><td><a href="https://neetcode.io/problems/car-fleet">Car Fleet</a></td><td>按位置排序后的单调到达时间栈。</td><td>35 分钟限时 + 5 分钟 invariant/bug risk</td></tr></table>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>闭卷起手</h2><p class="section-copy">先暴露自己的当前模型，再用 live headings 修正。</p></div>
+      <div class="callout"><p>15 分钟闭卷回答：fan-out on read、fan-out on write、hybrid push/pull 分别在哪个用户分布下失败。</p></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>Hello Interview 精确目录</h2><p class="section-copy">day 页面必须链接到具体 section anchors；周级 overview 不放小节链接。</p></div>
+      <table class="matrix reading-table"><tr><th>项目</th><th>精确 section anchor</th><th>Disposition</th><th>今天怎么用</th></tr><tr><td>FB News Feed</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed#potential-deep-dives">Potential Deep Dives</a></td><td>deep dive</td><td>transition from HLD to scale questions</td></tr>
+<tr><td>FB News Feed</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed#1-how-do-we-handle-users-who-are-following-a-large-number-of-users">1) How do we handle users who are following a large number of users?</a></td><td>deep dive</td><td>fan-out on read and precomputed feed</td></tr>
+<tr><td>FB News Feed</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed#2-how-do-we-handle-users-with-a-large-number-of-followers">2) How do we handle users with a large number of followers?</a></td><td>deep dive</td><td>fan-out on write, async workers, hybrid celebrity pull</td></tr>
+<tr><td>FB News Feed</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed#3-how-can-we-handle-uneven-reads-of-posts">3) How can we handle uneven reads of Posts?</a></td><td>deep dive</td><td>hot post cache and replicated hot-key reads</td></tr>
+<tr><td>FB News Feed</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed#what-is-expected-at-each-level">What is Expected at Each Level?</a></td><td>level expectation</td><td>calibrate depth</td></tr>
+<tr><td>FB News Feed</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed#mid-level">Mid-level</a></td><td>level expectation</td><td>basic flow</td></tr>
+<tr><td>FB News Feed</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed#senior">Senior</a></td><td>level expectation</td><td>trade-offs, scale, failure</td></tr>
+<tr><td>FB News Feed</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed#staff">Staff+</a></td><td>level expectation</td><td>skew, operational rigor, principled simplification</td></tr></table>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>DDIA 精确决策卡</h2><p class="section-copy">只读能改变今天设计决定的小节。</p></div>
+      <table class="matrix"><tr><th>项目问题</th><th>精确 DDIA subsection</th><th>改变的系统决定</th></tr><tr><td>Feed table 是事实还是派生状态？</td><td><a href="https://ddia.vonng.com/ch13/#id446">Ch13 · 维护派生状态</a></td><td>Post 与 Follow graph 是事实；per-user feed rows 是可重建派生状态，因此要有 lag、replay、repair 指标。</td></tr>
+<tr><td>fan-out worker 重试为什么必须幂等？</td><td><a href="https://ddia.vonng.com/ch12/#sec_stream_idempotence">Ch12 · 幂等性</a></td><td>feed insert key 使用 (viewerId, postId)，重复事件只刷新位置/score，不产生重复 feed item。</td></tr>
+<tr><td>如何看见派生 feed 已经落后？</td><td><a href="https://ddia.vonng.com/ch13/#sec_future_observing">Ch13 · 观察派生数据状态</a></td><td>公开 per-shard fan-out lag、oldest unprocessed event、repair backlog，而不是只看 API p99。</td></tr></table>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>今日产出与修复规则</h2></div>
+      <table class="rubric">
+        <tr><th>课程角色</th><td>CORE · all deep dives + Bad/Good/Great</td></tr>
+        <tr><th>必须交付</th><td>News Feed deep-dive matrix：large followees / large followers / uneven reads，各含 Bad-Good-Great、recovery 和指标。</td></tr>
+        <tr><th>修复规则</th><td>如果答案只是“用 Kafka + Redis”，必须补 event key、idempotent insert key、lag measurement 和 fallback read path。</td></tr>
+      </table>
+    </section>
+    <footer class="footer">Day 2 只推进 Week 3；不打开 Week 4。完成后把证据写入 <a href="#local-materials">scorecard</a>。</footer>
+  <section id="local-materials" style="margin:40px auto;max-width:1080px;padding:18px 22px;border:1px solid #d9dce1;background:#f7f8fa;color:#30343b;font:14px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif"><strong>Local study materials</strong><br>Detailed lecture notes, audio, recall scripts, PDFs, Staff Q&amp;A, and mock packs are archived locally and are intentionally not published on this site.</section></main>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>THU · 07.30 - Rate Limiter：原子性、分片与故障策略</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="../week1/style.css">
+</head>
+<body>
+
+  <header class="topbar">
+    <nav class="shell nav">
+      <a class="brand" href="../system-design-12-week-master-plan.html"><span class="mark"></span> CRACK SYSTEM INTERVIEW</a>
+      <div class="navlinks">
+        <a href="../system-design-12-week-master-plan.html">12 周路线</a>
+        <a href="../week1-action-guide.html">第 1 周</a>
+        <a href="#local-materials">深度讲义</a>
+        <a href="#local-materials">Staff Q&amp;A</a>
+        <a href="#local-materials">Live Mock</a>
+        <a href="#local-materials">验收</a>
+      </div>
+    </nav>
+  </header>
+  <main class="shell">
+
+    <section class="day-hero">
+      <div class="eyebrow">THU · 07.30 · WEEK 01</div>
+      <h1>Rate Limiter：原子性、分片与故障策略</h1>
+      <p class="deck">完整覆盖算法、Redis 原子 read-modify-write、1M RPS 扩展、consistent hashing、hot key 与 fail-open / fail-closed。</p>
+      <div class="day-meta"><span>08:50—10:55 系统设计</span><span>14:30—16:15 三题</span><span>20:30—21:15 口述</span></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>原文定位</h2><p class="section-copy">按顺序打开。链接直接指向当天需要阅读的小节。</p></div>
+      <ol class="reading-list"><li><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/distributed-rate-limiter#potential-deep-dives">Rate Limiter / Potential Deep Dives</a></li><li><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/distributed-rate-limiter#1-how-do-we-scale-to-handle-1m-requests-second">Rate Limiter / 1) How do we scale to handle 1M requests/second?</a></li><li><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/distributed-rate-limiter#2-how-do-we-ensure-high-availability-and-fault-tolerance">Rate Limiter / 2) How do we ensure high availability and fault tolerance?</a></li><li><a href="https://www.hellointerview.com/learn/system-design/deep-dives/redis">Redis</a></li><li><a href="https://www.hellointerview.com/learn/system-design/core-concepts/consistent-hashing">Consistent Hashing</a></li><li><a href="https://www.hellointerview.com/learn/system-design/patterns/dealing-with-contention">Dealing with Contention</a></li><li><a href="https://www.hellointerview.com/learn/system-design/patterns/scaling-writes">Scaling Writes</a></li><li><a href="https://ddia.vonng.com/ch7/#sec_sharding_hash">DDIA Ch7 / 按键的哈希分片</a></li><li><a href="https://ddia.vonng.com/ch7/#sec_sharding_skew">DDIA Ch7 / 倾斜的工作负载与缓解热点</a></li><li><a href="https://ddia.vonng.com/ch7/#sec_sharding_routing">DDIA Ch7 / 请求路由</a></li><li><a href="https://ddia.vonng.com/ch9/#sec_distributed_partial_failure">DDIA Ch9 / 故障与部分失效</a></li><li><a href="https://ddia.vonng.com/ch9/#sec_distributed_queueing">DDIA Ch9 / 超时和无界延迟</a></li></ol>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>上午执行</h2></div>
+      <table class="matrix"><tr><th>时间</th><th>动作</th></tr><tr><td><strong>08:50—09:20</strong></td><td>画出两个 gateway 并发消费最后一个 token 的 race window。</td></tr><tr><td><strong>09:20—10:05</strong></td><td>读完 Potential Deep Dives；把 Lua 原子操作边界画成一个盒子。</td></tr><tr><td><strong>10:05—10:30</strong></td><td>读 DDIA Ch7 的哈希分片、热点与路由，修正 shard key 和 hot-key 方案。</td></tr><tr><td><strong>10:30—10:45</strong></td><td>读 DDIA Ch9 的部分失效与超时，明确 limiter unavailable 不等于 limiter failed。</td></tr><tr><td><strong>10:45—10:55</strong></td><td>分别为 login、防滥用、推荐 API 选择 fail-open 或 fail-closed。</td></tr></table>
+      <div class="callout"><strong>必须产出：</strong>一页 Failure Policy：不同 endpoint 的 timeout、fail-open/closed、本地降级配额、告警和恢复。</div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>掌握标准</h2></div>
+      <ul class="compact-list"><li><span class="box"></span><span>知道 MULTI/EXEC 不自动覆盖事务外的 HMGET；原子边界必须包含 read-calculate-update。</span></li><li><span class="box"></span><span>能解释 consistent hashing 解决路由/重平衡，不解决 hot key 和跨区域强一致。</span></li><li><span class="box"></span><span>不会给全系统一个统一 fail-open/closed 答案；按风险和下游容量选择。</span></li></ul>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>算法 · Arrays &amp; Hashing</h2><p class="section-copy">Tag 不切换。三题结束后只记录四个字段。</p></div>
+      <table class="matrix"><tr><th>#</th><th>题目</th><th>留下的记录</th></tr><tr><td>1</td><td><a href="https://leetcode.com/problems/longest-consecutive-sequence/">Longest Consecutive Sequence</a></td><td>Pattern / Invariant / Bug / Complexity</td></tr><tr><td>2</td><td><a href="https://leetcode.com/problems/subarray-sum-equals-k/">Subarray Sum Equals K</a></td><td>Pattern / Invariant / Bug / Complexity</td></tr><tr><td>3</td><td><a href="https://leetcode.com/problems/product-of-array-except-self/">Product of Array Except Self · 复刷</a></td><td>Pattern / Invariant / Bug / Complexity</td></tr></table>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>晚上</h2></div>
+      <div class="callout green">Frontier 40 分钟：读 IBM Loop Engineering；只写 Claim、Mechanism、Failure、Transfer 四行。</div>
+    </section>
+    <footer class="footer"><a href="../week1-action-guide.html">返回第 1 周总览</a></footer>
+  <section id="local-materials" style="margin:40px auto;max-width:1080px;padding:18px 22px;border:1px solid #d9dce1;background:#f7f8fa;color:#30343b;font:14px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif"><strong>Local study materials</strong><br>Detailed lecture notes, audio, recall scripts, PDFs, Staff Q&amp;A, and mock packs are archived locally and are intentionally not published on this site.</section></main>
+</body>
+</html>

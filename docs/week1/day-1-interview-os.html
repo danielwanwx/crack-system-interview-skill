@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MON · 07.27 - Bitly：一次读到 High-Level Design</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="../week1/style.css">
+</head>
+<body>
+
+  <header class="topbar">
+    <nav class="shell nav">
+      <a class="brand" href="../system-design-12-week-master-plan.html"><span class="mark"></span> CRACK SYSTEM INTERVIEW</a>
+      <div class="navlinks">
+        <a href="../system-design-12-week-master-plan.html">12 周路线</a>
+        <a href="../week1-action-guide.html">第 1 周</a>
+        <a href="#local-materials">深度讲义</a>
+        <a href="#local-materials">Staff Q&amp;A</a>
+        <a href="#local-materials">Live Mock</a>
+        <a href="#local-materials">验收</a>
+      </div>
+    </nav>
+  </header>
+  <main class="shell">
+
+    <section class="day-hero">
+      <div class="eyebrow">MON · 07.27 · WEEK 01</div>
+      <h1>Bitly：一次读到 High-Level Design</h1>
+      <p class="deck">先闭卷 20 分钟，再完整读完问题定义、FR/NFR、核心实体、API 与 HLD。今天不拆成零散小节。</p>
+      <div class="day-meta"><span>08:50—10:55 系统设计</span><span>14:30—16:15 三题</span><span>20:30—21:15 口述</span></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>原文定位</h2><p class="section-copy">按顺序打开。链接直接指向当天需要阅读的小节。</p></div>
+      <ol class="reading-list"><li><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly#understanding-the-problem">Bitly / Understanding the Problem</a></li><li><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly#functional-requirements">Bitly / Functional Requirements</a></li><li><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly#non-functional-requirements">Bitly / Non-Functional Requirements</a></li><li><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly#the-set-up">Bitly / The Set Up</a></li><li><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly#defining-the-core-entities">Bitly / Defining the Core Entities</a></li><li><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly#the-api">Bitly / The API</a></li><li><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly#high-level-design">Bitly / High-Level Design</a></li><li><a href="https://ddia.vonng.com/ch2/#id23">DDIA Ch2 / 延迟与响应时间</a></li><li><a href="https://ddia.vonng.com/ch2/#id24">DDIA Ch2 / 平均值、中位数与百分位点</a></li></ol>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>上午执行</h2></div>
+      <table class="matrix"><tr><th>时间</th><th>动作</th></tr><tr><td><strong>08:50—09:10</strong></td><td>闭卷画 create path 与 redirect path；写出三项 FR、三项 NFR。</td></tr><tr><td><strong>09:10—10:05</strong></td><td>按上方顺序读到 High-Level Design；直接修正白板。</td></tr><tr><td><strong>10:05—10:25</strong></td><td>补 API、mapping schema、302/404/410 与 source of truth。</td></tr><tr><td><strong>10:25—10:45</strong></td><td>读 DDIA Ch2 两节，只提取 p50/p95/p99 与排队对 redirect NFR 的影响。</td></tr><tr><td><strong>10:45—10:55</strong></td><td>脱稿讲 2 分钟：需求 → API → HLD。</td></tr></table>
+      <div class="callout"><strong>必须产出：</strong>一张完整 Bitly HLD：create、redirect、cache miss、DB fallback 与过期判断都能沿箭头讲清。</div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>掌握标准</h2></div>
+      <ul class="compact-list"><li><span class="box"></span><span>能解释为什么 redirect 是 hot path，而 create path 优先保证唯一性和持久性。</span></li><li><span class="box"></span><span>能说明 302、404、410 的语义；不会让 client 传可信 user_id。</span></li><li><span class="box"></span><span>能把 cache 定位为加速层，而不是数据真实来源。</span></li></ul>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>算法 · Arrays &amp; Hashing</h2><p class="section-copy">Tag 不切换。三题结束后只记录四个字段。</p></div>
+      <table class="matrix"><tr><th>#</th><th>题目</th><th>留下的记录</th></tr><tr><td>1</td><td><a href="https://leetcode.com/problems/contains-duplicate/">Contains Duplicate</a></td><td>Pattern / Invariant / Bug / Complexity</td></tr><tr><td>2</td><td><a href="https://leetcode.com/problems/valid-anagram/">Valid Anagram</a></td><td>Pattern / Invariant / Bug / Complexity</td></tr><tr><td>3</td><td><a href="https://leetcode.com/problems/two-sum/">Two Sum</a></td><td>Pattern / Invariant / Bug / Complexity</td></tr></table>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>晚上</h2></div>
+      <div class="callout green">不看稿，用英文完成 requirements、API 和 HLD 三段式口述；卡住处只补一句 Repair。</div>
+    </section>
+    <footer class="footer"><a href="../week1-action-guide.html">返回第 1 周总览</a></footer>
+  <section id="local-materials" style="margin:40px auto;max-width:1080px;padding:18px 22px;border:1px solid #d9dce1;background:#f7f8fa;color:#30343b;font:14px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif"><strong>Local study materials</strong><br>Detailed lecture notes, audio, recall scripts, PDFs, Staff Q&amp;A, and mock packs are archived locally and are intentionally not published on this site.</section></main>
+</body>
+</html>

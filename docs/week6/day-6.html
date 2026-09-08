@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第 6 周 Day 6 - 三场 CORE mock：Payment、Ad Click、Metrics 各 45 分钟 + 两个 deep dives</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar"><nav class="shell nav"><a class="brand" href="../week6-action-guide.html"><span class="mark"></span> WEEK 06 · LEDGER & STREAM TRUTH</a><div class="navlinks"><a href="../week6-action-guide.html">第 6 周</a><a href="#local-materials">深度讲义</a><a href="#local-materials">Staff Q&A</a><a href="#local-materials">Live Mock</a><a href="#local-materials">验收</a></div></nav></header>
+  <main class="shell">
+<section class="hero"><div><div class="eyebrow">WEEK 06 · 2026-09-05 · SAT</div><h1>三场 CORE mock：Payment、Ad Click、Metrics 各 45 分钟 + 两个 deep dives</h1><p class="deck">今天只做选择驱动 mock：每场都必须追问候选人已经承诺的 source of truth、failure window 和 metric。</p><div class="pill-row"><a class="pill" href="#local-materials">讲义</a><a class="pill" href="#local-materials">Q&A</a><a class="pill" href="#local-materials">Mock</a><a class="pill" href="#local-materials">验收</a></div></div><aside class="hero-panel"><div class="metric"><b>08:50</b><span>system design</span></div><div class="metric"><b>14:30</b><span>Linked List x3</span></div><div class="metric"><b>20:30</b><span>recall/mock</span></div><div class="metric"><b>CORE</b><span>truth vs view</span></div></aside></section>
+    <section class="section"><div class="section-head"><h2>今日固定时间表</h2><p class="section-copy">只有三个学习窗口：08:50-10:55、14:30-16:15、20:30-21:15。section links 只放在本日页面。</p></div>
+      <table class="rubric">
+        <tr><th>08:50-10:55</th><td><b>System design</b><br>完成 Payment 45m mock 与 Ad Click 45m mock；每场记录两个 deep dives、hard fail、lowest dimension。余下 35 分钟写证据。</td></tr>
+        <tr><th>14:30-16:15</th><td><b>NeetCode Linked List</b><br>三道连续题位，每题 30m solve + 5m pattern/invariant/bug/complexity evidence。</td></tr>
+        <tr><th>20:30-21:15</th><td><b>Recall / Staff Q&A / Mock</b><br>完成 Metrics Monitoring 45m mock；最后写一条 cross-system conclusion：correctness source 与 low-latency view 的边界。</td></tr>
+      </table>
+    </section>
+    <section class="section"><div class="section-head"><h2>算法模块</h2><p class="section-copy">连续 NeetCode Linked List tag；每天恰好 3 个 slot。</p></div><table class="matrix algorithm-table"><tr><th>#</th><th>Problem / mode</th><th>Pattern</th><th>Invariant</th><th>Bug risk</th><th>Time</th><th>Space</th></tr><tr data-neetcode-slot="true" data-mode="NEW" data-minutes="35"><td data-label="Slot">16</td><td data-label="Problem / mode"><a href="https://neetcode.io/problems/sort-list/question">Sort List</a><br><span class="evidence-chip">NEW · 30m solve + 5m evidence</span></td><td data-label="Pattern">merge sort on linked list</td><td data-label="Invariant">split halves shrink until single nodes</td><td data-label="Bug risk">not breaking mid.next</td><td data-label="Time">O(n log n)</td><td data-label="Space">O(log n)</td></tr><tr data-neetcode-slot="true" data-mode="NEW" data-minutes="35"><td data-label="Slot">17</td><td data-label="Problem / mode"><a href="https://neetcode.io/problems/partition-list/question">Partition List</a><br><span class="evidence-chip">NEW · 30m solve + 5m evidence</span></td><td data-label="Pattern">two stable lists</td><td data-label="Invariant">before list has &lt; x, after list has &gt;= x</td><td data-label="Bug risk">not terminating after tail</td><td data-label="Time">O(n)</td><td data-label="Space">O(1)</td></tr><tr data-neetcode-slot="true" data-mode="NEW" data-minutes="35"><td data-label="Slot">18</td><td data-label="Problem / mode"><a href="https://neetcode.io/problems/rotate-list/question">Rotate List</a><br><span class="evidence-chip">NEW · 30m solve + 5m evidence</span></td><td data-label="Pattern">length + ring break</td><td data-label="Invariant">new tail is length - k%length - 1</td><td data-label="Bug risk">k greater than length</td><td data-label="Time">O(n)</td><td data-label="Space">O(1)</td></tr></table></section>
+    <section class="section"><div class="section-head"><h2>DDIA 精确决策卡</h2><p class="section-copy">只读 Ch8、Ch12、Ch13 中能改变今天设计选择的小节。</p></div><table class="matrix"><tr><th>项目问题</th><th>精确 DDIA subsection</th><th>改变的系统决定</th></tr><tr><td>Three mocks must separate correctness from fresh views</td><td><a href="https://ddia.vonng.com/ch13/#sec_future_end_to_end">Ch13 · 数据库的端到端原则</a></td><td>end-to-end idempotency and reconciliation live above individual storage/stream tools</td></tr></table></section><section class="section"><div class="section-head"><h2>本日项目 artifacts</h2></div><div class="pill-row"><a class="pill" href="#local-materials">Payment System 中文讲稿</a><a class="pill" href="#local-materials">Payment System 中文音频</a><a class="pill" href="#local-materials">Payment System English recall</a><a class="pill" href="#local-materials">Payment System PDF</a><a class="pill" href="#local-materials">Ad Click Aggregator 中文讲稿</a><a class="pill" href="#local-materials">Ad Click Aggregator 中文音频</a><a class="pill" href="#local-materials">Ad Click Aggregator English recall</a><a class="pill" href="#local-materials">Ad Click Aggregator PDF</a><a class="pill" href="#local-materials">Metrics Monitoring 中文讲稿</a><a class="pill" href="#local-materials">Metrics Monitoring 中文音频</a><a class="pill" href="#local-materials">Metrics Monitoring English recall</a><a class="pill" href="#local-materials">Metrics Monitoring PDF</a></div></section>
+    <section class="section"><div class="section-head"><h2>今日产出、修复与英语 recall</h2></div>
+      <table class="rubric">
+        <tr><th>必须交付</th><td>三张 mock evidence sheet：每场 100 分，两个 deep dives，各自一个 repair sentence。</td></tr>
+        <tr><th>修复规则</th><td>如果回答只说组件名，重写为 decision -> mechanism -> invariant -> failure window -> recovery -> metric。</td></tr>
+        <tr><th>English recall</th><td><div class="english-recall">Correctness is the durable source of truth; low-latency status, aggregates, dashboards, and alerts are views with freshness and repair semantics.</div></td></tr>
+      </table>
+    </section>
+    <footer class="footer">Day 6 只推进 Week 6；不打开 Week 7。完成后把证据写入 <a href="#local-materials">scorecard</a>。</footer>
+
+  <section id="local-materials" style="margin:40px auto;max-width:1080px;padding:18px 22px;border:1px solid #d9dce1;background:#f7f8fa;color:#30343b;font:14px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif"><strong>Local study materials</strong><br>Detailed lecture notes, audio, recall scripts, PDFs, Staff Q&amp;A, and mock packs are archived locally and are intentionally not published on this site.</section></main>
+</body>
+</html>

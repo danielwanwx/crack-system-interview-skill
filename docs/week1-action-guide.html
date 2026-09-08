@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第 1 周行动指南 - Bitly + Distributed Rate Limiter</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="week1/style.css">
+</head>
+<body>
+
+  <header class="topbar">
+    <nav class="shell nav">
+      <a class="brand" href="system-design-12-week-master-plan.html"><span class="mark"></span> CRACK SYSTEM INTERVIEW</a>
+      <div class="navlinks">
+        <a href="system-design-12-week-master-plan.html">12 周路线</a>
+        <a href="week1-action-guide.html">第 1 周</a>
+        <a href="#local-materials">深度讲义</a>
+        <a href="#local-materials">Staff Q&amp;A</a>
+        <a href="#local-materials">Live Mock</a>
+        <a href="#local-materials">验收</a>
+      </div>
+    </nav>
+  </header>
+  <main class="shell">
+
+    <section class="hero">
+      <div>
+        <div class="eyebrow">WEEK 01 · 2026.07.27—08.02</div>
+        <h1>缓存与流量控制</h1>
+        <p class="deck">Bitly 与 Distributed Rate Limiter。两个核心项目完整覆盖，从 HLD 快速进入真正决定 Senior+ 表现的 Deep Dives。</p>
+        <div class="pill-row">
+          <a class="pill" href="#local-materials">双项目深度讲义</a>
+          <a class="pill" href="#local-materials">Staff Q&amp;A</a>
+          <a class="pill" href="#local-materials">Live Mock</a>
+          <a class="pill" href="#local-materials">验收清单</a>
+        </div>
+      </div>
+      <aside class="hero-panel">
+        <div class="metric"><b>2</b><span>Core Mastery</span></div>
+        <div class="metric"><b>4</b><span>核心技术簇</span></div>
+        <div class="metric"><b>21</b><span>算法题位</span></div>
+        <div class="metric"><b>2</b><span>Mock 回合</span></div>
+      </aside>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>本周 Scope</h2><p class="section-copy">不是背两张图，而是掌握读写不对称、缓存、共享计数器、原子更新、分片路由与故障策略。</p></div>
+      <div class="grid-2">
+        <article class="tile"><div class="kicker">PROJECT A · BITLY</div><h3>唯一写入，极热读取</h3><p>短码唯一性、302 redirect、cache-aside、过期语义、容量判断、counter 与数据库故障。</p></article>
+        <article class="tile"><div class="kicker">PROJECT B · RATE LIMITER</div><h3>每次请求都要争用状态</h3><p>部署位置、client identity、Token Bucket、Redis Lua、consistent hashing、fail-open / fail-closed。</p></article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>一周结束时</h2></div>
+      <table class="matrix">
+        <tr><th>能力</th><th>通过线</th></tr>
+        <tr><td>完整答题</td><td>任一项目 45 分钟内到达两项 Deep Dive 和 operations。</td></tr>
+        <tr><td>机制迁移</td><td>解释为什么 Bitly cache miss 可回源，而 Rate Limiter state miss 会改变保护语义。</td></tr>
+        <tr><td>故障判断</td><td>按 endpoint 风险选择 fail-open/closed，并给 timeout、fallback、metric。</td></tr>
+        <tr><td>英文表达</td><td>任一项目 8 分钟无稿讲出 scope、HLD、关键 trade-off 与 failure。</td></tr>
+      </table>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>DDIA 定点加深</h2><p class="section-copy">不按章节通读。只在项目暴露具体问题后进入对应小节；精确链接放在日级页面。</p></div>
+      <table class="matrix">
+        <tr><th>项目问题</th><th>DDIA 小节</th><th>读完必须能回答</th></tr>
+        <tr><td>Bitly 的 redirect “快”如何量化？</td><td>Ch2 · 延迟与响应时间；平均值、中位数与百分位点</td><td>为什么 p99 比平均延迟更接近用户和下游容量风险。</td></tr>
+        <tr><td>数据库故障切副本后会发生什么？</td><td>Ch6 · 处理节点故障；复制延迟的问题</td><td>刚创建的 mapping 为什么可能暂时读不到，以及如何收窄窗口。</td></tr>
+        <tr><td>Rate Limiter 如何分片？</td><td>Ch7 · 按键的哈希分片；偏斜与热点；请求路由</td><td>consistent hashing 能解决重映射，为什么仍解决不了 celebrity hot key。</td></tr>
+        <tr><td>Redis 超时到底代表什么？</td><td>Ch9 · 故障与部分失效；超时和无界延迟</td><td>为什么 timeout 不能证明远端已失败，以及 fail-open/closed 的代价。</td></tr>
+      </table>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>7 天执行</h2></div>
+      <div class="route">
+        <div class="row asset-row">
+          <div class="kicker">MON · 07.27</div>
+          <h3><a href="week1/day-1-interview-os.html">Bitly：一次读到 High-Level Design</a></h3>
+          <p>先闭卷 20 分钟，再完整读完问题定义、FR/NFR、核心实体、API 与 HLD。今天不拆成零散小节。</p>
+          <a class="button" href="week1/day-1-interview-os.html">进入</a>
+        </div>
+        <div class="row asset-row">
+          <div class="kicker">TUE · 07.28</div>
+          <h3><a href="week1/day-2-requirements.html">Bitly：把 Deep Dives 全部打穿</a></h3>
+          <p>短码生成、低延迟跳转、1B URLs / 100M DAU、数据库故障、counter 故障与 Senior level expectation。</p>
+          <a class="button" href="week1/day-2-requirements.html">进入</a>
+        </div>
+        <div class="row asset-row">
+          <div class="kicker">WED · 07.29</div>
+          <h3><a href="week1/day-3-api.html">Rate Limiter：一次读到 High-Level Design</a></h3>
+          <p>从需求读到 HLD，完成客户端身份、规则、接口、部署位置、算法选择与 429 契约。</p>
+          <a class="button" href="week1/day-3-api.html">进入</a>
+        </div>
+        <div class="row asset-row">
+          <div class="kicker">THU · 07.30</div>
+          <h3><a href="week1/day-4-data-model.html">Rate Limiter：原子性、分片与故障策略</a></h3>
+          <p>完整覆盖算法、Redis 原子 read-modify-write、1M RPS 扩展、consistent hashing、hot key 与 fail-open / fail-closed。</p>
+          <a class="button" href="week1/day-4-data-model.html">进入</a>
+        </div>
+        <div class="row asset-row">
+          <div class="kicker">FRI · 07.31</div>
+          <h3><a href="week1/day-5-capacity.html">横向串联：缓存、计数器与系统边界</a></h3>
+          <p>今天不新增架构图。把两个项目共享的机制和不能互相复制的假设说清楚。</p>
+          <a class="button" href="week1/day-5-capacity.html">进入</a>
+        </div>
+        <div class="row asset-row">
+          <div class="kicker">SAT · 08.01</div>
+          <h3><a href="week1/day-6-hld.html">双项目 Mock：完整答题与压力追问</a></h3>
+          <p>一场 45 分钟完整 Mock，加一场 20 分钟第二项目压力轮。项目顺序随机。</p>
+          <a class="button" href="week1/day-6-hld.html">进入</a>
+        </div>
+        <div class="row asset-row">
+          <div class="kicker">SUN · 08.02</div>
+          <h3><a href="week1/day-7-mock.html">验收、外部计划 Crosswalk 与 Week 2 预热</a></h3>
+          <p>修复最弱答案，锁定本周机制图；外部计划只作为 retrieval / preview 接口。</p>
+          <a class="button" href="week1/day-7-mock.html">进入</a>
+        </div></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>本周资产</h2></div>
+      <div class="grid-3">
+        <article class="tile tight"><div class="kicker">READ</div><h3>完整原文</h3><p>日级页面提供精确 Section 链接；周级页不堆叠小节目录。</p></article>
+        <article class="tile tight"><div class="kicker">SPEAK</div><h3>讲义 + Q&amp;A</h3><p>讲义用于形成模型；Q&amp;A 可直接作为 GPT Live interviewer 的追问语料。</p></article>
+        <article class="tile tight"><div class="kicker">PROVE</div><h3>Mock + Repair</h3><p>不使用空泛总分。只记录可观察的遗漏、错误假设和重答证据。</p></article>
+      </div>
+    </section>
+    <footer class="footer">下一周：Distributed Cache + Dropbox。先建立缓存基础设施，再进入 blob / metadata / sync。</footer>
+  <section id="local-materials" style="margin:40px auto;max-width:1080px;padding:18px 22px;border:1px solid #d9dce1;background:#f7f8fa;color:#30343b;font:14px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif"><strong>Local study materials</strong><br>Detailed lecture notes, audio, recall scripts, PDFs, Staff Q&amp;A, and mock packs are archived locally and are intentionally not published on this site.</section></main>
+</body>
+</html>

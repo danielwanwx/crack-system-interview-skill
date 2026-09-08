@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Week 8 Day 3 · Job Scheduler CORE HLD</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body id="top">
+
+
+<header class="topbar">
+  <nav class="nav shell" aria-label="Week 8 navigation">
+    <a class="brand" href="../week8-action-guide.html"><span class="mark"></span><span>Week 8 · Day 3</span></a>
+    <div class="navlinks"><a href="../week8-action-guide.html">Overview</a><a href="day-1.html">Day 1</a><a href="day-2.html">Day 2</a><a href="day-3.html">Day 3</a><a href="day-4.html">Day 4</a><a href="day-5.html">Day 5</a><a href="day-6.html">Day 6</a><a href="day-7.html">Day 7</a><a href="#local-materials">Lecture</a><a href="#local-materials">Mock</a><a href="#local-materials">Scorecard</a></div>
+  </nav>
+</header>
+
+<main>
+  <section class="day-hero shell">
+    <div class="eyebrow">Week 8 · Wed Sep 16, 2026 · Sep 14-20, 2026</div>
+    <h1>Day 3: Job Scheduler CORE HLD</h1>
+    <p class="deck">A scheduler HLD that separates job definitions, schedules, execution instances, leases, attempts, and user-visible status.</p>
+    <div class="day-meta"><span>What is durable state: the job definition, the scheduled occurrence, or the execution attempt?</span><span>Frontier · leases · retries · dedupe · recovery</span><span>3 Heap/Priority Queue slots</span></div>
+  </section>
+
+  <section class="section shell" id="schedule">
+    <div class="section-head"><h2>Exact Time Blocks</h2><p class="section-copy">Follow the Week 4 delivery pattern: blank-page first, source reading second, DDIA decision third, spoken close, contiguous algorithm practice, evening recall.</p></div>
+
+<table class="matrix reading-table" id="time-blocks">
+  <tr><th>Time</th><th>Block</th><th>Required output</th></tr>
+  <tr><td data-label="Time">08:30</td><td data-label="Block">Wake + setup</td><td data-label="Required output">Open this page, start the board, write the day question: What is durable state: the job definition, the scheduled occurrence, or the execution attempt?</td></tr>
+  <tr><td data-label="Time">08:50—09:00</td><td data-label="Block">Board set</td><td data-label="Required output">List entities, queues, leases, retry states, dedupe keys, metrics before reading.</td></tr>
+  <tr><td data-label="Time">09:00—10:05</td><td data-label="Block">Blank-page attempt + Hello reading</td><td data-label="Required output">Blank-page the scheduler: create job, update recurring schedule, store next fire time, scan due buckets, enqueue executable work, run worker, write attempt/status, expose monitor API. Then read Hello through HLD and update entity names.</td></tr>
+  <tr><td data-label="Time">10:05—10:45</td><td data-label="Block">Deep dive + DDIA decision</td><td data-label="Required output">Name the state transitions: scheduled -&gt; due -&gt; leased -&gt; running -&gt; succeeded/failed/retry/dead. Store idempotency key, lease token, attempt number, not_before, and poison reason. User status reads should not depend on worker memory.</td></tr>
+  <tr><td data-label="Time">10:45—10:55</td><td data-label="Block">Spoken close</td><td data-label="Required output">Explain why recurring schedules create execution instances instead of mutating one long-running job row.</td></tr>
+  <tr><td data-label="Time">14:30—16:15</td><td data-label="Block">NeetCode Heap/Priority Queue</td><td data-label="Required output">Complete contiguous slots W8-H07—W8-H09; capture invariant and bug risk for each.</td></tr>
+  <tr><td data-label="Time">20:30—21:15</td><td data-label="Block">Recall / Q&A / mock</td><td data-label="Required output">Use <a href="#local-materials">Staff Q&A</a>, <a href="#local-materials">lecture assets</a>, or <a href="#local-materials">mock script</a> for the day's system.</td></tr>
+</table>
+
+  </section>
+
+  <section class="section shell" id="canonical-headings">
+    <div class="section-head"><h2>Canonical Heading Anchors</h2><p class="section-copy">Read only the listed Hello Interview headings for today's assignment. Every link is a direct day-page anchor.</p></div>
+    <div class="ops-grid"><section>
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/job-scheduler#understanding-the-problem">Understanding the Problem</a><span>Day 3</span></div>
+  <ul class="source-sections">
+    <li>CORE scope and requirements gate</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/job-scheduler#functional-requirements">Functional Requirements</a><span>Day 3</span></div>
+  <ul class="source-sections">
+    <li>CORE schedule, monitor, cancel contract</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/job-scheduler#non-functional-requirements">Non-Functional Requirements</a><span>Day 3</span></div>
+  <ul class="source-sections">
+    <li>CORE precision, scale, durability constraints</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/job-scheduler#the-set-up">The Set Up</a><span>Day 3</span></div>
+  <ul class="source-sections">
+    <li>CORE setup and interviewer framing</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/job-scheduler#planning-the-approach">Planning the Approach</a><span>Day 3</span></div>
+  <ul class="source-sections">
+    <li>CORE planning spine</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/job-scheduler#defining-the-core-entities">Defining the Core Entities</a><span>Day 3</span></div>
+  <ul class="source-sections">
+    <li>Job, schedule, execution, attempt, lease</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/job-scheduler#the-api">The API</a><span>Day 3</span></div>
+  <ul class="source-sections">
+    <li>CORE API</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/job-scheduler#data-flow">Data Flow</a><span>Day 3</span></div>
+  <ul class="source-sections">
+    <li>CORE write, schedule, dispatch, execute, observe flow</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/job-scheduler#high-level-design">High-Level Design</a><span>Day 3</span></div>
+  <ul class="source-sections">
+    <li>CORE architecture</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/job-scheduler#1-users-should-be-able-to-schedule-jobs-to-be-executed-immediately-at-a-future-date-or-on-a-recurring-schedule">1) Users should be able to schedule jobs to be executed immediately, at a future date, or on a recurring schedule</a><span>Day 3</span></div>
+  <ul class="source-sections">
+    <li>CORE scheduling flow</li>
+  </ul>
+</div>
+
+<div class="source-block">
+  <div class="source-title"><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/job-scheduler#2-users-should-be-able-monitor-the-status-of-their-jobs">2) Users should be able monitor the status of their jobs.</a><span>Day 3</span></div>
+  <ul class="source-sections">
+    <li>CORE observability surface</li>
+  </ul>
+</div>
+</section><section><h2>Decision Notes</h2><ul class="compact-list">
+      <li><span class="box"></span><span>CORE means you must answer requirement, HLD, deep dive, failure, recovery, metric, and Staff-level tradeoff.</span></li>
+      <li><span class="box"></span><span>TRANSFER means blind attempt first, then delta against source, invalid assumption, new bottleneck, and follow-up pressure question.</span></li>
+      <li><span class="box"></span><span>Do not add open-ended AI radar unless it changes a concrete Week 8 design decision; this week it does not.</span></li>
+    </ul></section></div>
+  </section>
+
+  <section class="section shell" id="ddia">
+    <div class="section-head"><h2>DDIA Decision Map</h2><p class="section-copy">Use exact sections only from Ch5, Ch9, and Ch12.</p></div>
+
+<table class="matrix reading-table">
+  <tr><th>Chapter</th><th>Exact DDIA decision section</th><th>Concrete Week 8 use</th></tr>
+  <tr><td data-label="Chapter">Ch5</td><td data-label="Exact section"><a href="https://ddia.vonng.com/ch5/#sec_encoding_dataflow_workflows">持久化执行与工作流</a></td><td data-label="Decision use">The workflow definition is separate from each execution instance.</td></tr>
+<tr><td data-label="Chapter">Ch5</td><td data-label="Exact section"><a href="https://ddia.vonng.com/ch5/#message-brokers">消息代理</a></td><td data-label="Decision use">The dispatch layer decouples time discovery from worker execution.</td></tr>
+<tr><td data-label="Chapter">Ch12</td><td data-label="Exact section"><a href="https://ddia.vonng.com/ch12/#sec_stream_messaging">消息传递系统</a></td><td data-label="Decision use">Execution messages must support acknowledgement and redelivery semantics.</td></tr>
+</table>
+
+  </section>
+
+  <section class="section shell" id="algorithm">
+    <div class="section-head"><h2>Heap/Priority Queue Slots</h2><p class="section-copy">Three contiguous slots today. Keep one invariant and one failure mode per problem.</p></div>
+
+<table class="matrix algorithm-table" id="heap-slots-7-9">
+  <tr><th>Slot</th><th>Problem</th><th>Pattern</th><th>Invariant / bug risk</th><th>Time · Space</th></tr>
+
+<tr data-neetcode-slot="true" id="w8-h07">
+  <td data-label="Slot">W8-H07</td>
+  <td data-label="Problem"><a href="https://neetcode.io/problems/find-median-in-a-data-stream/question">Find Median From Data Stream</a></td>
+  <td data-label="Pattern">two heaps</td>
+  <td data-label="Invariant">All left items &lt;= all right items, and sizes differ by at most one.</td>
+  <td data-label="Complexity">O(log n) · O(n)</td>
+</tr>
+
+<tr data-neetcode-slot="true" id="w8-h08">
+  <td data-label="Slot">W8-H08</td>
+  <td data-label="Problem"><a href="https://neetcode.io/problems/merge-k-sorted-lists/question">Merge K Sorted Lists</a></td>
+  <td data-label="Pattern">heap of list heads</td>
+  <td data-label="Invariant">Only the next head of each list belongs in the frontier.</td>
+  <td data-label="Complexity">O(n log k) · O(k)</td>
+</tr>
+
+<tr data-neetcode-slot="true" id="w8-h09">
+  <td data-label="Slot">W8-H09</td>
+  <td data-label="Problem"><a href="https://neetcode.io/problems/design-twitter-feed/question">Design Twitter</a></td>
+  <td data-label="Pattern">heap merge of recency streams</td>
+  <td data-label="Invariant">News feed is a bounded k-way merge over followed users.</td>
+  <td data-label="Complexity">O(f log f) · O(f)</td>
+</tr>
+
+</table>
+
+  </section>
+
+  <section class="section shell" id="evidence">
+    <div class="section-head"><h2>Evidence To Save</h2><p class="section-copy">One compact artifact is enough if it proves mechanism depth.</p></div>
+    <div class="grid-3">
+      <article class="tile"><div class="kicker">Invariant</div><h3>State safety</h3><p>Name the state that survives restart and the write that makes retry safe.</p></article>
+      <article class="tile"><div class="kicker">Failure</div><h3>Concrete break</h3><p>Use a worker crash, zombie lease, redelivery, poison message, stale robots decision, or duplicate price event.</p></article>
+      <article class="tile"><div class="kicker">Metric</div><h3>Operational proof</h3><p>Attach lag, retry rate, duplicate suppression, stale lease reject count, host politeness violation, or alert freshness.</p></article>
+    </div>
+  </section>
+<section id="local-materials" style="margin:40px auto;max-width:1080px;padding:18px 22px;border:1px solid #d9dce1;background:#f7f8fa;color:#30343b;font:14px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif"><strong>Local study materials</strong><br>Detailed lecture notes, audio, recall scripts, PDFs, Staff Q&amp;A, and mock packs are archived locally and are intentionally not published on this site.</section></main>
+
+<footer class="footer shell">Week 8 only · Reliable execution · Heap/Priority Queue · READY_FOR_REVIEW gate</footer>
+</body>
+</html>

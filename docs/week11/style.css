@@ -1,0 +1,84 @@
+@import url("../week4/style.css");
+
+/* Week 11 adds dense serving/eval tables while preserving the accepted Week 4 visual system. */
+:root {
+  --week11-cyan: #0f766e;
+  --week11-ink: #172033;
+}
+
+.qa-card p {
+  margin: 8px 0;
+}
+
+.code {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px;
+  background: rgba(15, 23, 42, .04);
+}
+
+.schedule-table td:first-child {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.nav,
+main > .hero,
+main > .section {
+  width: min(1180px, calc(100vw - 44px));
+  margin-inline: auto;
+}
+
+.note {
+  color: var(--muted);
+}
+
+@media (max-width: 860px) {
+  .nav,
+  main > .hero,
+  main > .section {
+    width: min(1180px, calc(100vw - 28px));
+  }
+
+  .schedule-table,
+  .schedule-table tbody,
+  .schedule-table tr,
+  .schedule-table td,
+  .schedule-table th,
+  .reading-table,
+  .reading-table tbody,
+  .reading-table tr,
+  .reading-table td,
+  .reading-table th {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .schedule-table thead,
+  .reading-table thead,
+  .schedule-table tr:first-child,
+  .reading-table tr:first-child {
+    display: none;
+  }
+
+  .schedule-table tr,
+  .reading-table tr {
+    border-top: 2px solid var(--line-strong);
+    padding: 14px 0;
+  }
+
+  .schedule-table td,
+  .reading-table td {
+    border: 0;
+    padding: 5px 0;
+    overflow-wrap: anywhere;
+  }
+
+  .asset-row {
+    align-items: stretch;
+  }
+}

@@ -1,0 +1,46 @@
+@import url("../week4/style.css");
+
+/* Week 5 reuses the validated Week 4 visual system and adds narrow guards for
+   transaction traces, market-update rows, and dense source inventories. */
+.trace-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.trace-step {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255,255,255,.72);
+  padding: 16px;
+}
+
+.trace-step b {
+  display: block;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+.compact-note {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.qa-source a {
+  margin-right: 10px;
+}
+
+@media (max-width: 900px) {
+  .trace-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .matrix td,
+  .matrix th,
+  .rubric td,
+  .rubric th {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+}

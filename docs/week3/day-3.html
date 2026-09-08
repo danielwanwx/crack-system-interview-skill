@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第 3 周 Day 3 - FB Live Comments：实时评论 HLD、SSE 与可恢复历史</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css" data-week='3'>
+</head>
+<body>
+
+  <header class="topbar">
+    <nav class="shell nav">
+      <a class="brand" href="../system-design-12-week-master-plan.html"><span class="mark"></span> WEEK 03 · FEED & REALTIME</a>
+      <div class="navlinks">
+        <a href="../week3-action-guide.html">第 3 周</a>
+        <a href="#local-materials">深度讲义</a>
+        <a href="#local-materials">Staff Q&amp;A</a>
+        <a href="#local-materials">Live Mock</a>
+        <a href="#local-materials">验收</a>
+      </div>
+    </nav>
+  </header>
+  <main class="shell">
+
+    <section class="hero">
+      <div>
+        <div class="eyebrow">WEEK 03 · 2026-08-12 · WED</div>
+        <h1>FB Live Comments：实时评论 HLD、SSE 与可恢复历史</h1>
+        <p class="deck">把 live comments 拆成 durable comment log + realtime delivery；不要把 WebSocket 当作数据库。</p>
+        <div class="pill-row">
+          <a class="pill" href="../week3-action-guide.html">周指南</a>
+          <a class="pill" href="#local-materials">讲义</a>
+          <a class="pill" href="#local-materials">Q&amp;A</a>
+          <a class="pill" href="#local-materials">验收</a>
+        </div>
+      </div>
+      <aside class="hero-panel">
+        <div class="metric"><b>08:30</b><span>wake</span></div>
+        <div class="metric"><b>125m</b><span>system design</span></div>
+        <div class="metric"><b>3</b><span>Stack problems</span></div>
+        <div class="metric"><b>45m</b><span>oral block</span></div>
+      </aside>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>今日固定时间表</h2><p class="section-copy">08:30 wake 只保留起床；学习从 08:50 开始。三块窗口不互相挤占。</p></div>
+      <table class="rubric">
+        <tr><th>08:30 wake</th><td>起床、早餐、准备白板；不安排预读或算法。</td></tr>
+        <tr><th>08:50—09:10</th><td><b>08:50—10:55 system design</b><br>闭卷 HLD — 先给 API 和实体，明确历史评论与实时评论的分界。</td></tr><tr><th>09:10—09:45</th><td><b>08:50—10:55 system design</b><br>精确原文 — 读 Live Comments requirements/entity/API/HLD 三个功能子路径。</td></tr><tr><th>09:45—10:25</th><td><b>08:50—10:55 system design</b><br>机制化白板 — 画 append comment → log/broker → connection server → SSE client；旁路 history page。</td></tr><tr><th>10:25—10:55</th><td><b>08:50—10:55 system design</b><br>DDIA 决策卡 — 用 log broker 与 offset 解释 Last-Event-ID 和 catch-up。</td></tr>
+        <tr><th>14:30—16:15</th><td><b>NeetCode Tag · Stack</b><br>三道题在下方独立算法表执行，避免系统设计表格挤压算法细节。</td></tr>
+        <tr><th>20:30—21:15</th><td>20:30—21:15 口述：为什么 SSE 是本题默认解，什么时候才换 WebSocket。</td></tr>
+      </table>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>算法模块</h2><p class="section-copy">连续单一 NeetCode Stack tag；每天 3 题，14:30—16:15 完成。</p></div>
+      <table class="matrix"><tr><th>#</th><th>Problem</th><th>Invariant focus</th><th>执行</th></tr><tr data-neetcode-slot="true"><td>7</td><td><a href="https://neetcode.io/problems/largest-rectangle-in-histogram">Largest Rectangle in Histogram</a></td><td>单调递增栈和右边界结算。</td><td>35 分钟限时 + 5 分钟 invariant/bug risk</td></tr>
+<tr data-neetcode-slot="true"><td>8</td><td><a href="https://neetcode.io/problems/validate-parentheses">Valid Parentheses</a></td><td>限时复盘：错误输入和早停。</td><td>35 分钟限时 + 5 分钟 invariant/bug risk</td></tr>
+<tr data-neetcode-slot="true"><td>9</td><td><a href="https://neetcode.io/problems/minimum-stack">Min Stack</a></td><td>限时复盘：重复最小值和 pop 同步。</td><td>35 分钟限时 + 5 分钟 invariant/bug risk</td></tr></table>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>闭卷起手</h2><p class="section-copy">先暴露自己的当前模型，再用 live headings 修正。</p></div>
+      <div class="callout"><p>20 分钟闭卷画：postComment、subscribe/live stream、getCommentsSince；写出 lastCommentId 如何跨断线保存。</p></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>Hello Interview 精确目录</h2><p class="section-copy">day 页面必须链接到具体 section anchors；周级 overview 不放小节链接。</p></div>
+      <table class="matrix reading-table"><tr><th>项目</th><th>精确 section anchor</th><th>Disposition</th><th>今天怎么用</th></tr><tr><td>FB Live Comments</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-live-comments#understanding-the-problem">Understanding the Problem</a></td><td>required reading</td><td>clarify live video comments surface</td></tr>
+<tr><td>FB Live Comments</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-live-comments#functional-requirements">Functional Requirements</a></td><td>required reading</td><td>post, receive new comments, see earlier comments</td></tr>
+<tr><td>FB Live Comments</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-live-comments#non-functional-requirements">Non-Functional Requirements</a></td><td>required reading</td><td>realtime delivery, massive concurrent viewers, HA</td></tr>
+<tr><td>FB Live Comments</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-live-comments#the-set-up">The Set Up</a></td><td>required reading</td><td>scope and simplifications</td></tr>
+<tr><td>FB Live Comments</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-live-comments#planning-the-approach">Planning the Approach</a></td><td>required reading</td><td>entities/API/HLD/deep dive order</td></tr>
+<tr><td>FB Live Comments</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-live-comments#defining-the-core-entities">Defining the Core Entities</a></td><td>required reading</td><td>LiveVideo, Comment, ViewerSession, Cursor</td></tr>
+<tr><td>FB Live Comments</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-live-comments#api-or-system-interface">API or System Interface</a></td><td>required reading</td><td>post comment, stream comments, catch-up page</td></tr>
+<tr><td>FB Live Comments</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-live-comments#high-level-design">High-Level Design</a></td><td>required reading</td><td>write durable comment, broadcast to connected viewers</td></tr>
+<tr><td>FB Live Comments</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-live-comments#1-viewers-can-post-comments-on-a-live-video-feed">1. Viewers can post comments on a live video feed</a></td><td>required reading</td><td>durable append and moderation boundary</td></tr>
+<tr><td>FB Live Comments</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-live-comments#2-viewers-can-see-new-comments-being-posted-while-they-are-watching-the-live-video">2. Viewers can see new comments being posted while they are watching the live video</a></td><td>required reading</td><td>SSE/WebSocket realtime path</td></tr>
+<tr><td>FB Live Comments</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-live-comments#3-viewers-can-see-comments-made-before-they-joined-the-live-feed">3. Viewers can see comments made before they joined the live feed</a></td><td>required reading</td><td>history and cursor page</td></tr></table>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>DDIA 精确决策卡</h2><p class="section-copy">只读能改变今天设计决定的小节。</p></div>
+      <table class="matrix"><tr><th>项目问题</th><th>精确 DDIA subsection</th><th>改变的系统决定</th></tr><tr><td>Live Comments 的 comment log 和广播通道是什么关系？</td><td><a href="https://ddia.vonng.com/ch12/#sec_stream_log">Ch12 · 基于日志的消息代理</a></td><td>durable comment append 是可回放事实；SSE/WebSocket 是低延迟投递，不承担永久历史。</td></tr>
+<tr><td>客户端 reconnect 时从哪里补漏？</td><td><a href="https://ddia.vonng.com/ch12/#sec_stream_log_offsets">Ch12 · 消费者偏移量</a></td><td>客户端保存 lastCommentId/Last-Event-ID，服务端从 durable log/cache 读取 since cursor 后继续直播。</td></tr></table>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>今日产出与修复规则</h2></div>
+      <table class="rubric">
+        <tr><th>课程角色</th><td>CORE · requirements/API/data model/HLD</td></tr>
+        <tr><th>必须交付</th><td>Live Comments HLD：Comment store、stream broker、connection server、catch-up API、lastCommentId 客户端状态。</td></tr>
+        <tr><th>修复规则</th><td>如果实时通道丢消息会造成永久丢失，说明你把 delivery channel 当成 source of truth，必须重画 durable log。</td></tr>
+      </table>
+    </section>
+    <footer class="footer">Day 3 只推进 Week 3；不打开 Week 4。完成后把证据写入 <a href="#local-materials">scorecard</a>。</footer>
+  <section id="local-materials" style="margin:40px auto;max-width:1080px;padding:18px 22px;border:1px solid #d9dce1;background:#f7f8fa;color:#30343b;font:14px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif"><strong>Local study materials</strong><br>Detailed lecture notes, audio, recall scripts, PDFs, Staff Q&amp;A, and mock packs are archived locally and are intentionally not published on this site.</section></main>
+</body>
+</html>

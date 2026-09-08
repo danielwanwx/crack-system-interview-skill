@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Week 11 Day 5</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body id="top">
+  <nav class="nav"><a class="brand" href="../week11-action-guide.html">Week 11 · Oct 5-11</a><div class="navlinks"><a href="../week11-action-guide.html">Week 11</a><a href="day-1.html">Day 1</a><a href="day-2.html">Day 2</a><a href="day-3.html">Day 3</a><a href="day-4.html">Day 4</a><a class="active" href="day-5.html">Day 5</a><a href="day-6.html">Day 6</a><a href="day-7.html">Day 7</a><a href="#local-materials">Lecture</a><a href="#local-materials">Staff Q&amp;A</a><a href="#local-materials">Mock</a><a href="#local-materials">Scorecard</a></div></nav>
+  <main>
+
+<section class="hero day-hero">
+  <p class="eyebrow">Day 5 · Fri 2026-10-09 · ChatGPT CORE</p>
+  <h1>Production LLM design: RAG freshness, tenant boundary, context budgets, evals, and fallback</h1>
+  <p class="lede">Week 11 trains two designs with one operating spine: admission, isolation, durable work, queue/backpressure, streaming/reconnect, derived state, evals, and recovery.</p>
+  <div class="hero-metrics">
+    <div class="metric"><strong>3</strong><span>contiguous 1-D DP slots</span></div>
+    <div class="metric"><strong>25-35m</strong><span>attempt + follow-up window</span></div>
+    <div class="metric"><strong>Staff</strong><span>invariant, failure, recovery, metrics</span></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head"><h2>Exact Daily Schedule</h2><p>No drift: the same six blocks run every day.</p></div>
+  <table class="schedule-table"><thead><tr><th>Time</th><th>Block</th><th>Contract</th></tr></thead><tbody><tr><td>08:50-09:00</td><td>Target</td><td>Write one Staff-level invariant and one failure window before reading.</td></tr><tr><td>09:00-10:05</td><td>Project design</td><td>25-35m production LLM extension prompt, then RAG/evals/tenant-boundary decision pass.</td></tr><tr><td>10:05-10:45</td><td>DDIA / source grounding</td><td>Map the design to exact DDIA anchors and only direct applied-AI sources.</td></tr><tr><td>10:45-10:55</td><td>Spoken close</td><td>Record the architecture in English, then say the Chinese invariant aloud.</td></tr><tr><td>14:30-16:15</td><td>1-D DP contiguous block</td><td>Three NeetCode slots below; each slot is 25-35 minutes plus follow-up.</td></tr><tr><td>20:30-21:15</td><td>Recall / artifact</td><td>Run English Senior+/Staff recall and patch the scorecard evidence.</td></tr></tbody></table>
+</section>
+
+<section class="section">
+  <div class="section-head"><h2>Canonical Hello Interview Anchors</h2><p>Direct day-page anchors only. Source titles were verified live before build.</p></div>
+  <table class="reading-table"><thead><tr><th>Canonical anchor</th><th>Disposition</th><th>Design decision</th></tr></thead><tbody><tr><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/chatgpt#some-additional-deep-dives-you-might-consider">Some additional deep dives you might consider</a></td><td>CORE extension</td><td>Use only extensions that alter serving, eval, security, or operations.</td></tr><tr><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/chatgpt#what-is-expected-at-each-level">What is Expected at Each Level</a></td><td>CORE bar</td><td>Use level rubric to decide Staff depth.</td></tr><tr><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/chatgpt#mid-level">Mid-Level</a></td><td>CORE bar</td><td>Mid-level must have a coherent serving path.</td></tr><tr><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/chatgpt#senior">Senior</a></td><td>CORE bar</td><td>Senior owns scheduler, streaming, and context trade-offs.</td></tr><tr><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/chatgpt#staff">Staff</a></td><td>CORE bar</td><td>Staff owns tenant boundaries, eval loops, fallback, and operating controls.</td></tr></tbody></table>
+</section>
+
+<section class="section">
+  <div class="section-head"><h2>Exact DDIA Mapping</h2><p>Only Ch5, Ch9, and Ch13 sections are in scope.</p></div>
+  <table class="reading-table"><thead><tr><th>Chapter</th><th>Exact section</th><th>Interview use</th></tr></thead><tbody><tr><td>Ch13</td><td><a href="https://ddia.vonng.com/ch13/#id446">维护派生状态</a></td><td>Vectors, summaries, prompt-cache keys, and leaderboards are derived state.</td></tr><tr><td>Ch13</td><td><a href="https://ddia.vonng.com/ch13/#sec_future_observing">观察派生数据状态</a></td><td>Freshness, ACL rejects, stale retrieval, and drift must be observable.</td></tr></tbody></table>
+</section>
+
+<section class="section">
+  <div class="section-head"><h2>Applied AI Source Gate</h2><p>First-party/original sources appear only when they change a serving, eval, security, or operating decision.</p></div>
+  <table class="reading-table"><thead><tr><th>First-party/original source</th><th>Concrete decision it changes</th></tr></thead><tbody><tr><td><a href="https://developers.openai.com/api/docs/guides/retrieval">OpenAI - Retrieval</a></td><td>RAG freshness, chunking, and source attribution are part of product correctness.</td></tr><tr><td><a href="https://developers.openai.com/api/docs/guides/evaluation-best-practices">OpenAI - Evaluation best practices</a></td><td>Golden datasets and graders gate prompt or model changes.</td></tr><tr><td><a href="https://developers.openai.com/api/docs/guides/agent-evals">OpenAI - Evaluate agent workflows</a></td><td>Trace-level evals catch multi-step regressions that output-only scoring misses.</td></tr><tr><td><a href="https://platform.openai.com/docs/models/default-usage-policies-by-endpoint">OpenAI - Data controls in the OpenAI platform</a></td><td>Tenant isolation, retention, and zero-data-retention choices constrain feature design.</td></tr><tr><td><a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">Anthropic - Effective context engineering for AI agents</a></td><td>Context selection is an engineered budget with tools, memory, and state, not unlimited chat history.</td></tr><tr><td><a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">Anthropic - Demystifying evals for AI agents</a></td><td>Agent evals should inspect process, tool use, and failure modes, not just final answers.</td></tr><tr><td><a href="https://www.anthropic.com/engineering/how-we-contain-claude">Anthropic - How we contain Claude across products</a></td><td>Untrusted code/tool execution requires sandboxing, egress control, and per-product isolation boundaries.</td></tr></tbody></table>
+</section>
+
+<section class="section">
+  <div class="section-head"><h2>21-Slot 1-D DP Runway</h2><p>Today is slot 13-15 of 21, contiguous across the week.</p></div>
+  <table class="algorithm-table"><thead><tr><th>Block</th><th>NeetCode problem</th><th>Mode</th><th>Invariant</th><th>25-35m follow-up</th><th>Complexity</th></tr></thead><tbody><tr data-neetcode-slot="true" data-minutes="35"><td data-label="Block"><span class="mock-clock">14:30-15:05</span></td><td data-label="Problem"><a href="https://neetcode.io/problems/combination-sum-iv/question">Combination Sum IV</a></td><td data-label="Mode">Ordered count</td><td data-label="Invariant">dp[target] sums ways from previous targets, and order matters.</td><td data-label="Follow-up">Ask how answer changes if order does not matter.</td><td data-label="Complexity">O(target * nums) / O(target)</td></tr><tr data-neetcode-slot="true" data-minutes="35"><td data-label="Block"><span class="mock-clock">15:05-15:40</span></td><td data-label="Problem"><a href="https://neetcode.io/problems/coin-change-ii/question">Coin Change II</a></td><td data-label="Mode">Unordered count</td><td data-label="Invariant">Iterate coins outside and amounts forward to avoid permutation duplicates.</td><td data-label="Follow-up">Ask contrast with Combination Sum IV.</td><td data-label="Complexity">O(amount * coins) / O(amount)</td></tr><tr data-neetcode-slot="true" data-minutes="35"><td data-label="Block"><span class="mock-clock">15:40-16:15</span></td><td data-label="Problem"><a href="https://neetcode.io/problems/target-sum/question">Target Sum</a></td><td data-label="Mode">Subset transform</td><td data-label="Invariant">Convert signs to subset sum when total plus target is even and nonnegative.</td><td data-label="Follow-up">Ask for zeros multiplying counts.</td><td data-label="Complexity">O(n * target) / O(target)</td></tr></tbody></table>
+</section>
+
+<section class="section">
+  <div class="section-head"><h2>Artifacts And Recall</h2><p>Use these in the evening block and scorecard.</p></div>
+  <div class="asset-row"><a class="button" href="#local-materials">ChatGPT Chinese deep lecture</a><a class="button" href="#local-materials">ChatGPT Chinese lecture audio</a><a class="button" href="#local-materials">English Senior+/Staff recall script</a><a class="button" href="#local-materials">English recall PDF</a></div>
+  <div class="english-recall">
+    <strong>Required spoken close:</strong> explain one invariant, one failure window, one recovery path, and one metric in English. Then restate the same design decision in Chinese without adding new components.
+  </div>
+</section>
+
+  <section id="local-materials" style="margin:40px auto;max-width:1080px;padding:18px 22px;border:1px solid #d9dce1;background:#f7f8fa;color:#30343b;font:14px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif"><strong>Local study materials</strong><br>Detailed lecture notes, audio, recall scripts, PDFs, Staff Q&amp;A, and mock packs are archived locally and are intentionally not published on this site.</section></main>
+</body>
+</html>

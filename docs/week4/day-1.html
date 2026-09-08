@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第 4 周 Day 1 - WhatsApp：消息事实、connection ownership 与离线投递 HLD</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="topbar"><nav class="shell nav">
+    <a class="brand" href="../week4-action-guide.html"><span class="mark"></span> WEEK 04 · MESSAGING & COLLABORATION</a>
+    <div class="navlinks"><a href="../week4-action-guide.html">第 4 周</a><a href="#local-materials">深度讲义</a><a href="#local-materials">Staff Q&amp;A</a><a href="#local-materials">Live Mock</a><a href="#local-materials">验收</a></div>
+  </nav></header>
+  <main class="shell">
+
+    <section class="hero">
+      <div>
+        <div class="eyebrow">WEEK 04 · 2026-08-17 · MON</div>
+        <h1>WhatsApp：消息事实、connection ownership 与离线投递 HLD</h1>
+        <p class="deck">把 WhatsApp 讲成 durable message log + device delivery state + soft presence，而不是 WebSocket 转发器。</p>
+        <div class="pill-row"><a class="pill" href="../week4-action-guide.html">周指南</a><a class="pill" href="#local-materials">讲义</a><a class="pill" href="#local-materials">Q&amp;A</a><a class="pill" href="#local-materials">验收</a></div>
+      </div>
+      <aside class="hero-panel"><div class="metric"><b>08:30</b><span>wake</span></div><div class="metric"><b>125m</b><span>system design</span></div><div class="metric"><b>3</b><span>Sliding Window</span></div><div class="metric"><b>45m</b><span>recall/mock</span></div></aside>
+    </section>
+    <section class="section">
+      <div class="section-head"><h2>今日固定时间表</h2><p class="section-copy">08:30 wake 只保留起床；学习从 08:50 开始。三块窗口不互相挤占。</p></div>
+      <table class="rubric">
+        <tr><th>08:30 wake</th><td>起床、早餐、准备白板；不安排预读或算法。</td></tr>
+        <tr><th>08:50—09:10</th><td><b>08:50—10:55 system design</b><br>闭卷收敛 — FR/NFR/out-of-scope；先定义 per-conversation ordering，不承诺全局总序。</td></tr><tr><th>09:10—09:45</th><td><b>08:50—10:55 system design</b><br>精确原文 — 读 WhatsApp 到 HLD 四个功能路径。</td></tr><tr><th>09:45—10:25</th><td><b>08:50—10:55 system design</b><br>白板主路径 — client_message_id → conversation sequencer → durable message → fanout/mailbox → device receipt。</td></tr><tr><th>10:25—10:55</th><td><b>08:50—10:55 system design</b><br>DDIA 决策卡 — 把 logical timestamp/happens-before 绑定到消息顺序、离线重连和重复投递。</td></tr>
+        <tr><th>14:30—16:15</th><td><b>NeetCode Tag · Sliding Window</b><br>三道题在下方独立算法表执行。</td></tr>
+        <tr><th>20:30—21:15</th><td>20:30—21:15 WhatsApp 英语 recall + 中文 Q&amp;A：ordering guarantee、offline delivery、multi-device receipts。</td></tr>
+      </table>
+    </section>
+    <section class="section"><div class="section-head"><h2>算法模块</h2><p class="section-copy">连续单一 NeetCode Sliding Window tag；每天 3 个 NEW slot，每题 30 分钟作答 + 5 分钟证据，正好 105 分钟。每天 timed review = 0，满足不超过 1。</p></div><table class="matrix algorithm-table"><tr><th>#</th><th>Problem / mode</th><th>Pattern</th><th>Invariant</th><th>Bug risk</th><th>Time</th><th>Space</th></tr><tr data-neetcode-slot="true" data-mode="NEW" data-minutes="35"><td data-label="Slot">1</td><td data-label="Problem / mode"><a href="https://neetcode.io/problems/contains-duplicate-ii/question">Contains Duplicate II</a><br><span class="evidence-chip">NEW · 30m solve + 5m evidence</span></td><td data-label="Pattern">固定最大跨度窗口 + set</td><td data-label="Invariant">set 只保存与当前 index 距离不超过 k 的值。</td><td data-label="Bug risk">先查后删会漏掉边界 k；k=0。</td><td data-label="Time">O(n)</td><td data-label="Space">O(k)</td></tr>
+<tr data-neetcode-slot="true" data-mode="NEW" data-minutes="35"><td data-label="Slot">2</td><td data-label="Problem / mode"><a href="https://neetcode.io/problems/best-time-to-buy-and-sell-stock/question">Best Time to Buy and Sell Stock</a><br><span class="evidence-chip">NEW · 30m solve + 5m evidence</span></td><td data-label="Pattern">单调左状态</td><td data-label="Invariant">右指针处只需要左侧最低价格。</td><td data-label="Bug risk">先更新 min 再算利润；递减数组。</td><td data-label="Time">O(n)</td><td data-label="Space">O(1)</td></tr>
+<tr data-neetcode-slot="true" data-mode="NEW" data-minutes="35"><td data-label="Slot">3</td><td data-label="Problem / mode"><a href="https://neetcode.io/problems/minimum-recolors-to-get-k-consecutive-black-blocks/question">Minimum Recolors to Get K Consecutive Black Blocks</a><br><span class="evidence-chip">NEW · 30m solve + 5m evidence</span></td><td data-label="Pattern">固定长度计数窗口</td><td data-label="Invariant">窗口始终恰含 k 个 block，并维护 white 数。</td><td data-label="Bug risk">第 k 个元素加入时 off-by-one；k=n。</td><td data-label="Time">O(n)</td><td data-label="Space">O(1)</td></tr></table></section>
+    <section class="section"><div class="section-head"><h2>闭卷起手</h2></div><div class="callout"><p>20 分钟闭卷画 sendMessage、syncMessages、ackReceipt、setPresence；写清 sent/delivered/read 分别代表什么。</p></div></section>
+    <section class="section"><div class="section-head"><h2>Hello Interview 精确目录</h2><p class="section-copy">day 页面使用 canonical data-toc-id/H4 anchors；周级 overview 不放小节链接。</p></div><table class="matrix reading-table"><tr><th>项目</th><th>精确 canonical section</th><th>Disposition</th><th>今天怎么用</th></tr><tr><td>WhatsApp</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/whatsapp#understanding-the-problem">Understanding the Problem</a></td><td>required reading</td><td>scope: 1:1/group messaging, delivery and presence</td></tr>
+<tr><td>WhatsApp</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/whatsapp#functional-requirements">Functional Requirements</a></td><td>required reading</td><td>groups, messages, offline delivery, media</td></tr>
+<tr><td>WhatsApp</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/whatsapp#non-functional-requirements">Non-Functional Requirements</a></td><td>required reading</td><td>scale, durability, latency, eventual delivery</td></tr>
+<tr><td>WhatsApp</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/whatsapp#the-set-up">The Set Up</a></td><td>required reading</td><td>candidate framing</td></tr>
+<tr><td>WhatsApp</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/whatsapp#planning-the-approach">Planning the Approach</a></td><td>required reading</td><td>requirements → entities → API → HLD</td></tr>
+<tr><td>WhatsApp</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/whatsapp#defining-the-core-entities">Defining the Core Entities</a></td><td>required reading</td><td>User, Device, Chat, Message, Receipt, Presence</td></tr>
+<tr><td>WhatsApp</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/whatsapp#api-or-system-interface">API or System Interface</a></td><td>required reading</td><td>send, sync, receipts, presence</td></tr>
+<tr><td>WhatsApp</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/whatsapp#high-level-design">High-Level Design</a></td><td>required reading</td><td>connection gateway + durable log + fanout</td></tr>
+<tr><td>WhatsApp</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/whatsapp#1-users-should-be-able-to-start-group-chats-with-multiple-participants-limit-100">1) Users should be able to start group chats with multiple participants (limit 100)</a></td><td>required reading</td><td>group membership and chat ownership</td></tr>
+<tr><td>WhatsApp</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/whatsapp#2-users-should-be-able-to-send-receive-messages">2) Users should be able to send/receive messages.</a></td><td>required reading</td><td>durable accept and delivery pipeline</td></tr>
+<tr><td>WhatsApp</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/whatsapp#3-users-should-be-able-to-receive-messages-sent-while-they-are-not-online-up-to-30-days">3) Users should be able to receive messages sent while they are not online (up to 30 days).</a></td><td>required reading</td><td>mailbox/sync cursor and retention</td></tr>
+<tr><td>WhatsApp</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/whatsapp#4-users-should-be-able-to-send-receive-media-in-their-messages">4) Users should be able to send/receive media in their messages.</a></td><td>required reading</td><td>media pointer; not Week 4 main bottleneck</td></tr></table></section>
+    <section class="section"><div class="section-head"><h2>DDIA 精确决策卡</h2><p class="section-copy">只读能改变今天设计决定的小节。</p></div><table class="matrix"><tr><th>项目问题</th><th>精确 DDIA subsection</th><th>改变的系统决定</th></tr><tr><td>WhatsApp 发送 ACK 到底代表消息处于哪个顺序点？</td><td><a href="https://ddia.vonng.com/ch10/#sec_consistency_timestamps">Ch10 · 逻辑时钟</a></td><td>conversation 内 sequence/logical timestamp 由服务端分配；不使用客户端日历时钟决定消息顺序。</td></tr>
+<tr><td>离线设备重连时如何判断哪些消息先发生、哪些是重复？</td><td><a href="https://ddia.vonng.com/ch6/#sec_replication_happens_before">Ch6 · “先发生”关系与并发</a></td><td>设备保存 last applied cursor；按 conversation sequence 补缺口，messageId/clientMessageId 幂等应用。</td></tr></table></section>
+    <section class="section"><div class="section-head"><h2>本日项目 artifacts</h2><p class="section-copy">脚本、音频、PDF 与 mock evidence 直接从对应日打开。</p></div><div class="pill-row"><a class="pill" href="#local-materials">WhatsApp 中文完整讲稿</a> <a class="pill" href="#local-materials">WhatsApp 中文完整音频</a> <a class="pill" href="#local-materials">WhatsApp Senior+/Staff English recall</a> <a class="pill" href="#local-materials">WhatsApp printable recall PDF</a></div></section>
+    <section class="section"><div class="section-head"><h2>今日产出、修复与英语 recall</h2></div><table class="rubric"><tr><th>课程角色</th><td>CORE · requirements/API/data model/HLD</td></tr><tr><th>必须交付</th><td>WhatsApp HLD：Chat/Message/DeviceDelivery/Receipt/Presence schema、发送 ACK 语义、离线 sync cursor。</td></tr><tr><th>修复规则</th><td>如果 ACK 被说成对方已读，重写 sent/durable/delivered/read 四种状态。</td></tr><tr><th>English recall</th><td><div class="english-recall">English recall: “A send ACK means the server durably accepted the message, not that every recipient has read it.”</div></td></tr></table></section>
+    <footer class="footer">Day 1 只推进 Week 4；不打开 Week 5。完成后把证据写入 <a href="#local-materials">scorecard</a>。</footer>
+  <section id="local-materials" style="margin:40px auto;max-width:1080px;padding:18px 22px;border:1px solid #d9dce1;background:#f7f8fa;color:#30343b;font:14px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif"><strong>Local study materials</strong><br>Detailed lecture notes, audio, recall scripts, PDFs, Staff Q&amp;A, and mock packs are archived locally and are intentionally not published on this site.</section></main>
+</body>
+</html>

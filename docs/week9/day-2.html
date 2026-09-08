@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Day 2 - FB Post Search FULL: deep dives, writes and privacy freshness</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar"><nav class="shell nav">
+    <a class="brand" href="../week9-action-guide.html"><span class="mark"></span> WEEK 09 · INDEXING, RANKING & GEO SEARCH</a>
+    <div class="navlinks"><a href="../week9-action-guide.html">第 9 周</a><a href="#local-materials">深度讲义</a><a href="#local-materials">Staff Q&amp;A</a><a href="#local-materials">Live Mock</a><a href="#local-materials">验收</a></div>
+  </nav></header>
+  <main class="shell">
+    <section class="hero">
+      <div>
+        <div class="eyebrow">WEEK 09 · 2026.09.21-09.27 · WRITER GATE</div>
+        <h1>Day 2 - FB Post Search FULL: deep dives, writes and privacy freshness</h1>
+        <p class="deck">2026-09-22 · TUE · 补齐 FB Post Search deep dives：请求量、multi-keyword/phrase、写入风暴、存储优化、隐私与删除新鲜度。</p>
+        <div class="pill-row"><a class="pill" href="#local-materials">中文深度讲义</a><a class="pill" href="#local-materials">Staff Q&amp;A</a><a class="pill" href="#local-materials">GPT Live Mock</a><a class="pill" href="#local-materials">证据验收</a></div>
+      </div>
+      <aside class="hero-panel"><div class="metric"><b>1</b><span>FULL project</span></div><div class="metric"><b>2</b><span>transfer projects</span></div><div class="metric"><b>82</b><span>live headings</span></div><div class="metric"><b>21</b><span>Graphs slots</span></div></aside>
+    </section>
+
+    <section class="section"><div class="section-head"><h2>今日固定时间表</h2><p class="section-copy">三个学习窗口必须保持 exactly 08:50-10:55, 14:30-16:15, 20:30-21:15。</p></div><table class="rubric"><tr><th>08:50-09:15</th><td><b>08:50-10:55 system design</b><br>Recall repair from Day 1: source of truth, index document, candidate retrieval, rank features.</td></tr>
+<tr><th>09:15-10:05</th><td><b>08:50-10:55 system design</b><br>Read every remaining FB Post Search live heading and level expectation with direct anchors.</td></tr>
+<tr><th>10:05-10:35</th><td><b>08:50-10:55 system design</b><br>Deep dive: high request volume, hot query cache, phrase query positions, like-event aggregation and storage tiering.</td></tr>
+<tr><th>10:35-10:55</th><td><b>08:50-10:55 system design</b><br>Follow-up: privacy/ACL/delete changes, stale derived state, reindex/backfill and recovery metrics.</td></tr><tr><th>14:30-16:15</th><td><b>NeetCode Graphs</b><br>Three contiguous Graphs slots below; no other tag.</td></tr><tr><th>20:30-21:15</th><td>Staff Q&amp;A nodes 1-7, then record one spoken answer against the MP3 script.</td></tr></table></section>
+    <section class="section"><div class="section-head"><h2>算法模块</h2><p class="section-copy">NeetCode Graphs, exactly three slots today, contiguous slots 4-6 of 21.</p></div><table class="matrix algorithm-table"><tr><th>#</th><th>Problem / mode</th><th>Pattern</th><th>Invariant</th><th>Bug risk</th><th>Time</th><th>Space</th></tr><tr data-neetcode-slot="true" data-tag="Graphs" data-mode="NEW" data-minutes="35"><td data-label="Slot">4</td><td data-label="Problem / mode"><a href="https://neetcode.io/problems/clone-graph/question">Clone Graph</a><br><span class="evidence-chip">Graphs · NEW · 30m solve + 5m evidence</span></td><td data-label="Pattern">graph traversal with memo</td><td data-label="Invariant">one cloned node per original node id/reference</td><td data-label="Bug risk">creating duplicate clones during cycles</td><td data-label="Time">O(V+E)</td><td data-label="Space">O(V)</td></tr>
+<tr data-neetcode-slot="true" data-tag="Graphs" data-mode="NEW" data-minutes="35"><td data-label="Slot">5</td><td data-label="Problem / mode"><a href="https://neetcode.io/problems/number-of-connected-components-in-an-undirected-graph/question">Connected Components</a><br><span class="evidence-chip">Graphs · NEW · 30m solve + 5m evidence</span></td><td data-label="Pattern">adjacency DFS or union-find</td><td data-label="Invariant">component count decreases only when two roots merge</td><td data-label="Bug risk">double-counting isolated nodes</td><td data-label="Time">O(V+E)</td><td data-label="Space">O(V+E)</td></tr>
+<tr data-neetcode-slot="true" data-tag="Graphs" data-mode="NEW" data-minutes="35"><td data-label="Slot">6</td><td data-label="Problem / mode"><a href="https://neetcode.io/problems/graph-valid-tree/question">Graph Valid Tree</a><br><span class="evidence-chip">Graphs · NEW · 30m solve + 5m evidence</span></td><td data-label="Pattern">tree = connected and acyclic</td><td data-label="Invariant">n-1 edges plus full connectivity is sufficient</td><td data-label="Bug risk">detecting only cycles but not disconnected graphs</td><td data-label="Time">O(V+E)</td><td data-label="Space">O(V+E)</td></tr></table></section>
+    <section class="section"><div class="section-head"><h2>今日产出</h2></div><table class="rubric"><tr><th>必须交付</th><td>FB Post Search complete FULL artifact set and one follow-up answer.</td></tr><tr><th>修复规则</th><td>If privacy changes are treated as async-only, add query-time ACL/delete guard and leakage metric.</td></tr></table></section>
+
+    <section class="section"><div class="section-head"><h2>Hello Interview 精确目录</h2><p class="section-copy">使用 live heading 的 original title 和 direct anchor。</p></div><table class="matrix reading-table"><tr><th>项目</th><th>Level</th><th>精确 canonical section</th><th>Disposition</th><th>Day</th></tr><tr><td>FB Post Search</td><td>h6</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-post-search#approach-2">Approach</a></td><td>required reading</td><td>Day 2</td></tr>
+<tr><td>FB Post Search</td><td>h5</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-post-search#challenges-2">Challenges</a></td><td>required reading</td><td>Day 2</td></tr>
+<tr><td>FB Post Search</td><td>h5</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-post-search#approach-3">Approach</a></td><td>required reading</td><td>Day 2</td></tr>
+<tr><td>FB Post Search</td><td>h5</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-post-search#challenges-3">Challenges</a></td><td>required reading</td><td>Day 2</td></tr>
+<tr><td>FB Post Search</td><td>h2</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-post-search#potential-deep-dives">Potential Deep Dives</a></td><td>deep dive</td><td>Day 2</td></tr>
+<tr><td>FB Post Search</td><td>h3</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-post-search#1-how-can-we-handle-the-large-volume-of-requests-from-users">1) How can we handle the large volume of requests from users?</a></td><td>deep dive</td><td>Day 2</td></tr>
+<tr><td>FB Post Search</td><td>h5</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-post-search#approach-4">Approach</a></td><td>deep dive</td><td>Day 2</td></tr>
+<tr><td>FB Post Search</td><td>h6</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-post-search#approach-5">Approach</a></td><td>deep dive</td><td>Day 2</td></tr>
+<tr><td>FB Post Search</td><td>h3</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-post-search#2-how-can-we-handle-multi-keyword-phrase-queries">2) How can we handle multi-keyword, phrase queries?</a></td><td>deep dive</td><td>Day 2</td></tr>
+<tr><td>FB Post Search</td><td>h5</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-post-search#approach-6">Approach</a></td><td>deep dive</td><td>Day 2</td></tr>
+<tr><td>FB Post Search</td><td>h5</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-post-search#challenges-4">Challenges</a></td><td>deep dive</td><td>Day 2</td></tr>
+<tr><td>FB Post Search</td><td>h5</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-post-search#approach-7">Approach</a></td><td>deep dive</td><td>Day 2</td></tr>
+<tr><td>FB Post Search</td><td>h5</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-post-search#challenges-5">Challenges</a></td><td>deep dive</td><td>Day 2</td></tr>
+<tr><td>FB Post Search</td><td>h3</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-post-search#3-how-can-we-address-the-large-volume-of-writes">3) How can we address the large volume of writes?</a></td><td>deep dive</td><td>Day 2</td></tr>
+<tr><td>FB Post Search</td><td>h4</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-post-search#post-creation">Post Creation</a></td><td>deep dive</td><td>Day 2</td></tr>
+<tr><td>FB Post Search</td><td>h4</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-post-search#like-event">Like Event</a></td><td>deep dive</td><td>Day 2</td></tr>
+<tr><td>FB Post Search</td><td>h6</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-post-search#approach-8">Approach</a></td><td>deep dive</td><td>Day 2</td></tr>
+<tr><td>FB Post Search</td><td>h6</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-post-search#challenges-6">Challenges</a></td><td>deep dive</td><td>Day 2</td></tr>
+<tr><td>FB Post Search</td><td>h6</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-post-search#approach-9">Approach</a></td><td>deep dive</td><td>Day 2</td></tr>
+<tr><td>FB Post Search</td><td>h6</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-post-search#challenges-7">Challenges</a></td><td>deep dive</td><td>Day 2</td></tr>
+<tr><td>FB Post Search</td><td>h3</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-post-search#4-how-can-we-optimize-storage-of-our-system">4) How can we optimize storage of our system?</a></td><td>deep dive</td><td>Day 2</td></tr>
+<tr><td>FB Post Search</td><td>h2</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-post-search#what-is-expected-at-each-level">What is Expected at Each Level?</a></td><td>level expectation</td><td>Day 2</td></tr>
+<tr><td>FB Post Search</td><td>h3</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-post-search#mid-level">Mid-Level</a></td><td>level expectation</td><td>Day 2</td></tr>
+<tr><td>FB Post Search</td><td>h3</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-post-search#senior">Senior</a></td><td>level expectation</td><td>Day 2</td></tr>
+<tr><td>FB Post Search</td><td>h3</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-post-search#staff">Staff+</a></td><td>level expectation</td><td>Day 2</td></tr></table></section>
+
+    <section class="section"><div class="section-head"><h2>DDIA 精确决策卡</h2><p class="section-copy">Only DDIA Ch4 and Ch13 decision links are allowed.</p></div><table class="matrix"><tr><th>Day</th><th>Project</th><th>Decision</th><th>Link</th></tr><tr><td>Day 2</td><td>FB Post Search</td><td>large write volume chooses update pipeline and refresh interval consciously</td><td><a href="https://ddia.vonng.com/ch4/#sec_storage_btree_lsm_comparison">https://ddia.vonng.com/ch4/#sec_storage_btree_lsm_comparison</a></td></tr>
+<tr><td>Day 2</td><td>FB Post Search</td><td>rebuild/search index as derived state, then swap safely</td><td><a href="https://ddia.vonng.com/ch13/#id340">https://ddia.vonng.com/ch13/#id340</a></td></tr></table></section>
+    <section class="section"><div class="section-head"><h2>Artifacts</h2><p class="section-copy">PDF is intentionally absent; Week 9 requires MP3 only for the FULL/TRANSFER scripts.</p></div><div class="artifact-list"><a href="#local-materials">FB follow-up drill</a>
+<a href="#local-materials">FB English recall outline</a></div></section>
+
+    <footer class="footer">Week 9 only. Writer stops at READY_FOR_REVIEW after production record; no self-approval and no Week 10 work.</footer>
+  <section id="local-materials" style="margin:40px auto;max-width:1080px;padding:18px 22px;border:1px solid #d9dce1;background:#f7f8fa;color:#30343b;font:14px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif"><strong>Local study materials</strong><br>Detailed lecture notes, audio, recall scripts, PDFs, Staff Q&amp;A, and mock packs are archived locally and are intentionally not published on this site.</section></main>
+</body>
+</html>

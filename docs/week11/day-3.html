@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Week 11 Day 3</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body id="top">
+  <nav class="nav"><a class="brand" href="../week11-action-guide.html">Week 11 · Oct 5-11</a><div class="navlinks"><a href="../week11-action-guide.html">Week 11</a><a href="day-1.html">Day 1</a><a href="day-2.html">Day 2</a><a class="active" href="day-3.html">Day 3</a><a href="day-4.html">Day 4</a><a href="day-5.html">Day 5</a><a href="day-6.html">Day 6</a><a href="day-7.html">Day 7</a><a href="#local-materials">Lecture</a><a href="#local-materials">Staff Q&amp;A</a><a href="#local-materials">Mock</a><a href="#local-materials">Scorecard</a></div></nav>
+  <main>
+
+<section class="hero day-hero">
+  <p class="eyebrow">Day 3 · Wed 2026-10-07 · ChatGPT CORE</p>
+  <h1>ChatGPT CORE baseline: conversations, messages, generations, and durable serving path</h1>
+  <p class="lede">Week 11 trains two designs with one operating spine: admission, isolation, durable work, queue/backpressure, streaming/reconnect, derived state, evals, and recovery.</p>
+  <div class="hero-metrics">
+    <div class="metric"><strong>3</strong><span>contiguous 1-D DP slots</span></div>
+    <div class="metric"><strong>25-35m</strong><span>attempt + follow-up window</span></div>
+    <div class="metric"><strong>Staff</strong><span>invariant, failure, recovery, metrics</span></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head"><h2>Exact Daily Schedule</h2><p>No drift: the same six blocks run every day.</p></div>
+  <table class="schedule-table"><thead><tr><th>Time</th><th>Block</th><th>Contract</th></tr></thead><tbody><tr><td>08:50-09:00</td><td>Target</td><td>Write one Staff-level invariant and one failure window before reading.</td></tr><tr><td>09:00-10:05</td><td>Project design</td><td>25-35m ChatGPT CORE blank-page attempt, then entities/API/high-level path.</td></tr><tr><td>10:05-10:45</td><td>DDIA / source grounding</td><td>Map the design to exact DDIA anchors and only direct applied-AI sources.</td></tr><tr><td>10:45-10:55</td><td>Spoken close</td><td>Record the architecture in English, then say the Chinese invariant aloud.</td></tr><tr><td>14:30-16:15</td><td>1-D DP contiguous block</td><td>Three NeetCode slots below; each slot is 25-35 minutes plus follow-up.</td></tr><tr><td>20:30-21:15</td><td>Recall / artifact</td><td>Run English Senior+/Staff recall and patch the scorecard evidence.</td></tr></tbody></table>
+</section>
+
+<section class="section">
+  <div class="section-head"><h2>Canonical Hello Interview Anchors</h2><p>Direct day-page anchors only. Source titles were verified live before build.</p></div>
+  <table class="reading-table"><thead><tr><th>Canonical anchor</th><th>Disposition</th><th>Design decision</th></tr></thead><tbody><tr><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/chatgpt#understanding-the-problem">Understanding the Problem</a></td><td>CORE required reading</td><td>Constrain to text chat, streamed responses, history, and durable context.</td></tr><tr><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/chatgpt#functional-requirements">Functional Requirements</a></td><td>CORE required reading</td><td>Message, conversation, and generation behavior must not collapse into one row.</td></tr><tr><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/chatgpt#non-functional-requirements">Non-Functional Requirements</a></td><td>CORE required reading</td><td>Latency, availability, and cost are negotiated per tier.</td></tr><tr><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/chatgpt#the-set-up">The Set Up</a></td><td>CORE required reading</td><td>State model scope and exclude training.</td></tr><tr><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/chatgpt#planning-the-approach">Planning the Approach</a></td><td>CORE required reading</td><td>Build from entities and API into serving architecture.</td></tr><tr><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/chatgpt#defining-the-core-entities">Defining the Core Entities</a></td><td>CORE required reading</td><td>Conversation, Message, Generation, ModelRequest, and ContextPack are separate.</td></tr><tr><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/chatgpt#api-or-system-interface">API or System Interface</a></td><td>CORE required reading</td><td>POST prompt creates a run; streaming is an observation channel.</td></tr><tr><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/chatgpt#high-level-design">High-Level Design</a></td><td>CORE required reading</td><td>Gateway, orchestrator, scheduler, workers, stores, and stream fanout.</td></tr><tr><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/chatgpt#1-users-should-be-able-to-send-a-prompt-and-receive-an-ai-generated-response">Users should be able to send a prompt and receive an AI-generated response</a></td><td>CORE required reading</td><td>Generation state must survive client disconnects.</td></tr><tr><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/chatgpt#2-users-should-be-able-to-view-past-chats-and-resume-a-conversation-with-context-carried-across-turns">Users should be able to view past chats and resume a conversation with context carried across turns</a></td><td>CORE required reading</td><td>History is stored truth; context is selected and budgeted.</td></tr></tbody></table>
+</section>
+
+<section class="section">
+  <div class="section-head"><h2>Exact DDIA Mapping</h2><p>Only Ch5, Ch9, and Ch13 sections are in scope.</p></div>
+  <table class="reading-table"><thead><tr><th>Chapter</th><th>Exact section</th><th>Interview use</th></tr></thead><tbody><tr><td>Ch5</td><td><a href="https://ddia.vonng.com/ch5/#sec_encoding_dataflow_workflows">持久化执行与工作流</a></td><td>A Generation has durable lifecycle independent of the HTTP stream.</td></tr></tbody></table>
+</section>
+
+<section class="section">
+  <div class="section-head"><h2>Applied AI Source Gate</h2><p>First-party/original sources appear only when they change a serving, eval, security, or operating decision.</p></div>
+  <p class="note">No applied-AI source is introduced today unless it changes a concrete serving, eval, security, or operating decision.</p>
+</section>
+
+<section class="section">
+  <div class="section-head"><h2>21-Slot 1-D DP Runway</h2><p>Today is slot 7-9 of 21, contiguous across the week.</p></div>
+  <table class="algorithm-table"><thead><tr><th>Block</th><th>NeetCode problem</th><th>Mode</th><th>Invariant</th><th>25-35m follow-up</th><th>Complexity</th></tr></thead><tbody><tr data-neetcode-slot="true" data-minutes="35"><td data-label="Block"><span class="mock-clock">14:30-15:05</span></td><td data-label="Problem"><a href="https://neetcode.io/problems/decode-ways/question">Decode Ways</a></td><td data-label="Mode">Prefix count</td><td data-label="Invariant">ways[i] comes from valid one-digit and two-digit decodes ending at i.</td><td data-label="Follow-up">Ask for zeros and leading-zero rejection.</td><td data-label="Complexity">O(n) / O(1)</td></tr><tr data-neetcode-slot="true" data-minutes="35"><td data-label="Block"><span class="mock-clock">15:05-15:40</span></td><td data-label="Problem"><a href="https://neetcode.io/problems/coin-change/question">Coin Change</a></td><td data-label="Mode">Unbounded min</td><td data-label="Invariant">dp[amount] is the fewest coins; initialize unreachable with infinity.</td><td data-label="Follow-up">Ask why coin order does not matter for min count.</td><td data-label="Complexity">O(amount * coins) / O(amount)</td></tr><tr data-neetcode-slot="true" data-minutes="35"><td data-label="Block"><span class="mock-clock">15:40-16:15</span></td><td data-label="Problem"><a href="https://neetcode.io/problems/maximum-product-subarray/question">Maximum Product Subarray</a></td><td data-label="Mode">Dual extremes</td><td data-label="Invariant">Track max and min ending here because negative values flip sign.</td><td data-label="Follow-up">Ask for zeros and all-negative arrays.</td><td data-label="Complexity">O(n) / O(1)</td></tr></tbody></table>
+</section>
+
+<section class="section">
+  <div class="section-head"><h2>Artifacts And Recall</h2><p>Use these in the evening block and scorecard.</p></div>
+  <div class="asset-row"><a class="button" href="#local-materials">ChatGPT Chinese deep lecture</a><a class="button" href="#local-materials">ChatGPT Chinese lecture audio</a><a class="button" href="#local-materials">English Senior+/Staff recall script</a><a class="button" href="#local-materials">English recall PDF</a></div>
+  <div class="english-recall">
+    <strong>Required spoken close:</strong> explain one invariant, one failure window, one recovery path, and one metric in English. Then restate the same design decision in Chinese without adding new components.
+  </div>
+</section>
+
+  <section id="local-materials" style="margin:40px auto;max-width:1080px;padding:18px 22px;border:1px solid #d9dce1;background:#f7f8fa;color:#30343b;font:14px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif"><strong>Local study materials</strong><br>Detailed lecture notes, audio, recall scripts, PDFs, Staff Q&amp;A, and mock packs are archived locally and are intentionally not published on this site.</section></main>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Day 1 - FB Post Search FULL: attempt, requirements and HLD</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar"><nav class="shell nav">
+    <a class="brand" href="../week9-action-guide.html"><span class="mark"></span> WEEK 09 · INDEXING, RANKING & GEO SEARCH</a>
+    <div class="navlinks"><a href="../week9-action-guide.html">第 9 周</a><a href="#local-materials">深度讲义</a><a href="#local-materials">Staff Q&amp;A</a><a href="#local-materials">Live Mock</a><a href="#local-materials">验收</a></div>
+  </nav></header>
+  <main class="shell">
+    <section class="hero">
+      <div>
+        <div class="eyebrow">WEEK 09 · 2026.09.21-09.27 · WRITER GATE</div>
+        <h1>Day 1 - FB Post Search FULL: attempt, requirements and HLD</h1>
+        <p class="deck">2026-09-21 · MON · 35 分钟闭卷设计 FB Post Search，然后用原文 anchors 修正实体、API、倒排索引和排序路径。</p>
+        <div class="pill-row"><a class="pill" href="#local-materials">中文深度讲义</a><a class="pill" href="#local-materials">Staff Q&amp;A</a><a class="pill" href="#local-materials">GPT Live Mock</a><a class="pill" href="#local-materials">证据验收</a></div>
+      </div>
+      <aside class="hero-panel"><div class="metric"><b>1</b><span>FULL project</span></div><div class="metric"><b>2</b><span>transfer projects</span></div><div class="metric"><b>82</b><span>live headings</span></div><div class="metric"><b>21</b><span>Graphs slots</span></div></aside>
+    </section>
+
+    <section class="section"><div class="section-head"><h2>今日固定时间表</h2><p class="section-copy">三个学习窗口必须保持 exactly 08:50-10:55, 14:30-16:15, 20:30-21:15。</p></div><table class="rubric"><tr><th>08:50-09:25</th><td><b>08:50-10:55 system design</b><br>FB Post Search 35-minute design attempt: requirements, entities, write path, read path, latency split.</td></tr>
+<tr><th>09:25-10:05</th><td><b>08:50-10:55 system design</b><br>Read live headings through search and sort HLD; copy every missed requirement into the attempt repair.</td></tr>
+<tr><th>10:05-10:35</th><td><b>08:50-10:55 system design</b><br>Whiteboard inverted index construction: tokenization, posting list, index document, visibility snapshot, refresh.</td></tr>
+<tr><th>10:35-10:55</th><td><b>08:50-10:55 system design</b><br>DDIA Ch4 decision cards for full text and multi-column/indexed sort choices.</td></tr><tr><th>14:30-16:15</th><td><b>NeetCode Graphs</b><br>Three contiguous Graphs slots below; no other tag.</td></tr><tr><th>20:30-21:15</th><td>English recall outline: explain source of truth vs search index, then say recall/rank/presentation latency separately.</td></tr></table></section>
+    <section class="section"><div class="section-head"><h2>算法模块</h2><p class="section-copy">NeetCode Graphs, exactly three slots today, contiguous slots 1-3 of 21.</p></div><table class="matrix algorithm-table"><tr><th>#</th><th>Problem / mode</th><th>Pattern</th><th>Invariant</th><th>Bug risk</th><th>Time</th><th>Space</th></tr><tr data-neetcode-slot="true" data-tag="Graphs" data-mode="NEW" data-minutes="35"><td data-label="Slot">1</td><td data-label="Problem / mode"><a href="https://neetcode.io/problems/number-of-islands/question">Number of Islands</a><br><span class="evidence-chip">Graphs · NEW · 30m solve + 5m evidence</span></td><td data-label="Pattern">DFS/BFS grid components</td><td data-label="Invariant">visited prevents recounting the same island</td><td data-label="Bug risk">forgetting to mark before recursion/queue push</td><td data-label="Time">O(mn)</td><td data-label="Space">O(mn)</td></tr>
+<tr data-neetcode-slot="true" data-tag="Graphs" data-mode="NEW" data-minutes="35"><td data-label="Slot">2</td><td data-label="Problem / mode"><a href="https://neetcode.io/problems/max-area-of-island/question">Max Area of Island</a><br><span class="evidence-chip">Graphs · NEW · 30m solve + 5m evidence</span></td><td data-label="Pattern">DFS/BFS connected area</td><td data-label="Invariant">each land cell contributes exactly once to one component</td><td data-label="Bug risk">mixing rows/cols or missing zero grid</td><td data-label="Time">O(mn)</td><td data-label="Space">O(mn)</td></tr>
+<tr data-neetcode-slot="true" data-tag="Graphs" data-mode="NEW" data-minutes="35"><td data-label="Slot">3</td><td data-label="Problem / mode"><a href="https://neetcode.io/problems/flood-fill/question">Flood Fill</a><br><span class="evidence-chip">Graphs · NEW · 30m solve + 5m evidence</span></td><td data-label="Pattern">source color expansion</td><td data-label="Invariant">only original-color reachable cells are recolored</td><td data-label="Bug risk">newColor equals original causing infinite revisit</td><td data-label="Time">O(mn)</td><td data-label="Space">O(mn)</td></tr></table></section>
+    <section class="section"><div class="section-head"><h2>今日产出</h2></div><table class="rubric"><tr><th>必须交付</th><td>FB Post Search first-pass HLD plus full-reading anchor coverage through sorted search path.</td></tr><tr><th>修复规则</th><td>If the design sorts all matching posts at request time, rewrite it into bounded retrieval plus rank.</td></tr></table></section>
+
+    <section class="section"><div class="section-head"><h2>Hello Interview 精确目录</h2><p class="section-copy">使用 live heading 的 original title 和 direct anchor。</p></div><table class="matrix reading-table"><tr><th>项目</th><th>Level</th><th>精确 canonical section</th><th>Disposition</th><th>Day</th></tr><tr><td>FB Post Search</td><td>h2</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-post-search#understanding-the-problem">Understanding the Problem</a></td><td>required reading</td><td>Day 1</td></tr>
+<tr><td>FB Post Search</td><td>h3</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-post-search#functional-requirements">Functional Requirements</a></td><td>required reading</td><td>Day 1</td></tr>
+<tr><td>FB Post Search</td><td>h3</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-post-search#non-functional-requirements">Non-Functional Requirements</a></td><td>required reading</td><td>Day 1</td></tr>
+<tr><td>FB Post Search</td><td>h2</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-post-search#scale-estimations">Scale estimations</a></td><td>required reading</td><td>Day 1</td></tr>
+<tr><td>FB Post Search</td><td>h2</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-post-search#the-set-up">The Set Up</a></td><td>required reading</td><td>Day 1</td></tr>
+<tr><td>FB Post Search</td><td>h3</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-post-search#planning-the-approach">Planning the Approach</a></td><td>required reading</td><td>Day 1</td></tr>
+<tr><td>FB Post Search</td><td>h3</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-post-search#defining-the-core-entities">Defining the Core Entities</a></td><td>required reading</td><td>Day 1</td></tr>
+<tr><td>FB Post Search</td><td>h3</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-post-search#api-or-system-interface">API or System Interface</a></td><td>required reading</td><td>Day 1</td></tr>
+<tr><td>FB Post Search</td><td>h2</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-post-search#high-level-design">High-Level Design</a></td><td>required reading</td><td>Day 1</td></tr>
+<tr><td>FB Post Search</td><td>h3</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-post-search#1-users-should-be-able-to-create-and-like-posts">1) Users should be able to create and like posts.</a></td><td>required reading</td><td>Day 1</td></tr>
+<tr><td>FB Post Search</td><td>h3</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-post-search#2-users-should-be-able-to-search-posts-by-keyword">2) Users should be able to search posts by keyword.</a></td><td>required reading</td><td>Day 1</td></tr>
+<tr><td>FB Post Search</td><td>h5</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-post-search#approach">Approach</a></td><td>required reading</td><td>Day 1</td></tr>
+<tr><td>FB Post Search</td><td>h5</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-post-search#challenges">Challenges</a></td><td>required reading</td><td>Day 1</td></tr>
+<tr><td>FB Post Search</td><td>h5</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-post-search#approach-1">Approach</a></td><td>required reading</td><td>Day 1</td></tr>
+<tr><td>FB Post Search</td><td>h5</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-post-search#challenges-1">Challenges</a></td><td>required reading</td><td>Day 1</td></tr>
+<tr><td>FB Post Search</td><td>h3</td><td><a href="https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-post-search#3-users-should-be-able-to-get-search-results-sorted-by-recency-or-like-count">3) Users should be able to get search results sorted by recency or like count.</a></td><td>required reading</td><td>Day 1</td></tr></table></section>
+
+    <section class="section"><div class="section-head"><h2>DDIA 精确决策卡</h2><p class="section-copy">Only DDIA Ch4 and Ch13 decision links are allowed.</p></div><table class="matrix"><tr><th>Day</th><th>Project</th><th>Decision</th><th>Link</th></tr><tr><td>Day 1</td><td>FB Post Search</td><td>keyword search is an inverted index, not SQL LIKE</td><td><a href="https://ddia.vonng.com/ch4/#sec_storage_full_text">https://ddia.vonng.com/ch4/#sec_storage_full_text</a></td></tr>
+<tr><td>Day 1</td><td>FB Post Search</td><td>recency and like sort need index/ranker fields, not presentation sorting</td><td><a href="https://ddia.vonng.com/ch4/#sec_storage_index_multicolumn">https://ddia.vonng.com/ch4/#sec_storage_index_multicolumn</a></td></tr></table></section>
+    <section class="section"><div class="section-head"><h2>Artifacts</h2><p class="section-copy">PDF is intentionally absent; Week 9 requires MP3 only for the FULL/TRANSFER scripts.</p></div><div class="artifact-list"><a href="#local-materials">FB 中文完整讲稿</a>
+<a href="#local-materials">FB 中文音频</a>
+<a href="#local-materials">FB English recall outline</a>
+<a href="#local-materials">FB 35-minute attempt</a></div></section>
+
+    <footer class="footer">Week 9 only. Writer stops at READY_FOR_REVIEW after production record; no self-approval and no Week 10 work.</footer>
+  <section id="local-materials" style="margin:40px auto;max-width:1080px;padding:18px 22px;border:1px solid #d9dce1;background:#f7f8fa;color:#30343b;font:14px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif"><strong>Local study materials</strong><br>Detailed lecture notes, audio, recall scripts, PDFs, Staff Q&amp;A, and mock packs are archived locally and are intentionally not published on this site.</section></main>
+</body>
+</html>
